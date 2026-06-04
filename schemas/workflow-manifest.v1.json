@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/workflow-manifest.v1.json",
+  "title": "Threadify Workflow Manifest",
+  "type": "object",
+  "required": [
+    "workflow_id",
+    "version",
+    "title",
+    "summary",
+    "supported_adapters",
+    "required_mcp_tools",
+    "free_capabilities",
+    "paid_capability_stubs",
+    "approval_gate",
+    "fallback",
+    "receipt"
+  ],
+  "properties": {
+    "workflow_id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "version": { "type": "string" },
+    "title": { "type": "string" },
+    "summary": { "type": "string" },
+    "supported_adapters": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "required_mcp_tools": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "free_capabilities": { "type": "array", "items": { "type": "string" } },
+    "paid_capability_stubs": { "type": "array", "items": { "type": "string" } },
+    "approval_gate": {
+      "type": "object",
+      "required": ["required", "type", "must_show"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "type": { "type": "string" },
+        "must_show": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "required": ["mode", "artifact_schema", "instructions"],
+      "properties": {
+        "mode": { "type": "string" },
+        "artifact_schema": { "type": "string" },
+        "instructions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["schema", "must_prove"],
+      "properties": {
+        "schema": { "type": "string" },
+        "must_prove": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    }
+  }
+}

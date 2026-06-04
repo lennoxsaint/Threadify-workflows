@@ -1,0 +1,20 @@
+{
+  "name": "threadify-workflows",
+  "interface": {
+    "displayName": "Threadify Workflows"
+  },
+  "plugins": [
+    {
+      "name": "threadify-workflows",
+      "source": {
+        "source": "local",
+        "path": "."
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "threadify-workflows",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public-safe workflow manifests and agent adapters for Threadify MCP.",
+  "type": "module",
+  "scripts": {
+    "validate": "node validation/schema-checks/validate.mjs",
+    "test": "node validation/schema-checks/validate.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

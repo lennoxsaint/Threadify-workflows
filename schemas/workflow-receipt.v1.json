@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/workflow-receipt.v1.json",
+  "title": "Threadify Workflow Receipt",
+  "type": "object",
+  "required": [
+    "workflow_id",
+    "adapter",
+    "account_handle",
+    "action",
+    "approved_text",
+    "approved_text_sha256",
+    "status",
+    "timestamp",
+    "timezone",
+    "tool_path",
+    "fallback_used"
+  ],
+  "properties": {
+    "workflow_id": { "type": "string" },
+    "adapter": { "type": "string" },
+    "account_handle": { "type": "string" },
+    "action": { "type": "string" },
+    "approved_text": { "type": "array", "items": { "type": "string" } },
+    "approved_text_sha256": { "type": "string" },
+    "status": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "timezone": { "type": "string" },
+    "tool_path": { "type": "array", "items": { "type": "string" } },
+    "fallback_used": { "type": "boolean" },
+    "artifact_ids": { "type": "array", "items": { "type": "string" } }
+  }
+}

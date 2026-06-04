@@ -1,0 +1,20 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "adapter": "codex",
+  "account_handle": "@redacted_creator",
+  "action": "schedule_post",
+  "approved_text": ["the best workflows do not ask users to memorize tools. they make the next safe action obvious."],
+  "approved_text_sha256": "7f2f0d7c6f2a82b067d6a6c3a533f6d8a5c4a5f81a01b40a1111111111111111",
+  "status": "scheduled",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": [
+    "get_connection_defaults",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report"
+  ],
+  "fallback_used": false,
+  "artifact_ids": ["redacted-artifact-id"]
+}

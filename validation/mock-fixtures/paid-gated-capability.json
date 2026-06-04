@@ -1,0 +1,6 @@
+{
+  "workflow_id": "weekly-winner-replication",
+  "requested_capability": "advanced analytics ranking",
+  "status": "paid_gated",
+  "fallback_reason": "Public workflow can prepare a manual review packet, but advanced strategy remains a paid Threadify capability"
+}

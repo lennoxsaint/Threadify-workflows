@@ -1,0 +1,13 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "posts": [
+    {
+      "text": "approved example text",
+      "media": []
+    }
+  ],
+  "scheduled_at": "2026-06-03T09:00:00+08:00",
+  "timezone": "Australia/Perth",
+  "approval_state": "blocked_missing_explicit_final_approval",
+  "fallback_reason": "User has not approved the exact final action"
+}

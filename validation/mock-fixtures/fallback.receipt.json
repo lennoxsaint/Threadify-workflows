@@ -1,0 +1,14 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "adapter": "generic-mcp",
+  "account_handle": "@example_creator",
+  "action": "manual_web_fallback",
+  "approved_text": ["approved example text"],
+  "approved_text_sha256": "hash-placeholder",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": ["get_connection_defaults"],
+  "fallback_used": true,
+  "artifact_ids": ["redacted-artifact-id"]
+}

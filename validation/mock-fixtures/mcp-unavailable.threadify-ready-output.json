@@ -1,0 +1,13 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "posts": [
+    {
+      "text": "approved example text",
+      "media": []
+    }
+  ],
+  "scheduled_at": "2026-06-03T09:00:00+08:00",
+  "timezone": "Australia/Perth",
+  "approval_state": "ready_for_manual_review",
+  "fallback_reason": "Threadify MCP unavailable"
+}

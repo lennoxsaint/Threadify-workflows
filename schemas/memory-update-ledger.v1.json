@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/memory-update-ledger.v1.json",
+  "title": "Memory Update Ledger",
+  "type": "object",
+  "required": ["workflow_id", "adapter", "source_artifact", "items", "fallback_used", "timestamp"],
+  "properties": {
+    "workflow_id": { "type": "string" },
+    "adapter": { "type": "string" },
+    "source_artifact": { "type": "string" },
+    "fallback_used": { "type": "boolean" },
+    "timestamp": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "memory_class",
+          "memory_text",
+          "approved",
+          "write_status",
+          "readback_status",
+          "source_note",
+          "action_taken"
+        ],
+        "properties": {
+          "candidate_id": { "type": "string" },
+          "memory_class": {
+            "type": "string",
+            "enum": [
+              "evergreen_identity",
+              "live_metric",
+              "voice_litmus",
+              "channel_voice",
+              "workflow_lesson",
+              "relationship_context_note",
+              "temporary_current_state_note"
+            ]
+          },
+          "memory_text": { "type": "string" },
+          "approved": { "type": "boolean" },
+          "write_status": { "type": "string" },
+          "readback_status": { "type": "string" },
+          "source_note": { "type": "string" },
+          "source_date": { "type": "string" },
+          "expires_or_review_after": { "type": "string" },
+          "action_taken": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/threadify-ready-output.v1.json",
+  "title": "Threadify Ready Output",
+  "type": "object",
+  "required": ["workflow_id", "posts", "approval_state", "fallback_reason"],
+  "properties": {
+    "workflow_id": { "type": "string" },
+    "posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text"],
+        "properties": {
+          "text": { "type": "string" },
+          "media": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "scheduled_at": { "type": "string" },
+    "timezone": { "type": "string" },
+    "approval_state": { "type": "string" },
+    "fallback_reason": { "type": "string" }
+  }
+}

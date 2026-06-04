@@ -1,0 +1,12 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "posts": [
+    {
+      "text": "approved example text",
+      "media": []
+    }
+  ],
+  "timezone": "Australia/Perth",
+  "approval_state": "blocked_missing_auth",
+  "fallback_reason": "Threadify Agent Connection is missing or not authenticated"
+}

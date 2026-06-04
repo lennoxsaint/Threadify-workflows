@@ -1,0 +1,62 @@
+{
+  "workflow_id": "personal-brain-sync-current-self",
+  "version": "0.1.0",
+  "title": "Personal Brain Sync / Current Self Packet",
+  "summary": "Turn an approved personal context packet into small, classified, approval-gated Threadify Brain memories with readback proof and a per-item ledger.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "query_brain",
+    "remember",
+    "correct_memory",
+    "tombstone_memory",
+    "record_feedback",
+    "audit_log"
+  ],
+  "free_capabilities": [
+    "approved source artifact review",
+    "atomic memory proposal",
+    "memory classification",
+    "approval-gated memory write",
+    "memory readback verification",
+    "per-item memory update ledger",
+    "structured workflow feedback"
+  ],
+  "paid_capability_stubs": [
+    "native voice analysis",
+    "advanced memory conflict detection",
+    "premium creator strategy synthesis",
+    "hosted recurring Brain Sync automation"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["source artifact name", "memory class", "exact memory text", "source note", "expiry or review date", "action"]
+  },
+  "fallback": {
+    "mode": "memory-update-ledger",
+    "artifact_schema": "memory-update-ledger.v1",
+    "instructions": [
+      "Treat the approved packet as a source artifact only.",
+      "Return proposed atomic memory records and classifications.",
+      "Mark MCP execution as unavailable or not approved.",
+      "Do not claim any Brain memory was written unless readback verifies it.",
+      "Tell the user how to review and approve each proposed memory manually."
+    ]
+  },
+  "receipt": {
+    "schema": "memory-update-ledger.v1",
+    "must_prove": [
+      "workflow ID",
+      "adapter",
+      "source artifact",
+      "approved memory text",
+      "memory class",
+      "write status",
+      "readback status",
+      "timestamp",
+      "tool path",
+      "fallback state"
+    ]
+  }
+}

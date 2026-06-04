@@ -1,0 +1,33 @@
+{
+  "workflow_id": "personal-brain-sync-current-self",
+  "adapter": "generic-mcp",
+  "source_artifact": "approved-clean-current-self-sample",
+  "fallback_used": true,
+  "timestamp": "2026-06-04T00:00:00+08:00",
+  "items": [
+    {
+      "candidate_id": "memory-001",
+      "memory_class": "workflow_lesson",
+      "memory_text": "Large personal context packets should be atomized into small approved memory records, then verified by readback before downstream workflows use them.",
+      "approved": false,
+      "write_status": "not_executed",
+      "readback_status": "not_executed",
+      "source_note": "sample approved source artifact",
+      "action_taken": "proposal_only",
+      "notes": "MCP write was unavailable or not approved."
+    },
+    {
+      "candidate_id": "memory-002",
+      "memory_class": "live_metric",
+      "memory_text": "Sample metric value captured for workflow testing only.",
+      "approved": false,
+      "write_status": "not_executed",
+      "readback_status": "not_executed",
+      "source_note": "sample approved source artifact",
+      "source_date": "2026-06-04",
+      "expires_or_review_after": "2026-06-11",
+      "action_taken": "proposal_only",
+      "notes": "Live metrics need timestamped source context."
+    }
+  ]
+}

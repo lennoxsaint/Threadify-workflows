@@ -1,0 +1,45 @@
+{
+  "workflow_id": "weekly-winner-replication",
+  "version": "0.1.0",
+  "title": "Weekly Winner Replication",
+  "summary": "Use basic greatest-hits readback where available, prepare an approved replication schedule, and keep advanced analytics strategy paid-gated.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report",
+    "record_feedback"
+  ],
+  "free_capabilities": [
+    "basic greatest-hits readback where exposed",
+    "approved scheduling",
+    "schedule receipt"
+  ],
+  "paid_capability_stubs": [
+    "advanced analytics ranking",
+    "winner replication strategy",
+    "native rewrite engine",
+    "premium workflow variants"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["account handle", "source winner", "exact text", "scheduled time", "timezone", "action"]
+  },
+  "fallback": {
+    "mode": "manual-winner-packet",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Ask the user to provide top post links or metrics when analytics are unavailable.",
+      "Return a manual review packet.",
+      "Do not present advanced ranking as free."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "source status", "approved text", "status", "timestamp", "tool path", "fallback state"]
+  }
+}

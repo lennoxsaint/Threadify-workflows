@@ -1,0 +1,43 @@
+{
+  "workflow_id": "crosspost-x-after-threads",
+  "version": "0.1.0",
+  "title": "Cross-post To X After Threads",
+  "summary": "Read a Threads schedule or publish status and prepare an X-ready fallback artifact. Live X execution is not part of public v0.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "get_schedule_status",
+    "get_schedule_report",
+    "get_publish_status",
+    "validate_post",
+    "record_feedback"
+  ],
+  "free_capabilities": [
+    "Threads status readback",
+    "X-ready artifact preparation",
+    "manual fallback receipt"
+  ],
+  "paid_capability_stubs": [
+    "additional platform execution",
+    "cross-platform analytics",
+    "premium cross-post automation"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["source status", "exact X-ready text", "media", "manual action", "fallback state"]
+  },
+  "fallback": {
+    "mode": "manual-crosspost-artifact",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Confirm Threads status when available.",
+      "Return an X-ready artifact.",
+      "Do not claim X was posted by Threadify."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "source status", "approved text", "fallback state", "timestamp"]
+  }
+}
