@@ -12,6 +12,7 @@ Threadify Workflows is a lead-magnet and activation layer. Threadify remains the
 - basic receipts
 - structured feedback capture
 - basic analytics readback where Threadify exposes it
+- user-supplied greatest-hits source-pack intake and public-safe daily review packets
 
 ## Paid Threadify Layer
 
@@ -19,6 +20,7 @@ Threadify Workflows is a lead-magnet and activation layer. Threadify remains the
 - draft editing
 - reply generation
 - advanced analytics and winner strategy
+- native Brain winner strategy and recurring greatest-hits automation
 - additional accounts
 - additional platforms
 - premium workflows

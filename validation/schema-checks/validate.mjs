@@ -179,7 +179,7 @@ function validateReadmeClaims() {
 
 const files = walk(root);
 const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
-assert(manifestFiles.length === 5, `expected 5 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length === 6, `expected 6 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
 for (const file of files) {
