@@ -13,6 +13,7 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Receipt templates that prove what happened.
 - Redacted examples based on real operating patterns, with private details removed.
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
+- Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
 - Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
 

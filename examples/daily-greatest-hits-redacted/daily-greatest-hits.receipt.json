@@ -1,0 +1,17 @@
+{
+  "workflow_id": "daily-greatest-hits",
+  "adapter": "codex",
+  "account_handle": "@example_creator",
+  "action": "manual_daily_greatest_hits_packet_fallback",
+  "approved_text": [
+    "draft packet prepared; no live Threadify schedule performed"
+  ],
+  "approved_text_sha256": "hash-placeholder",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-05T10:30:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": ["get_connection_defaults", "greatest_hits", "validate_post", "record_feedback"],
+  "fallback_used": true,
+  "source_status": "redacted_user_supplied_example",
+  "artifact_ids": ["redacted-daily-greatest-hits-review-packet"]
+}

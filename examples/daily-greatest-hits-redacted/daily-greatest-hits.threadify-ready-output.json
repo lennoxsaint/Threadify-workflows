@@ -1,0 +1,45 @@
+{
+  "workflow_id": "daily-greatest-hits",
+  "posts": [
+    {
+      "slot": "daily_candidate_1",
+      "source_basis": "approved top-post theme: proof beats generic prompting",
+      "text": "Stop asking AI to guess what your audience wants.\n\nStart with the posts your audience already rewarded.\n\nThat one change turns AI from a slot machine into a daily operating system."
+    },
+    {
+      "slot": "daily_candidate_2",
+      "source_basis": "approved top-post theme: systems compound better than prompts",
+      "text": "A prompt is useful once.\n\nA workflow is useful every morning.\n\nThe difference is whether your best old posts become raw material for the next batch."
+    },
+    {
+      "slot": "daily_candidate_3",
+      "source_basis": "approved top-post theme: first-party proof",
+      "text": "The best content system is not more inspiration.\n\nIt is a clean loop:\n\n1. Find what already worked\n2. Reuse the signal\n3. Review the candidates\n4. Schedule with receipts"
+    }
+  ],
+  "approval_state": "draft_packet_ready",
+  "fallback_reason": "Redacted public example only. No live Threadify schedule, account write, Brain write, or advanced ranking was performed.",
+  "source_packet": {
+    "status": "redacted_user_supplied_example",
+    "included_private_metrics": false,
+    "included_account_ids": false,
+    "advanced_ranking_used": false
+  },
+  "proposed_schedule": [
+    {
+      "slot": "daily_candidate_1",
+      "time": "08:00",
+      "timezone": "Australia/Perth"
+    },
+    {
+      "slot": "daily_candidate_2",
+      "time": "18:15",
+      "timezone": "Australia/Perth"
+    },
+    {
+      "slot": "daily_candidate_3",
+      "time": "20:20",
+      "timezone": "Australia/Perth"
+    }
+  ]
+}

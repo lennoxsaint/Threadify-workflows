@@ -1,0 +1,53 @@
+{
+  "workflow_id": "daily-greatest-hits",
+  "version": "0.1.0",
+  "title": "Daily Greatest Hits",
+  "summary": "Use a user-approved greatest-hits source pack or basic greatest-hits readback, prepare daily post candidates, validate approved copy, schedule only after explicit approval, and return receipts.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report",
+    "record_feedback"
+  ],
+  "free_capabilities": [
+    "connection defaults",
+    "basic greatest-hits readback where exposed",
+    "user-supplied greatest-hits source-pack intake",
+    "candidate packet review",
+    "post validation",
+    "approved scheduling",
+    "schedule readback",
+    "structured receipt capture"
+  ],
+  "paid_capability_stubs": [
+    "native post generation",
+    "native draft editing",
+    "advanced analytics ranking",
+    "Brain winner strategy",
+    "hosted recurring automations",
+    "premium workflow variants"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["account handle", "source pack", "candidate text", "scheduled times", "timezone", "action"]
+  },
+  "fallback": {
+    "mode": "daily-greatest-hits-review-packet",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Ask the user to provide top post links, approved source text, or a clean greatest-hits source pack when greatest_hits is unavailable.",
+      "Return exact candidate texts and proposed schedule slots for manual review.",
+      "Do not claim Threadify generated, scheduled, or optimized posts if the connected tool was unavailable.",
+      "Keep private metrics, account IDs, member data, and private proof paths out of the fallback artifact."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "account handle", "source status", "approved text", "status", "timestamp", "tool path", "fallback state"]
+  }
+}

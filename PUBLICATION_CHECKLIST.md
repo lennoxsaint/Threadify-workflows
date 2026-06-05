@@ -11,6 +11,8 @@ Use this checklist before any public repo sync.
 - No secrets, tokens, account IDs, raw member data, private course material, raw
   Current Self packets, or proprietary generation prompt internals are present.
 - Redacted examples contain no private proof paths or personal metrics.
+- Daily Greatest Hits examples use only redacted source themes and do not expose
+  private analytics, account IDs, or paid generation internals.
 - Fallback paths do not pretend live Threadify actions happened.
 
 ## Owner Gates
