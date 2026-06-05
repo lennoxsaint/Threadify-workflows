@@ -1,0 +1,43 @@
+{
+  "workflow_id": "x-article-from-daily-post",
+  "version": "0.1.0",
+  "title": "X Article From Daily Post",
+  "summary": "Turn an approved daily post into a draft-only, bookmark-optimized X Article packet with thumbnail brief, scorecard, manual review gate, and receipt. Live X execution is not part of public v0.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "validate_post",
+    "record_feedback"
+  ],
+  "free_capabilities": [
+    "source post review",
+    "X Article draft packet preparation",
+    "thumbnail brief preparation",
+    "manual review receipt"
+  ],
+  "paid_capability_stubs": [
+    "native article generation",
+    "native thumbnail generation",
+    "additional platform execution",
+    "premium bookmark-optimization workflows"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["source post", "article title options", "article draft", "thumbnail direction", "scorecard", "manual action", "fallback state"]
+  },
+  "fallback": {
+    "mode": "x-article-draft-packet",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Return the source post, article brief, draft article, thumbnail brief, thumbnail prompt, and scorecard.",
+      "Mark live X execution as unavailable in public v0.",
+      "Do not claim the article or thumbnail was published, scheduled, uploaded, or submitted.",
+      "Keep the packet draft-only until the user gives a separate explicit publish or schedule approval in a supported product surface."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "approved text", "status", "timestamp", "tool path", "fallback state"]
+  }
+}

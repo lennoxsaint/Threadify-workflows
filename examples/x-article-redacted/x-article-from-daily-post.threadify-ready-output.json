@@ -1,0 +1,33 @@
+{
+  "workflow_id": "x-article-from-daily-post",
+  "posts": [
+    {
+      "text": "Source post: useful content gets saved when it becomes a tool the reader can reuse later."
+    }
+  ],
+  "approval_state": "draft_packet_ready",
+  "fallback_reason": "Public v0 prepares an X Article draft packet only. Live X publishing, scheduling, media upload, and browser submission are out of scope.",
+  "article_packet": {
+    "title_options": [
+      "Why Useful Posts Get Saved",
+      "The Save-Worthy Article Test",
+      "Turn Attention Into a Reusable Reference"
+    ],
+    "selected_archetype": "operating-manual",
+    "outputs": [
+      "article_brief.md",
+      "article_draft.md",
+      "thumbnail_brief.md",
+      "thumbnail_prompt.md",
+      "scorecard.json"
+    ],
+    "thumbnail_direction": "A clean proof-object image showing a marked-up checklist with one readable title label.",
+    "scorecard": {
+      "headline_score": 8,
+      "bookmark_score": 9,
+      "proof_score": 7,
+      "thumbnail_score": 8,
+      "risk_flags": ["requires proof check before publication"]
+    }
+  }
+}

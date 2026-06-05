@@ -1,7 +1,7 @@
 {
   "name": "threadify-workflows",
   "version": "0.1.0",
-  "description": "Agent-native Threadify workflow recipes for approved scheduling, cross-post fallback, winner replication, and granular Brain Sync.",
+  "description": "Agent-native Threadify workflow recipes for approved scheduling, cross-post fallback, winner replication, X Article drafting, and granular Brain Sync.",
   "author": {
     "name": "Threadify"
   },
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Threadify Workflows",
     "shortDescription": "Run public-safe Threadify MCP workflow recipes.",
-    "longDescription": "Threadify Workflows gives Codex workflow recipes for approved creator operations through Threadify MCP. It covers daily post scheduling, X cross-post fallback preparation, weekly winner replication, and granular Brain Sync from approved source artifacts. The plugin is orchestration-only and does not include private generation prompts, account credentials, tokens, or live provider configuration.",
+    "longDescription": "Threadify Workflows gives Codex workflow recipes for approved creator operations through Threadify MCP. It covers daily post scheduling, X cross-post fallback preparation, weekly winner replication, draft-only X Article packet creation, and granular Brain Sync from approved source artifacts. The plugin is orchestration-only and does not include private generation prompts, account credentials, tokens, or live provider configuration.",
     "developerName": "Threadify",
     "category": "Productivity",
     "capabilities": [
@@ -30,6 +30,7 @@
     "defaultPrompt": [
       "Run the Daily Posts Heartbeat workflow",
       "Prepare an X-ready fallback artifact after a Threads post",
+      "Turn an approved daily post into a draft-only X Article packet",
       "Run Personal Brain Sync from an approved source packet"
     ],
     "brandColor": "#0F172A"

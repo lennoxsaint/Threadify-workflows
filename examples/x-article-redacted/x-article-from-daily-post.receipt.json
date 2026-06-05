@@ -1,0 +1,14 @@
+{
+  "workflow_id": "x-article-from-daily-post",
+  "adapter": "codex",
+  "account_handle": "@example_creator",
+  "action": "manual_draft_packet_fallback",
+  "approved_text": ["draft packet prepared; no live X action performed"],
+  "approved_text_sha256": "hash-placeholder",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-05T10:00:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": ["get_connection_defaults", "validate_post", "record_feedback"],
+  "fallback_used": true,
+  "artifact_ids": ["redacted-x-article-draft-packet"]
+}

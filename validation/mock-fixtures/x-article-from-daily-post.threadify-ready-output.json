@@ -1,0 +1,15 @@
+{
+  "workflow_id": "x-article-from-daily-post",
+  "posts": [
+    {
+      "text": "Source post: a saved article should make the reader's next action easier."
+    }
+  ],
+  "approval_state": "draft_packet_ready",
+  "fallback_reason": "Live X execution is unavailable in public v0. The workflow produced a manual draft packet only.",
+  "article_packet": {
+    "selected_archetype": "checklist-article",
+    "outputs": ["article_brief.md", "article_draft.md", "thumbnail_brief.md", "thumbnail_prompt.md", "scorecard.json"],
+    "fallback_state": "no_publish_no_schedule_no_upload"
+  }
+}

@@ -13,6 +13,7 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Receipt templates that prove what happened.
 - Redacted examples based on real operating patterns, with private details removed.
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
+- Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
 
 ## What Stays In Threadify
@@ -23,6 +24,7 @@ Threadify keeps the paid execution layer:
 - reply generation
 - advanced analytics and winner strategy
 - additional accounts and platforms
+- live X Article publishing or scheduling
 - premium workflow packs
 - hosted calendar and deeper readback surfaces
 - private quality and voice systems
@@ -73,10 +75,9 @@ reviewer credentials into this repo.
 
 ## Publication Status
 
-This folder is now structured as a public-ready local repo, but it is not yet
-published. Public GitHub creation or sync requires explicit owner approval.
-
-Before publishing, run the checklist in `PUBLICATION_CHECKLIST.md`.
+This repo is structured as a public-ready workflow library. Before any public
+sync or release announcement, run the checklist in `PUBLICATION_CHECKLIST.md`
+and confirm the owner gates listed there.
 
 ## Safety Rule
 
