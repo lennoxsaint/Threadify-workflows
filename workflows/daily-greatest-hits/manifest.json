@@ -2,7 +2,7 @@
   "workflow_id": "daily-greatest-hits",
   "version": "0.1.0",
   "title": "Daily Greatest Hits",
-  "summary": "Use a user-approved greatest-hits source pack or basic greatest-hits readback, prepare daily post candidates, validate approved copy, schedule only after explicit approval, and return receipts.",
+  "summary": "Use a user-approved greatest-hits source pack or basic greatest-hits readback, prepare daily post candidates and optional proof/use-case lanes, validate approved copy, schedule only after explicit approval, and return receipts.",
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",
@@ -17,6 +17,7 @@
     "connection defaults",
     "basic greatest-hits readback where exposed",
     "user-supplied greatest-hits source-pack intake",
+    "optional public-safe proof/use-case lane review",
     "candidate packet review",
     "post validation",
     "approved scheduling",
@@ -29,12 +30,13 @@
     "advanced analytics ranking",
     "Brain winner strategy",
     "hosted recurring automations",
+    "native proof-lane generation",
     "premium workflow variants"
   ],
   "approval_gate": {
     "required": true,
     "type": "explicit-final-approval",
-    "must_show": ["account handle", "source pack", "candidate text", "scheduled times", "timezone", "action"]
+    "must_show": ["account handle", "source pack", "candidate text", "optional lane blockers", "scheduled times", "timezone", "action"]
   },
   "fallback": {
     "mode": "daily-greatest-hits-review-packet",
@@ -42,6 +44,7 @@
     "instructions": [
       "Ask the user to provide top post links, approved source text, or a clean greatest-hits source pack when greatest_hits is unavailable.",
       "Return exact candidate texts and proposed schedule slots for manual review.",
+      "Keep optional proof/use-case lane labels, receipts, blockers, CTA metadata, and media review state separate from public post copy.",
       "Do not claim Threadify generated, scheduled, or optimized posts if the connected tool was unavailable.",
       "Keep private metrics, account IDs, member data, and private proof paths out of the fallback artifact."
     ]

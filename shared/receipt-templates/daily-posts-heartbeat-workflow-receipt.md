@@ -24,6 +24,18 @@ This template is public-safe. Replace placeholders with real values only inside 
   "approved_text": [
     "approved post text exactly as scheduled"
   ],
+  "review_items": [
+    {
+      "slot": 1,
+      "review_label": "optional review-only label",
+      "public_copy_label_included": false,
+      "source_receipt_status": "verified|blocked|not_applicable",
+      "blockers": [],
+      "cta_destination": "optional destination",
+      "utm_source": "optional tracked URL",
+      "media_review_status": "approved|review_gated|not_applicable"
+    }
+  ],
   "approved_text_sha256": "sha256-placeholder",
   "status": "scheduled",
   "timestamp": "2026-06-04T09:00:00+08:00",

@@ -27,7 +27,7 @@
   "approval_gate": {
     "required": true,
     "type": "explicit-final-approval",
-    "must_show": ["account handle", "exact text", "media", "scheduled time", "timezone", "action"]
+    "must_show": ["account handle", "exact text", "media", "optional lane blockers", "scheduled time", "timezone", "action"]
   },
   "fallback": {
     "mode": "threadify-ready-artifact",
@@ -40,6 +40,6 @@
   },
   "receipt": {
     "schema": "workflow-receipt.v1",
-    "must_prove": ["workflow ID", "adapter", "account handle", "approved text", "status", "timestamp", "tool path", "fallback state"]
+    "must_prove": ["workflow ID", "adapter", "account handle", "approved text", "optional review item metadata", "status", "timestamp", "tool path", "fallback state"]
   }
 }

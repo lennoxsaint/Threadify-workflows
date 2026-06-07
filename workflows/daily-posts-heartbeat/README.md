@@ -6,6 +6,8 @@ This workflow must not create public copy itself. It validates, approves, schedu
 
 Daily Posts may use only approved clean Threadify-safe packs or verified Brain memories as context. It must not consume raw Current Self packets, private metrics ledgers, private proof paths, unapproved memory candidates, account data, or member/course material.
 
+Approved packs may include review-only lane metadata such as proof/use-case/testimonial labels, receipt notes, blockers, CTA destinations, UTM sources, and media review state. Those fields are scheduling/review context only. They must not be silently inserted into public post copy.
+
 ## Receipt
 
 Use the shared receipt template at `shared/receipt-templates/daily-posts-heartbeat-workflow-receipt.md`.
