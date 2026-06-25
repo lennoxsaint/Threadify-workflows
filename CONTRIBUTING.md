@@ -39,11 +39,12 @@ Each workflow must include:
 
 The YouTube Edit workflow drives [Eddy](https://github.com/lennoxsaint/eddy), vendored as the
 `engines/eddy` submodule. Eddy stays the canonical, independently-released source of truth; this
-repo only pins a specific Eddy commit.
+repo only pins a specific Eddy **release tag**. The current pin is **v1.9.1**.
 
 - Initialize it with `git submodule update --init engines/eddy`.
-- To advance the pin, check out the desired Eddy commit (prefer a release tag once Eddy cuts one)
-  inside `engines/eddy`, then commit the updated gitlink here. Re-pin deliberately, not implicitly.
+- To advance the pin, check out the desired Eddy release tag inside `engines/eddy`
+  (`git -C engines/eddy fetch --tags && git -C engines/eddy checkout vX.Y.Z`), then commit the
+  updated gitlink here. Re-pin deliberately to a tag, not to a feature-branch commit.
 - Do not edit Eddy source from this repo; send Eddy changes upstream to `lennoxsaint/eddy`.
 - The validator (`npm test`) intentionally skips `engines/eddy`; Eddy validates itself in its own
   repo.
