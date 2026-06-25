@@ -2,6 +2,8 @@
 
 Threadify Workflows is a public, MCP ready workflow library for running creator workflows through Threadify from agent clients such as Hermes, Gemini, Codex, Claude, OpenClaw, Cursor, and any generic MCP client.
 
+These recipes are free and open source under the MIT License. The tie to Threadify is a runtime dependency, not a license restriction: the workflows are free to read, fork, and run, while Threadify's hosted generation, scheduling, and analytics remain the paid service they call into.
+
 This repo is orchestration-only. It teaches agents which Threadify MCP tools to use, when to stop for human approval, how to fall back when a tool is unavailable, and how to produce receipts. It does not publish Threadify's private generation logic, private course material, member data, account IDs, credentials, or proprietary quality systems.
 
 ## What V0 Includes
@@ -15,7 +17,18 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
 - Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
 - Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
+- YouTube Edit workflow that drives the Eddy engine (the `engines/eddy` submodule) to turn raw footage into a finished edit, then optionally prepares and schedules Threadify promotional posts about the video after approval.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
+
+## YouTube support via the Eddy engine
+
+The YouTube Edit workflow uses [Eddy](https://github.com/lennoxsaint/eddy), a separate MIT-licensed, local-first video editor, vendored here as the `engines/eddy` submodule. Eddy turns raw footage into a launch kit (long video, Shorts, titles, thumbnails, description) and never publishes by itself; this repo orchestrates Eddy and then hands off to Threadify for the promotion step. Initialize the engine with:
+
+```sh
+git clone --recurse-submodules https://github.com/lennoxsaint/Threadify-workflows.git
+# or, in an existing clone:
+git submodule update --init engines/eddy
+```
 
 ## What Stays In Threadify
 

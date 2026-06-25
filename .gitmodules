@@ -1,0 +1,3 @@
+[submodule "engines/eddy"]
+	path = engines/eddy
+	url = https://github.com/lennoxsaint/eddy.git

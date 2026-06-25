@@ -107,6 +107,9 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === 'node_modules' || entry.name === '.git') continue;
     const full = path.join(dir, entry.name);
+    // engines/eddy is an external submodule (the Eddy project). It is validated
+    // by its own repo and uses its own receipt/manifest conventions, so skip it.
+    if (path.relative(root, full) === path.join('engines', 'eddy')) continue;
     if (entry.isDirectory()) out.push(...walk(full));
     else out.push(full);
   }
@@ -179,7 +182,7 @@ function validateReadmeClaims() {
 
 const files = walk(root);
 const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
-assert(manifestFiles.length === 6, `expected 6 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length === 7, `expected 7 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
 for (const file of files) {
