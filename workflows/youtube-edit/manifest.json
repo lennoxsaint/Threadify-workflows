@@ -1,0 +1,66 @@
+{
+  "workflow_id": "youtube-edit",
+  "version": "0.1.0",
+  "title": "YouTube Edit (Eddy)",
+  "summary": "Drive the Eddy engine to turn raw footage into a finished YouTube edit (long video, Shorts, titles, thumbnails, description), then optionally prepare and schedule Threadify promotional posts about the video. Eddy runs locally and never publishes; Threadify scheduling happens only after explicit final approval.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "external_engines": ["eddy"],
+  "modes": [
+    {
+      "id": "edit-only",
+      "summary": "Run Eddy and return the launch kit (edited long video, Shorts, titles, thumbnails, chapters, description). No Threadify posting step."
+    },
+    {
+      "id": "edit-then-promote",
+      "summary": "Run Eddy, then prepare Threadify promotional post/thread candidates from the launch kit and schedule them only after explicit final approval."
+    }
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "upload_media",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report",
+    "record_feedback"
+  ],
+  "free_capabilities": [
+    "local Eddy edit run (raw footage to launch kit)",
+    "edit-only deliverable review",
+    "promotional post/thread candidate review from the launch kit",
+    "connection defaults",
+    "thumbnail media intake for review",
+    "post validation",
+    "approved scheduling",
+    "schedule readback",
+    "structured receipt capture"
+  ],
+  "paid_capability_stubs": [
+    "native post generation",
+    "native draft editing",
+    "advanced analytics ranking",
+    "Brain winner strategy",
+    "hosted recurring automations",
+    "premium workflow variants"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["account handle", "video launch-kit summary", "candidate post text", "attached media", "scheduled times", "timezone", "action"]
+  },
+  "fallback": {
+    "mode": "youtube-edit-review-packet",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Run Eddy locally (engines/eddy) to produce the launch kit; never claim a finished edit unless Eddy reports a completed run.",
+      "If the Eddy engine is unavailable, ask the user to provide the finished video assets, titles, and description before preparing any promo copy.",
+      "When Threadify MCP is unavailable, return exact candidate post texts, proposed schedule slots, and the local media paths for manual posting.",
+      "Do not claim Threadify generated, scheduled, or optimized posts if the connected tool was unavailable.",
+      "Keep private metrics, account IDs, member data, and private proof paths out of the fallback artifact."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "account handle", "edit run status", "approved text", "status", "timestamp", "tool path", "fallback state"]
+  }
+}

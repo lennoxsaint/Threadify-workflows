@@ -1,6 +1,8 @@
 # Contributing
 
-Threadify Workflows accepts public-safe workflow improvements only.
+Threadify Workflows accepts public-safe workflow improvements only. The repo is open source under
+the MIT License; by contributing you agree your contribution is licensed under MIT. The "tie" to
+Threadify is the runtime MCP dependency, not a usage restriction.
 
 ## Contribution Rules
 
@@ -32,3 +34,16 @@ Each workflow must include:
 - fallback behavior
 - explicit approval gate
 - receipt requirements
+
+## The Eddy engine submodule
+
+The YouTube Edit workflow drives [Eddy](https://github.com/lennoxsaint/eddy), vendored as the
+`engines/eddy` submodule. Eddy stays the canonical, independently-released source of truth; this
+repo only pins a specific Eddy commit.
+
+- Initialize it with `git submodule update --init engines/eddy`.
+- To advance the pin, check out the desired Eddy commit (prefer a release tag once Eddy cuts one)
+  inside `engines/eddy`, then commit the updated gitlink here. Re-pin deliberately, not implicitly.
+- Do not edit Eddy source from this repo; send Eddy changes upstream to `lennoxsaint/eddy`.
+- The validator (`npm test`) intentionally skips `engines/eddy`; Eddy validates itself in its own
+  repo.
