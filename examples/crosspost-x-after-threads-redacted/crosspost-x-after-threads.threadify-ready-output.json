@@ -1,0 +1,16 @@
+{
+  "workflow_id": "crosspost-x-after-threads",
+  "posts": [
+    {
+      "text": "Said this on Threads this morning: the best workflows do not ask users to memorize tools. They make the next safe action obvious.\n\n(crossposted from Threads)"
+    }
+  ],
+  "approval_state": "draft_packet_ready",
+  "fallback_reason": "V0 prepares a user-approved X-ready artifact only. Live X posting is out of scope until Threadify exposes and gates that provider action.",
+  "source_post": {
+    "platform": "threads",
+    "publish_status": "redacted_published_status",
+    "included_account_ids": false,
+    "included_private_metrics": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "workflow_id": "crosspost-x-after-threads",
+  "adapter": "cursor",
+  "account_handle": "@example_creator",
+  "action": "manual_crosspost_artifact_fallback",
+  "approved_text": [
+    "X-ready packet prepared from a published Threads post; no live X posting performed"
+  ],
+  "approved_text_sha256": "redacted-sha256-placeholder",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-18T09:15:00+08:00",
+  "timezone": "Australia/Perth",
+  "tool_path": [
+    "get_connection_defaults",
+    "get_schedule_status",
+    "get_schedule_report",
+    "get_publish_status",
+    "validate_post",
+    "record_feedback"
+  ],
+  "fallback_used": true,
+  "source_status": "redacted_published_threads_post_readback",
+  "artifact_ids": ["redacted-crosspost-x-packet"]
+}

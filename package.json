@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "validate": "node validation/schema-checks/validate.mjs",
-    "test": "node validation/schema-checks/validate.mjs"
+    "simulate": "node validation/workflow-simulator/run.mjs",
+    "test": "node validation/schema-checks/validate.mjs && node validation/workflow-simulator/run.mjs"
   },
   "engines": {
     "node": ">=18"

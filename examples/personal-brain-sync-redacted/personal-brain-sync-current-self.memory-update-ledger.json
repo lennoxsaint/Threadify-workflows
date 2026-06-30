@@ -1,0 +1,31 @@
+{
+  "workflow_id": "personal-brain-sync-current-self",
+  "adapter": "claude",
+  "source_artifact": "approved-clean-current-self-sample",
+  "fallback_used": false,
+  "timestamp": "2026-06-25T07:00:00+08:00",
+  "items": [
+    {
+      "candidate_id": "memory-101",
+      "memory_class": "channel_voice",
+      "memory_text": "Prefers short, declarative sentences and a single strong claim per post over hedged, list-heavy copy.",
+      "approved": true,
+      "write_status": "written",
+      "readback_status": "verified",
+      "source_note": "approved source artifact, voice section",
+      "action_taken": "written"
+    },
+    {
+      "candidate_id": "memory-102",
+      "memory_class": "live_metric",
+      "memory_text": "Sample subscriber count snapshot captured for workflow testing only.",
+      "approved": true,
+      "write_status": "written",
+      "readback_status": "verified",
+      "source_note": "approved source artifact, metrics section",
+      "source_date": "2026-06-25",
+      "expires_or_review_after": "2026-07-25",
+      "action_taken": "written"
+    }
+  ]
+}

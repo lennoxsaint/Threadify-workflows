@@ -1,0 +1,25 @@
+{
+  "workflow_id": "weekly-winner-replication",
+  "adapter": "claude",
+  "account_handle": "@example_creator",
+  "action": "schedule_post",
+  "approved_text": [
+    "A year ago this post barely moved. Today the same idea, said plainer, is the one people save.\n\nThe lesson was never the idea. It was the clarity."
+  ],
+  "approved_text_sha256": "redacted-sha256-placeholder",
+  "status": "scheduled",
+  "timestamp": "2026-06-22T08:00:00+08:00",
+  "timezone": "Australia/Perth",
+  "tool_path": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report",
+    "record_feedback"
+  ],
+  "fallback_used": false,
+  "source_status": "redacted_basic_greatest_hits_readback",
+  "artifact_ids": ["redacted-weekly-winner-replication-slot-1"]
+}

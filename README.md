@@ -19,6 +19,9 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
 - YouTube Edit workflow that drives the Eddy engine (the `engines/eddy` submodule) to turn raw footage into a finished edit, then optionally prepares and schedules Threadify promotional posts about the video after approval.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
+- A dependency-free workflow simulator that walks every manifest end-to-end against a mock
+  Threadify MCP client, proving (not just documenting) that no mutating tool ever runs without
+  explicit approval and that every workflow falls back cleanly when a tool is unavailable.
 
 ## YouTube support via the Eddy engine
 
@@ -65,6 +68,14 @@ Validate the repo before publishing or editing:
 ```sh
 npm test
 ```
+
+`npm test` runs two checks: `validation/schema-checks/validate.mjs` (static manifest/fixture/
+redaction shape) and `validation/workflow-simulator/run.mjs` (a dynamic simulator that drives each
+workflow against a mock Threadify MCP client through approved, approval-denied, and
+tool-unavailable scenarios, then validates every produced receipt/ready-output/ledger against
+`schemas/*.json`). Run the simulator alone with `npm run simulate`. See
+`validation/workflow-simulator/README.md` for how it works and how to extend it for a new
+workflow.
 
 ## Local Codex Plugin Wrapper
 

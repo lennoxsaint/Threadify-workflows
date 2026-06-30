@@ -1,0 +1,26 @@
+{
+  "workflow_id": "youtube-edit",
+  "adapter": "claude",
+  "account_handle": "@example_creator",
+  "action": "schedule_post",
+  "approved_text": [
+    "New video is up: the one change that made our edit loop 10x more reliable. Link in the next post."
+  ],
+  "approved_text_sha256": "redacted-sha256-placeholder",
+  "status": "scheduled",
+  "timestamp": "2026-06-27T07:30:00+08:00",
+  "timezone": "Australia/Perth",
+  "tool_path": [
+    "get_connection_defaults",
+    "upload_media",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_schedule_report",
+    "record_feedback"
+  ],
+  "fallback_used": false,
+  "mode": "edit-then-promote",
+  "eddy_run_status": "redacted_completed_local_run",
+  "artifact_ids": ["redacted-youtube-edit-promo-slot-1"]
+}
