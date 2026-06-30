@@ -180,6 +180,46 @@ function validateReadmeClaims() {
   assert(!/guaranteed/i.test(readme), 'README must not use guarantee language');
 }
 
+// Every workflow in this repo is adapter-agnostic by design (any of the 7 supported clients can
+// run any workflow) — every manifest's supported_adapters is the SAME full set today. Catch silent
+// drift in either direction: a manifest that quietly drops/adds an adapter relative to its peers,
+// a manifest referencing an adapter with no real adapters/<name> directory, or a real adapter
+// directory no manifest references at all (orphaned).
+function validateAdapterParity(manifestFiles) {
+  const realAdapters = new Set(
+    fs.readdirSync(path.join(root, 'adapters'), { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name),
+  );
+  const referenced = new Set();
+  const perManifest = [];
+  for (const file of manifestFiles) {
+    const manifest = readJson(file);
+    if (!manifest) continue;
+    const declared = manifest.supported_adapters ?? [];
+    for (const adapter of declared) {
+      referenced.add(adapter);
+      assert(realAdapters.has(adapter), `${rel(file)} declares unknown adapter "${adapter}"`);
+    }
+    perManifest.push({ file, set: new Set(declared) });
+  }
+  for (const adapter of realAdapters) {
+    assert(referenced.has(adapter), `adapters/${adapter} is not declared by any workflow manifest`);
+  }
+
+  const baseline = perManifest[0];
+  for (const entry of perManifest.slice(1)) {
+    const missing = [...baseline.set].filter((a) => !entry.set.has(a));
+    const extra = [...entry.set].filter((a) => !baseline.set.has(a));
+    assert(
+      missing.length === 0 && extra.length === 0,
+      `${rel(entry.file)} supported_adapters differs from ${rel(baseline.file)} `
+        + `(missing: [${missing.join(', ')}], extra: [${extra.join(', ')}]) — every workflow in this `
+        + 'repo currently supports every adapter; if that changes intentionally, update this check.',
+    );
+  }
+}
+
 const files = walk(root);
 const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
 assert(manifestFiles.length === 7, `expected 7 workflow manifests, found ${manifestFiles.length}`);
@@ -192,6 +232,7 @@ for (const file of files) {
 }
 
 validateReadmeClaims();
+validateAdapterParity(manifestFiles);
 
 if (failures.length) {
   console.error('Threadify Workflows validation failed:');
