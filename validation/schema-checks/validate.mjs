@@ -1,9 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {
+  calibrateVoice,
+  classifyOwnerEdits,
   evaluateCandidate,
   evaluateLearningWindow,
+  evaluateOutcome,
   evaluateQuerySample,
+  evaluateQueryRun,
+  evaluateReplyDraft,
 } from '../../workflows/qualified-buyer-research/reference-policy.mjs';
 
 const root = path.resolve(new URL('../..', import.meta.url).pathname);
@@ -161,7 +166,22 @@ function validateReceipt(file) {
     assert(Object.hasOwn(receipt, field), `${rel(file)} missing receipt field ${field}`);
   }
   if (receipt.workflow_id === 'qualified-buyer-research') {
-    for (const field of ['offer_context_version', 'query_quality', 'fit_evidence']) {
+    for (const field of [
+      'offer_context_version',
+      'voice_context_version',
+      'voice_confidence',
+      'query_quality',
+      'query_run',
+      'fit_evidence',
+      'supporting_signals',
+      'solution_awareness',
+      'commercial_evidence',
+      'language_bank_route',
+      'reply_branch',
+      'staged_variant',
+      'sent_variant',
+      'owner_edit_dimensions',
+    ]) {
       assert(Object.hasOwn(receipt, field), `${rel(file)} missing buyer-research receipt field ${field}`);
     }
   }
@@ -212,11 +232,17 @@ function validateQualifiedBuyerResearchFixtures() {
     'wrong account blocks composer work',
     'genuine pain outside the offer is research only',
     'correct audience with out of scope problem is research only',
-    'profile evidence maps audience problem and transformation',
+    'authored situation evidence maps audience problem and transformation',
     'missing offer context stops public action',
     'seller who matches the offer can be public reply ready',
     'anonymous quoted pain is language research only',
     'saturated disputed thread is research only',
+    'outcome fit qualifies without solution awareness',
+    'situation match qualifies despite vague profile label',
+    'matching identity with wrong situation is research only',
+    'current problem without supporting signal is research only',
+    'public reply readiness ignores low rank score',
+    'call stage requires later commercial evidence',
   ];
   const candidateNames = new Set((fixture.candidate_scenarios ?? []).map((scenario) => scenario.name));
   for (const name of requiredCandidateNames) {
@@ -231,6 +257,9 @@ function validateQualifiedBuyerResearchFixtures() {
     }
     if (scenario.expected_status) {
       assert(actual.status === scenario.expected_status, `${scenario.name}: expected status ${scenario.expected_status}, got ${actual.status}`);
+    }
+    if (scenario.expected_language_bank_route) {
+      assert(actual.language_bank_route === scenario.expected_language_bank_route, `${scenario.name}: expected language route ${scenario.expected_language_bank_route}, got ${actual.language_bank_route}`);
     }
   }
 
@@ -250,6 +279,37 @@ function validateQualifiedBuyerResearchFixtures() {
       actual.action === scenario.expected_action,
       `${scenario.name}: expected ${scenario.expected_action}, got ${actual.action}`,
     );
+  }
+
+  for (const scenario of fixture.query_run_scenarios ?? []) {
+    const actual = evaluateQueryRun(scenario.input);
+    assert(actual.status === scenario.expected_status, `${scenario.name}: expected status ${scenario.expected_status}, got ${actual.status}`);
+    assert(actual.stop_reason === scenario.expected_stop_reason, `${scenario.name}: expected stop ${scenario.expected_stop_reason}, got ${actual.stop_reason}`);
+  }
+
+  for (const scenario of fixture.reply_scenarios ?? []) {
+    const actual = evaluateReplyDraft(scenario.input);
+    assert(actual.branch === scenario.expected_branch, `${scenario.name}: expected branch ${scenario.expected_branch}, got ${actual.branch}`);
+    assert(actual.ready === scenario.expected_ready, `${scenario.name}: expected ready ${scenario.expected_ready}, got ${actual.ready}`);
+    if (scenario.expected_reason) assert(actual.reasons.includes(scenario.expected_reason), `${scenario.name}: missing reason ${scenario.expected_reason}`);
+  }
+
+  for (const scenario of fixture.voice_scenarios ?? []) {
+    const actual = calibrateVoice(scenario.input);
+    assert(actual.voice_confidence === scenario.expected_confidence, `${scenario.name}: expected confidence ${scenario.expected_confidence}, got ${actual.voice_confidence}`);
+    assert(actual.mode === scenario.expected_mode, `${scenario.name}: expected mode ${scenario.expected_mode}, got ${actual.mode}`);
+  }
+
+  for (const scenario of fixture.owner_edit_scenarios ?? []) {
+    const actual = classifyOwnerEdits(scenario.input);
+    assert(actual.learning_target === scenario.expected_learning_target, `${scenario.name}: wrong learning target`);
+    assert(actual.candidate_policy_mutated === scenario.expected_candidate_policy_mutated, `${scenario.name}: candidate policy mutation mismatch`);
+    assert(JSON.stringify(actual.changed_dimensions) === JSON.stringify(scenario.expected_changed_dimensions), `${scenario.name}: owner edit dimensions mismatch`);
+  }
+
+  for (const scenario of fixture.outcome_scenarios ?? []) {
+    const actual = evaluateOutcome(scenario.input);
+    assert(actual.qualified_progression === scenario.expected_progression, `${scenario.name}: progression mismatch`);
   }
 
   const requiredLearningNames = [
@@ -275,9 +335,18 @@ function validateQualifiedBuyerResearchSchema() {
   if (!schema) return;
   assert(Boolean(schema.$defs?.OfferContextV1), `${rel(file)} missing OfferContextV1`);
   const required = new Set(schema.$defs?.CandidateEvaluationV1?.required ?? []);
-  for (const field of ['query_quality', 'offer_context_version', 'fit_evidence']) {
+  for (const field of ['query_quality', 'offer_context_version', 'fit_evidence', 'solution_awareness', 'commercial_evidence']) {
     assert(required.has(field), `${rel(file)} CandidateEvaluationV1 must require ${field}`);
   }
+  for (const definition of ['QueryRunV1', 'VoiceContextV1']) {
+    assert(Boolean(schema.$defs?.[definition]), `${rel(file)} missing ${definition}`);
+  }
+  const fitRequired = new Set(schema.$defs?.CandidateEvaluationV1?.properties?.fit_evidence?.required ?? []);
+  assert(fitRequired.has('situation_evidence_source'), `${rel(file)} fit evidence must require situation_evidence_source`);
+  const outcomeRequired = new Set(schema.$defs?.OutcomeEventV1?.required ?? []);
+  assert(outcomeRequired.has('observed_within_hours'), `${rel(file)} OutcomeEventV1 must require observed_within_hours`);
+  const updateRequired = new Set(schema.$defs?.PolicyUpdateEventV1?.required ?? []);
+  assert(updateRequired.has('policy_family'), `${rel(file)} PolicyUpdateEventV1 must require policy_family`);
 }
 
 const files = walk(root);

@@ -5,15 +5,48 @@
   "$defs": {
     "OfferContextV1": {
       "type": "object",
-      "required": ["record_type", "offer_context_version", "audience", "problem", "transformation", "fit_evidence", "exclusions"],
+      "required": ["record_type", "offer_context_version", "audience_situation", "current_problem", "desired_outcome", "failed_approaches", "fit_evidence", "exclusions", "later_stage_commercial_criteria"],
       "properties": {
         "record_type": { "const": "OfferContextV1" },
         "offer_context_version": { "type": "string", "minLength": 1 },
-        "audience": { "type": "string", "minLength": 1 },
-        "problem": { "type": "string", "minLength": 1 },
-        "transformation": { "type": "string", "minLength": 1 },
+        "audience_situation": { "type": "string", "minLength": 1 },
+        "current_problem": { "type": "string", "minLength": 1 },
+        "desired_outcome": { "type": "string", "minLength": 1 },
+        "failed_approaches": { "type": "array", "items": { "type": "string" } },
         "fit_evidence": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-        "exclusions": { "type": "array", "items": { "type": "string" } }
+        "exclusions": { "type": "array", "items": { "type": "string" } },
+        "later_stage_commercial_criteria": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "QueryRunV1": {
+      "type": "object",
+      "required": ["record_type", "query_run_id", "offer_context_version", "query_family", "sampled_results", "first_person_offer_matches", "rewrite_count", "total_results_inspected", "candidate_stages_observed", "target_count", "status", "stop_reason"],
+      "properties": {
+        "record_type": { "const": "QueryRunV1" },
+        "query_run_id": { "type": "string", "minLength": 1 },
+        "offer_context_version": { "type": "string", "minLength": 1 },
+        "query_family": { "enum": ["problem", "failed_attempt", "stakes", "desired_outcome", "workaround_or_objection"] },
+        "sampled_results": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "first_person_offer_matches": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "rewrite_count": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "total_results_inspected": { "type": "integer", "minimum": 0, "maximum": 50 },
+        "candidate_stages_observed": { "type": "array", "items": { "enum": ["reject", "research_only", "public_reply_ready", "dm_permission_ready", "call_ready", "offer_ready"] } },
+        "target_count": { "type": "integer", "minimum": 1 },
+        "status": { "enum": ["continue_search", "target_reached", "no_qualified_candidate"] },
+        "stop_reason": { "type": ["string", "null"] }
+      }
+    },
+    "VoiceContextV1": {
+      "type": "object",
+      "required": ["record_type", "voice_context_version", "approved_samples", "reusable_traits", "forbidden_imitation", "voice_confidence", "mode"],
+      "properties": {
+        "record_type": { "const": "VoiceContextV1" },
+        "voice_context_version": { "type": "string", "minLength": 1 },
+        "approved_samples": { "type": "array", "items": { "type": "string" }, "maxItems": 5 },
+        "reusable_traits": { "type": "array", "items": { "type": "string" } },
+        "forbidden_imitation": { "type": "array", "items": { "type": "string" } },
+        "voice_confidence": { "enum": ["low", "high"] },
+        "mode": { "enum": ["approved_samples", "plain_human_fallback"] }
       }
     },
     "QualificationPolicyV1": {
@@ -30,7 +63,7 @@
     },
     "CandidateEvaluationV1": {
       "type": "object",
-      "required": ["record_type", "candidate_key", "source_url", "query", "query_quality", "policy_version", "offer_context_version", "fit_evidence", "stage", "score", "reasons", "approval_state"],
+      "required": ["record_type", "candidate_key", "source_url", "query", "query_quality", "policy_version", "offer_context_version", "fit_evidence", "supporting_signals", "solution_awareness", "commercial_evidence", "language_bank_route", "stage", "score", "reasons", "approval_state"],
       "properties": {
         "record_type": { "const": "CandidateEvaluationV1" },
         "candidate_key": { "type": "string" },
@@ -50,15 +83,27 @@
         "offer_context_version": { "type": "string", "minLength": 1 },
         "fit_evidence": {
           "type": "object",
-          "required": ["audience", "problem", "transformation", "exclusions_clear", "rationale"],
+          "required": ["situation", "situation_evidence_source", "problem", "desired_outcome", "exclusions_clear", "rationale"],
           "properties": {
-            "audience": { "enum": ["match", "no_match", "unknown"] },
+            "situation": { "enum": ["match", "no_match", "unknown"] },
+            "situation_evidence_source": { "enum": ["authored_post_or_replies", "recent_content", "profile_supporting_only", "unknown"] },
             "problem": { "enum": ["match", "no_match", "unknown"] },
-            "transformation": { "enum": ["match", "no_match", "unknown"] },
+            "desired_outcome": { "enum": ["match", "no_match", "unknown"] },
             "exclusions_clear": { "type": "boolean" },
             "rationale": { "type": "string", "minLength": 1 }
           }
         },
+        "supporting_signals": { "type": "array", "items": { "enum": ["failed_attempt", "stakes", "asks_for_help"] } },
+        "solution_awareness": { "enum": ["unaware", "problem_aware", "solution_aware", "unknown"] },
+        "commercial_evidence": {
+          "type": "object",
+          "required": ["present", "rationale"],
+          "properties": {
+            "present": { "type": "boolean" },
+            "rationale": { "type": "string" }
+          }
+        },
+        "language_bank_route": { "enum": ["active_buyer_language_bank", "adjacent_off_offer_research", "none"] },
         "stage": { "enum": ["reject", "research_only", "public_reply_ready", "dm_permission_ready", "call_ready", "offer_ready"] },
         "score": { "type": "integer", "minimum": 0, "maximum": 100 },
         "reasons": { "type": "array", "items": { "type": "string" } },
@@ -67,25 +112,33 @@
     },
     "OutcomeEventV1": {
       "type": "object",
-      "required": ["record_type", "event_key", "candidate_key", "policy_version", "action_state", "qualified_progression", "proof_status"],
+      "required": ["record_type", "event_key", "candidate_key", "policy_version", "action_state", "staged_variant", "sent_variant", "owner_edit_dimensions", "message_policy_version", "candidate_policy_version", "qualified_progression", "progression_evidence", "observed_within_hours", "proof_status"],
       "properties": {
         "record_type": { "const": "OutcomeEventV1" },
         "event_key": { "type": "string" },
         "candidate_key": { "type": "string" },
         "policy_version": { "type": "string" },
-        "action_state": { "enum": ["draft_only", "staged_only", "sent_verified", "not_sent", "blocked"] },
+        "action_state": { "enum": ["draft_only", "staged_only", "sent_owner_confirmed", "sent_verified", "not_sent", "blocked"] },
+        "staged_variant": { "type": ["string", "null"] },
+        "sent_variant": { "type": ["string", "null"] },
+        "owner_edit_dimensions": { "type": "array", "items": { "enum": ["truth", "relevance", "mechanism", "action", "tradeoff", "voice"] } },
+        "message_policy_version": { "type": "string" },
+        "candidate_policy_version": { "type": "string" },
         "qualified_progression": { "type": ["boolean", "null"] },
+        "progression_evidence": { "type": "array", "items": { "enum": ["new_pain", "new_failed_attempt", "new_stakes", "new_desired_outcome", "permission", "resource_accepted", "call", "offer", "payment"] } },
+        "observed_within_hours": { "type": ["number", "null"], "minimum": 0 },
         "proof_status": { "type": "string" }
       }
     },
     "PolicyUpdateEventV1": {
       "type": "object",
-      "required": ["record_type", "change_key", "target", "result", "evidence_keys", "before_policy_version", "rollback_policy_version"],
+      "required": ["record_type", "change_key", "policy_family", "target", "result", "evidence_keys", "before_policy_version", "rollback_policy_version"],
       "properties": {
         "record_type": { "const": "PolicyUpdateEventV1" },
         "change_key": { "type": "string" },
+        "policy_family": { "enum": ["candidate_policy", "message_policy"] },
         "target": { "type": "string" },
-        "result": { "enum": ["no_change_insufficient_evidence", "proposed_change", "hold_proposed_change", "auto_apply_soft_change", "blocked_immutable_gate"] },
+        "result": { "enum": ["no_change_insufficient_evidence", "proposed_change", "hold_proposed_change", "auto_apply_soft_change", "immutable_gate_protected"] },
         "evidence_keys": { "type": "array", "items": { "type": "string" } },
         "before_policy_version": { "type": "string" },
         "after_policy_version": { "type": ["string", "null"] },

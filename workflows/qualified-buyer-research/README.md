@@ -8,30 +8,33 @@ This workflow searches the words a buyer would use, checks the entire post and p
 
 1. Confirm the intended account with `get_connection_defaults` and visible browser identity.
 2. Load only user-approved offer, audience, proof, voice, and suppression context.
-3. Create an `OfferContextV1` map for this user and run: audience served, problem solved, promised transformation, acceptable fit evidence, exclusions, and version. Do not reuse another user's niche assumptions.
-4. Turn the mapped problem, failed attempts, stakes, and desired outcomes into narrow search phrases. Prefer posts from the last 72 hours and reject posts older than seven days unless they are explicitly retained as language research only.
-5. Sample the first five results. Record intended-problem matches and first-person ownership matches. One owned, offer-mapped problem is enough to inspect; zero means rewrite the query instead of weakening qualification.
-6. Inspect each candidate's full post, visible replies, profile, and relevant recent content. Confirm the candidate authored the problem.
-7. Run hard gates before action eligibility or scoring. A high score never overrides seller-funnel, advice, stale, duplicate, suppression, profile-conflict, approval, permission, or proof rules. Having an offer is not itself a rejection.
-8. Record direct evidence for audience fit, problem fit, and transformation fit. Missing offer context stops the run; authentic pain with no direct offer mapping is `research_only`.
-9. Confirm that the public thread is safe and the proposed reply adds distinct value. A saturated or disputed thread may be `research_only` even when the person and problem are genuine.
-10. Classify the candidate as `reject`, `research_only`, `public_reply_ready`, `dm_permission_ready`, `call_ready`, or `offer_ready`.
-11. Draft one useful non-pitch reply or the exact next eligible message.
-12. With a verified logged-in browser, type the draft into the correct composer only when the user asked for staging. Stop before send and show the exact text, account, source, Offer Context Map version, fit evidence, destination, and action.
-13. Record the outcome later. A like or generic reply is not qualified progression.
-14. Return a versioned receipt, including an honest no-change result when learning evidence is incomplete.
+3. Create an `OfferContextV1` map for this user and run: observable audience situation, current problem, desired outcome, common failed approaches, acceptable fit evidence, exclusions, later-stage commercial criteria, and version. Do not reuse another user's niche assumptions.
+4. Load a `VoiceContextV1` from 3-5 approved samples. If fewer than three exist, use the plain-human fallback and mark voice confidence low.
+5. Search narrow phrases in this order: problem, failed attempt, stakes, desired outcome, workaround or objection. Prefer posts from the last 72 hours and reject posts older than seven days unless retained as language research only.
+6. Sample the first five results. One owned, offer-mapped problem is enough to inspect; zero means rewrite one element. Stop after one qualified candidate by default, 10 rewrites, or 50 inspected results.
+7. Inspect each candidate's full post, visible replies, profile, and relevant recent content. Confirm the candidate authored a concrete current problem.
+8. Run hard gates before action eligibility or scoring. A high score never overrides seller-funnel, advice, stale, duplicate, suppression, profile-conflict, approval, permission, or proof rules. Having an offer is not itself a rejection.
+9. Record direct evidence for situation fit, problem fit, desired-outcome fit, and at least one supporting signal: failed attempt, meaningful stakes, or genuine request for help. Solution awareness is not required.
+10. Route authentic off-offer pain to adjacent research, never the active Buyer Language Bank.
+11. Confirm that the public thread is safe and the proposed reply adds distinct value. A saturated or disputed thread may be `research_only` even when the person and problem are genuine.
+12. Classify the candidate as `reject`, `research_only`, `public_reply_ready`, `dm_permission_ready`, `call_ready`, or `offer_ready`. Scores rank public-ready candidates and control later stages; they do not create or veto public-reply eligibility.
+13. Draft through the adaptive router: clear context gets one useful mechanism, one action, and an honest tradeoff; a real evidence gap gets one diagnostic A-C-A question. The first public reply must contain no offer, link, DM ask, call ask, or paid ask.
+14. With a verified logged-in browser, type the draft into the correct composer only when the user asked for staging. Stop before send and show the exact text, account, source, Offer and Voice Context versions, evidence, destination, and action.
+15. Preserve staged and sent variants plus structured owner-edit dimensions. Message edits cannot mutate candidate policy.
+16. Record the outcome later. A like or generic reply is not qualified progression.
+17. Return a versioned receipt, including honest `no_qualified_candidate` and no-change results.
 
 ## Offer fit is user-specific
 
-The workflow is niche-agnostic, not context-free. Every run must use the current user's Offer Context Map. A garden designer, fitness coach, accountant, author, or software consultant can all qualify, but only when their authored problem maps directly to the audience, problem, and transformation of the user's actual offer.
+The workflow is niche-agnostic, not context-free. Every run must use the current user's Offer Context Map. A garden designer, fitness coach, accountant, author, or software consultant can qualify when their observable situation, authored problem, and desired outcome map directly to the user's offer. They do not need to know the user's mechanism yet.
 
 ## Learning rule
 
-Qualified progression within 72 hours is the primary signal. It requires new pain, attempt, stakes, fit, permission, resource acceptance, call, offer, or payment evidence.
+Qualified progression within 72 hours is the primary signal. It requires new pain, attempt, stakes, desired outcome, permission, resource acceptance, call, offer, or payment evidence.
 
 - Fewer than 10 completed comparable outcomes: `no_change_insufficient_evidence`.
-- 10 to 19 completed outcomes: propose a soft rule or weight change only.
-- 20 completed outcomes across two batches: auto-apply only when both batches improve qualified progression by at least 20 percentage points, false positives do not worsen, and hard-gate breaches remain zero.
+- 10 to 19 completed comparable outcomes: propose a soft rule or weight change only.
+- 20 completed comparable outcomes across two batches: auto-apply only when both batches improve qualified progression by at least 20 percentage points, false positives do not worsen, and hard-gate breaches remain zero.
 - Trust, consent, approval, account verification, and proof gates never self-modify.
 
 ## Public and private boundary
