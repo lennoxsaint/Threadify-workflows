@@ -11,7 +11,21 @@
   "tool_path": "logged-in-browser-fallback",
   "fallback_used": true,
   "source_status": "synthetic",
-  "policy_version": "0.1.0",
+  "policy_version": "0.2.0",
+  "offer_context_version": "offer-example-1",
+  "query_quality": {
+    "sample_size": 5,
+    "intended_problem_matches": 2,
+    "first_person_ownership_matches": 1,
+    "action": "continue_inspection"
+  },
+  "fit_evidence": {
+    "audience": "match",
+    "problem": "match",
+    "transformation": "match",
+    "exclusions_clear": true,
+    "rationale": "The candidate's authored problem and profile map to the example offer context."
+  },
   "candidate_stage": "public_reply_ready",
   "rejection_reasons": [],
   "composer_state": "exact_text_visible",

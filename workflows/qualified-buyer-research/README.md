@@ -8,14 +8,22 @@ This workflow searches the words a buyer would use, checks the entire post and p
 
 1. Confirm the intended account with `get_connection_defaults` and visible browser identity.
 2. Load only user-approved offer, audience, proof, voice, and suppression context.
-3. Turn current buyer problems into narrow search phrases. Prefer posts from the last 72 hours and reject posts older than seven days unless they are explicitly retained as language research only.
-4. Inspect each candidate's full post, visible replies, and profile.
-5. Run hard gates before the score. A high score never overrides seller, advice, stale, duplicate, suppression, profile-conflict, approval, permission, or proof rules.
-6. Classify the candidate as `reject`, `research_only`, `public_reply_ready`, `dm_permission_ready`, `call_ready`, or `offer_ready`.
-7. Draft one useful non-pitch reply or the exact next eligible message.
-8. With a verified logged-in browser, type the draft into the correct composer only when the user asked for staging. Stop before send and show the exact text, account, source, destination, and action.
-9. Record the outcome later. A like or generic reply is not qualified progression.
-10. Return a versioned receipt, including an honest no-change result when learning evidence is incomplete.
+3. Create an `OfferContextV1` map for this user and run: audience served, problem solved, promised transformation, acceptable fit evidence, exclusions, and version. Do not reuse another user's niche assumptions.
+4. Turn the mapped problem, failed attempts, stakes, and desired outcomes into narrow search phrases. Prefer posts from the last 72 hours and reject posts older than seven days unless they are explicitly retained as language research only.
+5. Sample the first five results. Record intended-problem matches and first-person ownership matches. One owned, offer-mapped problem is enough to inspect; zero means rewrite the query instead of weakening qualification.
+6. Inspect each candidate's full post, visible replies, profile, and relevant recent content. Confirm the candidate authored the problem.
+7. Run hard gates before action eligibility or scoring. A high score never overrides seller-funnel, advice, stale, duplicate, suppression, profile-conflict, approval, permission, or proof rules. Having an offer is not itself a rejection.
+8. Record direct evidence for audience fit, problem fit, and transformation fit. Missing offer context stops the run; authentic pain with no direct offer mapping is `research_only`.
+9. Confirm that the public thread is safe and the proposed reply adds distinct value. A saturated or disputed thread may be `research_only` even when the person and problem are genuine.
+10. Classify the candidate as `reject`, `research_only`, `public_reply_ready`, `dm_permission_ready`, `call_ready`, or `offer_ready`.
+11. Draft one useful non-pitch reply or the exact next eligible message.
+12. With a verified logged-in browser, type the draft into the correct composer only when the user asked for staging. Stop before send and show the exact text, account, source, Offer Context Map version, fit evidence, destination, and action.
+13. Record the outcome later. A like or generic reply is not qualified progression.
+14. Return a versioned receipt, including an honest no-change result when learning evidence is incomplete.
+
+## Offer fit is user-specific
+
+The workflow is niche-agnostic, not context-free. Every run must use the current user's Offer Context Map. A garden designer, fitness coach, accountant, author, or software consultant can all qualify, but only when their authored problem maps directly to the audience, problem, and transformation of the user's actual offer.
 
 ## Learning rule
 

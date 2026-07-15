@@ -20,6 +20,24 @@ export function scoreCandidate(scores = {}) {
   return Math.round(((positive + (6 - risk)) / 30) * 100);
 }
 
+export function evaluateQuerySample(results = []) {
+  const sample = Array.isArray(results) ? results.slice(0, 5) : [];
+  const intendedProblemMatches = sample.filter((result) => result.intended_problem_match).length;
+  const firstPersonOwnershipMatches = sample.filter(
+    (result) => result.intended_problem_match && result.first_person_owned,
+  ).length;
+
+  return {
+    sample_size: sample.length,
+    intended_problem_matches: intendedProblemMatches,
+    first_person_ownership_matches: firstPersonOwnershipMatches,
+    action:
+      sample.length === 5 && intendedProblemMatches >= 1 && firstPersonOwnershipMatches >= 1
+        ? 'continue_inspection'
+        : 'rewrite_query',
+  };
+}
+
 export function evaluateCandidate(candidate) {
   const reasons = [];
   const ageHours = Number(candidate.age_hours);
@@ -59,6 +77,43 @@ export function evaluateCandidate(candidate) {
       status: 'eligible_for_language_research_only',
       score,
       reasons: ['stale_research_only_override'],
+      approval_state: 'no_public_action',
+    };
+  }
+
+  const eligibilityReasons = [];
+  if (!candidate.offer_context_loaded || !candidate.offer_context_version) {
+    return {
+      stage: 'research_only',
+      status: 'missing_offer_context',
+      score,
+      reasons: ['missing_offer_context'],
+      approval_state: 'no_public_action',
+    };
+  }
+  if (!candidate.problem_authored_by_candidate) {
+    eligibilityReasons.push('problem_not_authored_by_candidate');
+  }
+  if (!candidate.full_context_inspected) {
+    eligibilityReasons.push('full_context_not_inspected');
+  }
+
+  const fitEvidence = candidate.fit_evidence ?? {};
+  if (fitEvidence.audience !== 'match') eligibilityReasons.push('audience_not_mapped_to_offer');
+  if (fitEvidence.problem !== 'match') eligibilityReasons.push('problem_not_mapped_to_offer');
+  if (fitEvidence.transformation !== 'match') {
+    eligibilityReasons.push('transformation_not_mapped_to_offer');
+  }
+  if (fitEvidence.exclusions_clear !== true) eligibilityReasons.push('offer_exclusion_not_cleared');
+  if (candidate.safe_public_context !== true) eligibilityReasons.push('unsafe_or_disputed_public_context');
+  if (candidate.distinct_public_value !== true) eligibilityReasons.push('no_distinct_public_value');
+
+  if (eligibilityReasons.length > 0) {
+    return {
+      stage: 'research_only',
+      status: 'not_action_eligible',
+      score,
+      reasons: eligibilityReasons,
       approval_state: 'no_public_action',
     };
   }

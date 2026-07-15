@@ -3,6 +3,7 @@ import path from 'node:path';
 import {
   evaluateCandidate,
   evaluateLearningWindow,
+  evaluateQuerySample,
 } from '../../workflows/qualified-buyer-research/reference-policy.mjs';
 
 const root = path.resolve(new URL('../..', import.meta.url).pathname);
@@ -159,6 +160,11 @@ function validateReceipt(file) {
   for (const field of requiredReceiptFields) {
     assert(Object.hasOwn(receipt, field), `${rel(file)} missing receipt field ${field}`);
   }
+  if (receipt.workflow_id === 'qualified-buyer-research') {
+    for (const field of ['offer_context_version', 'query_quality', 'fit_evidence']) {
+      assert(Object.hasOwn(receipt, field), `${rel(file)} missing buyer-research receipt field ${field}`);
+    }
+  }
 }
 
 function validateReadyOutput(file) {
@@ -204,6 +210,13 @@ function validateQualifiedBuyerResearchFixtures() {
     'duplicate is rejected',
     'suppressed person is rejected',
     'wrong account blocks composer work',
+    'genuine pain outside the offer is research only',
+    'correct audience with out of scope problem is research only',
+    'profile evidence maps audience problem and transformation',
+    'missing offer context stops public action',
+    'seller who matches the offer can be public reply ready',
+    'anonymous quoted pain is language research only',
+    'saturated disputed thread is research only',
   ];
   const candidateNames = new Set((fixture.candidate_scenarios ?? []).map((scenario) => scenario.name));
   for (const name of requiredCandidateNames) {
@@ -219,6 +232,24 @@ function validateQualifiedBuyerResearchFixtures() {
     if (scenario.expected_status) {
       assert(actual.status === scenario.expected_status, `${scenario.name}: expected status ${scenario.expected_status}, got ${actual.status}`);
     }
+  }
+
+  const requiredQueryNames = [
+    'irrelevant token matches rewrite the query',
+    'mapped buyer language continues to inspection',
+    'one precise owned match is enough to inspect',
+  ];
+  const queryNames = new Set((fixture.query_scenarios ?? []).map((scenario) => scenario.name));
+  for (const name of requiredQueryNames) {
+    assert(queryNames.has(name), `${rel(file)} missing query scenario: ${name}`);
+  }
+
+  for (const scenario of fixture.query_scenarios ?? []) {
+    const actual = evaluateQuerySample(scenario.input);
+    assert(
+      actual.action === scenario.expected_action,
+      `${scenario.name}: expected ${scenario.expected_action}, got ${actual.action}`,
+    );
   }
 
   const requiredLearningNames = [
@@ -238,6 +269,17 @@ function validateQualifiedBuyerResearchFixtures() {
   }
 }
 
+function validateQualifiedBuyerResearchSchema() {
+  const file = path.join(root, 'schemas', 'qualified-buyer-research.v1.json');
+  const schema = readJson(file);
+  if (!schema) return;
+  assert(Boolean(schema.$defs?.OfferContextV1), `${rel(file)} missing OfferContextV1`);
+  const required = new Set(schema.$defs?.CandidateEvaluationV1?.required ?? []);
+  for (const field of ['query_quality', 'offer_context_version', 'fit_evidence']) {
+    assert(required.has(field), `${rel(file)} CandidateEvaluationV1 must require ${field}`);
+  }
+}
+
 const files = walk(root);
 const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
 assert(manifestFiles.length === 8, `expected 8 workflow manifests, found ${manifestFiles.length}`);
@@ -251,6 +293,7 @@ for (const file of files) {
 
 validateReadmeClaims();
 validateQualifiedBuyerResearchFixtures();
+validateQualifiedBuyerResearchSchema();
 
 if (failures.length) {
   console.error('Threadify Workflows validation failed:');

@@ -3,6 +3,19 @@
   "$id": "https://threadify.app/schemas/qualified-buyer-research.v1.json",
   "title": "Qualified Buyer Research Records",
   "$defs": {
+    "OfferContextV1": {
+      "type": "object",
+      "required": ["record_type", "offer_context_version", "audience", "problem", "transformation", "fit_evidence", "exclusions"],
+      "properties": {
+        "record_type": { "const": "OfferContextV1" },
+        "offer_context_version": { "type": "string", "minLength": 1 },
+        "audience": { "type": "string", "minLength": 1 },
+        "problem": { "type": "string", "minLength": 1 },
+        "transformation": { "type": "string", "minLength": 1 },
+        "fit_evidence": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "exclusions": { "type": "array", "items": { "type": "string" } }
+      }
+    },
     "QualificationPolicyV1": {
       "type": "object",
       "required": ["record_type", "policy_version", "immutable_hard_gates", "soft_weights", "stage_thresholds", "learning_policy"],
@@ -17,13 +30,35 @@
     },
     "CandidateEvaluationV1": {
       "type": "object",
-      "required": ["record_type", "candidate_key", "source_url", "query", "policy_version", "stage", "score", "reasons", "approval_state"],
+      "required": ["record_type", "candidate_key", "source_url", "query", "query_quality", "policy_version", "offer_context_version", "fit_evidence", "stage", "score", "reasons", "approval_state"],
       "properties": {
         "record_type": { "const": "CandidateEvaluationV1" },
         "candidate_key": { "type": "string" },
         "source_url": { "type": "string" },
         "query": { "type": "string" },
+        "query_quality": {
+          "type": "object",
+          "required": ["sample_size", "intended_problem_matches", "first_person_ownership_matches", "action"],
+          "properties": {
+            "sample_size": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "intended_problem_matches": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "first_person_ownership_matches": { "type": "integer", "minimum": 0, "maximum": 5 },
+            "action": { "enum": ["continue_inspection", "rewrite_query"] }
+          }
+        },
         "policy_version": { "type": "string" },
+        "offer_context_version": { "type": "string", "minLength": 1 },
+        "fit_evidence": {
+          "type": "object",
+          "required": ["audience", "problem", "transformation", "exclusions_clear", "rationale"],
+          "properties": {
+            "audience": { "enum": ["match", "no_match", "unknown"] },
+            "problem": { "enum": ["match", "no_match", "unknown"] },
+            "transformation": { "enum": ["match", "no_match", "unknown"] },
+            "exclusions_clear": { "type": "boolean" },
+            "rationale": { "type": "string", "minLength": 1 }
+          }
+        },
         "stage": { "enum": ["reject", "research_only", "public_reply_ready", "dm_permission_ready", "call_ready", "offer_ready"] },
         "score": { "type": "integer", "minimum": 0, "maximum": 100 },
         "reasons": { "type": "array", "items": { "type": "string" } },

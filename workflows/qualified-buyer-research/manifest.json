@@ -1,8 +1,8 @@
 {
   "workflow_id": "qualified-buyer-research",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Qualified Buyer Research",
-  "summary": "Search buyer-language phrases, reject stale or misleading candidates, classify the next honest stage, stage exact copy in the correct composer, stop before send, and learn only from completed qualified-progression outcomes.",
+  "summary": "Map the user's actual offer, search buyer-language phrases, measure query quality, reject stale, misleading, or off-offer candidates, stage exact copy in the correct composer, stop before send, and learn only from completed qualified-progression outcomes.",
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",
@@ -13,7 +13,9 @@
   ],
   "free_capabilities": [
     "approved buyer-context intake",
+    "versioned offer-context mapping",
     "buyer-language query planning",
+    "five-result query-quality check",
     "browser or manual candidate inspection",
     "hard-gate rejection",
     "stage classification",
@@ -34,6 +36,9 @@
     "must_show": [
       "account handle",
       "source URL",
+      "offer context version",
+      "audience, problem, and transformation fit evidence",
+      "query-quality result",
       "candidate evaluation",
       "rejection or stage reasons",
       "exact staged text",
@@ -46,6 +51,7 @@
     "artifact_schema": "qualified-buyer-research.v1",
     "instructions": [
       "If live search is unavailable, ask for recent post URLs or use synthetic or approved public examples.",
+      "Build an Offer Context Map for the current user; do not reuse niche assumptions from another user.",
       "Inspect the full post, visible replies, and profile before classifying a candidate.",
       "Return rejection reasons, stage, exact proposed reply, and the destination composer without claiming that anything was typed or sent.",
       "If the intended account cannot be verified, stop with blocked_wrong_account.",
@@ -60,6 +66,9 @@
       "account handle",
       "source status",
       "policy version",
+      "offer context version",
+      "query quality",
+      "audience, problem, and transformation fit evidence",
       "candidate stage",
       "rejection reasons",
       "approved text",
