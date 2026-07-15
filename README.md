@@ -17,6 +17,7 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
 - Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
 - Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
+- Qualified Buyer Research workflow for finding current problem-language posts, rejecting seller/advice false positives, staging one useful reply, and learning only from completed qualified-progression outcomes.
 - YouTube Edit workflow that drives the Eddy engine (the `engines/eddy` submodule) to turn raw footage into a finished edit, then optionally prepares and schedules Threadify promotional posts about the video after approval.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
 

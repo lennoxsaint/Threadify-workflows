@@ -1,0 +1,77 @@
+{
+  "candidate_scenarios": [
+    {
+      "name": "stale post is rejected",
+      "input": { "account_verified": true, "age_hours": 240, "first_person_problem": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 1, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "stale_over_seven_days"
+    },
+    {
+      "name": "seller funnel is rejected",
+      "input": { "account_verified": true, "age_hours": 4, "first_person_problem": true, "intent": "seller_funnel", "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 2, "permission_readiness": 1, "risk": 3 } },
+      "expected_stage": "reject",
+      "expected_reason": "seller_funnel"
+    },
+    {
+      "name": "advice post is research rejection",
+      "input": { "account_verified": true, "age_hours": 8, "intent": "teaching_or_advice", "asks_for_help": false, "useful_reply_without_pitch": true, "scores": { "pain": 2, "intent": 1, "fit": 3, "warmth": 1, "permission_readiness": 1, "risk": 3 } },
+      "expected_stage": "reject",
+      "expected_reason": "teaching_not_asking"
+    },
+    {
+      "name": "current first person pain is public reply ready",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "failed_attempt": true, "stakes": true, "asks_for_help": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 1, "risk": 1 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "like only is not DM permission",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "useful_reply_without_pitch": true, "like_only": true, "dm_permission_explicit": false, "scores": { "pain": 3, "intent": 2, "fit": 3, "warmth": 1, "permission_readiness": 1, "risk": 2 } },
+      "expected_stage": "research_only"
+    },
+    {
+      "name": "explicit DM permission is DM ready",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "dm_permission_explicit": true, "scores": { "pain": 4, "intent": 4, "fit": 4, "warmth": 3, "permission_readiness": 5, "risk": 1 } },
+      "expected_stage": "dm_permission_ready"
+    },
+    {
+      "name": "duplicate is rejected",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "duplicate": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "duplicate_candidate"
+    },
+    {
+      "name": "suppressed person is rejected",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "suppressed": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "suppressed_candidate"
+    },
+    {
+      "name": "wrong account blocks composer work",
+      "input": { "account_verified": false, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_status": "blocked_wrong_account"
+    }
+  ],
+  "learning_scenarios": [
+    {
+      "name": "pending outcomes do not change policy",
+      "input": { "target": "soft_weight.intent", "completed_outcomes": 0, "batches": [] },
+      "expected_result": "no_change_insufficient_evidence"
+    },
+    {
+      "name": "ten outcomes create proposal only",
+      "input": { "target": "soft_weight.intent", "completed_outcomes": 10, "batches": [{ "completed_outcomes": 10 }] },
+      "expected_result": "proposed_change"
+    },
+    {
+      "name": "two proven batches promote soft change",
+      "input": { "target": "soft_weight.intent", "completed_outcomes": 20, "batches": [{ "completed_outcomes": 10, "baseline_progression_rate": 0.2, "candidate_progression_rate": 0.5, "false_positive_rate_before": 0.2, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }, { "completed_outcomes": 10, "baseline_progression_rate": 0.3, "candidate_progression_rate": 0.6, "false_positive_rate_before": 0.1, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }] },
+      "expected_result": "auto_apply_soft_change"
+    },
+    {
+      "name": "hard gate never self modifies",
+      "input": { "target": "hard_gate.permission_before_dm", "completed_outcomes": 100, "batches": [] },
+      "expected_result": "blocked_immutable_gate"
+    }
+  ]
+}

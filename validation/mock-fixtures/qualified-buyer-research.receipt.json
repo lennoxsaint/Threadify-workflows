@@ -1,0 +1,20 @@
+{
+  "workflow_id": "qualified-buyer-research",
+  "adapter": "codex",
+  "account_handle": "@example_creator",
+  "action": "composer_staged_no_send",
+  "approved_text": "That six-month build sounds brutal. What did the first five customer conversations tell you?",
+  "approved_text_sha256": "c1ba2aa2ed6a29faea5d39d8d04c30088d9cf208d4fbaaaadc7fb5c4245dc1d7",
+  "status": "staged_only",
+  "timestamp": "2026-01-15T12:00:00Z",
+  "timezone": "UTC",
+  "tool_path": "logged-in-browser-fallback",
+  "fallback_used": true,
+  "source_status": "synthetic",
+  "policy_version": "0.1.0",
+  "candidate_stage": "public_reply_ready",
+  "rejection_reasons": [],
+  "composer_state": "exact_text_visible",
+  "send_state": "not_sent",
+  "learning_result": "no_change_insufficient_evidence"
+}

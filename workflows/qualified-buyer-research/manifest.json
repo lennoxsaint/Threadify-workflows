@@ -1,0 +1,74 @@
+{
+  "workflow_id": "qualified-buyer-research",
+  "version": "0.1.0",
+  "title": "Qualified Buyer Research",
+  "summary": "Search buyer-language phrases, reject stale or misleading candidates, classify the next honest stage, stage exact copy in the correct composer, stop before send, and learn only from completed qualified-progression outcomes.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "query_brain",
+    "greatest_hits",
+    "record_feedback",
+    "audit_log"
+  ],
+  "free_capabilities": [
+    "approved buyer-context intake",
+    "buyer-language query planning",
+    "browser or manual candidate inspection",
+    "hard-gate rejection",
+    "stage classification",
+    "draft-only composer staging",
+    "explicit approval stop",
+    "outcome and learning receipt capture"
+  ],
+  "paid_capability_stubs": [
+    "hosted recurring research",
+    "native cross-platform inbox staging",
+    "advanced response analytics",
+    "managed policy optimization",
+    "premium workflow variants"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account handle",
+      "source URL",
+      "candidate evaluation",
+      "rejection or stage reasons",
+      "exact staged text",
+      "destination composer",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "qualified-buyer-research-review-packet",
+    "artifact_schema": "qualified-buyer-research.v1",
+    "instructions": [
+      "If live search is unavailable, ask for recent post URLs or use synthetic or approved public examples.",
+      "Inspect the full post, visible replies, and profile before classifying a candidate.",
+      "Return rejection reasons, stage, exact proposed reply, and the destination composer without claiming that anything was typed or sent.",
+      "If the intended account cannot be verified, stop with blocked_wrong_account.",
+      "Keep private messages, account identifiers, member data, private metrics, and private proof paths out of public artifacts."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "workflow ID",
+      "adapter",
+      "account handle",
+      "source status",
+      "policy version",
+      "candidate stage",
+      "rejection reasons",
+      "approved text",
+      "composer state",
+      "send state",
+      "learning result",
+      "timestamp",
+      "tool path",
+      "fallback state"
+    ]
+  }
+}

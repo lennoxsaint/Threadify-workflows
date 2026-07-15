@@ -1,5 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {
+  evaluateCandidate,
+  evaluateLearningWindow,
+} from '../../workflows/qualified-buyer-research/reference-policy.mjs';
 
 const root = path.resolve(new URL('../..', import.meta.url).pathname);
 
@@ -180,9 +184,63 @@ function validateReadmeClaims() {
   assert(!/guaranteed/i.test(readme), 'README must not use guarantee language');
 }
 
+function validateQualifiedBuyerResearchFixtures() {
+  const file = path.join(
+    root,
+    'validation',
+    'mock-fixtures',
+    'qualified-buyer-research.scenarios.json',
+  );
+  const fixture = readJson(file);
+  if (!fixture) return;
+
+  const requiredCandidateNames = [
+    'stale post is rejected',
+    'seller funnel is rejected',
+    'advice post is research rejection',
+    'current first person pain is public reply ready',
+    'like only is not DM permission',
+    'explicit DM permission is DM ready',
+    'duplicate is rejected',
+    'suppressed person is rejected',
+    'wrong account blocks composer work',
+  ];
+  const candidateNames = new Set((fixture.candidate_scenarios ?? []).map((scenario) => scenario.name));
+  for (const name of requiredCandidateNames) {
+    assert(candidateNames.has(name), `${rel(file)} missing candidate scenario: ${name}`);
+  }
+
+  for (const scenario of fixture.candidate_scenarios ?? []) {
+    const actual = evaluateCandidate(scenario.input);
+    assert(actual.stage === scenario.expected_stage, `${scenario.name}: expected stage ${scenario.expected_stage}, got ${actual.stage}`);
+    if (scenario.expected_reason) {
+      assert(actual.reasons.includes(scenario.expected_reason), `${scenario.name}: missing reason ${scenario.expected_reason}`);
+    }
+    if (scenario.expected_status) {
+      assert(actual.status === scenario.expected_status, `${scenario.name}: expected status ${scenario.expected_status}, got ${actual.status}`);
+    }
+  }
+
+  const requiredLearningNames = [
+    'pending outcomes do not change policy',
+    'ten outcomes create proposal only',
+    'two proven batches promote soft change',
+    'hard gate never self modifies',
+  ];
+  const learningNames = new Set((fixture.learning_scenarios ?? []).map((scenario) => scenario.name));
+  for (const name of requiredLearningNames) {
+    assert(learningNames.has(name), `${rel(file)} missing learning scenario: ${name}`);
+  }
+
+  for (const scenario of fixture.learning_scenarios ?? []) {
+    const actual = evaluateLearningWindow(scenario.input);
+    assert(actual.result === scenario.expected_result, `${scenario.name}: expected ${scenario.expected_result}, got ${actual.result}`);
+  }
+}
+
 const files = walk(root);
 const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
-assert(manifestFiles.length === 7, `expected 7 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length === 8, `expected 8 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
 for (const file of files) {
@@ -192,6 +250,7 @@ for (const file of files) {
 }
 
 validateReadmeClaims();
+validateQualifiedBuyerResearchFixtures();
 
 if (failures.length) {
   console.error('Threadify Workflows validation failed:');

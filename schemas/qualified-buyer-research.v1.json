@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/qualified-buyer-research.v1.json",
+  "title": "Qualified Buyer Research Records",
+  "$defs": {
+    "QualificationPolicyV1": {
+      "type": "object",
+      "required": ["record_type", "policy_version", "immutable_hard_gates", "soft_weights", "stage_thresholds", "learning_policy"],
+      "properties": {
+        "record_type": { "const": "QualificationPolicyV1" },
+        "policy_version": { "type": "string" },
+        "immutable_hard_gates": { "type": "array", "items": { "type": "string" }, "minItems": 5 },
+        "soft_weights": { "type": "object" },
+        "stage_thresholds": { "type": "object" },
+        "learning_policy": { "type": "object" }
+      }
+    },
+    "CandidateEvaluationV1": {
+      "type": "object",
+      "required": ["record_type", "candidate_key", "source_url", "query", "policy_version", "stage", "score", "reasons", "approval_state"],
+      "properties": {
+        "record_type": { "const": "CandidateEvaluationV1" },
+        "candidate_key": { "type": "string" },
+        "source_url": { "type": "string" },
+        "query": { "type": "string" },
+        "policy_version": { "type": "string" },
+        "stage": { "enum": ["reject", "research_only", "public_reply_ready", "dm_permission_ready", "call_ready", "offer_ready"] },
+        "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "approval_state": { "type": "string" }
+      }
+    },
+    "OutcomeEventV1": {
+      "type": "object",
+      "required": ["record_type", "event_key", "candidate_key", "policy_version", "action_state", "qualified_progression", "proof_status"],
+      "properties": {
+        "record_type": { "const": "OutcomeEventV1" },
+        "event_key": { "type": "string" },
+        "candidate_key": { "type": "string" },
+        "policy_version": { "type": "string" },
+        "action_state": { "enum": ["draft_only", "staged_only", "sent_verified", "not_sent", "blocked"] },
+        "qualified_progression": { "type": ["boolean", "null"] },
+        "proof_status": { "type": "string" }
+      }
+    },
+    "PolicyUpdateEventV1": {
+      "type": "object",
+      "required": ["record_type", "change_key", "target", "result", "evidence_keys", "before_policy_version", "rollback_policy_version"],
+      "properties": {
+        "record_type": { "const": "PolicyUpdateEventV1" },
+        "change_key": { "type": "string" },
+        "target": { "type": "string" },
+        "result": { "enum": ["no_change_insufficient_evidence", "proposed_change", "hold_proposed_change", "auto_apply_soft_change", "blocked_immutable_gate"] },
+        "evidence_keys": { "type": "array", "items": { "type": "string" } },
+        "before_policy_version": { "type": "string" },
+        "after_policy_version": { "type": ["string", "null"] },
+        "rollback_policy_version": { "type": "string" }
+      }
+    }
+  }
+}
