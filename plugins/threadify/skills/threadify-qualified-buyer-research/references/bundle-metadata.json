@@ -5,7 +5,7 @@
     {
       "source": "workflows/qualified-buyer-research/manifest.json",
       "target": "workflow-manifest.json",
-      "sha256": "ffac9a214cf0830374316b6d70fead4fcd6725f0d87f17b5bd236d97ed39ad25"
+      "sha256": "88f55380ca51b8ff2e2086ca02063aef58b3a029ad1d4450daa5494db20ad886"
     },
     {
       "source": "workflows/qualified-buyer-research/README.md",
@@ -50,7 +50,7 @@
     {
       "source": "release/release-intent.json",
       "target": "release-metadata.json",
-      "sha256": "9e175d4865248889ffb74e8bbc4f36156a60e71a4a86c1cfad432e0c96f8a9a7"
+      "sha256": "07d08b57cfc4216512eb617ecc8911b44945c774aa298b0f4076b5a98d5f47b0"
     },
     {
       "source": "scripts/qualified-buyer-update-on-use.mjs",

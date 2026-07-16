@@ -1,5 +1,11 @@
 # Threadify Workflows stable releases
 
+## 0.4.1
+
+- Prevents duplicate discovery by excluding the universal `~/.agents` target from native `--targets all` installations.
+- Keeps `~/.agents/skills` available as an explicit target and as the fallback when no native client is detected.
+- Reconciles and removes only stale Threadify-managed targets when the selected client set changes.
+
 ## 0.4.0
 
 - Makes Qualified Buyer Research self-contained for standalone agent installation.

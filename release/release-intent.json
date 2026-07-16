@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.4.0",
+  "release_version": "0.4.1",
   "skill_version": "0.4.0",
-  "plugin_version": "0.4.0",
+  "plugin_version": "0.4.1",
   "rules_version": "0.4.0",
   "change_class": "installer",
   "release": true,
-  "summary": "Self-contained Qualified Buyer Research skill with controlled stable updates and cross-agent installation."
+  "summary": "Prevent duplicate native and universal skill registration while keeping the universal Agent Skills path explicitly supported."
 }
