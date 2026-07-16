@@ -11,7 +11,7 @@
     "bundle:build": "node scripts/build-qbr-bundle.mjs",
     "bundle:check": "node scripts/build-qbr-bundle.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
-    "test:installer": "node --test validation/installer-tests/*.test.mjs",
+    "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/proposal.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test": "npm run validate && npm run test:installer"
   },

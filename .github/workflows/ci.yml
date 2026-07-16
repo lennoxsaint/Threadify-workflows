@@ -42,4 +42,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: node --test validation/installer-tests/*.test.mjs
+      - run: npm run test:installer
