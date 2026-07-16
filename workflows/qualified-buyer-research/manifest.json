@@ -1,6 +1,6 @@
 {
   "workflow_id": "qualified-buyer-research",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "title": "Qualified Buyer Research",
   "summary": "Map the user's offer and voice, search persistently within a hard cap, qualify situation and outcome fit, stage one offer-free reply, stop before send, and learn separately from candidate and message outcomes.",
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],

@@ -98,7 +98,7 @@ function sandbox() {
   };
 }
 
-test('fresh install exposes exactly one skill in every supported client and a complete Codex plugin', async (t) => {
+test('fresh install exposes exactly one native skill in every supported client and a complete Codex plugin', async (t) => {
   const box = sandbox();
   t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
   const release = fixtureRelease(box.directory, { version: '0.4.0' });
@@ -112,13 +112,59 @@ test('fresh install exposes exactly one skill in every supported client and a co
     sourceManifest: release.manifestFile,
   });
   assert.equal(receipt.status, 'installed');
-  for (const client of ['codex', 'claude', 'cursor', 'gemini', 'openclaw', 'hermes', 'agents']) {
-    const skill = path.join(box.home, `.${client === 'agents' ? 'agents' : client}`, 'skills', 'threadify-qualified-buyer-research', 'SKILL.md');
+  for (const client of ['codex', 'claude', 'cursor', 'gemini', 'openclaw', 'hermes']) {
+    const skill = path.join(box.home, `.${client}`, 'skills', 'threadify-qualified-buyer-research', 'SKILL.md');
     assert.equal(fs.existsSync(skill), true, `${client} skill missing`);
   }
+  assert.equal(fs.existsSync(path.join(box.home, '.agents', 'skills', 'threadify-qualified-buyer-research')), false);
   assert.equal(fs.existsSync(path.join(box.home, '.codex', 'plugins', 'threadify-workflows', '.codex-plugin', 'plugin.json')), true);
   assert.equal(fs.existsSync(path.join(box.home, 'Library', 'LaunchAgents', 'com.threadify.workflows.update.plist')), true);
   assert.equal(status({ root: box.root, env: box.env }).status, 'installed');
+});
+
+test('universal Agent Skills path remains explicitly supported', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.4.1' });
+  const receipt = await install({
+    home: box.home,
+    root: box.root,
+    env: box.env,
+    targets: 'agents',
+    autoUpdate: false,
+    sourceBundle: release.bundleFile,
+    sourceManifest: release.manifestFile,
+  });
+  assert.equal(receipt.status, 'installed');
+  assert.equal(fs.existsSync(path.join(box.home, '.agents', 'skills', 'threadify-qualified-buyer-research', 'SKILL.md')), true);
+});
+
+test('rerunning native all removes a prior managed universal duplicate', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.4.1' });
+  await install({
+    home: box.home,
+    root: box.root,
+    env: box.env,
+    targets: 'claude,agents',
+    autoUpdate: false,
+    sourceBundle: release.bundleFile,
+    sourceManifest: release.manifestFile,
+  });
+  const universal = path.join(box.home, '.agents', 'skills', 'threadify-qualified-buyer-research');
+  assert.equal(fs.existsSync(universal), true);
+  const receipt = await install({
+    home: box.home,
+    root: box.root,
+    env: box.env,
+    targets: 'all',
+    autoUpdate: false,
+    sourceBundle: release.bundleFile,
+    sourceManifest: release.manifestFile,
+  });
+  assert.equal(fs.existsSync(universal), false);
+  assert.equal(receipt.removed_stale_targets.includes(universal), true);
 });
 
 test('frozen beta migration preserves local Offer Context and creates no duplicate target', async (t) => {
