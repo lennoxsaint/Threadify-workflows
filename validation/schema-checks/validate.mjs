@@ -349,8 +349,45 @@ function validateQualifiedBuyerResearchSchema() {
   assert(updateRequired.has('policy_family'), `${rel(file)} PolicyUpdateEventV1 must require policy_family`);
 }
 
+function validateDurableRuleContracts() {
+  const rulesFile = path.join(root, 'public-rules', 'qualified-buyer-research.v1.json');
+  const ruleset = readJson(rulesFile);
+  if (!ruleset) return;
+  assert(ruleset.record_type === 'PublicDurableRulesetV1', `${rel(rulesFile)} has wrong record type`);
+  assert(/^\d+\.\d+\.\d+$/.test(ruleset.rules_version ?? ''), `${rel(rulesFile)} has invalid rules version`);
+  assert(Array.isArray(ruleset.rules) && ruleset.rules.length >= 10, `${rel(rulesFile)} must contain durable rules`);
+  const ids = new Set();
+  for (const rule of ruleset.rules ?? []) {
+    assert(rule.record_type === 'DurableRuleV1', `${rel(rulesFile)} contains a non-DurableRuleV1 record`);
+    assert(['candidate', 'message'].includes(rule.scope), `${rel(rulesFile)} contains invalid scope ${rule.scope}`);
+    assert(rule.rule_id?.startsWith(`${rule.scope}.`), `${rel(rulesFile)} rule scope mismatch ${rule.rule_id}`);
+    assert(!ids.has(rule.rule_id), `${rel(rulesFile)} duplicates ${rule.rule_id}`);
+    ids.add(rule.rule_id);
+    assert(typeof rule.hard_gate === 'boolean', `${rel(rulesFile)} ${rule.rule_id} missing hard_gate`);
+  }
+  for (const schemaName of [
+    'durable-rule.v1.json',
+    'public-rule-proposal.v1.json',
+    'stable-release-manifest.v1.json',
+    'update-receipt.v1.json',
+  ]) {
+    const schemaFile = path.join(root, 'schemas', schemaName);
+    const schema = readJson(schemaFile);
+    assert(Boolean(schema?.required?.length), `${rel(schemaFile)} must declare required fields`);
+  }
+  const releaseIntentFile = path.join(root, 'release', 'release-intent.json');
+  const releaseIntent = readJson(releaseIntentFile);
+  assert(releaseIntent?.release === true, `${rel(releaseIntentFile)} must explicitly opt into stable release`);
+  assert(releaseIntent?.rules_version === ruleset.rules_version, `${rel(releaseIntentFile)} rules version drift`);
+  const plugin = readJson(path.join(root, '.codex-plugin', 'plugin.json'));
+  assert(plugin?.version === releaseIntent?.plugin_version, 'Codex plugin version must match release intent');
+}
+
 const files = walk(root);
-const manifestFiles = files.filter((file) => file.endsWith(path.join('manifest.json')));
+const manifestFiles = files.filter(
+  (file) => file.startsWith(path.join(root, 'workflows') + path.sep)
+    && file.endsWith(path.join('manifest.json')),
+);
 assert(manifestFiles.length === 8, `expected 8 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
@@ -363,6 +400,7 @@ for (const file of files) {
 validateReadmeClaims();
 validateQualifiedBuyerResearchFixtures();
 validateQualifiedBuyerResearchSchema();
+validateDurableRuleContracts();
 
 if (failures.length) {
   console.error('Threadify Workflows validation failed:');

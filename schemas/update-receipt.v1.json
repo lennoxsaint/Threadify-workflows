@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/update-receipt.v1.json",
+  "title": "UpdateReceiptV1",
+  "type": "object",
+  "required": ["record_type", "status", "checked_at", "previous_versions", "new_versions", "installed_targets", "verified_hashes", "fallback", "rollback_state"],
+  "properties": {
+    "record_type": {"const": "UpdateReceiptV1"},
+    "status": {"enum": ["installed", "up_to_date", "rules_reloaded", "updated_restart_required", "update_failed_using_cached_version", "rolled_back", "uninstalled"]},
+    "checked_at": {"type": "string", "format": "date-time"},
+    "previous_versions": {"type": ["object", "null"]},
+    "new_versions": {"type": ["object", "null"]},
+    "installed_targets": {"type": "array", "items": {"type": "string"}},
+    "verified_hashes": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}},
+    "fallback": {"type": ["string", "null"]},
+    "rollback_state": {"type": "object"}
+  },
+  "additionalProperties": true
+}
