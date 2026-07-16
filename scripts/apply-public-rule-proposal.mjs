@@ -2,8 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(new URL('..', import.meta.url).pathname);
+const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const proposalFile = process.argv[2];
 if (!proposalFile) throw new Error('usage: node scripts/apply-public-rule-proposal.mjs proposal.json');
 const proposal = JSON.parse(fs.readFileSync(path.resolve(proposalFile), 'utf8'));

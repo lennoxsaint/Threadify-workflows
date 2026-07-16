@@ -4,8 +4,9 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const sourceRoot = path.resolve(new URL('../..', import.meta.url).pathname);
+const sourceRoot = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 function checkout(t) {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'threadify-proposal-'));

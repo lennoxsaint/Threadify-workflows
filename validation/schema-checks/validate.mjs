@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import {
   calibrateVoice,
   classifyOwnerEdits,
@@ -11,7 +12,7 @@ import {
   evaluateReplyDraft,
 } from '../../workflows/qualified-buyer-research/reference-policy.mjs';
 
-const root = path.resolve(new URL('../..', import.meta.url).pathname);
+const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 const allowedTools = new Set([
   'get_connection_defaults',
