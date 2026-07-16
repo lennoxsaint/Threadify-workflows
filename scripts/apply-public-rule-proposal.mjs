@@ -89,9 +89,11 @@ fs.writeFileSync(
 );
 
 const changelogFile = path.join(root, 'release', 'CHANGELOG.md');
-const priorChangelog = fs.readFileSync(changelogFile, 'utf8');
+const priorChangelog = fs.readFileSync(changelogFile, 'utf8').replace(/\r\n/g, '\n');
 const entry = `## ${releaseVersion}\n\n- ${proposal.change.summary ?? proposedRule.instruction}\n- Evidence: ${proposal.evidence_class}; promotion state: ${proposal.promotion_state}.\n- Synthetic fixture: ${proposal.proposal_id}.\n\n`;
-fs.writeFileSync(changelogFile, priorChangelog.replace('# Threadify Workflows stable releases\n\n', `# Threadify Workflows stable releases\n\n${entry}`));
+const heading = '# Threadify Workflows stable releases\n\n';
+if (!priorChangelog.startsWith(heading)) throw new Error('stable_changelog_heading_missing');
+fs.writeFileSync(changelogFile, `${heading}${entry}${priorChangelog.slice(heading.length)}`);
 
 const render = spawnSync(process.execPath, [path.join(root, 'scripts', 'build-qbr-bundle.mjs')], {
   cwd: root,
