@@ -1,0 +1,315 @@
+{
+  "candidate_scenarios": [
+    {
+      "name": "stale post is rejected",
+      "input": { "account_verified": true, "age_hours": 240, "first_person_problem": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 1, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "stale_over_seven_days"
+    },
+    {
+      "name": "seller funnel is rejected",
+      "input": { "account_verified": true, "age_hours": 4, "first_person_problem": true, "intent": "seller_funnel", "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 2, "permission_readiness": 1, "risk": 3 } },
+      "expected_stage": "reject",
+      "expected_reason": "seller_funnel"
+    },
+    {
+      "name": "advice post is research rejection",
+      "input": { "account_verified": true, "age_hours": 8, "intent": "teaching_or_advice", "asks_for_help": false, "useful_reply_without_pitch": true, "scores": { "pain": 2, "intent": 1, "fit": 3, "warmth": 1, "permission_readiness": 1, "risk": 3 } },
+      "expected_stage": "reject",
+      "expected_reason": "teaching_not_asking"
+    },
+    {
+      "name": "current first person pain is public reply ready",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "failed_attempt": true, "stakes": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 1, "risk": 1 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "outcome fit qualifies without solution awareness",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "failed_attempt": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "solution_awareness": "unaware", "fit_evidence": { "situation": "match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 2, "intent": 1, "fit": 2, "warmth": 1, "permission_readiness": 1, "risk": 4 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "situation match qualifies despite vague profile label",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "stakes": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "profile_label_match": false, "fit_evidence": { "situation": "match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 4, "intent": 2, "fit": 4, "warmth": 1, "permission_readiness": 1, "risk": 2 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "profile label alone cannot establish situation fit",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "stakes": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "situation": "match", "situation_evidence_source": "profile_supporting_only", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 4, "intent": 2, "fit": 4, "warmth": 1, "permission_readiness": 1, "risk": 2 } },
+      "expected_stage": "research_only",
+      "expected_reason": "profile_label_cannot_establish_situation_fit",
+      "expected_language_bank_route": "none"
+    },
+    {
+      "name": "matching identity with wrong situation is research only",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "profile_label_match": true, "fit_evidence": { "situation": "no_match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "situation_not_mapped_to_offer"
+    },
+    {
+      "name": "current problem without supporting signal is research only",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "situation": "match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "missing_supporting_signal"
+    },
+    {
+      "name": "public reply readiness ignores low rank score",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "failed_attempt": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "situation": "match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "commercial_evidence": { "present": false }, "scores": { "pain": 1, "intent": 1, "fit": 1, "warmth": 1, "permission_readiness": 1, "risk": 5 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "call stage requires later commercial evidence",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "stakes": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-3", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "situation": "match", "problem": "match", "desired_outcome": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "dm_permission_explicit": true, "call_invite_allowed": true, "commercial_evidence": { "present": false }, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 4, "permission_readiness": 5, "risk": 1 } },
+      "expected_stage": "dm_permission_ready",
+      "expected_reason": "commercial_evidence_required_for_call"
+    },
+    {
+      "name": "like only is not DM permission",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "useful_reply_without_pitch": true, "like_only": true, "dm_permission_explicit": false, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 3, "intent": 2, "fit": 3, "warmth": 1, "permission_readiness": 1, "risk": 2 } },
+      "expected_stage": "research_only"
+    },
+    {
+      "name": "explicit DM permission is DM ready",
+      "input": { "account_verified": true, "age_hours": 5, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "dm_permission_explicit": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 4, "intent": 4, "fit": 4, "warmth": 3, "permission_readiness": 5, "risk": 1 } },
+      "expected_stage": "dm_permission_ready"
+    },
+    {
+      "name": "genuine pain outside the offer is research only",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "no_match", "problem": "no_match", "transformation": "no_match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "problem_not_mapped_to_offer",
+      "expected_status": "adjacent_research_only"
+    },
+    {
+      "name": "correct audience with out of scope problem is research only",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "no_match", "transformation": "no_match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "problem_not_mapped_to_offer"
+    },
+    {
+      "name": "authored situation evidence maps audience problem and transformation",
+      "input": { "account_verified": true, "age_hours": 1, "first_person_problem": true, "failed_attempt": true, "stakes": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "situation_evidence_source": "authored_post_or_replies", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "missing offer context stops public action",
+      "input": { "account_verified": true, "age_hours": 1, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "missing_offer_context",
+      "expected_status": "missing_offer_context"
+    },
+    {
+      "name": "seller who matches the offer can be public reply ready",
+      "input": { "account_verified": true, "age_hours": 1, "first_person_problem": true, "failed_attempt": true, "intent": "selling_unrelated_offer", "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 4, "intent": 4, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "public_reply_ready"
+    },
+    {
+      "name": "anonymous quoted pain is language research only",
+      "input": { "account_verified": true, "age_hours": 1, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": false, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": true, "distinct_public_value": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "problem_not_authored_by_candidate"
+    },
+    {
+      "name": "saturated disputed thread is research only",
+      "input": { "account_verified": true, "age_hours": 1, "first_person_problem": true, "asks_for_help": true, "useful_reply_without_pitch": true, "offer_context_loaded": true, "offer_context_version": "offer-1", "problem_authored_by_candidate": true, "full_context_inspected": true, "fit_evidence": { "audience": "match", "problem": "match", "transformation": "match", "exclusions_clear": true }, "safe_public_context": false, "distinct_public_value": false, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 1, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "research_only",
+      "expected_reason": "unsafe_or_disputed_public_context"
+    },
+    {
+      "name": "duplicate is rejected",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "duplicate": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "duplicate_candidate"
+    },
+    {
+      "name": "suppressed person is rejected",
+      "input": { "account_verified": true, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "suppressed": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_reason": "suppressed_candidate"
+    },
+    {
+      "name": "wrong account blocks composer work",
+      "input": { "account_verified": false, "age_hours": 2, "first_person_problem": true, "useful_reply_without_pitch": true, "scores": { "pain": 5, "intent": 5, "fit": 5, "warmth": 3, "permission_readiness": 2, "risk": 1 } },
+      "expected_stage": "reject",
+      "expected_status": "blocked_wrong_account"
+    }
+  ],
+  "query_scenarios": [
+    {
+      "name": "one owned match on a short result page still inspects",
+      "input": [
+        { "intended_problem_match": true, "first_person_owned": true },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false }
+      ],
+      "expected_action": "continue_inspection"
+    },
+    {
+      "name": "irrelevant token matches rewrite the query",
+      "input": [
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false }
+      ],
+      "expected_action": "rewrite_query"
+    },
+    {
+      "name": "mapped buyer language continues to inspection",
+      "input": [
+        { "intended_problem_match": true, "first_person_owned": true },
+        { "intended_problem_match": true, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false }
+      ],
+      "expected_action": "continue_inspection"
+    },
+    {
+      "name": "one precise owned match is enough to inspect",
+      "input": [
+        { "intended_problem_match": true, "first_person_owned": true },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false },
+        { "intended_problem_match": false, "first_person_owned": false }
+      ],
+      "expected_action": "continue_inspection"
+    }
+  ],
+  "query_run_scenarios": [
+    {
+      "name": "search stops after ten rewrites",
+      "input": { "rewrite_count": 10, "total_results_inspected": 45, "candidate_stages_observed": [] },
+      "expected_status": "no_qualified_candidate",
+      "expected_stop_reason": "rewrite_cap_reached"
+    },
+    {
+      "name": "search stops after fifty sampled results",
+      "input": { "rewrite_count": 9, "total_results_inspected": 50, "candidate_stages_observed": [] },
+      "expected_status": "no_qualified_candidate",
+      "expected_stop_reason": "result_cap_reached"
+    },
+    {
+      "name": "search stops after one qualified candidate by default",
+      "input": { "rewrite_count": 3, "total_results_inspected": 20, "candidate_stages_observed": ["public_reply_ready"] },
+      "expected_status": "target_reached",
+      "expected_stop_reason": "default_single_candidate_reached"
+    },
+    {
+      "name": "adjacent research does not satisfy qualified target",
+      "input": { "rewrite_count": 3, "total_results_inspected": 20, "candidate_stages_observed": ["research_only"] },
+      "expected_status": "continue_search",
+      "expected_stop_reason": null
+    }
+  ],
+  "reply_scenarios": [
+    {
+      "name": "clear context uses one mechanism without forced question",
+      "input": { "evidence_gap": false, "candidate_stage": "public_reply_ready", "acknowledges_signal": true, "mechanism_count": 1, "practical_next_move": true, "honest_tradeoff": true, "question_count": 0, "offer_mentioned": false, "link_included": false, "lived_experience_used": true, "lived_experience_approved": true },
+      "expected_branch": "clear_context_mechanism",
+      "expected_ready": true
+    },
+    {
+      "name": "evidence gap uses diagnostic aca question",
+      "input": { "evidence_gap": true, "candidate_stage": "public_reply_ready", "acknowledges_signal": true, "mechanism_count": 0, "practical_next_move": false, "honest_tradeoff": false, "question_count": 1, "offer_mentioned": false, "link_included": false },
+      "expected_branch": "diagnostic_aca",
+      "expected_ready": true
+    },
+    {
+      "name": "first public reply rejects offer mention",
+      "input": { "evidence_gap": false, "candidate_stage": "public_reply_ready", "acknowledges_signal": true, "mechanism_count": 1, "practical_next_move": true, "honest_tradeoff": true, "question_count": 0, "offer_mentioned": true, "link_included": false },
+      "expected_branch": "clear_context_mechanism",
+      "expected_ready": false,
+      "expected_reason": "offer_not_allowed_in_first_public_reply"
+    },
+    {
+      "name": "first public reply rejects dm call and paid asks",
+      "input": {
+        "evidence_gap": false,
+        "candidate_stage": "public_reply_ready",
+        "acknowledges_signal": true,
+        "mechanism_count": 1,
+        "practical_next_move": true,
+        "honest_tradeoff": true,
+        "question_count": 0,
+        "offer_mentioned": false,
+        "link_included": false,
+        "dm_ask": true,
+        "call_ask": true,
+        "paid_ask": true
+      },
+      "expected_branch": "clear_context_mechanism",
+      "expected_ready": false,
+      "expected_reason": "offer_not_allowed_in_first_public_reply"
+    },
+    {
+      "name": "unapproved lived experience is rejected",
+      "input": { "evidence_gap": false, "candidate_stage": "public_reply_ready", "acknowledges_signal": true, "mechanism_count": 1, "practical_next_move": true, "honest_tradeoff": true, "question_count": 0, "offer_mentioned": false, "link_included": false, "lived_experience_used": true, "lived_experience_approved": false },
+      "expected_branch": "clear_context_mechanism",
+      "expected_ready": false,
+      "expected_reason": "unapproved_or_fabricated_lived_experience"
+    },
+    {
+      "name": "off offer candidate cannot produce ready reply",
+      "input": { "evidence_gap": false, "candidate_stage": "research_only", "acknowledges_signal": true, "mechanism_count": 1, "practical_next_move": true, "honest_tradeoff": true, "question_count": 0, "offer_mentioned": false, "link_included": false },
+      "expected_branch": "clear_context_mechanism",
+      "expected_ready": false,
+      "expected_reason": "candidate_not_public_reply_eligible"
+    }
+  ],
+  "voice_scenarios": [
+    { "name": "three approved samples calibrate voice", "input": ["sample one", "sample two", "sample three"], "expected_confidence": "high", "expected_mode": "approved_samples" },
+    { "name": "missing samples use neutral fallback", "input": [], "expected_confidence": "low", "expected_mode": "plain_human_fallback" }
+  ],
+  "owner_edit_scenarios": [
+    {
+      "name": "voice only owner edit cannot mutate candidate policy",
+      "input": {
+        "staged_text": "Fewer views can create stronger buyer conversations.",
+        "sent_text": "your views may drop but the right conversations get better.",
+        "staged_components": { "truth": "views may fall", "relevance": "buyer conversation", "mechanism": "narrow problem", "action": "test one problem", "tradeoff": "fewer views" },
+        "sent_components": { "truth": "views may fall", "relevance": "buyer conversation", "mechanism": "narrow problem", "action": "test one problem", "tradeoff": "views may drop but conversations improve" },
+        "staged_voice_traits": ["sentence_case", "formal"],
+        "sent_voice_traits": ["lowercase", "conversational"]
+      },
+      "expected_learning_target": "message_policy",
+      "expected_candidate_policy_mutated": false,
+      "expected_changed_dimensions": ["tradeoff", "voice"]
+    }
+  ],
+  "outcome_scenarios": [
+    { "name": "like is not qualified progression", "input": { "like": true, "observed_within_hours": 12 }, "expected_progression": false },
+    { "name": "generic thanks is not qualified progression", "input": { "generic_reply": true, "observed_within_hours": 24 }, "expected_progression": false },
+    { "name": "new failed attempt is qualified progression", "input": { "new_failed_attempt": true, "observed_within_hours": 36 }, "expected_progression": true },
+    { "name": "substantive evidence after 72 hours is not qualified progression", "input": { "new_failed_attempt": true, "observed_within_hours": 80 }, "expected_progression": false }
+  ],
+  "learning_scenarios": [
+    {
+      "name": "pending outcomes do not change policy",
+      "input": { "target": "candidate_policy.soft_weight.intent", "completed_outcomes": 0, "comparable_completed_outcomes": 0, "batches": [] },
+      "expected_result": "no_change_insufficient_evidence"
+    },
+    {
+      "name": "ten incomparable outcomes do not change policy",
+      "input": { "target": "candidate_policy.soft_weight.intent", "completed_outcomes": 10, "comparable_completed_outcomes": 0, "batches": [] },
+      "expected_result": "no_change_insufficient_evidence"
+    },
+    {
+      "name": "ten outcomes create proposal only",
+      "input": { "target": "candidate_policy.soft_weight.intent", "completed_outcomes": 10, "comparable_completed_outcomes": 10, "batches": [{ "completed_outcomes": 10, "comparable": true }] },
+      "expected_result": "proposed_change"
+    },
+    {
+      "name": "two proven batches promote soft change",
+      "input": { "target": "candidate_policy.soft_weight.intent", "completed_outcomes": 20, "comparable_completed_outcomes": 20, "batches": [{ "completed_outcomes": 10, "comparable": true, "baseline_progression_rate": 0.2, "candidate_progression_rate": 0.5, "false_positive_rate_before": 0.2, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }, { "completed_outcomes": 10, "comparable": true, "baseline_progression_rate": 0.3, "candidate_progression_rate": 0.6, "false_positive_rate_before": 0.1, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }] },
+      "expected_result": "auto_apply_soft_change"
+    },
+    {
+      "name": "hard gate never self modifies",
+      "input": { "target": "hard_gate.permission_before_dm", "completed_outcomes": 100, "batches": [] },
+      "expected_result": "immutable_gate_protected"
+    }
+  ]
+}
