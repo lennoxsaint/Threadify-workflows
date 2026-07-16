@@ -20,6 +20,7 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 - Qualified Buyer Research workflow for finding current problem-language posts, rejecting seller/advice false positives, staging one useful reply, and learning only from completed qualified-progression outcomes.
 - YouTube Edit workflow that drives the Eddy engine (the `engines/eddy` submodule) to turn raw footage into a finished edit, then optionally prepares and schedules Threadify promotional posts about the video after approval.
 - A dependency-free validator for manifests, fixtures, redaction, and launch claims.
+- A dependency-free Node 18+ installer and stable updater for Codex, Claude Code, Cursor, Gemini CLI, OpenClaw, Hermes, and universal Agent Skills.
 
 ## YouTube support via the Eddy engine
 
@@ -54,6 +55,14 @@ Daily Posts workflows may consume only approved clean Threadify-safe packs or ve
 
 ## Quick Start
 
+Install the latest validated stable release:
+
+```sh
+npx --yes github:lennoxsaint/Threadify-workflows install
+```
+
+The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
+
 1. Connect Threadify MCP in your agent client.
 2. Pick a workflow under `workflows/`.
 3. Open the matching adapter under `adapters/`.
@@ -65,6 +74,12 @@ Validate the repo before publishing or editing:
 
 ```sh
 npm test
+```
+
+Build the exact stable release assets:
+
+```sh
+npm run release:build
 ```
 
 ## Local Codex Plugin Wrapper

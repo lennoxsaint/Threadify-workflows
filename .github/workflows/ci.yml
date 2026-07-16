@@ -1,0 +1,45 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - stable
+
+permissions:
+  contents: read
+
+jobs:
+  workflow-and-bundle:
+    name: workflow-and-bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm test
+      - run: npm run release:build -- --commit "$GITHUB_SHA"
+      - name: Verify no private evidence entered public release assets
+        run: |
+          if grep -Eri 'student email|member email|private lesson|access_token|refresh_token|threads_account_id' dist; then
+            exit 1
+          fi
+
+  isolated-client-installs:
+    name: isolated-client-installs (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm run test:installer

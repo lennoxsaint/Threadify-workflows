@@ -304,7 +304,17 @@
     {
       "name": "two proven batches promote soft change",
       "input": { "target": "candidate_policy.soft_weight.intent", "completed_outcomes": 20, "comparable_completed_outcomes": 20, "batches": [{ "completed_outcomes": 10, "comparable": true, "baseline_progression_rate": 0.2, "candidate_progression_rate": 0.5, "false_positive_rate_before": 0.2, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }, { "completed_outcomes": 10, "comparable": true, "baseline_progression_rate": 0.3, "candidate_progression_rate": 0.6, "false_positive_rate_before": 0.1, "false_positive_rate_after": 0.1, "hard_gate_breaches": 0 }] },
-      "expected_result": "auto_apply_soft_change"
+      "expected_result": "promotion_recommended"
+    },
+    {
+      "name": "safety defect creates immediate tested proposal",
+      "input": { "target": "message_policy.safety", "evidence_class": "safety_defect", "synthetic_reproduction_passed": true, "privacy_check_passed": true, "completed_outcomes": 0, "comparable_completed_outcomes": 0, "batches": [] },
+      "expected_result": "immediate_proposal"
+    },
+    {
+      "name": "unreproduced safety defect is held",
+      "input": { "target": "message_policy.safety", "evidence_class": "safety_defect", "synthetic_reproduction_passed": false, "privacy_check_passed": true, "completed_outcomes": 0, "comparable_completed_outcomes": 0, "batches": [] },
+      "expected_result": "hold_proposed_change"
     },
     {
       "name": "hard gate never self modifies",

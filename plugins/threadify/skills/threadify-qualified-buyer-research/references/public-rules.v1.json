@@ -1,0 +1,143 @@
+{
+  "record_type": "PublicDurableRulesetV1",
+  "skill": "threadify-qualified-buyer-research",
+  "rules_version": "0.4.0",
+  "candidate_policy_version": "0.4.0",
+  "message_policy_version": "0.4.0",
+  "privacy_boundary": {
+    "allowed": [
+      "niche-agnostic instructions",
+      "aggregate evidence counts",
+      "synthetic reproductions",
+      "redacted rollback references"
+    ],
+    "forbidden": [
+      "private FC5 prompts",
+      "student or member records",
+      "personal voice samples",
+      "raw outcomes",
+      "account identifiers",
+      "private messages",
+      "proprietary offer or proof context"
+    ]
+  },
+  "rules": [
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.offer-context-first",
+      "scope": "candidate",
+      "instruction": "Build a versioned Offer Context Map before searching: observable situation, current problem, desired outcome, failed approaches, exclusions, and later-stage commercial criteria.",
+      "evidence_class": "validated_cross_niche_fixture",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.bounded-persistent-search",
+      "scope": "candidate",
+      "instruction": "Search problem, failed-attempt, stakes, desired-outcome, then workaround or objection language. Inspect five results per query and stop after one qualified candidate, ten rewrites, or fifty sampled results without weakening the gates.",
+      "evidence_class": "validated_cross_niche_fixture",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.problem-plus-one",
+      "scope": "candidate",
+      "instruction": "Public-reply eligibility requires a concrete current first-person problem plus at least one failed attempt, meaningful stake, or genuine request for help.",
+      "evidence_class": "validated_cross_niche_fixture",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.situation-and-outcome-fit",
+      "scope": "candidate",
+      "instruction": "Qualify from authored situation and desired-outcome evidence. Solution awareness is informational; profile labels can support but cannot establish fit.",
+      "evidence_class": "validated_cross_niche_fixture",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.full-context-inspection",
+      "scope": "candidate",
+      "instruction": "Inspect the full post, visible replies, profile, and relevant recent content. Reject stale, duplicate, suppressed, contradictory, teacher, advice, recycled-hook, or seller-funnel false positives.",
+      "evidence_class": "safety_and_correctness",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.off-offer-separation",
+      "scope": "candidate",
+      "instruction": "Route genuine off-offer pain to adjacent research with the rejection reason and Offer Context version; never add it to the active Buyer Language Bank.",
+      "evidence_class": "validated_cross_niche_fixture",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.scores-rank-only",
+      "scope": "candidate",
+      "instruction": "Run hard gates before scoring. Scores rank eligible candidates and control later stages; they cannot qualify or disqualify a public reply.",
+      "evidence_class": "correctness",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "message.offer-free-first-reply",
+      "scope": "message",
+      "instruction": "The first public reply must contain no offer, link, DM ask, call ask, or paid ask.",
+      "evidence_class": "safety",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "message.adaptive-router",
+      "scope": "message",
+      "instruction": "With clear context, acknowledge the exact signal, explain one mechanism, give one practical next move, and state the honest tradeoff without forcing a question. Use A-C-A and exactly one useful question only when evidence is genuinely missing.",
+      "evidence_class": "owner_edit_pattern_and_cross_niche_fixture",
+      "hard_gate": false,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "message.truthful-experience-only",
+      "scope": "message",
+      "instruction": "Use lived experience only when the owner has approved it as true. Personal diction remains in local Voice Context and never becomes a universal rule.",
+      "evidence_class": "safety",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.owner-controls-send",
+      "scope": "candidate",
+      "instruction": "Agents may research, reject, rank, draft, pre-fill, log, and learn. The owner alone clicks Send, grants DM permission, approves calls or offers, and authorizes account changes.",
+      "evidence_class": "safety",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "message.qualified-progression-learning",
+      "scope": "message",
+      "instruction": "Learn from qualified progression within seventy-two hours, not likes or generic thanks. Owner edits update message policy only and never retroactively change candidate qualification.",
+      "evidence_class": "learning_contract",
+      "hard_gate": true,
+      "introduced_version": "0.3.0"
+    },
+    {
+      "record_type": "DurableRuleV1",
+      "rule_id": "candidate.release-approved-learning",
+      "scope": "candidate",
+      "instruction": "Safety or correctness defects may create an immediate tested proposal. Soft rules require ten comparable outcomes; twenty outcomes across two passing batches mark promotion recommended. No public rule changes until the owner merges a redacted tested release PR.",
+      "evidence_class": "release_governance",
+      "hard_gate": true,
+      "introduced_version": "0.4.0"
+    }
+  ]
+}

@@ -1,12 +1,19 @@
 {
   "name": "threadify-workflows",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Public-safe, open-source workflow manifests and agent adapters for Threadify MCP.",
   "license": "MIT",
   "type": "module",
+  "bin": {
+    "threadify-workflows": "./bin/threadify-workflows.mjs"
+  },
   "scripts": {
-    "validate": "node validation/schema-checks/validate.mjs",
-    "test": "node validation/schema-checks/validate.mjs"
+    "bundle:build": "node scripts/build-qbr-bundle.mjs",
+    "bundle:check": "node scripts/build-qbr-bundle.mjs --check",
+    "release:build": "node scripts/build-release-assets.mjs",
+    "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/proposal.test.mjs",
+    "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
+    "test": "npm run validate && npm run test:installer"
   },
   "engines": {
     "node": ">=18"

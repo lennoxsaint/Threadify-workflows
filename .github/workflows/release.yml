@@ -1,0 +1,97 @@
+name: stable-release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: threadify-workflows-stable-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: approved-versioned-release
+    runs-on: ubuntu-latest
+    env:
+      FC_SYNC_TOKEN: ${{ secrets.FULL_CIRCLE_SYNC_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Read release intent
+        id: intent
+        shell: bash
+        run: |
+          node - <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require('fs');
+          const intent = JSON.parse(fs.readFileSync('release/release-intent.json', 'utf8'));
+          console.log(`enabled=${intent.release === true}`);
+          console.log(`version=${intent.release_version}`);
+          console.log(`tag=v${intent.release_version}`);
+          NODE
+      - name: Check whether stable tag already exists
+        id: tag
+        if: steps.intent.outputs.enabled == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.intent.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate approved source
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
+        run: npm test
+      - name: Build immutable assets
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
+        run: npm run release:build -- --commit "$GITHUB_SHA"
+      - name: Create GitHub stable release
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.intent.outputs.tag }}" \
+            dist/threadify-workflows-bundle.json \
+            dist/stable-release-manifest.json \
+            dist/checksums.txt \
+            dist/CHANGELOG.md \
+            --target "$GITHUB_SHA" \
+            --title "Threadify Workflows ${{ steps.intent.outputs.version }}" \
+            --notes-file release/CHANGELOG.md
+      - name: Advance stable branch
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
+        run: |
+          git push origin "$GITHUB_SHA:refs/heads/stable"
+      - name: Dispatch Full Circle rules pin
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false' && env.FC_SYNC_TOKEN != ''
+        env:
+          GH_TOKEN: ${{ secrets.FULL_CIRCLE_SYNC_TOKEN }}
+        run: |
+          node - <<'NODE' > /tmp/threadify-fc-dispatch.json
+          const fs = require('fs');
+          const intent = JSON.parse(fs.readFileSync('release/release-intent.json', 'utf8'));
+          const manifest = JSON.parse(fs.readFileSync('dist/stable-release-manifest.json', 'utf8'));
+          process.stdout.write(JSON.stringify({
+            event_type: 'threadify_qbr_stable_release',
+            client_payload: {
+              release_version: intent.release_version,
+              rules_version: intent.rules_version,
+              commit: manifest.commit,
+              manifest_url: `https://github.com/${process.env.GITHUB_REPOSITORY}/releases/download/v${intent.release_version}/stable-release-manifest.json`
+            }
+          }));
+          NODE
+          gh api --method POST repos/lennoxsaint/full-circle/dispatches --input /tmp/threadify-fc-dispatch.json
+      - name: Report missing Full Circle sync credential
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false' && env.FC_SYNC_TOKEN == ''
+        run: |
+          echo "::warning::Stable release succeeded, but FULL_CIRCLE_SYNC_TOKEN is not configured."

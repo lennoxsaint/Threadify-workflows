@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.1.0",
+  "version": "0.4.0",
   "description": "Agent-native Threadify workflow recipes for approved scheduling, cross-post fallback, winner replication, X Article drafting, YouTube editing via the Eddy engine, and granular Brain Sync.",
   "author": {
     "name": "Threadify"
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Threadify Workflows",
     "shortDescription": "Run public-safe Threadify MCP workflow recipes.",
-    "longDescription": "Threadify Workflows gives Codex workflow recipes for approved creator operations through Threadify MCP. It covers daily post scheduling, X cross-post fallback preparation, weekly winner replication, draft-only X Article packet creation, YouTube editing that drives the local Eddy engine to turn raw footage into a finished edit and optional approved promo schedule, and granular Brain Sync from approved source artifacts. The plugin is orchestration-only and does not include private generation prompts, account credentials, tokens, or live provider configuration.",
+    "longDescription": "Threadify Workflows gives Codex workflow recipes for approved creator operations through Threadify MCP. It covers daily post scheduling, X cross-post fallback preparation, weekly winner replication, draft-only X Article packet creation, YouTube editing, granular Brain Sync, and Qualified Buyer Research with controlled stable updates. The plugin is orchestration-only and does not include private generation prompts, account credentials, tokens, student data, raw outcomes, or live provider configuration.",
     "developerName": "Threadify",
     "category": "Productivity",
     "capabilities": [
@@ -32,7 +32,8 @@
       "Prepare an X-ready fallback artifact after a Threads post",
       "Turn an approved daily post into a draft-only X Article packet",
       "Edit my raw footage into a finished YouTube video with Eddy",
-      "Run Personal Brain Sync from an approved source packet"
+      "Run Personal Brain Sync from an approved source packet",
+      "Find one qualified buyer signal and stage an offer-free reply"
     ],
     "brandColor": "#0F172A"
   }
