@@ -35,7 +35,8 @@ Return a local or chat-visible packet containing:
 6. Create three thumbnail directions and choose the highest-scoring one.
 7. Run a review gate over proof, specificity, and saved-for-later value.
 8. Return the packet for human review.
-9. Record feedback or a receipt if the connected tool surface supports it.
+9. Keep the receipt and feedback local. Sharing exact feedback with Threadify
+   requires separate explicit opt-in, even when the connected tool is available.
 
 ## Safety Rules
 
@@ -44,7 +45,8 @@ Return a local or chat-visible packet containing:
 - Prefer save-worthy utility over engagement bait.
 - Keep observed source facts separate from interpretation.
 - Do not claim X Article publishing support unless the product surface has verified X support.
-- Do not claim a thumbnail was generated unless a real image asset or image-generation request packet exists.
+- Claim a generated thumbnail only after inspecting the actual image asset.
+  An image-generation request packet is not a generated image.
 
 ## Receipt
 

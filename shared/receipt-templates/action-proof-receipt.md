@@ -1,5 +1,8 @@
 # Action Proof Receipt
 
+Synthetic shape only, not execution proof. List only tools actually called and
+replace example states with verified readback in the private operator workspace.
+
 ```json
 {
   "workflow_id": "daily-posts-heartbeat",
@@ -11,7 +14,7 @@
   "status": "scheduled",
   "timestamp": "2026-06-02T10:00:00Z",
   "timezone": "Australia/Perth",
-  "tool_path": ["get_connection_defaults", "validate_post", "schedule_post", "get_schedule_status", "get_schedule_report"],
+  "tool_path": ["get_connection_defaults", "validate_post", "schedule_post", "get_schedule_status", "list_scheduled_posts"],
   "fallback_used": false,
   "artifact_ids": ["redacted-artifact-id"]
 }

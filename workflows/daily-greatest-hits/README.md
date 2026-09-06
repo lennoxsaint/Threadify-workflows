@@ -2,7 +2,7 @@
 
 Use this workflow to turn proven historical posts into a daily review-and-schedule loop.
 
-Public v0 is orchestration-only. It can read basic `greatest_hits` output where Threadify exposes it, or accept a user-supplied clean source pack. It must not expose private analytics logic, private Brain prompts, account IDs, credentials, member data, or proprietary generation systems.
+This compatibility workflow can read basic `greatest_hits` output where Threadify exposes it, or accept a user-supplied clean source pack for local drafting. It must not expose private analytics logic, private Brain prompts, account IDs, credentials, member data, or proprietary generation systems. Use the primary creator workflows for new Day, Week or Month planning.
 
 ## Source Inputs
 

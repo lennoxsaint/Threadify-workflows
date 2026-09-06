@@ -10,4 +10,6 @@ Default behavior:
 - do not rewrite approved public text silently
 - produce the receipt in the shape required by the manifest
 
-Codex may help validate or edit this repo, but public workflows must remain orchestration-only.
+Follow the [generic adapter](../generic-mcp/README.md) for local drafting,
+entitled connected services and exact action gates. Codex may run the bundled
+local engine; that does not grant permission to schedule or publish.
