@@ -222,7 +222,7 @@ test('failed native update keeps the active pointer and requires reconciliation 
   assert.equal(fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8'), calls);
   await install({ ...options, targets: 'codex', autoUpdate: false,
     env: { ...env, THREADIFY_TEST_FAIL_COMMAND: 'never-match' } });
-  assert.equal(status({ root: box.root }).status, 'installed');
+  assert.equal(status({ root: box.root }).status, 'installed_unverified');
   assert.equal(fs.realpathSync(path.join(box.root, 'current')), fs.realpathSync(path.join(box.root, 'releases', '0.5.0')));
 });
 
@@ -254,6 +254,77 @@ test('an unreadable mutation marker blocks automatic update without fetching or 
   assert.equal(result.recovery.status, 'unreadable');
   assert.equal(status({ root: box.root }).status, 'installation_requires_recovery');
 });
+
+test('native targets remain unverified in local status and empty targets are not installed', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  await install({ home: box.home, root: box.root, env: box.env, targets: 'codex', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+  const file = path.join(box.root, 'config.json');
+  const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+  config.installed_targets = ['codex-plugin:threadify-workflows@threadify-workflows'];
+  fs.writeFileSync(file, JSON.stringify(config));
+  const result = status({ root: box.root });
+  assert.equal(result.status, 'installed_unverified');
+  assert.equal(result.targets[0].exists, null);
+  assert.equal(result.targets[0].verification, 'native_readback_required');
+  uninstall({ home: box.home, root: box.root, env: box.env });
+  assert.equal(status({ root: box.root }).status, 'not_installed');
+});
+
+test('uninstall cannot mutate targets while another update holds the lock', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  await install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+  fs.mkdirSync(path.join(box.root, 'update.lock'));
+  assert.throws(() => uninstall({ home: box.home, root: box.root, env: box.env }), /update_in_progress/);
+  assert.equal(status({ root: box.root }).status, 'installed');
+});
+
+test('an aged lock owned by a live process cannot be stolen', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  const lock = path.join(box.root, 'update.lock');
+  fs.mkdirSync(lock, { recursive: true });
+  fs.writeFileSync(path.join(lock, 'owner.json'), JSON.stringify({ pid: process.pid }));
+  const old = new Date(Date.now() - 60 * 60 * 1000);
+  fs.utimesSync(lock, old, old);
+  await assert.rejects(install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile }), /update_in_progress/);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(lock, 'owner.json'), 'utf8')).pid, process.pid);
+});
+
+for (const lockState of ['dead owner', 'unknown owner', 'recovery already held']) {
+  test(`aged update lock recovery handles ${lockState}`, async (t) => {
+    const box = sandbox();
+    t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+    const release = fixtureRelease(box.directory, { version: '0.5.0' });
+    const lock = path.join(box.root, 'update.lock');
+    fs.mkdirSync(lock, { recursive: true });
+    if (lockState === 'dead owner') {
+      const child = spawnSync(process.execPath, ['-e', 'console.log(process.pid)'], { encoding: 'utf8' });
+      assert.equal(child.status, 0);
+      fs.writeFileSync(path.join(lock, 'owner.json'), JSON.stringify({ pid: Number(child.stdout.trim()) }));
+    }
+    if (lockState === 'recovery already held') fs.mkdirSync(path.join(box.root, 'update-recovery.lock'));
+    const old = new Date(Date.now() - 60 * 60 * 1000);
+    fs.utimesSync(lock, old, old);
+    const attempt = install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: false,
+      sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+    if (lockState === 'dead owner') {
+      assert.equal((await attempt).status, 'installed');
+      assert.equal(fs.existsSync(lock), false);
+      assert.equal(fs.existsSync(path.join(box.root, 'update-recovery.lock')), false);
+    } else {
+      await assert.rejects(attempt, lockState === 'unknown owner' ? /update_lock_owner_unverified/ : /update_in_progress/);
+      assert.equal(fs.existsSync(lock), true);
+    }
+  });
+}
 
 for (const operation of ['uninstall', 'target migration']) {
   for (const command of ['plugin remove', 'plugin marketplace remove']) {

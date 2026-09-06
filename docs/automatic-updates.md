@@ -40,6 +40,10 @@ For the current user's home, Codex targets respect an intentional `CODEX_HOME` s
 
 Native installation checks configured marketplaces before changing them. A same-name marketplace is replaced only when its local source resolves to a marked release owned by this installer. Unknown, remote or unrelated sources stop installation. Updates re-register a changed managed marketplace source and reinstall the plugin without first uninstalling its cache. A later failure still requires recovery; this is not an atomic native update.
 
+Local `status` checks filesystem targets, but a native plugin entry remains `installed_unverified` with `exists: null` until a separate native readback is obtained. The saved installation record does not prove current Codex loading. Empty target lists report `not_installed`.
+
+Install, rollback and uninstall share the update lock. An aged lock is recovered only when its recorded process is confirmed absent; live processes, unknown owners and permission-denied probes stop the operation. A separate recovery lock serializes recovery attempts. If that recovery lock itself is left behind, verify the owning processes and client state before manual repair; age alone never authorizes removing it.
+
 ## Update behavior
 
 - Daily scheduler checks include up to thirty minutes of jitter.
