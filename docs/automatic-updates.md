@@ -36,6 +36,8 @@ The installer detects Codex, Claude Code, Cursor, Gemini CLI, OpenClaw, Hermes, 
 
 State, release history, receipts, preserved migration context, and the last-known-good releases live under `~/.threadify-workflows/`.
 
+For the current user's home, Codex targets respect an intentional `CODEX_HOME` setting. An alternate `home` supplied through the installer API targets that home's `.codex` directory instead of inheriting the caller's Codex configuration. Native commands and filesystem fallback links use the same rule. This isolates the Codex target; it is not a general process or credential sandbox.
+
 ## Update behavior
 
 - Daily scheduler checks include up to thirty minutes of jitter.

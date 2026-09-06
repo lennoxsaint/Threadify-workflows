@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -106,6 +107,7 @@ function nativeCodexFixture(box, failingCommand) {
 import fs from 'node:fs';
 const args = process.argv.slice(2);
 fs.appendFileSync(${JSON.stringify(calls)}, JSON.stringify(args) + '\\n');
+fs.appendFileSync(${JSON.stringify(`${calls}.environment`)}, JSON.stringify({ home: process.env.HOME, codexHome: process.env.CODEX_HOME }) + '\\n');
 if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {
   process.stderr.write('synthetic removal denied');
   process.exit(1);
@@ -122,6 +124,44 @@ process.stdout.write('{}');
     THREADIFY_TEST_FAIL_COMMAND: failingCommand,
   };
 }
+
+test('alternate-home native install does not inherit another Codex configuration target', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  const env = nativeCodexFixture(box, 'never-match');
+  env.CODEX_HOME = path.join(box.directory, 'other-codex');
+  await install({ home: box.home, root: box.root, env, targets: 'codex', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+  const environments = fs.readFileSync(`${env.THREADIFY_TEST_CALLS}.environment`, 'utf8').trim().split('\n').map(JSON.parse);
+  assert.ok(environments.length > 0);
+  for (const observed of environments) {
+    assert.equal(observed.home, box.home);
+    assert.equal(observed.codexHome, path.join(box.home, '.codex'));
+  }
+  assert.equal(fs.existsSync(env.CODEX_HOME), false);
+});
+
+test('normal-home native install preserves an intentional custom CODEX_HOME', (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  const env = nativeCodexFixture(box, 'never-match');
+  env.CODEX_HOME = path.join(box.directory, 'custom-codex');
+  const options = { root: box.root, targets: 'codex', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile };
+  const script = `import { install } from ${JSON.stringify(new URL('../../lib/installer.mjs', import.meta.url).href)};
+await install(${JSON.stringify(options)});`;
+  // The child's actual home is the sandbox. No operation addresses the test runner's home.
+  const result = spawnSync(process.execPath, ['--input-type=module', '-e', script], { env, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr);
+  const environments = fs.readFileSync(`${env.THREADIFY_TEST_CALLS}.environment`, 'utf8').trim().split('\n').map(JSON.parse);
+  assert.ok(environments.length > 0);
+  for (const observed of environments) {
+    assert.equal(observed.home, box.home);
+    assert.equal(observed.codexHome, env.CODEX_HOME);
+  }
+});
 
 test('failed native update keeps the active pointer and requires reconciliation before another update', async (t) => {
   const box = sandbox();
