@@ -109,3 +109,17 @@ test('scheduling needs approval, a real draft and all fresh matching gates; occu
   const localApproved = approveReview(local, displayReview(local), { evidence_ref: 'owner', at: now });
   assert.throws(() => beginAttempt(localApproved, 'a', gates(localApproved), now), /draft/);
 });
+
+test('scheduling enforces the provider five-minute minimum before recording an attempt', () => {
+  for (const [scheduledAt, accepted] of [
+    ['2026-09-07T00:04:59Z', false], ['2026-09-07T00:05:00Z', true],
+  ]) {
+    const content = { ...card('a'), scheduled_at: scheduledAt };
+    const draft = createReviewPack({ id: 'lead-time', cards: [content], now });
+    const p = approveReview(draft, displayReview(draft), { evidence_ref: 'synthetic-owner', at: now });
+    if (accepted) assert.equal(beginAttempt(p, 'a', gates(p), now).cards[0].state, 'attempt_pending');
+    else assert.throws(() => beginAttempt(p, 'a', gates(p), now), /five minutes/);
+    assert.equal(p.cards[0].state, 'approved');
+    assert.deepEqual(p.cards[0].attempts, []);
+  }
+});

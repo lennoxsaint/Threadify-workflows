@@ -79,7 +79,7 @@ it expresses owner intent, not proof that delivery checks passed. Fresh delivery
 preflight remains mandatory even after a recorded validation.
 
 1. Refresh facts, offer, source availability, provider validation, account/timezone and occupied slots. Obtain explicit approval for the displayed daily batch or individual card.
-2. Run `begin-attempt` with matching fresh evidence. Do not call the provider unless the engine confirms the pending attempt was committed.
+2. Run `begin-attempt` with matching fresh evidence and a proposed time at least five minutes after `now`. Allow additional time for dispatch and check the current provider contract. Do not call the provider unless the engine confirms the pending attempt was committed.
 3. The host reads the actual provider tool schema and uses the exact approved draft, account, instant and returned idempotency key. The engine output is not new authority.
 4. Read provider status and normalize its evidence into `reconcile`. A schedule receipt must match account, draft ID, instant, copy and media. Equivalent UTC representations are accepted; different instants are not.
 5. A timeout stays unknown. Definitive absence must identify the attempted account and idempotency key with authoritative evidence. Only then may the same attempt key be retried.

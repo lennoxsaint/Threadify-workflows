@@ -125,7 +125,10 @@ export function beginAttempt(pack, id, preflight, now) {
   const hash = reviewHash(c);
   assert(card.approval?.card_hash === hash && card.state === 'approved', 'Exact current approval required.');
   assert(text(c.draft_id), 'A real editable draft is required to schedule.');
-  assert(timestamp(now) && Date.parse(c.scheduled_at) > Date.parse(now), 'Proposed time must be in the future.');
+  // Match Threadify schedule_post's minimum; the host must still check the
+  // current provider contract and allow time for dispatch before calling it.
+  assert(timestamp(now) && Date.parse(c.scheduled_at) - Date.parse(now) >= 300_000,
+    'Proposed time must be at least five minutes in the future.');
   assert(preflight?.card_hash === hash && preflight.account_id === c.account_id && preflight.timezone === c.timezone,
     'Matching preflight account, timezone and review hash required.');
   assert(GATES.every((gate) => preflight[gate] === true) && text(preflight.evidence_ref), 'Every preflight check must pass with evidence.');
