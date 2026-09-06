@@ -92,6 +92,7 @@ function sandbox() {
     env: {
       ...process.env,
       HOME: home,
+      ...(process.platform === 'win32' ? { USERPROFILE: home } : {}),
       THREADIFY_WORKFLOWS_HOME: root,
       THREADIFY_WORKFLOWS_TEST_MODE: '1',
       THREADIFY_TEST_PLATFORM: 'darwin',
@@ -103,9 +104,8 @@ function nativeCodexFixture(box, failingCommand) {
   const bin = path.join(box.directory, 'bin');
   const calls = path.join(box.directory, 'codex-calls.jsonl');
   fs.mkdirSync(bin);
-  fs.writeFileSync(path.join(bin, 'codex'), `#!${process.execPath}
-import fs from 'node:fs';
-const args = process.argv.slice(2);
+  const handler = `const fs = require('node:fs');
+function runFake(args) {
 fs.appendFileSync(${JSON.stringify(calls)}, JSON.stringify(args) + '\\n');
 fs.appendFileSync(${JSON.stringify(`${calls}.environment`)}, JSON.stringify({ home: process.env.HOME, codexHome: process.env.CODEX_HOME }) + '\\n');
 if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {
@@ -114,10 +114,24 @@ if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {
 }
 process.stdout.write(args.join(' ') === 'plugin marketplace list --json'
   ? (process.env.THREADIFY_TEST_MARKETPLACES || '{"marketplaces":[]}') : '{}');
-`, { mode: 0o755 });
-  fs.writeFileSync(path.join(bin, 'package.json'), '{"type":"module"}');
+process.exit(0);
+}
+`;
+  let preload = {};
+  if (process.platform === 'win32') {
+    // spawnSync requires an executable, not a .cmd file with implicit shell use.
+    // Run a private Node executable with a guarded preload instead of skipping native-path tests.
+    fs.copyFileSync(process.execPath, path.join(bin, 'codex.exe'));
+    const script = path.join(bin, 'codex-probe.cjs');
+    fs.writeFileSync(script, handler + `if (require('node:path').basename(process.execPath).toLowerCase() === 'codex.exe') runFake(['plugin', ...process.argv.slice(2)]);\n`);
+    preload = { NODE_OPTIONS: `--require "${script.replaceAll('\\', '/')}"` };
+  } else {
+    fs.writeFileSync(path.join(bin, 'codex'), `#!${process.execPath}\n${handler}runFake(process.argv.slice(2));\n`, { mode: 0o755 });
+  }
+  fs.writeFileSync(path.join(bin, 'package.json'), '{"type":"commonjs"}');
   return {
     ...box.env,
+    ...preload,
     PATH: `${bin}${path.delimiter}${process.env.PATH}`,
     CODEX_HOME: path.join(box.home, '.codex'),
     THREADIFY_WORKFLOWS_TEST_MODE: '0',

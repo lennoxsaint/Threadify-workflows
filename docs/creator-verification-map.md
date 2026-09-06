@@ -34,7 +34,8 @@ Paths below are relative to this repository; tests live in `validation/creator-t
 | Versioned metadata and publication gate | Candidate 0.5.0; shared release-metadata validation; `release:false` | Release approval. No tag, stable branch advancement, deployment or submission. |
 | Reproducible archive and extracted execution | Candidate tests build twice, compare bytes/hashes, extract and run CLI | Persistent reviewed final artifact and exact final hashes. Tested local tar toolchain; Linux CI not yet run. |
 | Clean install, upgrade from 0.4.1 and rollback | `full-install.test.mjs` builds isolated source snapshots and preserves synthetic private data | Final-artifact installation and actual host loading. Stable enablement in test fixtures is not canonical release intent. |
-| GitHub review candidate before Directory | Local app feature commit; workflow implementation remains under review | Workflow commit, feature-branch push/draft PR handoff, final GitHub validation. |
+| Native installer safety and proof state | Installer tests cover removal failures, unresolved mutations, target isolation, marketplace ownership, unverified native status and lock handling. Minimal native plugin probes succeeded on Codex 0.147.0 and 0.144.1 | Full Threadify host loading and the current desktop runtime remain unproven. The Windows fake-CLI harness needs its actual Windows CI run. |
+| GitHub review candidate before Directory | App and workflow implementation have local feature commits; final workflow whole-diff audit remains open | Feature-branch push/draft PR handoff and final GitHub validation. |
 | Directory submission package | Preparation doc and five positive/three negative reviewer scenarios | Current official form requirements, verified publisher/support/policy suitability, approved visual assets and actual scenario results. |
 | Owner-reviewed live connected Day | Explicitly gated in reviewer scenarios | Deployment/availability plus exact account/source/copy/action approval and provider readbacks. Never substitute fixtures. |
 
@@ -44,7 +45,7 @@ Paths below are relative to this repository; tests live in `validation/creator-t
    cross-setup reservations and edited-card account/day preservation. Host behavior
    and provider evidence remain separate gates.
 2. Finish the final whole diff, docs/reference-path and public-content review.
-3. Commit reviewed workflow source and build persistent candidate artifacts twice;
+3. Build persistent candidate artifacts twice from the final reviewed commit;
    verify extraction and installation against those exact bytes.
 4. Prepare feature-branch/draft PR handoff and complete independent submission work.
 5. Request only the remaining exact owner choices/actions for host and live gates.

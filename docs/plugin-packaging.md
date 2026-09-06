@@ -30,7 +30,8 @@ not been rerun. Plugin-creator supplies the current local packaging fallback.
 - Repeat full install/upgrade checks against the final release artifact and
   verify Codex host discovery/loading, not only filesystem installation.
 - Audit advanced workflow behavior and generation/free-versus-paid guidance.
-- Finish creator schemas, validation states and reviewer demonstrations.
+- Complete actual reviewer demonstrations; creator schemas and validation states
+  already have local implementation and automated fixture coverage.
 - Select and verify visual assets and publisher, support and legal details.
 - Build and compare two release archives, then test the extracted contents.
 - Obtain exact approval for the live connected Day and for any deployment,
