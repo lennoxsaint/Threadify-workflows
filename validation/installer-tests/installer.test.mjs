@@ -112,7 +112,8 @@ if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {
   process.stderr.write('synthetic removal denied');
   process.exit(1);
 }
-process.stdout.write('{}');
+process.stdout.write(args.join(' ') === 'plugin marketplace list --json'
+  ? (process.env.THREADIFY_TEST_MARKETPLACES || '{"marketplaces":[]}') : '{}');
 `, { mode: 0o755 });
   fs.writeFileSync(path.join(bin, 'package.json'), '{"type":"module"}');
   return {
@@ -140,6 +141,42 @@ test('alternate-home native install does not inherit another Codex configuration
     assert.equal(observed.codexHome, path.join(box.home, '.codex'));
   }
   assert.equal(fs.existsSync(env.CODEX_HOME), false);
+  const calls = fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8').trim().split('\n').map(JSON.parse);
+  assert.equal(calls.some((args) => args[1] === 'remove'), false, 'install must not uninstall the existing plugin');
+  assert.equal(calls.some((args) => args[1] === 'marketplace' && args[2] === 'remove'), false);
+});
+
+test('native install refuses a same-name marketplace outside its managed releases', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.5.0' });
+  const env = nativeCodexFixture(box, 'never-match');
+  env.THREADIFY_TEST_MARKETPLACES = JSON.stringify({ marketplaces: [{ name: 'threadify-workflows',
+    root: box.directory, marketplaceSource: { sourceType: 'local', source: box.directory } }] });
+  await assert.rejects(install({ home: box.home, root: box.root, env, targets: 'codex', autoUpdate: false,
+    sourceBundle: release.bundleFile, sourceManifest: release.manifestFile }), /unmanaged_codex_marketplace/);
+  const calls = fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8').trim().split('\n').map(JSON.parse);
+  assert.deepEqual(calls, [['plugin', 'marketplace', 'list', '--json']]);
+});
+
+test('native update replaces only a verified managed marketplace without removing the plugin', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const oldRelease = fixtureRelease(box.directory, { version: '0.4.1' });
+  const newRelease = fixtureRelease(box.directory, { version: '0.5.0' });
+  await install({ home: box.home, root: box.root, env: box.env, targets: 'codex', autoUpdate: false,
+    sourceBundle: oldRelease.bundleFile, sourceManifest: oldRelease.manifestFile });
+  const env = nativeCodexFixture(box, 'never-match');
+  const source = path.join(box.root, 'releases', '0.4.1', 'plugin');
+  env.THREADIFY_TEST_MARKETPLACES = JSON.stringify({ marketplaces: [{ name: 'threadify-workflows',
+    root: source, marketplaceSource: { sourceType: 'local', source } }] });
+  await install({ home: box.home, root: box.root, env, targets: 'codex', autoUpdate: false,
+    sourceBundle: newRelease.bundleFile, sourceManifest: newRelease.manifestFile });
+  const calls = fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8').trim().split('\n').map(JSON.parse);
+  assert.deepEqual(calls.map((args) => args.slice(0, 3)), [
+    ['plugin', 'marketplace', 'list'], ['plugin', 'marketplace', 'remove'],
+    ['plugin', 'marketplace', 'add'], ['plugin', 'add', 'threadify-workflows@threadify-workflows'],
+  ]);
 });
 
 test('normal-home native install preserves an intentional custom CODEX_HOME', (t) => {

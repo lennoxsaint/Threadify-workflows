@@ -38,6 +38,8 @@ State, release history, receipts, preserved migration context, and the last-know
 
 For the current user's home, Codex targets respect an intentional `CODEX_HOME` setting. An alternate `home` supplied through the installer API targets that home's `.codex` directory instead of inheriting the caller's Codex configuration. Native commands and filesystem fallback links use the same rule. This isolates the Codex target; it is not a general process or credential sandbox.
 
+Native installation checks configured marketplaces before changing them. A same-name marketplace is replaced only when its local source resolves to a marked release owned by this installer. Unknown, remote or unrelated sources stop installation. Updates re-register a changed managed marketplace source and reinstall the plugin without first uninstalling its cache. A later failure still requires recovery; this is not an atomic native update.
+
 ## Update behavior
 
 - Daily scheduler checks include up to thirty minutes of jitter.
