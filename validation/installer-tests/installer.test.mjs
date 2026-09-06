@@ -106,7 +106,7 @@ function nativeCodexFixture(box, failingCommand) {
 import fs from 'node:fs';
 const args = process.argv.slice(2);
 fs.appendFileSync(${JSON.stringify(calls)}, JSON.stringify(args) + '\\n');
-if (args.join(' ').startsWith(${JSON.stringify(failingCommand)})) {
+if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {
   process.stderr.write('synthetic removal denied');
   process.exit(1);
 }
@@ -119,8 +119,64 @@ process.stdout.write('{}');
     CODEX_HOME: path.join(box.home, '.codex'),
     THREADIFY_WORKFLOWS_TEST_MODE: '0',
     THREADIFY_TEST_CALLS: calls,
+    THREADIFY_TEST_FAIL_COMMAND: failingCommand,
   };
 }
+
+test('failed native update keeps the active pointer and requires reconciliation before another update', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const oldRelease = fixtureRelease(box.directory, { version: '0.4.1' });
+  const newRelease = fixtureRelease(box.directory, { version: '0.5.0' });
+  await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
+    autoUpdate: false, sourceBundle: oldRelease.bundleFile, sourceManifest: oldRelease.manifestFile });
+  const pointer = fs.realpathSync(path.join(box.root, 'current'));
+  const env = nativeCodexFixture(box, 'plugin marketplace add');
+  const options = { home: box.home, root: box.root, env,
+    sourceBundle: newRelease.bundleFile, sourceManifest: newRelease.manifestFile };
+  const failed = await update(options);
+  assert.equal(failed.status, 'update_failed_requires_recovery');
+  assert.equal(failed.new_versions, null);
+  assert.deepEqual(failed.installed_targets, []);
+  assert.equal(fs.realpathSync(path.join(box.root, 'current')), pointer);
+  assert.equal(status({ root: box.root }).status, 'installation_requires_recovery');
+  const calls = fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8');
+  assert.equal((await update(options)).status, 'update_failed_requires_recovery');
+  assert.equal(fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8'), calls);
+  await install({ ...options, targets: 'codex', autoUpdate: false,
+    env: { ...env, THREADIFY_TEST_FAIL_COMMAND: 'never-match' } });
+  assert.equal(status({ root: box.root }).status, 'installed');
+  assert.equal(fs.realpathSync(path.join(box.root, 'current')), fs.realpathSync(path.join(box.root, 'releases', '0.5.0')));
+});
+
+test('failed native rollback does not switch the pointer or claim a healthy installation', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  for (const version of ['0.4.1', '0.5.0']) {
+    const release = fixtureRelease(box.directory, { version });
+    await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
+      autoUpdate: false, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+  }
+  const pointer = fs.realpathSync(path.join(box.root, 'current'));
+  const env = nativeCodexFixture(box, 'plugin add');
+  assert.throws(() => rollback({ home: box.home, root: box.root, env, version: '0.4.1' }), /codex_plugin_install_failed/);
+  assert.equal(fs.realpathSync(path.join(box.root, 'current')), pointer);
+  assert.equal(status({ root: box.root }).status, 'installation_requires_recovery');
+});
+
+test('an unreadable mutation marker blocks automatic update without fetching or changing clients', async (t) => {
+  const box = sandbox();
+  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  const release = fixtureRelease(box.directory, { version: '0.4.1' });
+  await install({ home: box.home, root: box.root, env: box.env, targets: 'claude',
+    autoUpdate: true, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+  fs.writeFileSync(path.join(box.root, 'mutation.json'), '{broken');
+  const result = await update({ home: box.home, root: box.root, env: box.env, onUse: true,
+    sourceManifest: path.join(box.directory, 'must-not-read.json') });
+  assert.equal(result.status, 'update_failed_requires_recovery');
+  assert.equal(result.recovery.status, 'unreadable');
+  assert.equal(status({ root: box.root }).status, 'installation_requires_recovery');
+});
 
 for (const operation of ['uninstall', 'target migration']) {
   for (const command of ['plugin remove', 'plugin marketplace remove']) {

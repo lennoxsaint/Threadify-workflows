@@ -6,7 +6,7 @@
   "required": ["record_type", "status", "checked_at", "previous_versions", "new_versions", "installed_targets", "verified_hashes", "fallback", "rollback_state"],
   "properties": {
     "record_type": {"const": "UpdateReceiptV1"},
-    "status": {"enum": ["installed", "up_to_date", "rules_reloaded", "updated_restart_required", "update_failed_using_cached_version", "rolled_back", "uninstalled"]},
+    "status": {"enum": ["installed", "up_to_date", "rules_reloaded", "updated_restart_required", "update_failed_using_cached_version", "update_failed_requires_recovery", "rolled_back", "uninstalled"]},
     "checked_at": {"type": "string", "format": "date-time"},
     "previous_versions": {"type": ["object", "null"]},
     "new_versions": {"type": ["object", "null"]},

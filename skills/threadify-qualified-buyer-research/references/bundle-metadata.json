@@ -45,7 +45,7 @@
     {
       "source": "schemas/update-receipt.v1.json",
       "target": "update-receipt.v1.json",
-      "sha256": "429db592013d6bd6178d9bfbb78d89a97a15b6a77e2eae8c77716d832577139d"
+      "sha256": "db0076d99e0e3a310670b9d2b154afd36dd73fecae958b372ddeba2b7be9d40d"
     },
     {
       "source": "release/release-intent.json",
