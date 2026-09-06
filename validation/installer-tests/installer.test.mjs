@@ -98,6 +98,57 @@ function sandbox() {
   };
 }
 
+function nativeCodexFixture(box, failingCommand) {
+  const bin = path.join(box.directory, 'bin');
+  const calls = path.join(box.directory, 'codex-calls.jsonl');
+  fs.mkdirSync(bin);
+  fs.writeFileSync(path.join(bin, 'codex'), `#!${process.execPath}
+import fs from 'node:fs';
+const args = process.argv.slice(2);
+fs.appendFileSync(${JSON.stringify(calls)}, JSON.stringify(args) + '\\n');
+if (args.join(' ').startsWith(${JSON.stringify(failingCommand)})) {
+  process.stderr.write('synthetic removal denied');
+  process.exit(1);
+}
+process.stdout.write('{}');
+`, { mode: 0o755 });
+  fs.writeFileSync(path.join(bin, 'package.json'), '{"type":"module"}');
+  return {
+    ...box.env,
+    PATH: `${bin}${path.delimiter}${process.env.PATH}`,
+    CODEX_HOME: path.join(box.home, '.codex'),
+    THREADIFY_WORKFLOWS_TEST_MODE: '0',
+    THREADIFY_TEST_CALLS: calls,
+  };
+}
+
+for (const operation of ['uninstall', 'target migration']) {
+  for (const command of ['plugin remove', 'plugin marketplace remove']) {
+    test(`native ${operation} preserves its record when ${command} fails`, async (t) => {
+      const box = sandbox();
+      t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+      const release = fixtureRelease(box.directory, { version: '0.4.1' });
+      await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
+        autoUpdate: false, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
+      const configFile = path.join(box.root, 'config.json');
+      const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+      config.installed_targets = ['codex-plugin:threadify-workflows@threadify-workflows'];
+      fs.writeFileSync(configFile, JSON.stringify(config));
+      const env = nativeCodexFixture(box, command);
+      if (operation === 'uninstall') {
+        assert.throws(() => uninstall({ home: box.home, root: box.root, env }), /synthetic removal denied/);
+      } else {
+        await assert.rejects(install({ home: box.home, root: box.root, env, targets: 'agents',
+          autoUpdate: false, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile }),
+        /synthetic removal denied/);
+      }
+      assert.deepEqual(JSON.parse(fs.readFileSync(configFile, 'utf8')), config);
+      const calls = fs.readFileSync(env.THREADIFY_TEST_CALLS, 'utf8').trim().split('\n').map(JSON.parse);
+      assert.equal(calls.length, command === 'plugin remove' ? 1 : 2);
+    });
+  }
+}
+
 test('fresh install exposes exactly one native skill in every supported client and a complete Codex plugin', async (t) => {
   const box = sandbox();
   t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
