@@ -70,6 +70,10 @@ test('valid redacted proposal updates rules, release intent, changelog, fixture,
   assert.equal(fs.existsSync(path.join(root, 'validation', 'mock-fixtures', 'public-rule-proposals', 'qbr-message-test-rule.json')), true);
   assert.equal(fs.readFileSync(path.join(root, 'release', 'CHANGELOG.md'), 'utf8').includes('## 0.4.1'), true);
   assert.equal(fs.readFileSync(path.join(root, 'plugins', 'threadify', 'skills', 'threadify-qualified-buyer-research', 'references', 'public-rules.v1.json'), 'utf8').includes('0.4.1'), true);
+  const installedRules = JSON.parse(fs.readFileSync(path.join(root, 'skills', 'threadify-qualified-buyer-research', 'references', 'public-rules.v1.json'), 'utf8'));
+  assert.ok(installedRules.rules.some((rule) => rule.rule_id === 'message.evidence-producing-step'));
+  const parity = spawnSync(process.execPath, ['scripts/build-advanced-bundles.mjs', '--check'], { cwd: root, encoding: 'utf8' });
+  assert.equal(parity.status, 0, parity.stderr);
 });
 
 test('public proposal application rejects immutable hard-gate mutation', (t) => {
@@ -82,6 +86,20 @@ test('public proposal application rejects immutable hard-gate mutation', (t) => 
   const result = runProposal(root, value);
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /immutable_hard_gate_mutation_rejected/);
+});
+
+test('a version-changing proposal preserves dependency lock data and updates package identity', (t) => {
+  const root = checkout(t);
+  const lockFile = path.join(root, 'package-lock.json');
+  const original = JSON.parse(fs.readFileSync(lockFile, 'utf8'));
+  const result = runProposal(root, proposal({ target_release_version: '0.4.2' }));
+  assert.equal(result.status, 0, result.stderr);
+  const lock = JSON.parse(fs.readFileSync(lockFile, 'utf8'));
+  assert.equal(lock.version, '0.4.2');
+  assert.equal(lock.packages[''].version, '0.4.2');
+  original.version = '0.4.2';
+  original.packages[''].version = '0.4.2';
+  assert.deepEqual(lock, original);
 });
 
 test('public proposal application rejects private voice material', (t) => {

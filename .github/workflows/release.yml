@@ -17,8 +17,6 @@ jobs:
   release:
     name: approved-versioned-release
     runs-on: ubuntu-latest
-    env:
-      FC_SYNC_TOKEN: ${{ secrets.FULL_CIRCLE_SYNC_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,6 +46,9 @@ jobs:
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
+      - name: Install locked test dependencies
+        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
+        run: npm ci --ignore-scripts
       - name: Validate approved source
         if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
         run: npm test
@@ -61,6 +62,7 @@ jobs:
         run: |
           gh release create "${{ steps.intent.outputs.tag }}" \
             dist/threadify-workflows-bundle.json \
+            dist/threadify-workflows-plugin.tar.gz \
             dist/stable-release-manifest.json \
             dist/checksums.txt \
             dist/CHANGELOG.md \
@@ -71,27 +73,3 @@ jobs:
         if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false'
         run: |
           git push origin "$GITHUB_SHA:refs/heads/stable"
-      - name: Dispatch Full Circle rules pin
-        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false' && env.FC_SYNC_TOKEN != ''
-        env:
-          GH_TOKEN: ${{ secrets.FULL_CIRCLE_SYNC_TOKEN }}
-        run: |
-          node - <<'NODE' > /tmp/threadify-fc-dispatch.json
-          const fs = require('fs');
-          const intent = JSON.parse(fs.readFileSync('release/release-intent.json', 'utf8'));
-          const manifest = JSON.parse(fs.readFileSync('dist/stable-release-manifest.json', 'utf8'));
-          process.stdout.write(JSON.stringify({
-            event_type: 'threadify_qbr_stable_release',
-            client_payload: {
-              release_version: intent.release_version,
-              rules_version: intent.rules_version,
-              commit: manifest.commit,
-              manifest_url: `https://github.com/${process.env.GITHUB_REPOSITORY}/releases/download/v${intent.release_version}/stable-release-manifest.json`
-            }
-          }));
-          NODE
-          gh api --method POST repos/lennoxsaint/full-circle/dispatches --input /tmp/threadify-fc-dispatch.json
-      - name: Report missing Full Circle sync credential
-        if: steps.intent.outputs.enabled == 'true' && steps.tag.outputs.exists == 'false' && env.FC_SYNC_TOKEN == ''
-        run: |
-          echo "::warning::Stable release succeeded, but FULL_CIRCLE_SYNC_TOKEN is not configured."

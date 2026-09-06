@@ -22,7 +22,8 @@
     "title": { "type": "string" },
     "summary": { "type": "string" },
     "supported_adapters": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
-    "required_mcp_tools": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "required_mcp_tools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+    "optional_mcp_tools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "free_capabilities": { "type": "array", "items": { "type": "string" } },
     "paid_capability_stubs": { "type": "array", "items": { "type": "string" } },
     "approval_gate": {

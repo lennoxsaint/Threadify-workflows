@@ -10,9 +10,9 @@
     "validate_post",
     "schedule_post",
     "get_schedule_status",
-    "get_schedule_report",
-    "record_feedback"
+    "list_scheduled_posts"
   ],
+  "optional_mcp_tools": ["record_feedback"],
   "free_capabilities": [
     "connection defaults",
     "basic greatest-hits readback where exposed",

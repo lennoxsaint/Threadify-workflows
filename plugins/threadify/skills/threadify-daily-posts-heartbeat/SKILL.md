@@ -11,11 +11,18 @@ through Threadify MCP.
 4. Validate exact approved text with `validate_post`.
 5. If the approved pack includes review-only lane metadata, keep labels, receipts, blockers, CTA destinations, UTM sources, and media review state separate from public copy.
 6. Show account handle, exact text, media, scheduled time, timezone, and action.
-7. Stop for explicit final approval before `schedule_post`.
+7. Check `list_scheduled_posts` for conflicts before proposing the final slots. Never overwrite
+   occupied slots. Stop for explicit final approval before `schedule_post`; approval binds the
+   exact copy, media, account and times shown. Changed items need fresh validation and approval.
 8. Read back status with `get_schedule_status`.
-9. Use `get_schedule_report` for the relevant schedule window when the user asks
+9. Use `list_scheduled_posts` for the relevant schedule window when the user asks
    what is queued, or when a day-level receipt needs complete readback.
 10. Return a receipt matching the manifest.
+
+Preserve confirmed successes and reconcile ambiguous schedule attempts before retrying;
+do not replay an entire batch. Keep feedback local unless the user separately opts in to
+share the exact feedback. This delivery workflow does not create a recurring automation
+merely because its name includes heartbeat.
 
 Do not create new public copy, silently rewrite approved text, publish now, or
 schedule without explicit final approval.

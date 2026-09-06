@@ -1,0 +1,1185 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/creator-lifecycle.v1.json",
+  "title": "Creator lifecycle records v1",
+  "description": "Local lifecycle shapes, not authorization or independent provider proof. Load creator-records.v1.json alongside this schema.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/setup"
+    },
+    {
+      "$ref": "#/$defs/setupDisplay"
+    },
+    {
+      "$ref": "#/$defs/feedback"
+    },
+    {
+      "$ref": "#/$defs/reminder"
+    },
+    {
+      "$ref": "#/$defs/workspace"
+    },
+    {
+      "$ref": "#/$defs/state"
+    }
+  ],
+  "$defs": {
+    "importReceipt": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "unknown"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "status",
+            "evidence_ref"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "saved"
+            },
+            "authoritative": {
+              "const": true
+            },
+            "user_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "source_url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https?://"
+            },
+            "full_text": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "item_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "in_my_vault": {
+              "const": true
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "status",
+            "authoritative",
+            "user_id",
+            "source_url",
+            "full_text",
+            "item_id",
+            "in_my_vault",
+            "checked_at",
+            "evidence_ref"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "not_found"
+            },
+            "authoritative": {
+              "const": true
+            },
+            "user_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "source_url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https?://"
+            },
+            "attempt_key": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "status",
+            "authoritative",
+            "user_id",
+            "source_url",
+            "attempt_key",
+            "checked_at",
+            "evidence_ref"
+          ]
+        }
+      ]
+    },
+    "savedReceipt": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "const": "saved"
+        },
+        "authoritative": {
+          "const": true
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "full_text": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "item_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "in_my_vault": {
+          "const": true
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "status",
+        "authoritative",
+        "user_id",
+        "source_url",
+        "full_text",
+        "item_id",
+        "in_my_vault",
+        "checked_at",
+        "evidence_ref"
+      ]
+    },
+    "importAttempt": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "outcome": {
+          "enum": [
+            "pending",
+            "unknown",
+            "ready",
+            "saved"
+          ]
+        },
+        "receipt": {
+          "$ref": "#/$defs/importReceipt"
+        }
+      },
+      "required": [
+        "key",
+        "started_at",
+        "outcome"
+      ]
+    },
+    "setup": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-setup.v1"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              },
+              "source_type": {
+                "enum": [
+                  "threads",
+                  "youtube"
+                ]
+              },
+              "origin": {
+                "enum": [
+                  "user",
+                  "shared_viral"
+                ]
+              },
+              "full_text": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "extraction_evidence": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "duplicate_of": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "initial_state": {
+                "enum": [
+                  "ready",
+                  "duplicate",
+                  "unavailable",
+                  "saved"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "ready",
+                  "duplicate",
+                  "unavailable",
+                  "saved",
+                  "import_pending",
+                  "unknown"
+                ]
+              },
+              "attempts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/importAttempt"
+                },
+                "minItems": 0
+              },
+              "receipt": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/importReceipt"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "url",
+              "source_type",
+              "origin",
+              "full_text",
+              "extraction_evidence",
+              "reason",
+              "duplicate_of",
+              "initial_state",
+              "state",
+              "attempts",
+              "receipt"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "saved"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "receipt": {
+                      "$ref": "#/$defs/savedReceipt"
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "import_pending",
+                        "unknown"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "attempts": {
+                      "type": "array",
+                      "minItems": 1
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "ready",
+                        "saved",
+                        "import_pending",
+                        "unknown"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "full_text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "extraction_evidence": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    }
+                  },
+                  "required": []
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "duplicate"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "state"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "duplicate_of": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    }
+                  },
+                  "required": []
+                }
+              }
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 25
+        },
+        "approval": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "hash": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "evidence_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "hash",
+                "evidence_ref",
+                "at"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "user_id",
+        "created_at",
+        "items",
+        "approval"
+      ]
+    },
+    "setupDisplay": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-setup-display.v1"
+        },
+        "setup_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "user_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "disclosure": {
+          "const": "Saving qualifying posts to My Vault can also publish them into shared Viral. Saving a source does not grant rights to copy it."
+        },
+        "coverage_note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              },
+              "source_type": {
+                "enum": [
+                  "threads",
+                  "youtube"
+                ]
+              },
+              "origin": {
+                "enum": [
+                  "user",
+                  "shared_viral"
+                ]
+              },
+              "full_text": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "extraction_evidence": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "reason": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "duplicate_of": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "initial_state": {
+                "enum": [
+                  "ready",
+                  "duplicate",
+                  "unavailable",
+                  "saved"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "url",
+              "source_type",
+              "origin",
+              "full_text",
+              "extraction_evidence",
+              "reason",
+              "duplicate_of",
+              "initial_state"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 25
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "schema_version",
+        "setup_id",
+        "user_id",
+        "disclosure",
+        "coverage_note",
+        "items",
+        "hash"
+      ]
+    },
+    "feedbackApproval": {
+      "type": "object",
+      "properties": {
+        "opt_in": {
+          "const": true
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "opt_in",
+        "content_hash",
+        "evidence_ref",
+        "at"
+      ]
+    },
+    "feedbackReceipt": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "unknown"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "status",
+            "evidence_ref"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "status": {
+              "const": "sent"
+            },
+            "authoritative": {
+              "const": true
+            },
+            "provider_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "account_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "status",
+            "authoritative",
+            "provider_ref",
+            "content_hash",
+            "account_id",
+            "checked_at",
+            "evidence_ref"
+          ]
+        }
+      ]
+    },
+    "feedback": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-feedback.v1"
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "account_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "review_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "card_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "original_parts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "minItems": 1
+            },
+            "final_parts": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "minItems": 1
+            },
+            "instruction": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "rating": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "account_id",
+            "review_id",
+            "card_id",
+            "original_parts",
+            "final_parts",
+            "instruction",
+            "rating",
+            "created_at"
+          ]
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "state": {
+          "enum": [
+            "local_only",
+            "share_pending",
+            "unknown",
+            "sent"
+          ]
+        },
+        "share_approval": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/feedbackApproval"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "receipt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/feedbackReceipt"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "durable_rule": {
+          "const": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "content",
+        "hash",
+        "state",
+        "share_approval",
+        "receipt",
+        "durable_rule"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "local_only"
+                ]
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "share_approval": {
+                "type": "null"
+              },
+              "receipt": {
+                "type": "null"
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "share_pending",
+                  "unknown",
+                  "sent"
+                ]
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "share_approval": {
+                "$ref": "#/$defs/feedbackApproval"
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "sent"
+                ]
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "$ref": "#/$defs/feedbackReceipt",
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "sent"
+                  }
+                }
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "unknown"
+                ]
+              }
+            },
+            "required": [
+              "state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "unknown"
+                  },
+                  "evidence_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  }
+                },
+                "required": [
+                  "status",
+                  "evidence_ref"
+                ]
+              }
+            },
+            "required": []
+          }
+        }
+      ]
+    },
+    "reminder": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "not_requested",
+            "unsupported",
+            "prepared_needs_confirmation"
+          ]
+        },
+        "created": {
+          "const": false
+        },
+        "manual_continuation": {
+          "const": true
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "plan_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,159}$"
+            },
+            "frequency": {
+              "const": "daily"
+            },
+            "local_time": {
+              "type": "string",
+              "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+            },
+            "timezone": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "plan_id",
+            "frequency",
+            "local_time",
+            "timezone",
+            "prompt"
+          ]
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "capability_evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "status",
+        "created",
+        "manual_continuation"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "unsupported"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "prepared_needs_confirmation"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "spec": {
+                "type": "object"
+              },
+              "hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "capability_evidence_ref": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              }
+            },
+            "required": [
+              "spec",
+              "hash",
+              "capability_evidence_ref"
+            ]
+          }
+        }
+      ]
+    },
+    "workspace": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-workspace.v1"
+        },
+        "plans": {
+          "type": "array",
+          "items": {
+            "$ref": "https://threadify.app/schemas/creator-records.v1.json#/$defs/horizon"
+          },
+          "minItems": 0
+        },
+        "reviews": {
+          "type": "array",
+          "items": {
+            "$ref": "https://threadify.app/schemas/creator-records.v1.json#/$defs/review"
+          },
+          "minItems": 0
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/feedback"
+          },
+          "minItems": 0
+        },
+        "setups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/setup"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "plans",
+        "reviews",
+        "feedback",
+        "setups"
+      ]
+    },
+    "state": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-state.v1"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "payload": {
+          "$ref": "#/$defs/workspace"
+        },
+        "checksum": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "schema_version",
+        "revision",
+        "payload",
+        "checksum"
+      ]
+    }
+  }
+}

@@ -1,40 +1,31 @@
-# Getting Started
+# Getting started
 
-Threadify Workflows gives agents a public-safe operating script for Threadify MCP.
+Start with Viral Vault Setup, Create My Day, Create My Week or Create My Month.
+The first three install-surface prompts are Vault Setup, Create My Day and
+Plan My Content. For Plan My Content, choose a seven-day week or 28-day month.
 
-Use it when a user wants a repeatable creator workflow without learning individual MCP tool names. The workflow manifest tells the agent:
+1. Read the chosen manifest and matching skill's bundled references.
+2. Confirm sources, account or local creator identity, timezone and preferred times.
+3. If connected, read `get_connection_defaults` and current tool/entitlement
+   information. If disconnected, keep local drafting available.
+4. Prepare the source selection or horizon blueprint. Rolling drafts are the
+   default; a blueprint is not a finished draft or a schedule.
+5. Create exact drafts and record validation with honest local/provider origin.
+6. Show copy, media, sources, adaptation mode, gaps, account, timezone and times.
+   Obtain exact approval before the proposed import or delivery action.
+7. Persist pending attempts before authorized provider writes. Reconcile actual
+   readback before retrying unknown results. Keep partial successes.
+8. Resume unresolved work first, then prepare the next day. Optional native
+   reminders prepare review packs only and require explicit creation/readback.
+9. Keep feedback local unless the owner separately opts into sharing.
 
-- which Threadify MCP tools are required
-- which actions are free/default versus paid/private
-- where human approval is mandatory
-- what receipt must be returned
-- what to do when MCP is unavailable
+Read [the creator protocol](creator-system.md) for defaults and edge cases,
+[engine commands](creator-engine.md) for local operations, and
+[packaging notes](plugin-packaging.md) for incomplete release gates.
 
-## V0 Operating Loop
+## Brain Sync
 
-1. Load the workflow manifest.
-2. Check Threadify connection defaults.
-3. Gather user-supplied or external-agent-supplied content.
-4. Validate the public payload.
-5. Show the exact action for approval.
-6. Call allowed MCP tools after approval.
-7. Read status back from Threadify.
-8. Emit a receipt.
-9. Record structured feedback when the user provides it.
-
-V0 does not run Threadify-native generation from public workflow prompts.
-
-## Brain Sync Loop
-
-For Personal Brain Sync / Current Self Packet workflows:
-
-1. Treat the approved packet as a source artifact only.
-2. Propose small memory records.
-3. Classify each record.
-4. Stop for approval.
-5. Write only approved memories.
-6. Query/read back Brain to prove the memory is retained and useful.
-7. Correct, tombstone, or retry failed memories.
-8. Emit a per-item memory update ledger.
-
-Live metrics must include source/date context and must not be stored as timeless identity facts.
+Treat approved source packets as source material, never bulk upload payloads.
+Propose small classified memories with source/date and expiry where relevant.
+Show exact changes, obtain approval, write only approved records and query them
+back. Do not store changing metrics as timeless identity facts.

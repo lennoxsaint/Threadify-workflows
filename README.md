@@ -2,11 +2,23 @@
 
 Threadify Workflows is a public, MCP ready workflow library for running creator workflows through Threadify from agent clients such as Hermes, Gemini, Codex, Claude, OpenClaw, Cursor, and any generic MCP client.
 
-These recipes are free and open source under the MIT License. The tie to Threadify is a runtime dependency, not a license restriction: the workflows are free to read, fork, and run, while Threadify's hosted generation, scheduling, and analytics remain the paid service they call into.
+The generalized methods and local Node engine are free and open source under the MIT License. Local drafting works from user-supplied sources and confirmed facts without a Threadify account. Hosted Brain, shared corpus, generation, saved drafts, scheduling and analytics require the connected account's current access.
 
-This repo is orchestration-only. It teaches agents which Threadify MCP tools to use, when to stop for human approval, how to fall back when a tool is unavailable, and how to produce receipts. It does not publish Threadify's private generation logic, private course material, member data, account IDs, credentials, or proprietary quality systems.
+This repo includes local planning, review and recovery controls plus approval-gated service orchestration. It does not publish Threadify's private generation logic, private source material, member data, account IDs, credentials or proprietary ranking systems.
 
-## What V0 Includes
+## Primary creator workflows
+
+- [Viral Vault Setup](workflows/vault-setup/README.md)
+- [Create My Day](workflows/create-my-day/README.md)
+- [Create My Week](workflows/create-my-week/README.md)
+- [Create My Month](workflows/create-my-month/README.md)
+
+Week means seven days; Month means 28 days, visibly four weeks. Rolling drafts
+are the default. All drafts upfront is optional; neither mode bypasses daily
+review or fresh delivery checks. See [getting started](docs/getting-started.md)
+and the [skill disposition audit](docs/skill-disposition-audit.md).
+
+## Preserved capabilities
 
 - Strict workflow manifests for agent-native Threadify execution.
 - Adapter packs for generic MCP, Hermes, Gemini, Codex, Claude, OpenClaw, and Cursor.
@@ -40,7 +52,7 @@ Threadify keeps the paid execution layer:
 - reply generation
 - advanced analytics and winner strategy
 - additional accounts and platforms
-- live X Article publishing or scheduling
+- any future supported X Article execution (not claimed by this package)
 - premium workflow packs
 - hosted calendar and deeper readback surfaces
 - private quality and voice systems
@@ -63,6 +75,11 @@ npx --yes github:lennoxsaint/Threadify-workflows install
 
 The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
 
+The existing standalone installer targets Qualified Buyer Research. The new
+creator package still needs complete extracted-plugin install and upgrade
+proof; running the stable installer does not prove these creator changes are
+released or installed. See [packaging status](docs/plugin-packaging.md).
+
 1. Connect Threadify MCP in your agent client.
 2. Pick a workflow under `workflows/`.
 3. Open the matching adapter under `adapters/`.
@@ -70,9 +87,10 @@ The installer asks before enabling daily and on-use automatic updates. It instal
 5. Approve the final action only after the agent shows exact text, account, time, media, and action.
 6. Save the receipt.
 
-Validate the repo before publishing or editing:
+Install development dependencies and validate before publishing or editing:
 
 ```sh
+npm ci
 npm test
 ```
 
@@ -105,7 +123,7 @@ reviewer credentials into this repo.
 
 ## Publication Status
 
-This repo is structured as a public-ready workflow library. Before any public
+This working creator package is not yet release-verified. Before any public
 sync or release announcement, run the checklist in `PUBLICATION_CHECKLIST.md`
 and confirm the owner gates listed there.
 

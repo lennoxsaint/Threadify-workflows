@@ -16,16 +16,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 18
+      - run: npm ci --ignore-scripts
       - run: npm test
-      - run: npm run release:build -- --commit "$GITHUB_SHA"
-      - name: Verify no private evidence entered public release assets
-        run: |
-          if grep -Eri 'student email|member email|private lesson|access_token|refresh_token|threads_account_id' dist; then
-            exit 1
-          fi
+      - run: npm run release:build -- --candidate --commit "$GITHUB_SHA"
+      - name: Verify candidate artifact integrity
+        run: node scripts/verify-release-assets.mjs dist
 
   isolated-client-installs:
     name: isolated-client-installs (${{ matrix.os }})
