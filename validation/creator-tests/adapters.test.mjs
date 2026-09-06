@@ -35,3 +35,15 @@ test('X Article preparation distinguishes thumbnail requests and optional feedba
   assert.match(body, /request packet is not a generated image/);
   assert.doesNotMatch(body, /real image asset or image-generation request packet exists/);
 });
+
+test('root contributor, security and publication guidance permits the public local engine', () => {
+  for (const file of ['CONTRIBUTING.md', 'SECURITY.md', 'PUBLICATION_CHECKLIST.md']) {
+    const body = read(file);
+    assert.doesNotMatch(body, /orchestration-only/, file);
+    assert.match(body, /local engine/, file);
+  }
+  const checklist = read('PUBLICATION_CHECKLIST.md');
+  assert.match(checklist, /Lennox approves/);
+  assert.match(checklist, /SamSam approves/);
+  assert.match(checklist, /Support\/security contact is confirmed/);
+});

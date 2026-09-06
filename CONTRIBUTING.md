@@ -1,12 +1,14 @@
 # Contributing
 
 Threadify Workflows accepts public-safe workflow improvements only. The repo is open source under
-the MIT License; by contributing you agree your contribution is licensed under MIT. The "tie" to
-Threadify is the runtime MCP dependency, not a usage restriction.
+the MIT License; by contributing you agree your contribution is licensed under MIT.
+The public local engine supports planning, review and recovery. Threadify MCP is
+optional for local drafting and required for hosted capabilities.
 
 ## Contribution Rules
 
-- Keep workflows orchestration-only.
+- Keep generalized methods and the local engine public; keep proprietary service
+  implementations, corpora and personal state out of the package.
 - Require explicit final approval before any public or queue-changing action.
 - Use fallback artifacts when MCP tools are unavailable.
 - Do not add private prompts, anti-slop internals, account IDs, member data,
@@ -18,6 +20,7 @@ Threadify is the runtime MCP dependency, not a usage restriction.
 Run:
 
 ```sh
+npm ci --ignore-scripts
 npm test
 ```
 
@@ -30,7 +33,7 @@ Each workflow must include:
 
 - a strict manifest
 - a README
-- required MCP tools
+- required and optional MCP tools, with disconnected behavior where supported
 - fallback behavior
 - explicit approval gate
 - receipt requirements
