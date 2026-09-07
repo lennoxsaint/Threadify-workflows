@@ -10,8 +10,18 @@ Preferred public setup:
 4. Log in to Threadify and approve the connection.
 5. Run a read-only check such as `get_connection_defaults` before any workflow.
 
-For local Codex dogfood, this repo also includes `plugins/threadify/` and can be
-added as a local plugin marketplace with `codex plugin marketplace add .`.
+For local Codex dogfood, the repository root is the plugin source. From that
+root, register and install it:
+
+```sh
+codex plugin marketplace add .
+codex plugin add threadify-workflows@threadify-workflows
+```
+
+Registration alone does not install the plugin. Start a new task to check skill
+discovery. The nested `plugins/threadify/` directory preserves compatibility
+sources; it is not the root creator plugin. Local drafting does not need OAuth;
+connect only when using Threadify's hosted services.
 
 Manual token setup is for power users only. Do not place manual tokens in this
 repo.

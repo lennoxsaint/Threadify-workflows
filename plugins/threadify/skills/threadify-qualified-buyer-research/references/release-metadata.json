@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.4.1",
+  "release_version": "0.5.0",
   "skill_version": "0.4.0",
-  "plugin_version": "0.4.1",
+  "plugin_version": "0.5.0",
   "rules_version": "0.4.0",
   "change_class": "installer",
-  "release": true,
-  "summary": "Prevent duplicate native and universal skill registration while keeping the universal Agent Skills path explicitly supported."
+  "release": false,
+  "summary": "Prepare the public creator workflows and local review engine; stable publication remains disabled pending release approval and live verification."
 }

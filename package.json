@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Public-safe, open-source workflow manifests and agent adapters for Threadify MCP.",
   "license": "MIT",
   "type": "module",
@@ -8,14 +8,19 @@
     "threadify-workflows": "./bin/threadify-workflows.mjs"
   },
   "scripts": {
-    "bundle:build": "node scripts/build-qbr-bundle.mjs",
-    "bundle:check": "node scripts/build-qbr-bundle.mjs --check",
+    "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs",
+    "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/proposal.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
-    "test": "npm run validate && npm run test:installer"
+    "test:creator": "node --test validation/creator-tests/*.test.mjs",
+    "test": "npm run validate && npm run test:installer && npm run test:creator"
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

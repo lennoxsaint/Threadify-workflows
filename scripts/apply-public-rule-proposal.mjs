@@ -62,6 +62,14 @@ const packageJson = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
 packageJson.version = releaseVersion;
 fs.writeFileSync(packageFile, `${JSON.stringify(packageJson, null, 2)}\n`);
 
+const lockFile = path.join(root, 'package-lock.json');
+if (fs.existsSync(lockFile)) {
+  const lock = JSON.parse(fs.readFileSync(lockFile, 'utf8'));
+  lock.version = releaseVersion;
+  if (lock.packages?.['']) lock.packages[''].version = releaseVersion;
+  fs.writeFileSync(lockFile, `${JSON.stringify(lock, null, 2)}\n`);
+}
+
 const pluginFile = path.join(root, '.codex-plugin', 'plugin.json');
 const plugin = JSON.parse(fs.readFileSync(pluginFile, 'utf8'));
 plugin.version = releaseVersion;
@@ -95,9 +103,13 @@ const heading = '# Threadify Workflows stable releases\n\n';
 if (!priorChangelog.startsWith(heading)) throw new Error('stable_changelog_heading_missing');
 fs.writeFileSync(changelogFile, `${heading}${entry}${priorChangelog.slice(heading.length)}`);
 
-const render = spawnSync(process.execPath, [path.join(root, 'scripts', 'build-qbr-bundle.mjs')], {
-  cwd: root,
-  stdio: 'inherit',
-});
-if (render.status !== 0) process.exit(render.status ?? 1);
+// The root plugin includes a generated copy of the standalone QBR bundle.
+// Render its source first, then refresh every root advanced bundle.
+for (const script of ['build-qbr-bundle.mjs', 'build-advanced-bundles.mjs']) {
+  const render = spawnSync(process.execPath, [path.join(root, 'scripts', script)], {
+    cwd: root,
+    stdio: 'inherit',
+  });
+  if (render.status !== 0) process.exit(render.status ?? 1);
+}
 console.log(JSON.stringify({ status: 'proposal_applied', proposal_id: proposal.proposal_id, release_version: releaseVersion }, null, 2));

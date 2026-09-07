@@ -6,7 +6,10 @@ Use this checklist before any public repo sync.
 
 - `npm test` passes.
 - README says MCP-ready workflow library, not directory-approved.
-- Workflows remain orchestration-only.
+- The public method and local engine remain separate from private corpora,
+  hosted service implementations and personal state.
+- Candidate artifacts are distinguished from stable releases; publication
+  remains disabled until the applicable release gates are approved.
 - Local plugin wrapper points at the repo root so workflow manifests are bundled.
 - No secrets, tokens, account IDs, raw member data, private course material, raw
   Current Self packets, or proprietary generation prompt internals are present.

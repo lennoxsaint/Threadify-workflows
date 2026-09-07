@@ -2,17 +2,29 @@
 
 Threadify Workflows is a public, MCP ready workflow library for running creator workflows through Threadify from agent clients such as Hermes, Gemini, Codex, Claude, OpenClaw, Cursor, and any generic MCP client.
 
-These recipes are free and open source under the MIT License. The tie to Threadify is a runtime dependency, not a license restriction: the workflows are free to read, fork, and run, while Threadify's hosted generation, scheduling, and analytics remain the paid service they call into.
+The generalized methods and local Node engine are free and open source under the MIT License. Local drafting works from user-supplied sources and confirmed facts without a Threadify account. Hosted Brain, shared corpus, generation, saved drafts, scheduling and analytics require the connected account's current access.
 
-This repo is orchestration-only. It teaches agents which Threadify MCP tools to use, when to stop for human approval, how to fall back when a tool is unavailable, and how to produce receipts. It does not publish Threadify's private generation logic, private course material, member data, account IDs, credentials, or proprietary quality systems.
+This repo includes local planning, review and recovery controls plus approval-gated service orchestration. It does not publish Threadify's private generation logic, private source material, member data, account IDs, credentials or proprietary ranking systems.
 
-## What V0 Includes
+## Primary creator workflows
+
+- [Viral Vault Setup](workflows/vault-setup/README.md)
+- [Create My Day](workflows/create-my-day/README.md)
+- [Create My Week](workflows/create-my-week/README.md)
+- [Create My Month](workflows/create-my-month/README.md)
+
+Week means seven days; Month means 28 days, visibly four weeks. Rolling drafts
+are the default. All drafts upfront is optional; neither mode bypasses daily
+review or fresh delivery checks. See [getting started](docs/getting-started.md)
+and the [skill disposition audit](docs/skill-disposition-audit.md).
+
+## Preserved capabilities
 
 - Strict workflow manifests for agent-native Threadify execution.
 - Adapter packs for generic MCP, Hermes, Gemini, Codex, Claude, OpenClaw, and Cursor.
 - Approval gates for public actions.
 - Manual/web fallback paths when MCP is unavailable.
-- Receipt templates that prove what happened.
+- Receipt templates for recording actual tool calls and verified readbacks; templates alone are not proof.
 - Redacted examples based on real operating patterns, with private details removed.
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
 - Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
@@ -24,13 +36,19 @@ This repo is orchestration-only. It teaches agents which Threadify MCP tools to 
 
 ## YouTube support via the Eddy engine
 
-The YouTube Edit workflow uses [Eddy](https://github.com/lennoxsaint/eddy), a separate MIT-licensed, local-first video editor, vendored here as the `engines/eddy` submodule. Eddy turns raw footage into a launch kit (long video, Shorts, titles, thumbnails, description) and never publishes by itself; this repo orchestrates Eddy and then hands off to Threadify for the promotion step. Initialize the engine with:
+The YouTube Edit workflow uses a separately verified [Eddy](https://github.com/lennoxsaint/eddy) installation or a finished launch kit. Source checkouts reference Eddy through the `engines/eddy` submodule; the plugin archive does not include it. Inspect the installed engine's current documentation and processing configuration before starting. Do not permit unapproved source-media transfers or publishing, and claim only output assets that actually exist and have been inspected.
+
+For a source checkout only, initialize the engine with:
 
 ```sh
 git clone --recurse-submodules https://github.com/lennoxsaint/Threadify-workflows.git
 # or, in an existing clone:
 git submodule update --init engines/eddy
 ```
+
+Do not run these setup commands inside an installed skill directory. Threadify
+is optional for edit-only use; promotional media uploads, scheduling and feedback
+sharing each require approval for that action.
 
 ## What Stays In Threadify
 
@@ -40,7 +58,7 @@ Threadify keeps the paid execution layer:
 - reply generation
 - advanced analytics and winner strategy
 - additional accounts and platforms
-- live X Article publishing or scheduling
+- any future supported X Article execution (not claimed by this package)
 - premium workflow packs
 - hosted calendar and deeper readback surfaces
 - private quality and voice systems
@@ -63,6 +81,11 @@ npx --yes github:lennoxsaint/Threadify-workflows install
 
 The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
 
+The existing standalone installer targets Qualified Buyer Research. The new
+creator package still needs complete host-loading and release verification;
+running the stable installer does not prove these creator changes are
+released or installed. See [packaging status](docs/plugin-packaging.md).
+
 1. Connect Threadify MCP in your agent client.
 2. Pick a workflow under `workflows/`.
 3. Open the matching adapter under `adapters/`.
@@ -70,9 +93,10 @@ The installer asks before enabling daily and on-use automatic updates. It instal
 5. Approve the final action only after the agent shows exact text, account, time, media, and action.
 6. Save the receipt.
 
-Validate the repo before publishing or editing:
+Install development dependencies and validate before publishing or editing:
 
 ```sh
+npm ci
 npm test
 ```
 
@@ -92,9 +116,12 @@ Install from this repo root:
 
 ```sh
 codex plugin marketplace add .
+codex plugin add threadify-workflows@threadify-workflows
 ```
 
-Then connect Threadify MCP with OAuth at:
+Marketplace registration alone does not install the plugin. Start a new task
+after installation to check skill discovery. Local drafting does not require
+a Threadify connection. For connected services, connect Threadify MCP with OAuth at:
 
 ```text
 https://www.threadify.app/api/mcp/threadify
@@ -105,7 +132,7 @@ reviewer credentials into this repo.
 
 ## Publication Status
 
-This repo is structured as a public-ready workflow library. Before any public
+This working creator package is not yet release-verified. Before any public
 sync or release announcement, run the checklist in `PUBLICATION_CHECKLIST.md`
 and confirm the owner gates listed there.
 

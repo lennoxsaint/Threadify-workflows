@@ -19,6 +19,13 @@ member data, private workflow packets, or provider callback details.
 
 ## Public Workflow Boundary
 
-This repository is orchestration-only. Live scheduling, publishing, Brain
-writes, provider writes, analytics, receipts, and entitlements stay inside
-Threadify.
+The public local engine plans content, binds reviews and persists private
+recovery state. It does not call providers. Keep that state outside public
+repositories; checksums detect corruption, not malicious owner edits.
+
+Connected generation, Brain writes, imports, scheduling and opt-in feedback use
+Threadify's hosted services through the authorized host. Local receipts do not
+prove those actions occurred. Preserve exact action approvals, current access
+checks and provider readbacks. Core workflows exclude immediate publishing and
+automatic replies. Private corpora and service implementation remain outside
+this package.

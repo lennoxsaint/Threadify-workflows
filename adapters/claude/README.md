@@ -1,6 +1,7 @@
 # Claude Adapter
 
-Claude Desktop or Claude Code should configure Threadify MCP, then follow the generic MCP adapter.
+Claude Desktop or Claude Code should follow the [generic MCP adapter](../generic-mcp/README.md).
+Connect Threadify only for requested hosted capabilities; local drafting remains available.
 
 Recommended phrasing:
 

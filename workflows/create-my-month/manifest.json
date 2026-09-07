@@ -1,0 +1,73 @@
+{
+  "workflow_id": "create-my-month",
+  "version": "0.1.0",
+  "title": "Create My Month",
+  "summary": "Plan 28 days, visibly four weeks, with rolling drafts by default or all drafts upfront.",
+  "supported_adapters": [
+    "generic-mcp",
+    "hermes",
+    "gemini",
+    "codex",
+    "claude",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "list_viral_items",
+    "get_viral_item",
+    "list_vault_items",
+    "get_vault_item",
+    "generate_content",
+    "save_draft",
+    "validate_post",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "free_capabilities": [
+    "local source review",
+    "host-authored drafts from confirmed facts",
+    "private local records and continuation",
+    "exact owner review"
+  ],
+  "paid_capability_stubs": [
+    "Brain personalization and shared corpus remain hosted; use only currently entitled connected tools"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "source links",
+      "adaptation mode",
+      "gaps",
+      "exact copy and media",
+      "account",
+      "timezone",
+      "proposed times",
+      "exact action"
+    ]
+  },
+  "fallback": {
+    "mode": "local-only",
+    "artifact_schema": "creator-review.v1",
+    "instructions": [
+      "Keep useful local work from user-supplied sources and verified facts.",
+      "Identify unavailable connection, Brain, hosted storage and scheduling.",
+      "Do not invent imports, saved drafts, provider validation or delivery."
+    ]
+  },
+  "receipt": {
+    "schema": "creator-records.v1",
+    "must_prove": [
+      "workflow ID",
+      "exact reviewed material",
+      "approval state",
+      "fallback state",
+      "local versus provider evidence",
+      "unresolved attempts"
+    ]
+  }
+}

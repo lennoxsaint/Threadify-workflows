@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readReleaseMetadata } from '../../lib/release-metadata.mjs';
 import {
   calibrateVoice,
   classifyOwnerEdits,
@@ -18,7 +19,6 @@ const allowedTools = new Set([
   'get_connection_defaults',
   'list_accounts',
   'list_dispatcher_tools',
-  'run_workflow',
   'call_agent_action',
   'query_brain',
   'get_brain_overview',
@@ -29,6 +29,11 @@ const allowedTools = new Set([
   'import_memory_packet',
   'ingest_vault_url',
   'generate_content',
+  'save_draft',
+  'list_vault_items',
+  'get_vault_item',
+  'list_viral_items',
+  'get_viral_item',
   'edit_draft',
   'save_final_draft',
   'upload_media',
@@ -37,7 +42,7 @@ const allowedTools = new Set([
   'publish_now',
   'get_publish_status',
   'get_schedule_status',
-  'get_schedule_report',
+  'list_scheduled_posts',
   'cancel_schedule',
   'reschedule_post',
   'greatest_hits',
@@ -50,8 +55,6 @@ const allowedTools = new Set([
 ]);
 
 const disallowedPublicTools = new Set([
-  'generate_content',
-  'edit_draft',
   'generate_replies',
   'publish_now',
   'send_reply',
@@ -145,7 +148,7 @@ function validateManifest(file) {
     `${rel(file)} must use explicit-final-approval`,
   );
 
-  for (const tool of manifest.required_mcp_tools ?? []) {
+  for (const tool of [...(manifest.required_mcp_tools ?? []), ...(manifest.optional_mcp_tools ?? [])]) {
     assert(allowedTools.has(tool), `${rel(file)} references unknown MCP tool ${tool}`);
     assert(!disallowedPublicTools.has(tool), `${rel(file)} uses disallowed public v0 tool ${tool}`);
   }
@@ -206,7 +209,7 @@ function validateRedaction(file) {
 function validateReadmeClaims() {
   const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
   assert(/MCP ready/i.test(readme), 'README must include MCP ready claim');
-  assert(/orchestration-only/i.test(readme), 'README must say orchestration-only');
+  assert(/local drafting/i.test(readme), 'README must describe useful local drafting');
   assert(!/fully automated growth/i.test(readme), 'README overclaims fully automated growth');
   assert(!/guaranteed/i.test(readme), 'README must not use guarantee language');
 }
@@ -377,8 +380,8 @@ function validateDurableRuleContracts() {
     assert(Boolean(schema?.required?.length), `${rel(schemaFile)} must declare required fields`);
   }
   const releaseIntentFile = path.join(root, 'release', 'release-intent.json');
-  const releaseIntent = readJson(releaseIntentFile);
-  assert(releaseIntent?.release === true, `${rel(releaseIntentFile)} must explicitly opt into stable release`);
+  const releaseIntent = readReleaseMetadata(root);
+  assert(typeof releaseIntent?.release === 'boolean', `${rel(releaseIntentFile)} must explicitly declare stable release intent`);
   assert(releaseIntent?.rules_version === ruleset.rules_version, `${rel(releaseIntentFile)} rules version drift`);
   const plugin = readJson(path.join(root, '.codex-plugin', 'plugin.json'));
   assert(plugin?.version === releaseIntent?.plugin_version, 'Codex plugin version must match release intent');
@@ -389,7 +392,7 @@ const manifestFiles = files.filter(
   (file) => file.startsWith(path.join(root, 'workflows') + path.sep)
     && file.endsWith(path.join('manifest.json')),
 );
-assert(manifestFiles.length === 8, `expected 8 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length === 12, `expected 12 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
 for (const file of files) {

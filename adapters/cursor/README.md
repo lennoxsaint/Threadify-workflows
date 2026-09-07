@@ -2,6 +2,9 @@
 
 Cursor should use this repo as a local workflow library.
 
+Follow the [generic adapter](../generic-mcp/README.md) for local drafting,
+entitlements and exact action gates.
+
 Recommended flow:
 
 1. Open the selected manifest.

@@ -59,6 +59,11 @@ async function resolveConsent(command, options) {
 }
 
 async function main() {
+  if (process.argv[2] === 'creator') {
+    const { creatorMain } = await import('../lib/creator/cli.mjs');
+    await creatorMain(process.argv.slice(3));
+    return;
+  }
   const parsed = parse(process.argv.slice(2));
   if (['help', '--help', '-h'].includes(parsed.command)) {
     process.stdout.write(help());

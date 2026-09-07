@@ -1,0 +1,64 @@
+{
+  "workflow_id": "vault-setup",
+  "version": "0.1.0",
+  "title": "Viral Vault Setup",
+  "summary": "Review 10–20 selected Threads/YouTube sources plus a small shared selection before any import; fewer strong sources may proceed with gaps.",
+  "supported_adapters": [
+    "generic-mcp",
+    "hermes",
+    "gemini",
+    "codex",
+    "claude",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "list_viral_items",
+    "get_viral_item",
+    "list_vault_items",
+    "get_vault_item",
+    "ingest_vault_url"
+  ],
+  "free_capabilities": [
+    "local source review",
+    "host-authored drafts from confirmed facts",
+    "private local records and continuation",
+    "exact owner review"
+  ],
+  "paid_capability_stubs": [
+    "Brain personalization and shared corpus remain hosted; use only currently entitled connected tools"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "selected sources",
+      "extraction and coverage gaps",
+      "shared Viral disclosure",
+      "intended owner",
+      "exact import action"
+    ]
+  },
+  "fallback": {
+    "mode": "local-only",
+    "artifact_schema": "creator-setup.v1",
+    "instructions": [
+      "Keep useful local work from user-supplied sources and verified facts.",
+      "Identify unavailable connection, Brain, hosted storage and scheduling.",
+      "Do not invent imports, saved drafts, provider validation or delivery."
+    ]
+  },
+  "receipt": {
+    "schema": "creator-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "exact reviewed material",
+      "approval state",
+      "fallback state",
+      "local versus provider evidence",
+      "unresolved attempts"
+    ]
+  }
+}

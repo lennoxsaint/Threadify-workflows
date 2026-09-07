@@ -9,18 +9,22 @@ From this repo root:
 
 ```sh
 codex plugin marketplace add .
+codex plugin add threadify-workflows@threadify-workflows
 ```
 
 The marketplace source path is the repo root, not only `plugins/threadify/`, so
 installed skills can read the workflow manifests under `workflows/`.
 
-The installed Codex CLI on 2026-06-03 supports `add`, `upgrade`, and `remove`
-for marketplaces. It does not support `codex plugin marketplace list`, so verify
-installation in the Codex app/plugin UI or local config.
+Marketplace registration is not plugin installation. On the locally tested
+Codex CLI 0.147.0, `codex plugin marketplace list --json` reads back registered
+sources and plugin installation returns a version and cache path. Inspect those
+results, then start a new task to verify skill discovery. A cache entry alone
+does not prove host routing, OAuth or connected service availability. Check
+your installed CLI's help if its command surface differs.
 
 ## MCP Connection
 
-Use OAuth with:
+Local drafting requires no Threadify connection. For hosted services, use OAuth with:
 
 ```text
 https://www.threadify.app/api/mcp/threadify

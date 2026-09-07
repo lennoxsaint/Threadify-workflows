@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "threadify": {
+      "url": "https://www.threadify.app/api/mcp/threadify"
+    }
+  }
+}

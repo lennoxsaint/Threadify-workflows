@@ -45,7 +45,7 @@ This template is public-safe. Replace placeholders with real values only inside 
     "validate_post",
     "schedule_post",
     "get_schedule_status",
-    "get_schedule_report"
+    "list_scheduled_posts"
   ],
   "fallback_used": false,
   "artifact_ids": [
@@ -60,7 +60,7 @@ This template is public-safe. Replace placeholders with real values only inside 
 proof_state:
   current: scheduled
   target_surface: "Threadify scheduled queue"
-  evidence: "schedule_post receipt plus get_schedule_status/get_schedule_report readback"
+  evidence: "schedule_post receipt plus get_schedule_status/list_scheduled_posts readback"
   approval_gate: already_explicit
   recovery_path: "cancel_schedule or reschedule_post before publish time"
   next_verification: "public/thread readback after publish time"

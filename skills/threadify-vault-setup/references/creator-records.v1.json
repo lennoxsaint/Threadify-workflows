@@ -1,0 +1,1690 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/creator-records.v1.json",
+  "title": "Creator records v1",
+  "description": "Structural contracts for local creator records. Runtime checks additionally enforce identity, hashes, chronology, rights, timezone and side-effect boundaries.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/preferences"
+    },
+    {
+      "$ref": "#/$defs/source"
+    },
+    {
+      "$ref": "#/$defs/horizon"
+    },
+    {
+      "$ref": "#/$defs/review"
+    },
+    {
+      "$ref": "#/$defs/attempt"
+    },
+    {
+      "$ref": "#/$defs/outcome"
+    }
+  ],
+  "$defs": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "preferences": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-preferences.v1"
+        },
+        "account_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "posts_per_day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "commercial_mode": {
+          "enum": [
+            "growth",
+            "conversion"
+          ]
+        },
+        "long_form_days": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 6
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "times": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "offer": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "verified": {
+              "const": true
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "valid_until": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "id",
+            "verified",
+            "evidence_ref",
+            "valid_until"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "account_id",
+        "timezone",
+        "posts_per_day",
+        "commercial_mode",
+        "long_form_days",
+        "times"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "commercial_mode": {
+                "const": "conversion"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "offer"
+            ],
+            "properties": {
+              "offer": {}
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-source.v1"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1
+        },
+        "owner_account_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rights": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "valid_until": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "basis": {
+              "enum": [
+                "owned",
+                "licensed",
+                "permissioned",
+                "unknown"
+              ]
+            }
+          },
+          "required": [
+            "verified",
+            "evidence_ref",
+            "valid_until",
+            "basis"
+          ]
+        },
+        "claims_review": {
+          "type": "object",
+          "properties": {
+            "verified": {
+              "type": "boolean"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "valid_until": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": [
+            "verified",
+            "evidence_ref",
+            "valid_until"
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "author",
+        "url",
+        "parts"
+      ]
+    },
+    "horizon": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-horizon.v1"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "horizon": {
+          "enum": [
+            "day",
+            "week",
+            "month"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "rolling",
+            "upfront"
+          ]
+        },
+        "preferences": {
+          "$ref": "#/$defs/preferences"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "drafting": {
+                "enum": [
+                  "due",
+                  "just_in_time"
+                ]
+              },
+              "slots": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "requested_lane": {
+                      "enum": [
+                        "greatest_hit",
+                        "viral",
+                        "my_vault",
+                        "experiment"
+                      ]
+                    },
+                    "selected_lane": {
+                      "anyOf": [
+                        {
+                          "enum": [
+                            "greatest_hit",
+                            "viral",
+                            "my_vault",
+                            "experiment"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source_id": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "\\S"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source_url": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/url"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "topic": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "\\S"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "substitution_reason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "\\S"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "gaps": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "\\S"
+                      },
+                      "minItems": 0
+                    },
+                    "format": {
+                      "enum": [
+                        "short_form",
+                        "long_form"
+                      ]
+                    },
+                    "cta": {
+                      "enum": [
+                        "none",
+                        "earned_optional"
+                      ]
+                    },
+                    "offer_id": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "pattern": "\\S"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "local_date": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "local_time": {
+                      "type": "string",
+                      "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$"
+                    },
+                    "timezone": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "state": {
+                      "const": "blueprint"
+                    },
+                    "parts": {
+                      "type": "null"
+                    },
+                    "refresh_required": {
+                      "const": [
+                        "facts",
+                        "offers",
+                        "source_availability",
+                        "validation",
+                        "calendar",
+                        "timezone_offset"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "requested_lane",
+                    "selected_lane",
+                    "source_id",
+                    "source_url",
+                    "topic",
+                    "substitution_reason",
+                    "gaps",
+                    "format",
+                    "cta",
+                    "offer_id",
+                    "local_date",
+                    "local_time",
+                    "timezone",
+                    "state",
+                    "parts",
+                    "refresh_required"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 5
+              }
+            },
+            "required": [
+              "date",
+              "drafting",
+              "slots"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 28
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "created_at",
+        "horizon",
+        "mode",
+        "preferences",
+        "label",
+        "days"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "horizon": {
+                "const": "day"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "days": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1
+              },
+              "label": {
+                "const": "1 day"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "horizon": {
+                "const": "week"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "days": {
+                "type": "array",
+                "minItems": 7,
+                "maxItems": 7
+              },
+              "label": {
+                "const": "7 days"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "horizon": {
+                "const": "month"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "days": {
+                "type": "array",
+                "minItems": 28,
+                "maxItems": 28
+              },
+              "label": {
+                "const": "28 days (4 weeks)"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-review.v1"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "account_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "scheduled_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "parts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "minItems": 1
+                  },
+                  "media": {
+                    "type": "array"
+                  },
+                  "gaps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "pattern": "\\S"
+                    },
+                    "minItems": 0
+                  },
+                  "source": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "\\S"
+                      },
+                      "url": {
+                        "$ref": "#/$defs/url"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "url"
+                    ]
+                  },
+                  "adaptation_mode": {
+                    "enum": [
+                      "structure_only",
+                      "literal_fill_in",
+                      "exact_repost"
+                    ]
+                  },
+                  "method": {
+                    "enum": [
+                      "host_authored",
+                      "threadify_brain"
+                    ]
+                  },
+                  "draft_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "\\S"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "format": {
+                    "enum": [
+                      "short_form",
+                      "long_form"
+                    ]
+                  },
+                  "cta": {
+                    "enum": [
+                      "none",
+                      "earned_optional"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "account_id",
+                  "timezone",
+                  "scheduled_at",
+                  "parts",
+                  "media",
+                  "gaps",
+                  "source",
+                  "adaptation_mode",
+                  "method"
+                ]
+              },
+              "state": {
+                "enum": [
+                  "draft",
+                  "validated",
+                  "approved",
+                  "attempt_pending",
+                  "unknown",
+                  "scheduled",
+                  "published",
+                  "observed",
+                  "reviewed_local"
+                ]
+              },
+              "approval": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/approval"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "validation": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/validation"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "validation_history": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/validation"
+                },
+                "minItems": 0
+              },
+              "attempts": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/attempt"
+                },
+                "minItems": 0
+              },
+              "publication": {
+                "type": "object",
+                "properties": {
+                  "post_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "published_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "evidence_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  }
+                },
+                "required": [
+                  "post_id",
+                  "published_at",
+                  "evidence_ref"
+                ]
+              },
+              "outcomes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/outcome"
+                },
+                "minItems": 1
+              },
+              "outcome_attribution": {
+                "const": "directional_only"
+              },
+              "local_handoff": {
+                "type": "object",
+                "properties": {
+                  "evidence_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                },
+                "required": [
+                  "evidence_ref",
+                  "at"
+                ]
+              }
+            },
+            "required": [
+              "content",
+              "state",
+              "approval",
+              "attempts"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "validated"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "validation"
+                  ],
+                  "properties": {
+                    "validation": {
+                      "$ref": "#/$defs/validation",
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "const": "passed"
+                        }
+                      }
+                    },
+                    "approval": {
+                      "type": "null"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "approved",
+                        "attempt_pending",
+                        "unknown",
+                        "scheduled",
+                        "published",
+                        "observed",
+                        "reviewed_local"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "approval": {
+                      "$ref": "#/$defs/approval"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "attempt_pending",
+                        "unknown",
+                        "scheduled",
+                        "published",
+                        "observed"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "attempts": {
+                      "type": "array",
+                      "minItems": 1
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "published",
+                        "observed"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "publication",
+                    "outcomes",
+                    "outcome_attribution"
+                  ],
+                  "properties": {
+                    "publication": {},
+                    "outcomes": {},
+                    "outcome_attribution": {}
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "state": {
+                      "const": "reviewed_local"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "local_handoff"
+                  ],
+                  "properties": {
+                    "local_handoff": {}
+                  }
+                }
+              }
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 5
+        },
+        "plan_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "reuse_evidence": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "created_at",
+        "cards"
+      ]
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "card_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "display_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "card_hash",
+        "display_hash",
+        "evidence_ref",
+        "at"
+      ]
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "card_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "account_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "local",
+            "threadify"
+          ]
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "issues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_until": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "authoritative": {
+          "type": "boolean"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "draft_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "card_hash",
+        "account_id",
+        "kind",
+        "status",
+        "issues",
+        "checked_at",
+        "valid_until",
+        "evidence_ref"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "passed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "issues": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "issues": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "threadify"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "authoritative",
+              "tool",
+              "draft_id"
+            ],
+            "properties": {
+              "authoritative": {
+                "const": true
+              },
+              "draft_id": {},
+              "tool": {
+                "const": "validate_post"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attempt": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-attempt.v1"
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "card_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "outcome": {
+          "enum": [
+            "pending",
+            "unknown",
+            "confirmed_absent",
+            "scheduled"
+          ]
+        },
+        "preflight": {
+          "type": "object",
+          "properties": {
+            "card_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "account_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "timezone": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "valid_until": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "occupied_instants": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "minItems": 0
+            },
+            "facts": {
+              "const": true
+            },
+            "offers": {
+              "const": true
+            },
+            "source_availability": {
+              "const": true
+            },
+            "validation": {
+              "const": true
+            },
+            "calendar": {
+              "const": true
+            },
+            "timezone_offset": {
+              "const": true
+            }
+          },
+          "required": [
+            "card_hash",
+            "account_id",
+            "timezone",
+            "checked_at",
+            "valid_until",
+            "evidence_ref",
+            "occupied_instants",
+            "facts",
+            "offers",
+            "source_availability",
+            "validation",
+            "calendar",
+            "timezone_offset"
+          ]
+        },
+        "receipt": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "const": "unknown"
+                },
+                "evidence_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "status",
+                "evidence_ref"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "const": "not_found"
+                },
+                "authoritative": {
+                  "const": true
+                },
+                "evidence_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "checked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "account_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "idempotency_key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "status",
+                "authoritative",
+                "evidence_ref",
+                "checked_at",
+                "account_id",
+                "idempotency_key"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "const": "scheduled"
+                },
+                "authoritative": {
+                  "const": true
+                },
+                "evidence_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "checked_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "account_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "draft_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "provider_ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "scheduled_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "parts": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  }
+                },
+                "media": {
+                  "type": "array"
+                }
+              },
+              "required": [
+                "status",
+                "authoritative",
+                "evidence_ref",
+                "checked_at",
+                "account_id",
+                "draft_id",
+                "provider_ref",
+                "scheduled_at",
+                "parts",
+                "media"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "number",
+        "card_hash",
+        "idempotency_key",
+        "started_at",
+        "outcome",
+        "preflight",
+        "receipt"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "pending"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "unknown"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "unknown"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "confirmed_absent"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "not_found"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "scheduled"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "receipt": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "const": "scheduled"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "creator-outcome.v1"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "receipt": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "status": {
+              "enum": [
+                "published",
+                "observed"
+              ]
+            },
+            "authoritative": {
+              "const": true
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "account_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "post_id": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "schedule_ref": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "published_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "metrics": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": false,
+              "properties": {
+                "views": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                },
+                "likes": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                },
+                "replies": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                },
+                "reposts": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                },
+                "quotes": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                },
+                "shares": {
+                  "anyOf": [
+                    {
+                      "type": "null"
+                    },
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "required": [
+            "id",
+            "status",
+            "authoritative",
+            "evidence_ref",
+            "checked_at",
+            "account_id",
+            "post_id"
+          ],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "published"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "schedule_ref",
+                  "content_hash",
+                  "published_at"
+                ],
+                "properties": {
+                  "schedule_ref": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "content_hash": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "published_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "observed"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "metrics"
+                ],
+                "properties": {
+                  "metrics": {
+                    "type": "object",
+                    "minProperties": 1,
+                    "additionalProperties": false,
+                    "properties": {
+                      "views": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "likes": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "replies": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "reposts": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "quotes": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      },
+                      "shares": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "hash",
+        "receipt"
+      ]
+    }
+  }
+}

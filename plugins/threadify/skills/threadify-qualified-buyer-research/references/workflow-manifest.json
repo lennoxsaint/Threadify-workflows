@@ -8,9 +8,9 @@
     "get_connection_defaults",
     "query_brain",
     "greatest_hits",
-    "record_feedback",
     "audit_log"
   ],
+  "optional_mcp_tools": ["record_feedback"],
   "free_capabilities": [
     "approved buyer-context intake",
     "versioned offer-context mapping",
@@ -57,6 +57,7 @@
     "mode": "qualified-buyer-research-review-packet",
     "artifact_schema": "qualified-buyer-research.v1",
     "instructions": [
+      "Keep feedback local unless the user gives explicit opt-in to share the exact feedback with Threadify.",
       "If live search is unavailable, ask for recent post URLs or use synthetic or approved public examples.",
       "Build Offer and Voice Context records for the current user; do not reuse another user's niche or diction.",
       "Inspect the full post, visible replies, and profile before classifying a candidate.",
