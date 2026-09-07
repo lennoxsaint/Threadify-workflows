@@ -93,7 +93,7 @@ function addReview(data, input) {
     assert(slot.source_id !== null, 'Resolve missing blueprint sources before creating a review.');
     resolveLocalTime(slot.local_date, slot.local_time, slot.timezone, card.scheduled_at);
     assert(card.cta === 'none' || (slot.cta === 'earned_optional' && card.offer_id === slot.offer_id), 'CTA must match the selected plan offer.');
-    validateReuse(card, input.reuse_proofs?.[card.id]);
+    validateReuse(card, input.reuse_proofs?.[card.id], input.now);
   }
   const review = { ...createReviewPack(input), plan_id: input.plan_id, date: input.date };
   review.reuse_evidence = Object.fromEntries(input.cards.filter((c) => c.adaptation_mode !== 'structure_only')
@@ -102,11 +102,11 @@ function addReview(data, input) {
   return displayReview(review);
 }
 
-function validateReuse(card, proof) {
+function validateReuse(card, proof, now = proof?.context?.now) {
   if (card.adaptation_mode === 'structure_only') return;
   assert(proof && proof.context?.account_id === card.account_id && proof.adaptation?.source?.id === card.source.id
     && proof.adaptation.source.url === card.source.url, 'Literal review requires matching source-rights evidence.');
-  const resolved = resolveAdaptation(proof.adaptation, proof.context);
+  const resolved = resolveAdaptation(proof.adaptation, { ...proof.context, now });
   assert(resolved.mode === card.adaptation_mode && JSON.stringify(resolved.parts) === JSON.stringify(card.parts),
     'Literal review copy must match the rights-gated deterministic source resolution.');
   assert(card.method === 'host_authored', 'Literal reuse must preserve exact copy, not Brain regeneration.');
@@ -199,7 +199,7 @@ export async function runCreatorCommand(command, { root, revision, input = {} })
           'Edited card must retain the plan account; create a separate plan for another account.');
         assert(localClock(input.card.scheduled_at, input.card.timezone).date === current.date,
           'Edited card must remain on its review day; prepare a destination-day plan/review for another date.');
-        validateReuse(input.card, input.reuse_proof);
+        validateReuse(input.card, input.reuse_proof, input.now);
         next = replaceCard(current, input.card);
         next.reuse_evidence = { ...(next.reuse_evidence ?? {}) };
         if (input.card.adaptation_mode === 'structure_only') delete next.reuse_evidence[input.card.id];
@@ -211,6 +211,9 @@ export async function runCreatorCommand(command, { root, revision, input = {} })
       if (command === 'begin-attempt') {
         const card = current.cards.find((c) => c.content.id === input.card_id);
         assert(card, 'Unknown review card.');
+        // A saved proof clock cannot keep expired rights, claims or replacement
+        // facts valid when an upfront draft is scheduled on a later day.
+        validateReuse(card.content, current.reuse_evidence?.[card.content.id], input.now);
         const occupied = data.reviews.filter((r) => r.id !== current.id).flatMap((r) => r.cards)
           .some((other) => ['attempt_pending', 'unknown', 'scheduled', 'published', 'observed'].includes(other.state)
             && other.content.account_id === card.content.account_id

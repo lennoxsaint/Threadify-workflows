@@ -29,6 +29,46 @@ const review = (blueprint, dayIndex = 0) => ({
   })),
 });
 
+for (const expired of ['rights', 'claims_review', 'replacement_fact']) {
+  test(`literal delivery refreshes ${expired} against attempt time, not the saved proof clock`, async (t) => {
+    const root = await fixture(t);
+    const call = (command, input, revision) => runCreatorCommand(command, { root, input, revision });
+    const created = await call('plan', plan('day'), 0);
+    const daily = review(created.result);
+    const card = daily.cards[0];
+    Object.assign(card, { parts: ['I wrote 12 notes.'], adaptation_mode: 'literal_fill_in', draft_id: 'synthetic-draft' });
+    const current = { verified: true, evidence_ref: 'synthetic-permission', valid_until: '2026-09-08T00:00:00Z' };
+    const source = { schema_version: 'creator-source.v1', ...card.source, author: 'synthetic-author',
+      parts: ['I wrote 10 notes.'], rights: { ...current, basis: 'licensed' }, claims_review: { ...current } };
+    const proof = { adaptation: { source, mode: 'literal_fill_in', template_parts: ['I wrote {{COUNT}} notes.'],
+      required_source_spans: ['10'], all_specifics_replaced: true,
+      placeholders: [{ key: 'COUNT', kind: 'number', source_text: '10', replacement: '12', evidence_ref: 'count' }] },
+    context: { account_id: card.account_id, now, facts: { count: { ...current, value: '12' } } } };
+    const evidence = expired === 'replacement_fact' ? proof.context.facts.count : source[expired];
+    evidence.valid_until = '2026-09-07T00:10:00Z';
+    daily.reuse_proofs = { [card.id]: proof };
+    const later = '2026-09-07T00:20:00Z';
+    const rejection = /rights-gated|Current claims review|current verified fact/;
+    await assert.rejects(call('add-review', { ...daily, now: later }, 1), rejection);
+    const added = await call('add-review', daily, 1);
+    await call('approve', { review_id: daily.id, displayed: added.result,
+      confirmation: { evidence_ref: 'synthetic-owner', at: now } }, 2);
+    const attempt = { review_id: daily.id, card_id: card.id, now: later, preflight: {
+      card_hash: added.result.cards[0].hash, account_id: card.account_id, timezone: card.timezone,
+      checked_at: later, valid_until: '2026-09-07T00:25:00Z', evidence_ref: 'synthetic-preflight', occupied_instants: [],
+      facts: true, offers: true, source_availability: true, validation: true, calendar: true, timezone_offset: true,
+    } };
+    await assert.rejects(call('begin-attempt', attempt, 3), rejection);
+    const unchanged = await call('continue', { plan_id: created.result.id });
+    assert.equal(unchanged.revision, 3);
+    assert.equal(unchanged.result.cards[0].attempts.length, 0);
+    evidence.valid_until = '2026-09-08T00:00:00Z';
+    proof.context.now = later;
+    await call('edit', { review_id: daily.id, card, reuse_proof: proof, now: later }, 3);
+    assert.equal((await call('begin-attempt', attempt, 4)).result.action, 'attempt_persisted');
+  });
+}
+
 test('validation persists across CLI processes without granting approval or delivery', async (t) => {
   const root = await fixture(t);
   const run = (command, revision, input) => {

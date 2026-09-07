@@ -96,4 +96,6 @@ A terminated writer can leave a lock. Use `inspectWriterLock` from the store API
 
 ## Current local evidence
 
+Before persisting a literal-reuse delivery attempt, the runtime checks its stored rights, claims review and replacement facts again using the attempt's current time, not the proof's original clock. Expired evidence stops before an attempt is recorded. Refresh the evidence through an explicit edit; unchanged copy keeps its approval, while content changes still require renewed review. Adding a review likewise checks evidence against the review creation time.
+
 `npm run test:creator` exercises separate CLI invocations for a disconnected Day and resumed Week/Month, exact review binding, durable pending attempts, receipt mismatches, stale revisions, real child-process termination and private storage. Fixtures are synthetic. These tests are not connected Day proof, publication proof, release approval or evidence of growth.
