@@ -1,6 +1,6 @@
 # Threadify Workflows stable releases
 
-## 0.5.0 (unreleased candidate)
+## 0.5.0
 
 - Adds Vault Setup, Create My Day, Create My Week and Create My Month, including
   local drafting without a Threadify connection and a clearly labeled four-week month.
@@ -9,8 +9,13 @@
 - Bundles four primary creator skills and seven preserved advanced/compatibility skills.
 - Adds reproducible candidate archives and isolated install/upgrade/rollback checks.
 - Keeps hosted Brain services and shared corpus data outside the public package.
-- Stable publication is disabled. Actual host review, connected Day readbacks and
-  final release approval remain pending; local tests do not prove those gates.
+- Adds a shared opening question and bundled Threadify-001 setup/video guide to
+  every workflow: new trial, existing connection, another provider or local work.
+- GitHub release approved by the owner. Directory submission is deferred.
+  Seven editable connected drafts were validated; live scheduling acceptance and
+  automatic host discovery remain unproven. This release does not claim either.
+- Works without the unreleased shared-Viral app changes. Existing My Vault,
+  Greatest Hits and supplied-source fallbacks remain available. No app deployment.
 
 ## 0.4.1
 

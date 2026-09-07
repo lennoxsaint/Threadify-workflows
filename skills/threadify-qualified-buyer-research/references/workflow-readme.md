@@ -1,5 +1,12 @@
 # Qualified Buyer Research
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](../../docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Find people worth talking to without spamming strangers or walking into somebody else's funnel.
 
 This workflow searches the words a buyer would use, checks the entire post and profile, rejects misleading candidates, classifies the next honest stage, and may stage exact copy in a browser composer. It always stops before send.

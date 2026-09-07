@@ -6,7 +6,7 @@ const check = process.argv.includes('--check');
 const names = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month'];
 const engine = fs.readdirSync(path.join(root, 'lib/creator')).filter((f) => f.endsWith('.mjs')).sort();
 const expected = new Map(engine.map((name) => [`scripts/engine/${name}`, fs.readFileSync(path.join(root, 'lib/creator', name))]));
-for (const name of ['creator-system.md', 'creator-engine.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
+for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
 expected.set('references/creator-records.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-records.v1.json')));
 expected.set('references/creator-lifecycle.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-lifecycle.v1.json')));
 expected.set('scripts/creator.mjs', Buffer.from("import { creatorMain } from './engine/cli.mjs';\ncreatorMain(process.argv.slice(2)).catch((error) => { process.stderr.write(JSON.stringify({ status: 'failed', error: error.message }) + '\\n'); process.exitCode = 1; });\n"));

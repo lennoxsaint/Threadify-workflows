@@ -25,17 +25,18 @@ The contract's Autopilot 0.5.0 skill is unavailable at its recorded path and no
 replacement was found in the installed skill locations. Its validation has
 not been rerun. Plugin-creator supplies the current local packaging fallback.
 
-## Remaining release gates
+## Release scope and remaining verification
 
-- Repeat full install/upgrade checks against the final release artifact and
-  verify Codex host discovery/loading, not only filesystem installation.
-- Audit advanced workflow behavior and generation/free-versus-paid guidance.
-- Complete actual reviewer demonstrations; creator schemas and validation states
-  already have local implementation and automated fixture coverage.
-- Select and verify visual assets and publisher, support and legal details.
-- Build and compare two release archives, then test the extracted contents.
-- Obtain exact approval for the live connected Day and for any deployment,
-  release publication or Directory submission. None is implied by this file.
+The owner authorized the 0.5.0 GitHub release with all creator workflows and
+shared onboarding, explicitly deferring Directory submission. App PR 178 is
+not required and must not be merged or deployed for this release.
+
+The release gate is source validation, relevant tests, bundle parity, final diff
+review and immutable artifact verification. Full-source install/upgrade tests
+cover filesystem and CLI behavior. Automatic client discovery and owner-approved
+live scheduling remain separate, unproven acceptance checks; this version does
+not claim those results. Seven connected editable drafts were validated without
+scheduling. Directory identity, support and visual assets are later work.
 
 Run bundle:build explicitly before release generation. The release builder
 checks parity without rewriting sources, reserves a new output directory and

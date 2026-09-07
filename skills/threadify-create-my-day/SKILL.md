@@ -5,6 +5,13 @@ description: Prepare or resume a daily Threads content batch with source evidenc
 
 # Create My Day
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Read [the complete creator protocol](references/creator-system.md), then [the engine command contract](references/creator-engine.md) before acting. These bundled references own the shared source, rights, review, recovery and delivery rules.
 
 Use horizon day for a new Day. Default to five posts, adjustable 1–5. For Continue My Plan, resume the existing horizon before creating a new one. Finish with an exact daily review or its separately approved delivery evidence.

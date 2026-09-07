@@ -1,5 +1,12 @@
 # Personal Brain Sync / Current Self Packet
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](../../docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Use this workflow when a user has an approved personal context packet and wants
 Threadify Brain updated safely.
 

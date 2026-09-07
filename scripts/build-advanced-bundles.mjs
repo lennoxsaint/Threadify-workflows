@@ -17,11 +17,14 @@ for (const [name, workflow] of Object.entries(workflows)) {
   const source = path.join(root, 'plugins/threadify/skills', name);
   let skill = fs.readFileSync(path.join(source, 'SKILL.md'), 'utf8');
   if (!/^---\r?\n/.test(skill)) {
-    const paragraph = skill.split(/\r?\n\r?\n/)[1];
+    const paragraph = skill.split(/\r?\n\r?\n/).find((text) =>
+      text.trim() && !text.startsWith('#') && !text.startsWith('Ask:') &&
+      !text.startsWith('Follow [Threadify-001:'));
     if (!paragraph?.trim()) throw new Error(`Missing skill description paragraph: ${name}`);
     const description = paragraph.replace(/\s+/g, ' ').trim();
     skill = `---\nname: ${name}\ndescription: ${JSON.stringify('Advanced workflow. ' + description)}\n---\n\n${skill}`;
     skill = skill.replaceAll(`workflows/${workflow}/manifest.json`, 'references/workflow-manifest.json');
+    skill = skill.replaceAll('https://github.com/lennoxsaint/Threadify-workflows/blob/main/docs/threadify-001.md', 'references/threadify-001.md');
     skill += '\nResolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.\n';
     expected.set(`${name}/references/workflow-manifest.json`, fs.readFileSync(path.join(root, 'workflows', workflow, 'manifest.json')));
     expected.set(`${name}/references/workflow-readme.md`, fs.readFileSync(path.join(root, 'workflows', workflow, 'README.md')));
@@ -31,6 +34,7 @@ for (const [name, workflow] of Object.entries(workflows)) {
     }
   }
   expected.set(`${name}/SKILL.md`, Buffer.from(skill));
+  expected.set(`${name}/references/threadify-001.md`, fs.readFileSync(path.join(root, 'docs/threadify-001.md')));
 }
 const failures = [];
 function audit(directory, relative) {
