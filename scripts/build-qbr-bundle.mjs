@@ -15,6 +15,7 @@ const references = path.join(
 );
 const check = process.argv.includes('--check');
 const sources = [
+  ['docs/threadify-001.md', 'threadify-001.md'],
   ['workflows/qualified-buyer-research/manifest.json', 'workflow-manifest.json'],
   ['workflows/qualified-buyer-research/README.md', 'workflow-readme.md'],
   ['workflows/qualified-buyer-research/reference-policy.mjs', 'reference-policy.mjs'],

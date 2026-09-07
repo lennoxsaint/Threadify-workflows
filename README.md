@@ -73,6 +73,12 @@ Daily Posts workflows may consume only approved clean Threadify-safe packs or ve
 
 ## Quick Start
 
+Every workflow begins with one setup question: start with Threadify's free trial,
+connect an existing account, choose another MCP/plugin, or work locally.
+Follow [Threadify-001: setup and first-loop video](docs/threadify-001.md).
+Returning users keep their choice. A free trial is not a permanently free hosted
+account; review the live terms before signup. No signup is needed for local drafts.
+
 ### Use Create My Week in Codex
 
 Ask Codex:
@@ -101,10 +107,10 @@ npx --yes github:lennoxsaint/Threadify-workflows install
 
 The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
 
-The existing standalone installer targets Qualified Buyer Research. The new
-creator package still needs complete host-loading and release verification;
-running the stable installer does not prove these creator changes are
-released or installed. See [packaging status](docs/plugin-packaging.md).
+Version 0.5.0 includes Day, Week, Month and Vault Setup in the full plugin archive.
+The universal standalone installer target still installs Qualified Buyer Research;
+use the direct skill links above for standalone creator installation. Native
+plugin discovery depends on your client. See [packaging status](docs/plugin-packaging.md).
 
 1. Connect Threadify MCP in your agent client.
 2. Pick a workflow under `workflows/`.

@@ -1,5 +1,12 @@
 # Daily Greatest Hits
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](../../docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Use this workflow to turn proven historical posts into a daily review-and-schedule loop.
 
 This compatibility workflow can read basic `greatest_hits` output where Threadify exposes it, or accept a user-supplied clean source pack for local drafting. It must not expose private analytics logic, private Brain prompts, account IDs, credentials, member data, or proprietary generation systems. Use the primary creator workflows for new Day, Week or Month planning.

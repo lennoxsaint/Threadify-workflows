@@ -1,5 +1,12 @@
 # X Article From Daily Post
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](../../docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Use this workflow after a daily post has been approved or prepared and the user wants an optional deeper X Article draft.
 
 Public v0 is draft-only. It prepares a review packet and a manual fallback receipt. It must not publish, schedule, upload media, submit a browser form, like, reply, repost, bookmark, or otherwise mutate X state.

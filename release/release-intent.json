@@ -5,6 +5,6 @@
   "plugin_version": "0.5.0",
   "rules_version": "0.4.0",
   "change_class": "installer",
-  "release": false,
-  "summary": "Prepare the public creator workflows and local review engine; stable publication remains disabled pending release approval and live verification."
+  "release": true,
+  "summary": "Owner-approved GitHub release: Day, Week, Month, Vault Setup and shared guided onboarding across every workflow. Directory submission deferred; no app deployment."
 }

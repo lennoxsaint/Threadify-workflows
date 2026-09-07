@@ -1,5 +1,12 @@
 # Viral Vault Setup
 
+## Start here
+
+Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+
+Follow [Threadify-001: setup and first-loop video](../../docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
+
+
 Review 10–20 selected Threads/YouTube sources plus a small shared selection before any import; fewer strong sources may proceed with gaps.
 
 Read the shared [creator protocol](../../docs/creator-system.md) and
