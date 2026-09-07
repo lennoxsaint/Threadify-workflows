@@ -88,3 +88,20 @@ test('invalid volume, date, time, timezone, horizon and mode fail rather than si
   ];
   for (const change of changes) { const params = input(); change(params); assert.throws(() => createHorizon(params)); }
 });
+
+test('a fully sourced week works without shared Viral in rolling and upfront modes', () => {
+  for (const mode of ['rolling', 'upfront']) {
+    const params = input();
+    params.mode = mode;
+    params.sources = candidates().filter((source) => source.lane !== 'viral');
+    const plan = createHorizon(params);
+    const slots = plan.days.flatMap((day) => day.slots);
+    assert.equal(slots.length, 35);
+    assert.equal(new Set(slots.map((slot) => slot.source_id)).size, 35);
+    assert.ok(slots.every((slot) => slot.source_id && slot.gaps.length === 0));
+    assert.ok(slots.every((slot) => slot.selected_lane !== 'viral'));
+    assert.ok(slots.filter((slot) => slot.requested_lane === 'viral')
+      .every((slot) => slot.substitution_reason.includes('viral')));
+    assert.equal(plan.days.filter((day) => day.drafting === 'due').length, mode === 'upfront' ? 7 : 1);
+  }
+});

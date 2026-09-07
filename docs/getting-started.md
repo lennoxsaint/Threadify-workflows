@@ -1,6 +1,9 @@
 # Getting started
 
 Start with Viral Vault Setup, Create My Day, Create My Week or Create My Month.
+Shared-Viral search is optional. These workflows work with the existing
+Threadify tools for Greatest Hits and My Vault, or with your supplied sources
+without a connection. No server deployment is required.
 The first three install-surface prompts are Vault Setup, Create My Day and
 Plan My Content. For Plan My Content, choose a seven-day week or 28-day month.
 

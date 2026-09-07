@@ -8,6 +8,8 @@ Run `status`, then `continue` for an existing plan before starting another. Resu
 
 For a connected session, call `get_connection_defaults` first. Verify the intended owned account, timezone, scopes, drafting mode and entitlement. Do not change account preferences. Read actual tool schemas before each operation; a documented tool may not yet be deployed on the connected server. Missing connection or generation entitlement means local host-authored drafting from supplied sources and confirmed facts, with unavailable Brain, analytics, hosted storage and scheduling identified plainly.
 
+Check capabilities individually. Missing `list_viral_items` or `get_viral_item` does not make a working Threadify connection offline and must never block Day, Week or Month. Keep using available Greatest Hits, My Vault, Brain, draft and validation tools. Do not ask the user to deploy a server change. Substitute qualified owned or My Vault sources for unavailable shared-Viral slots, preserving the actual source lane and the substitution reason. Never label My Vault as the shared corpus. If evidence runs short, offer fewer posts or selected user sources; leave remaining gaps explicit. No new MCP tools are required to use these workflows.
+
 ## Vault Setup
 
 Ask for 10–20 selected Threads/YouTube links and offer a small selection from shared Viral. Fewer strong sources are acceptable with an explicit coverage note. Use `list_viral_items` previews followed by `get_viral_item` for selected shared sources only. This is not My Vault or a corpus export.
