@@ -24,7 +24,7 @@ and the [skill disposition audit](docs/skill-disposition-audit.md).
 - Adapter packs for generic MCP, Hermes, Gemini, Codex, Claude, OpenClaw, and Cursor.
 - Approval gates for public actions.
 - Manual/web fallback paths when MCP is unavailable.
-- Receipt templates that prove what happened.
+- Receipt templates for recording actual tool calls and verified readbacks; templates alone are not proof.
 - Redacted examples based on real operating patterns, with private details removed.
 - Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
 - Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
@@ -36,13 +36,19 @@ and the [skill disposition audit](docs/skill-disposition-audit.md).
 
 ## YouTube support via the Eddy engine
 
-The YouTube Edit workflow uses [Eddy](https://github.com/lennoxsaint/eddy), a separate MIT-licensed, local-first video editor, vendored here as the `engines/eddy` submodule. Eddy turns raw footage into a launch kit (long video, Shorts, titles, thumbnails, description) and never publishes by itself; this repo orchestrates Eddy and then hands off to Threadify for the promotion step. Initialize the engine with:
+The YouTube Edit workflow uses a separately verified [Eddy](https://github.com/lennoxsaint/eddy) installation or a finished launch kit. Source checkouts reference Eddy through the `engines/eddy` submodule; the plugin archive does not include it. Inspect the installed engine's current documentation and processing configuration before starting. Do not permit unapproved source-media transfers or publishing, and claim only output assets that actually exist and have been inspected.
+
+For a source checkout only, initialize the engine with:
 
 ```sh
 git clone --recurse-submodules https://github.com/lennoxsaint/Threadify-workflows.git
 # or, in an existing clone:
 git submodule update --init engines/eddy
 ```
+
+Do not run these setup commands inside an installed skill directory. Threadify
+is optional for edit-only use; promotional media uploads, scheduling and feedback
+sharing each require approval for that action.
 
 ## What Stays In Threadify
 
@@ -76,8 +82,8 @@ npx --yes github:lennoxsaint/Threadify-workflows install
 The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
 
 The existing standalone installer targets Qualified Buyer Research. The new
-creator package still needs complete extracted-plugin install and upgrade
-proof; running the stable installer does not prove these creator changes are
+creator package still needs complete host-loading and release verification;
+running the stable installer does not prove these creator changes are
 released or installed. See [packaging status](docs/plugin-packaging.md).
 
 1. Connect Threadify MCP in your agent client.
@@ -110,9 +116,12 @@ Install from this repo root:
 
 ```sh
 codex plugin marketplace add .
+codex plugin add threadify-workflows@threadify-workflows
 ```
 
-Then connect Threadify MCP with OAuth at:
+Marketplace registration alone does not install the plugin. Start a new task
+after installation to check skill discovery. Local drafting does not require
+a Threadify connection. For connected services, connect Threadify MCP with OAuth at:
 
 ```text
 https://www.threadify.app/api/mcp/threadify
