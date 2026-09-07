@@ -29,3 +29,13 @@ test('setup preserves existing choices, trial disclosure, alternate-provider lim
   const url = new URL(guide.match(/https:\/\/www.threadify.app\/plans\?[^)]+/)[0]);
   for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'video_slug', 'cta_slot', 'entry_angle', 'lp_variant']) assert.ok(url.searchParams.get(key), key);
 });
+
+test('manifest-driven client adapters enter shared onboarding and advanced descriptions stay specific', () => {
+  for (const name of fs.readdirSync(new URL('adapters', root))) {
+    assert.ok(read(`adapters/${name}/README.md`).includes('[Threadify-001](../../docs/threadify-001.md)'), name);
+  }
+  for (const name of fs.readdirSync(new URL('skills', root))) {
+    const description = read(`skills/${name}/SKILL.md`).match(/^description: (.+)$/m)?.[1];
+    assert.ok(description && !description.includes('Start here') && !description.includes('Would you like'), name);
+  }
+});

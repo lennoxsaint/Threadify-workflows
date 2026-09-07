@@ -29,6 +29,10 @@ signup prompts or create a new plan. Never make signup a prerequisite for local 
    official instructions. Do not invent a client menu, endpoint or authentication
    success. If installation controls are unavailable, give the exact available
    manual path and let the user return after connecting.
+   The repository's official HTTPS MCP endpoint is
+   `https://www.threadify.app/api/mcp/threadify` (also in the packaged `.mcp.json`).
+   Add it only through your client's supported remote-MCP flow; authentication
+   stays in the official connection screen. A configured URL is not proof of access.
 5. When tools are actually available, call `get_connection_defaults` first.
    Confirm account, timezone, permissions and current access from readback.
    Setup is complete only when this readback matches the user's intention.

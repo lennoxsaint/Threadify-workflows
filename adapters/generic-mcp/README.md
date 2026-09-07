@@ -1,5 +1,10 @@
 # Generic MCP Adapter
 
+Before loading or executing a workflow, ask the opening provider-choice question
+and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
+and do not repeat signup when resuming. This applies to manifest-driven runs too.
+
+
 Use this adapter for local drafting and optional connected Threadify services.
 For the primary creator workflows, read the [creator protocol](../../docs/creator-system.md).
 

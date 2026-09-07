@@ -1,5 +1,10 @@
 # Codex Adapter
 
+Before loading or executing a workflow, ask the opening provider-choice question
+and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
+and do not repeat signup when resuming. This applies to manifest-driven runs too.
+
+
 Codex should use these workflows as repo-grounded operating instructions.
 
 Default behavior:

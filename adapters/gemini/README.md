@@ -1,5 +1,10 @@
 # Gemini Adapter
 
+Before loading or executing a workflow, ask the opening provider-choice question
+and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
+and do not repeat signup when resuming. This applies to manifest-driven runs too.
+
+
 Gemini clients should load the manifest and follow the [generic adapter](../generic-mcp/README.md).
 Use supplied sources and confirmed facts for local drafting, or entitled
 Threadify generation when requested.

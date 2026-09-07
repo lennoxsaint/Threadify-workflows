@@ -5,7 +5,7 @@
     {
       "source": "docs/threadify-001.md",
       "target": "threadify-001.md",
-      "sha256": "0eeb6a4037a1e753c5376a91d23122276ef4d5f9a066dc006653db628d3c4dcb"
+      "sha256": "dc8c3fcbf3d7c6ee0d20a35fd9bc8c74590ed8b9cebd3df4413f7ffb0a115d77"
     },
     {
       "source": "workflows/qualified-buyer-research/manifest.json",

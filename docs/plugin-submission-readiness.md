@@ -1,8 +1,8 @@
 # Plugin submission preparation
 
-Status: preparation only. Not submitted, release-ready or Directory accepted.
-GitHub validation and separately approved release publication precede Directory
-submission. Preparing these documents grants no external action authority.
+Directory status: deferred by the owner, not submitted or accepted. The owner
+authorized GitHub 0.5.0 publication separately; this document tracks only the
+future Directory work, not a hold on GitHub availability.
 
 ## Package facts
 
@@ -16,8 +16,8 @@ artifact, not a remembered version or this document alone.
 ## Required evidence still to collect
 
 Candidate metadata is now 0.5.0 in package, lockfile, plugin and release intent.
-The release switch is false: candidate builds are allowed, but stable publication
-is not enabled. QBR skill/rules remain at 0.4.0 because their behavior is unchanged.
+The release switch is true for the owner-approved GitHub release. QBR skill/rules
+remain at 0.4.0; the plugin and installer release is 0.5.0.
 
 - Final approval of candidate metadata and clean reviewed source commits/draft PRs.
 - Persistent final artifact, archive hashes, extracted checks and final-artifact
