@@ -31,6 +31,11 @@ Pass the operation's JSON through stdin. Do not put private copy, source bodies 
 | `continue` | `plan_id` | Unresolved review/attempt first, otherwise next day's blueprint |
 | `status` | Empty object | Compact counts, no draft bodies |
 | `resolve-source` | `adaptation`, `context` | Local rights/template checks; no state mutation |
+| `review-editor` | `plan_id`, verified `username`, normalized `automation`; or existing `session_root` | Starts private loopback editor; returns local URL and session directory; keep the server alive |
+| `review-wait` | `session_root`, optional `timeout_ms` (0–60000) | Bounded wait for the durable submission; no provider calls |
+| `review-submission` | `session_root` | Reads saved edits, exact submitted intent and matching workspace delivery states |
+| `apply-browser-review` | `session_root`, current `now`, optional refreshed `reuse_proofs` | Atomic exact edits, local feedback and browser-bound approval; uses workspace revision; no provider calls |
+| `review-note` | `session_root`, `stage`, `message`, `evidence_ref` | Evidenced host progress text; uses session revision, not workspace revision; cannot mark posts scheduled |
 | `setup` | `id`, `user_id`, `now`, selected `candidates` with extraction evidence | Private preview with shared-publication disclosure and explicit coverage gaps |
 | `display-setup` | `setup_id` | Exact setup preview and approval hash |
 | `approve-setup` | `setup_id`, `displayed`, `confirmation` | Approves only the displayed selected sources; does not import |
@@ -58,6 +63,8 @@ To target another account or date, prepare a separate destination plan/review;
 do not move content outside the daily volume and CTA policy by editing its identity.
 
 ## Delivery boundary
+
+Read `creator-browser-review.md` for browser Submit handling, host waiting, automation options and exact receipt binding. The editor does not replace the provider tool chain. Its prepared posts remain unscheduled until the host completes that chain with real readbacks.
 
 `record-validation` writes evidence for one `review_id` / `card_id`, with `now`
 and a normalized `receipt`: unique `id`, exact `card_hash`, `account_id`,

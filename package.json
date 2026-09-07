@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Public-safe, open-source workflow manifests and agent adapters for Threadify MCP.",
   "license": "MIT",
   "type": "module",
