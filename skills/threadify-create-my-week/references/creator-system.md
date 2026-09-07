@@ -34,6 +34,8 @@ Exact reposts require ownership and current claims. Literal fill-in requires evi
 
 For connected Brain-informed work, use `generate_content`. For literal templates or host-authored copy, use `save_draft` to preserve exact text when hosted saving is authorized. `save_final_draft` is audit-only, not editable draft storage. Offline, write useful local drafts in the user's confirmed voice without inventing Brain access, metrics or provider IDs. Label method and provider accurately.
 
+If generation times out, the saved-draft outcome is unknown, not failed. Read recent drafts and their exact content before retrying; retain the original request/idempotency key and reconcile any matching result. Do not launch a replacement generation with a new key to hide the timeout. If the provider remains unavailable, keep useful host-authored drafts local with that origin disclosed and the unresolved hosted request noted. Do not claim they are Brain-generated or saved, and never schedule an ambiguous draft.
+
 Ground claims, resolve every placeholder and check source availability. For evidence-led experiments, state the hypothesis and one changed dimension without a promised growth outcome. Preserve exact parts, media and source lineage. Validate connected drafts with `validate_post`; local checks are not provider validation. Re-read the saved draft when applicable and ensure it matches. Create a daily review with `add-review`, supplying rights proofs for literal modes. All-drafts-upfront still creates separate daily reviews and requires later freshness checks.
 
 ## Review and deliver

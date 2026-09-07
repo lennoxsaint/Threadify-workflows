@@ -73,6 +73,26 @@ Daily Posts workflows may consume only approved clean Threadify-safe packs or ve
 
 ## Quick Start
 
+### Use Create My Week in Codex
+
+Ask Codex:
+
+> Install the skill at https://github.com/lennoxsaint/Threadify-workflows/tree/main/skills/threadify-create-my-week, then use it to prepare my next seven days of Threads content. Keep everything draft-only for review.
+
+On your next turn, invoke `$threadify-create-my-week`. Node 18+ is required
+for private, resumable local state. You can install the sibling Day, Month and
+Vault Setup skills the same way. Each includes its own engine and references.
+This standalone route does not edit your Codex configuration or require a
+plugin marketplace installation.
+
+The existing Threadify connection is optional. Missing shared-Viral search does
+not block the workflow: it uses qualified Greatest Hits, My Vault or supplied
+sources and explains substitutions. A full week blueprint is seven days;
+rolling mode drafts Day 1 first. Ask for all drafts upfront if desired.
+Neither choice schedules or publishes your posts.
+
+### Stable updater
+
 Install the latest validated stable release:
 
 ```sh
