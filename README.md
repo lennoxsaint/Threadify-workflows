@@ -18,6 +18,12 @@ are the default. All drafts upfront is optional; neither mode bypasses daily
 review or fresh delivery checks. See [getting started](docs/getting-started.md)
 and the [skill disposition audit](docs/skill-disposition-audit.md).
 
+The v0.6.0 candidate adds an [in-app browser review editor](docs/creator-browser-review.md):
+edit Threads-style cards, check each post, then Submit the exact versions for
+the active host to validate and schedule. Auto Plug and Auto Repost are optional.
+The editor saves locally and never holds provider credentials. This feature is
+not yet in the published v0.5.0 release.
+
 ## Preserved capabilities
 
 - Strict workflow manifests for agent-native Threadify execution.

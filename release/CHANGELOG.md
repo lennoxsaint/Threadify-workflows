@@ -1,5 +1,15 @@
 # Threadify Workflows stable releases
 
+## 0.6.0 candidate (not released)
+
+- Adds a private in-app browser editor to Day, Week and Month with Threads-style
+  cards, exact text/spacing edits, local saving and one final Submit.
+- Binds opt-in Auto Plug and Auto Repost to the reviewed post; displays account-wide
+  repost overrides and requires matching fresh settings and schedule receipts.
+- Adds resumable submitted intents, stale-tab protection, atomic approval application
+  and local-only edit feedback. Provider delivery still runs through the active host.
+- Keeps v0.5.0 as the published stable version. Release approval is pending.
+
 ## 0.5.0
 
 - Adds Vault Setup, Create My Day, Create My Week and Create My Month, including

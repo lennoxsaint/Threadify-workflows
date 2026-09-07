@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { validateAutomation, validateGlobalRepost } from './automation.mjs';
 
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const text = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -25,6 +26,11 @@ function validateCard(c) {
   assert(c.source && text(c.source.id) && text(c.source.url), 'Source lineage required.');
   assert(['structure_only', 'literal_fill_in', 'exact_repost'].includes(c.adaptation_mode), 'Adaptation mode required.');
   assert(['host_authored', 'threadify_brain'].includes(c.method), 'Accurate drafting method required.');
+  if ('auto_plug' in c || 'auto_repost' in c || 'automation_context' in c) {
+    validateAutomation(c.auto_plug, true); validateAutomation(c.auto_repost);
+    validateGlobalRepost(c.automation_context);
+    assert(!c.auto_repost || (c.automation_context.known && !c.automation_context.enabled), 'Account-wide Auto Repost overrides this per-post request.');
+  }
   reviewHash(c);
 }
 
@@ -132,6 +138,11 @@ export function beginAttempt(pack, id, preflight, now) {
   assert(preflight?.card_hash === hash && preflight.account_id === c.account_id && preflight.timezone === c.timezone,
     'Matching preflight account, timezone and review hash required.');
   assert(GATES.every((gate) => preflight[gate] === true) && text(preflight.evidence_ref), 'Every preflight check must pass with evidence.');
+  if ('automation_context' in c) {
+    assert(c.automation_context.known && preflight.automation_verified === true && preflight.automation
+      && reviewHash(preflight.automation) === reviewHash({ auto_plug: c.auto_plug, auto_repost: c.auto_repost, global_repost: c.automation_context }),
+    'Fresh automation settings must match the browser approval, including account-wide Auto Repost.');
+  }
   assert(timestamp(preflight.checked_at) && Date.parse(preflight.checked_at) <= Date.parse(now)
     && Date.parse(now) - Date.parse(preflight.checked_at) <= 300_000
     && Date.parse(preflight.valid_until) > Date.parse(now), 'Fresh preflight required.');
@@ -168,6 +179,12 @@ export function reconcileAttempt(pack, id, receipt) {
     assert(Date.parse(receipt.scheduled_at) === Date.parse(card.content.scheduled_at), 'Schedule readback must match scheduled_at.');
     for (const field of ['account_id', 'draft_id', 'parts', 'media']) {
       assert(canonical(receipt[field]) === canonical(card.content[field]), `Schedule readback must match ${field}.`);
+    }
+    if ('automation_context' in card.content) {
+      assert(receipt.automation_verified === true && receipt.automation
+        && reviewHash(receipt.automation) === reviewHash({ auto_plug: card.content.auto_plug,
+          auto_repost: card.content.auto_repost, global_repost: card.content.automation_context }),
+      'Schedule readback must match approved automation settings.');
     }
     card.state = 'scheduled'; attempt.outcome = 'scheduled';
   }
