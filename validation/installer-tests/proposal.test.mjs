@@ -109,3 +109,21 @@ test('public proposal application rejects private voice material', (t) => {
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /private_field_rejected/);
 });
+
+test('advanced bundles parse CRLF markdown with and without frontmatter', (t) => {
+  const root = checkout(t);
+  const source = path.join(root, 'plugins', 'threadify', 'skills');
+  for (const name of fs.readdirSync(source)) {
+    const file = path.join(source, name, 'SKILL.md');
+    if (fs.existsSync(file)) fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/\r?\n/g, '\r\n'));
+  }
+  for (const args of [[], ['--check']]) {
+    const result = spawnSync(process.execPath, ['scripts/build-advanced-bundles.mjs', ...args], { cwd: root, encoding: 'utf8' });
+    assert.equal(result.status, 0, result.stderr);
+  }
+  const qbr = fs.readFileSync(path.join(root, 'skills', 'threadify-qualified-buyer-research', 'SKILL.md'), 'utf8');
+  assert.equal(qbr, fs.readFileSync(path.join(source, 'threadify-qualified-buyer-research', 'SKILL.md'), 'utf8'));
+  const legacy = fs.readFileSync(path.join(root, 'skills', 'threadify-youtube-edit', 'SKILL.md'), 'utf8');
+  assert.match(legacy, /^---\nname: threadify-youtube-edit\ndescription:/);
+  assert.ok(legacy.includes('references/workflow-manifest.json'));
+});

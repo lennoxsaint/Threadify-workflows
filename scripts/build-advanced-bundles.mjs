@@ -16,8 +16,10 @@ const expected = new Map();
 for (const [name, workflow] of Object.entries(workflows)) {
   const source = path.join(root, 'plugins/threadify/skills', name);
   let skill = fs.readFileSync(path.join(source, 'SKILL.md'), 'utf8');
-  if (!skill.startsWith('---\n')) {
-    const description = skill.split('\n\n')[1].replace(/\s+/g, ' ').trim();
+  if (!/^---\r?\n/.test(skill)) {
+    const paragraph = skill.split(/\r?\n\r?\n/)[1];
+    if (!paragraph?.trim()) throw new Error(`Missing skill description paragraph: ${name}`);
+    const description = paragraph.replace(/\s+/g, ' ').trim();
     skill = `---\nname: ${name}\ndescription: ${JSON.stringify('Advanced workflow. ' + description)}\n---\n\n${skill}`;
     skill = skill.replaceAll(`workflows/${workflow}/manifest.json`, 'references/workflow-manifest.json');
     skill += '\nResolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.\n';
