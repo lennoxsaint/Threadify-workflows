@@ -1,5 +1,17 @@
 # Threadify Workflows stable releases
 
+## 0.6.0
+
+- Bundles the exact public Viral Carousel Maker v0.2.0 runtime, source skill,
+  templates, and byte-identical controlled-mutation demo and QA contracts.
+- Adds a free local viral-carousel workflow that completes seven-edit creation
+  and review without a Threadify MCP call, provider write, or external action.
+- Adds fresh connector/account/timezone/capability/best-time/calendar gates,
+  separate hash-bound media-transfer and schedule approvals, durable request
+  intent, crash reconciliation, and duplicate prevention.
+- Adds one-install parity, lifecycle safety, clean-install, and privacy evidence
+  required by THREADIFY-021. Directory submission and app deployment remain deferred.
+
 ## 0.5.0
 
 - Adds Vault Setup, Create My Day, Create My Week and Create My Month, including

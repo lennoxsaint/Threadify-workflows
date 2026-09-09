@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "description": "Agent-native Threadify workflow recipes for approved scheduling, cross-post fallback, winner replication, X Article drafting, YouTube editing via the Eddy engine, and granular Brain Sync.",
   "author": {
     "name": "Threadify"

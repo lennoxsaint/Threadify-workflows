@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { reserveReleaseOutput, collectReleaseFiles } from '../lib/release-files.mjs';
 import { pluginArchive } from '../lib/release-archive.mjs';
 import { readReleaseMetadata } from '../lib/release-metadata.mjs';
+import { collectViralCarouselBundle, VIRAL_CAROUSEL_RELEASE } from '../lib/viral-carousel-bundle.mjs';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
 const candidate = process.argv.includes('--candidate');
@@ -69,6 +70,10 @@ function add(sourceRelative, targetRelative) {
 for (const file of pluginFiles) add(file, `plugin/${file}`);
 for (const file of skillFiles) add(`${skillRoot}/${file}`, `skill/${file}`);
 for (const file of cliFiles) add(file, `cli/${file}`);
+for (const file of collectViralCarouselBundle()) {
+  const target = `plugin/vendor/viral-carousel-maker/${file.relative}`;
+  entries.set(target, { sha256: sha256(file.content), bytes: file.content.length, mode: '0644', content_base64: file.content.toString('base64') });
+}
 
 const sortedEntries = [...entries.entries()].sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0);
 const source = { kind: candidate ? 'candidate' : 'stable', base_commit: head, worktree_dirty: worktreeDirty,
@@ -85,6 +90,7 @@ const bundle = {
     commit,
     change_class: intent.change_class,
   },
+  bundled_viral_carousel_maker: VIRAL_CAROUSEL_RELEASE,
   files: Object.fromEntries(sortedEntries),
 };
 const bundleContent = Buffer.from(`${JSON.stringify(bundle)}\n`);

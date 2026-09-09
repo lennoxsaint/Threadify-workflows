@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm, readFile, writeFile, stat, symlink, mkdir } from 'node:fs/promises';
+import { mkdtemp, rm, readFile, writeFile, stat, symlink, mkdir, chmod } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
@@ -83,7 +83,7 @@ test('symlinked roots or state and broad directory permissions are refused', asy
   const root = await fixture(t); const other = `${root}-other`;
   await mkdir(other, { mode: 0o700 }); await symlink(other, root);
   await assert.rejects(readState(root), /symlink/);
-  await rm(root); await mkdir(root, { mode: 0o755 });
+  await rm(root); await mkdir(root, { mode: 0o755 }); await chmod(root, 0o755);
   await assert.rejects(readState(root), /private/);
   await rm(root, { recursive: true }); await mkdir(root, { mode: 0o700 });
   await writeFile(path.join(other, 'target'), '{}');

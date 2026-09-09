@@ -77,6 +77,15 @@ test('candidate builds are reproducible, identify source state and cannot enter 
   assert.equal(manifest.source.kind, 'candidate');
   assert.equal(typeof manifest.source.worktree_dirty, 'boolean');
   assert.match(manifest.source.content_manifest_sha256, /^[a-f0-9]{64}$/);
+  assert.equal(bundle.bundled_viral_carousel_maker.version, '0.2.0');
+  assert.equal(bundle.bundled_viral_carousel_maker.commit_sha, '7a2cf34ee51404311a1a287e2f04c2c8e7523ce3');
+  assert.equal(bundle.bundled_viral_carousel_maker.demo_contract_sha256, 'f489877952820eec3da0951771f6bd75c286dc9d0969b0cefe1eceda00a6a8b9');
+  const demoEntry = bundle.files['plugin/vendor/viral-carousel-maker/src/viral_carousel_maker/contracts/controlled-mutation-demo-contract.json'];
+  assert.equal(demoEntry.sha256, bundle.bundled_viral_carousel_maker.demo_contract_sha256);
+  assert.ok(bundle.files['plugin/vendor/viral-carousel-maker/src/viral_carousel_maker/controlled_mutation.py']);
+  assert.ok(bundle.files['plugin/vendor/viral-carousel-maker/skills/source/viral-carousel-maker/SKILL.md']);
+  assert.ok(bundle.files['plugin/vendor/viral-carousel-maker/examples/specs/threads-soft-cta.yaml']);
+  assert.ok(!Object.keys(bundle.files).some((name) => /lennox[^/]*reference/i.test(name)));
   assert.equal(manifest.assets[0].sha256, hash(fs.readFileSync(bundlePath)));
   const archivePath = path.join(first, 'threadify-workflows-plugin-candidate.tar.gz');
   assert.ok(fs.existsSync(archivePath));

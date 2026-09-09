@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.5.0",
+  "release_version": "0.6.0",
   "skill_version": "0.4.0",
-  "plugin_version": "0.5.0",
+  "plugin_version": "0.6.0",
   "rules_version": "0.4.0",
   "change_class": "installer",
   "release": true,
-  "summary": "Owner-approved GitHub release: Day, Week, Month, Vault Setup and shared guided onboarding across every workflow. Directory submission deferred; no app deployment."
+  "summary": "THREADIFY-021 authorized GitHub release: one-install Viral Carousel Maker v0.2.0 workflow with exact bundled contracts, offline review, separate media-transfer and schedule approvals, and ambiguity-safe reconciliation. Directory submission and app deployment remain deferred."
 }

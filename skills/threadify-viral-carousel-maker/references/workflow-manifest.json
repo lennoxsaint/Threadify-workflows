@@ -1,0 +1,30 @@
+{
+  "workflow_id": "viral-carousel-maker",
+  "version": "0.6.0",
+  "title": "Viral Carousel Maker",
+  "summary": "Create and review a seven-edit controlled-mutation carousel locally with the bundled Viral Carousel Maker v0.2.0, then optionally upload its exact ordered media and schedule it through two separate approval gates.",
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "get_capabilities", "get_best_time", "list_scheduled_posts", "upload_media", "schedule_post", "get_schedule_status"],
+  "free_capabilities": ["bundled local carousel runtime", "controlled-mutation creation", "local critic review", "ordered final-media manifest", "local contact sheet and caption review"],
+  "paid_capability_stubs": ["hosted scheduling", "best-time evidence", "provider media upload"],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["exact account", "caption", "ordered media hashes", "scheduled time", "timezone", "best-time evidence", "upload_media action", "schedule_post action"]
+  },
+  "fallback": {
+    "mode": "local-carousel-review",
+    "artifact_schema": "controlled-mutation-demo-contract.v1",
+    "instructions": [
+      "Create and review locally with the bundled v0.2.0 runtime; this performs no Threadify MCP call or provider write.",
+      "If any scheduling read or capability is unavailable, stop after returning the ordered local review packet.",
+      "Never transfer media without its exact hash-bound transfer approval, and never treat that approval as permission to schedule.",
+      "Keep receipts local unless the user separately authorizes sharing them."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "bundled runtime version and commit", "ordered media hashes", "account", "timezone", "best-time evidence", "separate approvals", "request intent", "reconciliation state", "fallback state"]
+  }
+}

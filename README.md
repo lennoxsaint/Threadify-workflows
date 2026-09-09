@@ -107,7 +107,8 @@ npx --yes github:lennoxsaint/Threadify-workflows install
 
 The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
 
-Version 0.5.0 includes Day, Week, Month and Vault Setup in the full plugin archive.
+Version 0.6.0 includes Day, Week, Month, Vault Setup, and the one-install Viral
+Carousel Maker v0.2.0 controlled-mutation workflow in the full plugin archive.
 The universal standalone installer target still installs Qualified Buyer Research;
 use the direct skill links above for standalone creator installation. Native
 plugin discovery depends on your client. See [packaging status](docs/plugin-packaging.md).

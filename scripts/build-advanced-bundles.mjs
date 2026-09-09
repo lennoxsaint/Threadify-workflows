@@ -11,6 +11,7 @@ const workflows = {
   'threadify-x-article-from-daily-post': 'x-article-from-daily-post',
   'threadify-youtube-edit': 'youtube-edit',
   'threadify-qualified-buyer-research': 'qualified-buyer-research',
+  'threadify-viral-carousel-maker': 'viral-carousel-maker',
 };
 const expected = new Map();
 for (const [name, workflow] of Object.entries(workflows)) {

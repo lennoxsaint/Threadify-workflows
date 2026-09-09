@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Source-backed creator plans and reviewable drafts, with optional Threadify services and approval-gated scheduling.",
   "author": {
     "name": "Threadify"
