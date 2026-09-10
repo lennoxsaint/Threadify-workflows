@@ -1,0 +1,13 @@
+{
+  "workflow_id": "inbound-replies",
+  "version": "0.1.0",
+  "title": "Threadify Inbound Replies",
+  "summary": "Review grouped Threads inbound, preserve edits locally, and send exact approved replies through Threadify MCP with independent readback and feedback.",
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
+  "required_mcp_tools": ["get_connection_defaults", "list_comments", "analyze_comments", "list_mentions", "get_post_thread", "read_post_performance", "query_brain", "generate_replies", "send_replies", "record_feedback"],
+  "free_capabilities": ["local grouped review", "local resume and revision tracking"],
+  "paid_capability_stubs": ["Threadify native reply generation and comment analysis require the connected account's applicable access"],
+  "approval_gate": {"required": true, "type": "explicit-final-approval", "must_show": ["account handle", "exact final reply", "native target", "action", "fallback state"]},
+  "fallback": {"mode": "local-review", "artifact_schema": "inbound-packet.v1", "instructions": ["Guide OAuth setup when MCP is missing. Do not claim discovery or publication.", "Use the local editor when native Writing-block edit readback is unavailable.", "Use context-grounded agent drafts for native generator misses; block incomplete context.", "Keep uncertain sends pending for independent reconciliation; never retry blindly."]},
+  "receipt": {"schema": "workflow-receipt.v1", "must_prove": ["account handle", "source binding", "approved revision and text hash", "send receipt", "published reply readback", "feedback receipt", "coverage", "fallback state"]}
+}
