@@ -4,6 +4,8 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
 const workflows = {
+  'threadify-greatest-hits-runway': 'greatest-hits-runway',
+  'threadify-content-brain-repair': 'content-brain-repair',
   'threadify-offer-builder': 'offer-builder',
   'threadify-crosspost-x-after-threads': 'crosspost-x-after-threads',
   'threadify-daily-posts-heartbeat': 'daily-posts-heartbeat',

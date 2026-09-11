@@ -170,3 +170,7 @@ No workflow may schedule, cancel, reschedule, or otherwise mutate Threadify stat
 ## Offer Builder
 
 Use [Threadify Offer Builder](skills/threadify-offer-builder/SKILL.md) to clarify a real offer, create a concise local page, and optionally save approved fields to CTA Studio. The interview asks one question at a time; shortened filming mode asks 1, 2, 3, then 10. See the [workflow and local demo](workflows/offer-builder/README.md). No connection is needed for local preparation.
+
+## Find a workflow from a Proof Loops episode
+
+The [episode 15 onward index](docs/proof-loops-workflows.md) links the demonstrated workflows, including Greatest Hits Runway, Qualified Buyer Research, Create My Day/Week/Month, Content Brain Repair, Viral Carousel Maker and Offer Builder. It also includes the smaller use-case recipes named in the setup episode and explains source versus installed-release availability.
