@@ -17,6 +17,9 @@ const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 const allowedTools = new Set([
   'get_connection_defaults',
+  'list_offers',
+  'create_offer',
+  'update_offer',
   'get_capabilities',
   'get_best_time',
   'list_accounts',
@@ -394,7 +397,7 @@ const manifestFiles = files.filter(
   (file) => file.startsWith(path.join(root, 'workflows') + path.sep)
     && file.endsWith(path.join('manifest.json')),
 );
-assert(manifestFiles.length === 13, `expected 13 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length === 14, `expected 14 workflow manifests, found ${manifestFiles.length}`);
 for (const file of manifestFiles) validateManifest(file);
 
 for (const file of files) {

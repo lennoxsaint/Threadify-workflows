@@ -14,7 +14,8 @@
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/proposal.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
-    "test": "npm run validate && npm run test:installer && npm run test:creator"
+    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder",
+    "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs"
   },
   "engines": {
     "node": ">=18"

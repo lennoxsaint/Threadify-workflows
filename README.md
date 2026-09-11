@@ -166,3 +166,7 @@ and confirm the owner gates listed there.
 ## Safety Rule
 
 No workflow may schedule, cancel, reschedule, or otherwise mutate Threadify state until the user gives explicit final approval. If MCP is unavailable, the workflow must produce a Threadify-ready artifact and manual fallback steps instead of pretending the action happened.
+
+## Offer Builder
+
+Use [Threadify Offer Builder](skills/threadify-offer-builder/SKILL.md) to clarify a real offer, create a concise local page, and optionally save approved fields to CTA Studio. The interview asks one question at a time; shortened filming mode asks 1, 2, 3, then 10. See the [workflow and local demo](workflows/offer-builder/README.md). No connection is needed for local preparation.
