@@ -1,6 +1,6 @@
 # Plugin packaging
 
-## Current 0.8.0 candidate
+## Current 0.8.0 package
 
 The root plugin discovers the runnable catalog generated from canonical workflow manifests. A fresh install selects the full catalog. Existing client selections stay unchanged when an upgrade omits `--workflows`; `threadify-workflows install --workflows all` is the explicit full-catalog migration.
 
@@ -8,7 +8,7 @@ The recommended starter is Your Next Moves. It calls Offer Builder when no confi
 
 The root `.codex-plugin/plugin.json` and release bundle include current source skills through the registry. No second handwritten workflow list is authoritative. The plugin still exposes `.mcp.json`, but local preparation does not require authentication. Connect Threadify only when a useful step needs a current hosted capability.
 
-Source validation and extracted archive tests do not prove native client discovery. Codex and Claude Code walkthroughs for the new starter remain pending. Other client adapters are structural-only until separately observed. Local conversation state is supported on macOS and Linux; Windows installation is not state-engine proof.
+Source validation and extracted archive tests do not prove native client discovery. Codex and Claude Code passed synthetic native walkthroughs of the new starter; see [0.8.0 acceptance](buyer-experience-acceptance.md). Other client adapters are structural-only until separately observed. Local conversation state is supported on macOS and Linux; Windows installation is not state-engine proof.
 
 ## Prior packaging evidence
 

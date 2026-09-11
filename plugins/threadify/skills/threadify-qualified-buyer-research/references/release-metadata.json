@@ -5,6 +5,6 @@
   "plugin_version": "0.8.0",
   "rules_version": "0.4.0",
   "change_class": "installer",
-  "release": false,
+  "release": true,
   "summary": "Buyer-conversation experience: full-catalog fresh installation, preserved legacy selection, local-first discovery and five resumable review workflows. Release enabled only after candidate and native first-run verification."
 }

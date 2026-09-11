@@ -29,7 +29,7 @@ test('root onboarding leads from benefit to one local-first start before connect
     'example.invalid',
     'Fit rationale',
     'Suggested reply',
-    '`draft_only` - nothing was sent',
+    '`draft` - nothing was sent',
     'Use Your Next Moves with my offer and the conversations I provide.',
     'npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets codex',
     'docs/workflow-catalog.md',

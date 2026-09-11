@@ -16,7 +16,7 @@ The buyer workflows prepare useful work locally from an offer and conversations 
 
 ## Client proof status
 
-The source package and adapters can be checked structurally. Codex and Claude Code still need separate native discovery and first-run walkthroughs for the five new skills. The root release owner will record that proof. Cursor, Gemini CLI, OpenClaw, Hermes and generic MCP guidance is structural until each client completes its own native walkthrough.
+The source package and adapters can be checked structurally. Codex and Claude Code passed native discovery and a synthetic first run of Your Next Moves; the five-workflow engine sequence passed separately. See [0.8.0 acceptance](buyer-experience-acceptance.md). Cursor, Gemini CLI, OpenClaw, Hermes and generic MCP guidance is structural until each client completes its own native walkthrough.
 
 The local state engine currently targets macOS and Linux. A Windows installer result confirms installation only. It does not confirm local state creation, locking, revision recovery or end-to-end conversation use.
 

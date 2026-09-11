@@ -8,13 +8,17 @@ The library is MCP ready and works with agent clients including Codex, Claude Co
 
 This example is made up and uses the reserved `example.invalid` domain.
 
-| Field | Synthetic value |
-|---|---|
-| Source | `https://example.invalid/threads/conversation-one` |
-| Buyer evidence | "Yes, I would like help setting that up." and permission to use a Threads DM |
-| Fit rationale | The person showed explicit interest in help relevant to the confirmed offer. A generic public question would not qualify as a lead. |
-| Suggested reply | "I can send the short setup outline here today. If it fits, we can choose the next step after you read it." |
-| State | `draft_only` - nothing was sent |
+**Source:** a [fictional Threads conversation](https://example.invalid/threads/conversation-one).
+
+**Buyer evidence:** "Yes, I would like help setting that up." The synthetic record also includes permission to use a Threads DM.
+
+**Fit rationale:** the person showed explicit interest in help relevant to the confirmed offer. A generic public question would not qualify as a lead.
+
+**Suggested reply:**
+
+> I can send the short setup outline here today. If it fits, we can choose the next step after you read it.
+
+**State:** `draft` - nothing was sent.
 
 Your Next Moves may present up to three supported actions, but you review the first action by itself.
 
@@ -84,7 +88,7 @@ For installation or workflow trouble, run `npx --yes github:lennoxsaint/Threadif
 
 Conversation archives stay private. The local engine validates and persists the minimal evidence supplied by the host outside release archives. The host reinspects the source before an action. The engine then records a pending attempt before delivery and blocks replay when an outcome is unknown. An optional native reminder only prepares a review candidate after the owner enables it; it never sends.
 
-Tests, an installed file and a client discovery screen prove different things. Codex and Claude Code native first-run proof is still pending for this release candidate. Other adapters are structural guidance until their own native walkthroughs pass. See [packaging status](docs/plugin-packaging.md) for dated release evidence and remaining checks.
+Tests, an installed file and a client discovery screen prove different things. Codex and Claude Code passed synthetic native first-run walkthroughs on macOS. See the [0.8.0 acceptance record](docs/buyer-experience-acceptance.md). Other adapters are structural guidance until their own native walkthroughs pass. See [packaging status](docs/plugin-packaging.md) for dated release evidence and remaining checks.
 
 No workflow may ask a provider to import, save, schedule, publish, reply or send until the user approves the exact displayed action. Importing user-supplied evidence into private local state is part of the authorized first run. Qualified Buyer Research still stops with a staged reply before Send. If a required tool is unavailable, keep the useful work local and give the manual next step.
 
