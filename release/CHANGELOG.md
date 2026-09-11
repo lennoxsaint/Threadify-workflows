@@ -1,6 +1,6 @@
 # Threadify Workflows stable releases
 
-## 0.7.0 (prepared, not released)
+## 0.7.0
 
 - Adds Threadify Offer Builder (`threadify-offer-builder`), with the Offer Architect interview.
 - Supports ten adaptive questions, shortened filming mode and clearly labelled fictional demos.

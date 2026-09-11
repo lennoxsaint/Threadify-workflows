@@ -5,6 +5,6 @@
   "plugin_version": "0.7.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
-  "release": false,
-  "summary": "Offer Builder release candidate: adaptive interview, local responsive offer page and approval-gated offer preparation. Stable publication awaits exact merge/release approval; live CTA Studio proof is not claimed."
+  "release": true,
+  "summary": "Owner-approved Threadify Workflows v0.7.0 release: Offer Builder adaptive interview, local offer page and approval-gated offer preparation. Live CTA Studio proof and directory submission remain separate."
 }
