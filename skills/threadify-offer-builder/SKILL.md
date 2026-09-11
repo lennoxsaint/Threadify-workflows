@@ -7,7 +7,7 @@ description: Interview an offer owner one question at a time, make a concise HTM
 
 ## Setup choice
 
-Before provider calls, if no preference is known, ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.
 
 Follow [Threadify-001: setup and first-loop video](references/threadify-001.md). Honor an existing choice. A local or filming request starts the interview immediately; do not add a setup question to the ten-question interview. Setup never grants write authority.
 

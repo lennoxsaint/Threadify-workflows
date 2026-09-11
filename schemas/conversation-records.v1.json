@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/conversation-records.v1.json",
+  "title": "Private buyer conversation records v1",
+  "description": "Minimal local records supplied by a host. They are not independent provider verification or send authority.",
+  "oneOf": [
+    { "$ref": "#/$defs/offer" },
+    { "$ref": "#/$defs/evidence" },
+    { "$ref": "#/$defs/action" },
+    { "$ref": "#/$defs/receipt" },
+    { "$ref": "#/$defs/commitment" },
+    { "$ref": "#/$defs/outcome" },
+    { "$ref": "#/$defs/content" }
+  ],
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "time": { "type": "string", "format": "date-time" },
+    "url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "basis": { "enum": ["provider_observed", "owner_reported"] },
+    "identity": {
+      "type": "object",
+      "properties": {
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" }
+      },
+      "required": ["account_id", "platform"]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": { "$ref": "#/$defs/url" },
+        "relevant_excerpt": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" },
+        "availability": { "enum": ["available", "unavailable"] },
+        "evidence_ref": { "$ref": "#/$defs/id" }
+      },
+      "required": ["url", "relevant_excerpt", "availability", "evidence_ref"]
+    },
+    "offer": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-offer.v1" },
+        "record_type": { "const": "offer" },
+        "id": { "$ref": "#/$defs/id" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" },
+        "status": { "enum": ["active", "inactive"] },
+        "checked_at": { "$ref": "#/$defs/time" },
+        "evidence_ref": { "$ref": "#/$defs/id" }
+      },
+      "required": ["schema_version", "record_type", "id", "account_id", "platform", "status", "checked_at", "evidence_ref"]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-evidence.v1" },
+        "record_type": { "const": "evidence" },
+        "id": { "$ref": "#/$defs/id" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" },
+        "conversation_id": { "$ref": "#/$defs/id" },
+        "offer_id": { "oneOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+        "kind": { "enum": ["action_candidate", "opportunity_explored", "recipient_interest", "channel_permission", "question", "agreed_step", "commitment", "silence"] },
+        "observed_at": { "$ref": "#/$defs/time" },
+        "evidence_basis": { "$ref": "#/$defs/basis" },
+        "source": { "$ref": "#/$defs/source" },
+        "private_identifiers": { "type": "array", "items": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "\\S" }, "maxItems": 20, "uniqueItems": true },
+        "explicit": { "type": "boolean" },
+        "relevant_to_offer": { "type": "boolean" },
+        "channel": { "enum": ["threads_public", "threads_dm", "email", "call", "other"] },
+        "question_key": { "$ref": "#/$defs/id" },
+        "step_key": { "$ref": "#/$defs/id" }
+      },
+      "required": ["schema_version", "record_type", "id", "account_id", "platform", "conversation_id", "offer_id", "kind", "observed_at", "evidence_basis", "source", "private_identifiers"],
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "enum": ["recipient_interest", "channel_permission", "agreed_step", "commitment"] } }, "required": ["kind"] },
+          "then": { "properties": { "explicit": { "const": true } }, "required": ["explicit"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "recipient_interest" } }, "required": ["kind"] },
+          "then": { "properties": { "relevant_to_offer": { "const": true }, "offer_id": { "$ref": "#/$defs/id" } }, "required": ["relevant_to_offer"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "channel_permission" } }, "required": ["kind"] },
+          "then": { "required": ["channel"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "question" } }, "required": ["kind"] },
+          "then": { "required": ["question_key"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "agreed_step" } }, "required": ["kind"] },
+          "then": { "required": ["step_key"] }
+        }
+      ]
+    },
+    "approval": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "display_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "decision": { "const": "approve" },
+            "evidence_ref": { "$ref": "#/$defs/id" },
+            "at": { "$ref": "#/$defs/time" }
+          },
+          "required": ["action_hash", "display_hash", "decision", "evidence_ref", "at"]
+        }
+      ]
+    },
+    "inspection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_url": { "$ref": "#/$defs/url" },
+        "availability": { "const": "available" },
+        "checked_at": { "$ref": "#/$defs/time" },
+        "valid_until": { "$ref": "#/$defs/time" },
+        "evidence_ref": { "$ref": "#/$defs/id" }
+      },
+      "required": ["source_url", "availability", "checked_at", "valid_until", "evidence_ref"]
+    },
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-attempt.v1" },
+        "number": { "type": "integer", "minimum": 1 },
+        "idempotency_key": { "$ref": "#/$defs/id" },
+        "action_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "destination": { "$ref": "#/$defs/id" },
+        "exact_text_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "started_at": { "$ref": "#/$defs/time" },
+        "outcome": { "enum": ["pending", "unknown", "confirmed_not_sent", "succeeded"] },
+        "reinspections": { "type": "array", "items": { "$ref": "#/$defs/inspection" }, "minItems": 1 },
+        "receipt_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "uniqueItems": true }
+      },
+      "required": ["schema_version", "number", "idempotency_key", "action_hash", "account_id", "destination", "exact_text_sha256", "started_at", "outcome", "reinspections", "receipt_ids"]
+    },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-action.v1" },
+        "id": { "$ref": "#/$defs/id" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" },
+        "conversation_id": { "$ref": "#/$defs/id" },
+        "offer_id": { "$ref": "#/$defs/id" },
+        "action_type": { "enum": ["public_reply", "request_channel_permission", "agree_next_step", "follow_through", "share_resource", "ask_timing"] },
+        "channel": { "enum": ["threads_public", "threads_dm", "email", "call", "other"] },
+        "destination": { "$ref": "#/$defs/id" },
+        "exact_text": { "type": "string", "minLength": 1, "maxLength": 10000, "pattern": "\\S" },
+        "evidence_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1, "uniqueItems": true },
+        "created_at": { "$ref": "#/$defs/time" },
+        "updated_at": { "$ref": "#/$defs/time" },
+        "state": { "enum": ["draft", "approved", "rejected", "attempt_pending", "unknown", "succeeded"] },
+        "approval": { "$ref": "#/$defs/approval" },
+        "attempts": { "type": "array", "items": { "$ref": "#/$defs/attempt" } }
+      },
+      "required": ["schema_version", "id", "account_id", "platform", "conversation_id", "offer_id", "action_type", "channel", "destination", "exact_text", "evidence_ids", "created_at", "updated_at", "state", "approval", "attempts"]
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-action-receipt.v1" },
+        "id": { "$ref": "#/$defs/id" },
+        "status": { "enum": ["succeeded", "confirmed_not_sent", "unknown"] },
+        "evidence_basis": { "$ref": "#/$defs/basis" },
+        "evidence_ref": { "$ref": "#/$defs/id" },
+        "checked_at": { "$ref": "#/$defs/time" },
+        "idempotency_key": { "$ref": "#/$defs/id" },
+        "action_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "destination": { "$ref": "#/$defs/id" },
+        "exact_text_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "provider_ref": { "$ref": "#/$defs/id" }
+      },
+      "required": ["schema_version", "id", "status", "evidence_basis", "evidence_ref", "checked_at", "idempotency_key", "action_hash", "account_id", "destination", "exact_text_sha256"],
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "confirmed_not_sent" } }, "required": ["status"] },
+          "then": { "properties": { "evidence_basis": { "const": "provider_observed" } } }
+        }
+      ]
+    },
+    "commitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-commitment.v1" },
+        "id": { "$ref": "#/$defs/id" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" },
+        "conversation_id": { "$ref": "#/$defs/id" },
+        "offer_id": { "$ref": "#/$defs/id" },
+        "promised_by": { "enum": ["owner", "recipient"] },
+        "exact_promise": { "type": "string", "minLength": 1, "maxLength": 10000, "pattern": "\\S" },
+        "made_at": { "$ref": "#/$defs/time" },
+        "due_at": { "oneOf": [{ "$ref": "#/$defs/time" }, { "type": "null" }] },
+        "evidence_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1, "uniqueItems": true },
+        "status": { "enum": ["open", "fulfilled", "declined", "withdrawn", "uncertain"] },
+        "outcome_id": { "$ref": "#/$defs/id" }
+      },
+      "required": ["schema_version", "id", "account_id", "platform", "conversation_id", "offer_id", "promised_by", "exact_promise", "made_at", "due_at", "evidence_ids", "status"]
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-outcome.v1" },
+        "id": { "$ref": "#/$defs/id" },
+        "account_id": { "$ref": "#/$defs/id" },
+        "platform": { "const": "threads" },
+        "conversation_id": { "$ref": "#/$defs/id" },
+        "offer_id": { "$ref": "#/$defs/id" },
+        "commitment_id": { "oneOf": [{ "$ref": "#/$defs/id" }, { "type": "null" }] },
+        "status": { "enum": ["fulfilled", "declined", "withdrawn", "uncertain"] },
+        "occurred_at": { "$ref": "#/$defs/time" },
+        "evidence_basis": { "$ref": "#/$defs/basis" },
+        "evidence_ref": { "$ref": "#/$defs/id" }
+      },
+      "required": ["schema_version", "id", "account_id", "platform", "conversation_id", "offer_id", "commitment_id", "status", "occurred_at", "evidence_basis", "evidence_ref"]
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-content.v1" },
+        "id": { "$ref": "#/$defs/id" },
+        "question_key": { "$ref": "#/$defs/id" },
+        "evidence_ids": { "type": "array", "items": { "$ref": "#/$defs/id" }, "minItems": 1, "uniqueItems": true },
+        "exact_text": { "type": "string", "minLength": 1, "maxLength": 10000, "pattern": "\\S" },
+        "authorship": { "const": "host_authored" },
+        "created_at": { "$ref": "#/$defs/time" },
+        "privacy_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "passed": { "const": true },
+            "identifier_count": { "type": "integer", "minimum": 0 },
+            "identifiers_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          },
+          "required": ["passed", "identifier_count", "identifiers_sha256"]
+        }
+      },
+      "required": ["schema_version", "id", "question_key", "evidence_ids", "exact_text", "authorship", "created_at", "privacy_check"]
+    },
+    "import": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-import.v1" },
+        "import_key": { "$ref": "#/$defs/id" },
+        "records_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "imported_at": { "$ref": "#/$defs/time" }
+      },
+      "required": ["schema_version", "import_key", "records_hash", "imported_at"]
+    }
+  }
+}

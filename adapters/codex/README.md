@@ -1,20 +1,13 @@
-# Codex Adapter
+# Codex adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Install the current runnable catalog:
 
+```sh
+npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets codex
+```
 
-Codex should use these workflows as repo-grounded operating instructions.
+Start a new task, invoke `$threadify-your-next-moves`, and provide the offer and conversations you want reviewed. Work locally first. Follow [Threadify-001](../../docs/threadify-001.md) only when a useful step needs a connection.
 
-Default behavior:
+Codex should read the selected manifest, use the shared conversation CLI for private state, and show one bound action at a time. It may use current host tools after verifying their interface. Recipient interest, channel permission and exact owner approval are separate gates.
 
-- inspect the manifest before acting
-- avoid live actions until the approval gate is satisfied
-- call Threadify MCP tools only through the allowed workflow path
-- do not rewrite approved public text silently
-- produce the receipt in the shape required by the manifest
-
-Follow the [generic adapter](../generic-mcp/README.md) for local drafting,
-entitled connected services and exact action gates. Codex may run the bundled
-local engine; that does not grant permission to schedule or publish.
+Follow the [generic adapter](../generic-mcp/README.md) for local drafting, optional MCP use, pending attempts and receipts. A native Codex discovery and first-run walkthrough for the five new buyer skills is still pending; source presence and installer output do not prove routing.

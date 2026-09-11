@@ -5,7 +5,7 @@ description: Prepare a reviewed runway of existing best-performing posts, check 
 
 # Threadify Greatest Hits Runway
 
-If no setup choice is known, ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.
 
 Follow [Threadify-001: setup and first-loop video](references/threadify-001.md). Honor an existing choice; setup never authorizes scheduling.
 

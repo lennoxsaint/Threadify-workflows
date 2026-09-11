@@ -1,9 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadWorkflowRegistry, listWorkflows } from '../lib/workflow-registry.mjs';
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
-const names = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month'];
+const registry = loadWorkflowRegistry({ root });
+const names = listWorkflows(registry, { kind: 'skill', bundle: 'creator' })
+  .map((workflow) => workflow.skill_name);
 const engine = fs.readdirSync(path.join(root, 'lib/creator')).filter((f) => f.endsWith('.mjs')).sort();
 const expected = new Map(engine.map((name) => [`scripts/engine/${name}`, fs.readFileSync(path.join(root, 'lib/creator', name))]));
 for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));

@@ -3,6 +3,21 @@
   "version": "0.1.0",
   "title": "Create My Day",
   "summary": "Prepare one through five source-backed posts with exact daily review; five is the default.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-create-my-day",
+    "source": "skills/threadify-create-my-day/SKILL.md"
+  },
+  "bundle": { "kind": "creator", "standalone": false },
+  "dependencies": {
+    "workflows": ["vault-setup"],
+    "files": ["docs/creator-system.md", "docs/creator-engine.md", "schemas/creator-records.v1.json", "schemas/creator-lifecycle.v1.json"]
+  },
+  "triggers": ["create my day", "prepare today's Threads posts"],
+  "io": {
+    "inputs": [{ "name": "creator day request", "schema_ref": "inline:creator-day-request" }],
+    "outputs": [{ "name": "creator records", "schema_ref": "schemas/creator-records.v1.json" }]
+  },
   "supported_adapters": [
     "generic-mcp",
     "hermes",

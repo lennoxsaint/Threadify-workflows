@@ -1,0 +1,77 @@
+{
+  "workflow_id": "buyer-questions-to-content",
+  "version": "0.1.0",
+  "title": "Buyer Questions to Content",
+  "summary": "Turn deidentified buyer questions into a local content candidate while preserving whether evidence is single or repeated.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-buyer-questions-to-content",
+    "source": "plugins/threadify/skills/threadify-buyer-questions-to-content/SKILL.md"
+  },
+  "bundle": { "kind": "conversation", "standalone": false },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/buyer-questions-to-content/README.md",
+      "schemas/conversation-records.v1.json",
+      "schemas/conversation-lifecycle.v1.json"
+    ]
+  },
+  "triggers": [
+    "turn buyer questions into content",
+    "draft a post from these deidentified questions"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "buyer question evidence", "schema_ref": "schemas/conversation-records.v1.json" }
+    ],
+    "outputs": [
+      { "name": "deidentified content candidate", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "query_brain", "generate_content", "save_draft", "validate_post", "record_feedback"],
+  "free_capabilities": [
+    "local question evidence review",
+    "deidentification warning pass",
+    "single-versus-repeated evidence label",
+    "local content candidate and source map"
+  ],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "deidentified evidence",
+      "single or repeated evidence label",
+      "distinct source count and uncertainty",
+      "exact content",
+      "source map",
+      "provider action if requested",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "local-content-review",
+    "artifact_schema": "conversation-lifecycle.v1",
+    "instructions": [
+      "Remove names, handles, links and unnecessary identifying context before drafting.",
+      "Label one question as single evidence and repeated evidence only when distinct sources support it.",
+      "Return exact local content and a private source map without claiming a provider save or publication."
+    ]
+  },
+  "receipt": {
+    "schema": "conversation-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "state revision",
+      "evidence label",
+      "distinct source count",
+      "deidentification review",
+      "exact content hash",
+      "save or delivery state",
+      "fallback state"
+    ]
+  }
+}

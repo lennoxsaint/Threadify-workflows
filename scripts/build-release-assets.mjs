@@ -27,7 +27,7 @@ function sha256(buffer) {
   return crypto.createHash('sha256').update(buffer).digest('hex');
 }
 
-for (const script of ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs']) {
+for (const script of ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs', 'build-workflow-bundles.mjs']) {
   const render = spawnSync(process.execPath, [path.join(root, 'scripts', script), '--check'], {
     cwd: root,
     stdio: 'inherit',
@@ -70,6 +70,8 @@ function add(sourceRelative, targetRelative) {
 for (const file of pluginFiles) add(file, `plugin/${file}`);
 for (const file of skillFiles) add(`${skillRoot}/${file}`, `skill/${file}`);
 for (const file of cliFiles) add(file, `cli/${file}`);
+// Discovery ships with the exact CLI release, not a mutable source checkout.
+add('catalog.json', 'cli/catalog.json');
 for (const file of collectViralCarouselBundle()) {
   const target = `plugin/vendor/viral-carousel-maker/${file.relative}`;
   entries.set(target, { sha256: sha256(file.content), bytes: file.content.length, mode: '0644', content_base64: file.content.toString('base64') });

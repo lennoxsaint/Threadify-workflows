@@ -106,6 +106,7 @@ function nativeCodexFixture(box, failingCommand) {
   fs.mkdirSync(bin);
   const handler = `const fs = require('node:fs');
 function runFake(args) {
+if (!fs.existsSync(process.env.CODEX_HOME)) { process.stderr.write('Native Codex profile directory missing'); process.exit(1); }
 fs.appendFileSync(${JSON.stringify(calls)}, JSON.stringify(args) + '\\n');
 fs.appendFileSync(${JSON.stringify(`${calls}.environment`)}, JSON.stringify({ home: process.env.HOME, codexHome: process.env.CODEX_HOME }) + '\\n');
 if (args.join(' ').startsWith(process.env.THREADIFY_TEST_FAIL_COMMAND)) {

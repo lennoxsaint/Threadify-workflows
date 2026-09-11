@@ -3,6 +3,21 @@
   "version": "0.1.0",
   "title": "Create My Week",
   "summary": "Plan seven days with rolling drafts by default or all drafts upfront, preserving daily review and continuation.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-create-my-week",
+    "source": "skills/threadify-create-my-week/SKILL.md"
+  },
+  "bundle": { "kind": "creator", "standalone": false },
+  "dependencies": {
+    "workflows": ["create-my-day"],
+    "files": ["docs/creator-system.md", "docs/creator-engine.md", "schemas/creator-records.v1.json", "schemas/creator-lifecycle.v1.json"]
+  },
+  "triggers": ["create my week", "plan seven days of Threads content"],
+  "io": {
+    "inputs": [{ "name": "creator week request", "schema_ref": "inline:creator-week-request" }],
+    "outputs": [{ "name": "creator records", "schema_ref": "schemas/creator-records.v1.json" }]
+  },
   "supported_adapters": [
     "generic-mcp",
     "hermes",

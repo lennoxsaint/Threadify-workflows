@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "title": "Daily Posts Heartbeat",
   "summary": "Validate approved daily post copy, schedule it through Threadify MCP after explicit approval, read back status, and capture feedback.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-daily-posts-heartbeat",
+    "source": "plugins/threadify/skills/threadify-daily-posts-heartbeat/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": ["create-my-day"], "files": ["workflows/daily-posts-heartbeat/README.md"] },
+  "triggers": ["schedule my approved daily posts", "run my daily posts heartbeat"],
+  "io": {
+    "inputs": [{ "name": "approved post copy", "schema_ref": "schemas/threadify-ready-output.v1.json" }],
+    "outputs": [{ "name": "schedule receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

@@ -1,0 +1,1112 @@
+{
+  "record_type": "ThreadifyWorkflowCatalogV1",
+  "generated_from": "workflows/*/manifest.json",
+  "workflows": [
+    {
+      "workflow_id": "agree-next-step",
+      "version": "0.1.0",
+      "title": "Agree the Next Step",
+      "summary": "Turn current conversation evidence into one explicit next step with exact text, owner approval and separate recipient permission.",
+      "kind": "skill",
+      "skill_name": "threadify-agree-next-step",
+      "entrypoint": "skills/threadify-agree-next-step/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-agree-next-step/SKILL.md",
+      "source_manifest": "workflows/agree-next-step/manifest.json",
+      "bundle": {
+        "kind": "conversation",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "offer-builder",
+          "your-next-moves"
+        ],
+        "files": [
+          "workflows/agree-next-step/README.md",
+          "schemas/conversation-records.v1.json",
+          "schemas/conversation-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "agree the next step with this buyer",
+        "prepare one clear next step from this conversation"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "reviewed conversation action",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "approved next-step action",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "buyer-questions-to-content",
+      "version": "0.1.0",
+      "title": "Buyer Questions to Content",
+      "summary": "Turn deidentified buyer questions into a local content candidate while preserving whether evidence is single or repeated.",
+      "kind": "skill",
+      "skill_name": "threadify-buyer-questions-to-content",
+      "entrypoint": "skills/threadify-buyer-questions-to-content/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-buyer-questions-to-content/SKILL.md",
+      "source_manifest": "workflows/buyer-questions-to-content/manifest.json",
+      "bundle": {
+        "kind": "conversation",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/buyer-questions-to-content/README.md",
+          "schemas/conversation-records.v1.json",
+          "schemas/conversation-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "turn buyer questions into content",
+        "draft a post from these deidentified questions"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "buyer question evidence",
+            "schema_ref": "schemas/conversation-records.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "deidentified content candidate",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "content-brain-repair",
+      "version": "0.1.0",
+      "title": "Content Brain Repair",
+      "summary": "Public orchestration for Content Brain Repair, with review, exact approval and readback.",
+      "kind": "skill",
+      "skill_name": "threadify-content-brain-repair",
+      "entrypoint": "skills/threadify-content-brain-repair/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-content-brain-repair/SKILL.md",
+      "source_manifest": "workflows/content-brain-repair/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/content-brain-repair/README.md"
+        ]
+      },
+      "triggers": [
+        "repair my Content Brain",
+        "compare content before and after a Brain repair"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "approved creator context",
+            "schema_ref": "inline:approved-creator-context"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "repair receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "create-my-day",
+      "version": "0.1.0",
+      "title": "Create My Day",
+      "summary": "Prepare one through five source-backed posts with exact daily review; five is the default.",
+      "kind": "skill",
+      "skill_name": "threadify-create-my-day",
+      "entrypoint": "skills/threadify-create-my-day/SKILL.md",
+      "source_entrypoint": "skills/threadify-create-my-day/SKILL.md",
+      "source_manifest": "workflows/create-my-day/manifest.json",
+      "bundle": {
+        "kind": "creator",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "vault-setup"
+        ],
+        "files": [
+          "docs/creator-system.md",
+          "docs/creator-engine.md",
+          "schemas/creator-records.v1.json",
+          "schemas/creator-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "create my day",
+        "prepare today's Threads posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "creator day request",
+            "schema_ref": "inline:creator-day-request"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "creator records",
+            "schema_ref": "schemas/creator-records.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "create-my-month",
+      "version": "0.1.0",
+      "title": "Create My Month",
+      "summary": "Plan 28 days, visibly four weeks, with rolling drafts by default or all drafts upfront.",
+      "kind": "skill",
+      "skill_name": "threadify-create-my-month",
+      "entrypoint": "skills/threadify-create-my-month/SKILL.md",
+      "source_entrypoint": "skills/threadify-create-my-month/SKILL.md",
+      "source_manifest": "workflows/create-my-month/manifest.json",
+      "bundle": {
+        "kind": "creator",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "create-my-week"
+        ],
+        "files": [
+          "docs/creator-system.md",
+          "docs/creator-engine.md",
+          "schemas/creator-records.v1.json",
+          "schemas/creator-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "create my month",
+        "plan four weeks of Threads content"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "creator month request",
+            "schema_ref": "inline:creator-month-request"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "creator records",
+            "schema_ref": "schemas/creator-records.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "create-my-week",
+      "version": "0.1.0",
+      "title": "Create My Week",
+      "summary": "Plan seven days with rolling drafts by default or all drafts upfront, preserving daily review and continuation.",
+      "kind": "skill",
+      "skill_name": "threadify-create-my-week",
+      "entrypoint": "skills/threadify-create-my-week/SKILL.md",
+      "source_entrypoint": "skills/threadify-create-my-week/SKILL.md",
+      "source_manifest": "workflows/create-my-week/manifest.json",
+      "bundle": {
+        "kind": "creator",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "create-my-day"
+        ],
+        "files": [
+          "docs/creator-system.md",
+          "docs/creator-engine.md",
+          "schemas/creator-records.v1.json",
+          "schemas/creator-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "create my week",
+        "plan seven days of Threads content"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "creator week request",
+            "schema_ref": "inline:creator-week-request"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "creator records",
+            "schema_ref": "schemas/creator-records.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "crosspost-x-after-threads",
+      "version": "0.1.0",
+      "title": "Cross-post To X After Threads",
+      "summary": "Read a Threads schedule or publish status and prepare an X-ready fallback artifact. Live X execution is not part of public v0.",
+      "kind": "skill",
+      "skill_name": "threadify-crosspost-x-after-threads",
+      "entrypoint": "skills/threadify-crosspost-x-after-threads/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-crosspost-x-after-threads/SKILL.md",
+      "source_manifest": "workflows/crosspost-x-after-threads/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/crosspost-x-after-threads/README.md"
+        ]
+      },
+      "triggers": [
+        "cross-post my Threads post to X",
+        "prepare an X-ready follow-up"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "Threads post status",
+            "schema_ref": "inline:threads-post-status"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "X-ready artifact",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "daily-greatest-hits",
+      "version": "0.1.0",
+      "title": "Daily Greatest Hits",
+      "summary": "Use a user-approved greatest-hits source pack or basic greatest-hits readback, prepare daily post candidates and optional proof/use-case lanes, validate approved copy, schedule only after explicit approval, and return receipts.",
+      "kind": "recipe",
+      "skill_name": null,
+      "entrypoint": "workflows/daily-greatest-hits/README.md",
+      "source_entrypoint": "workflows/daily-greatest-hits/README.md",
+      "source_manifest": "workflows/daily-greatest-hits/manifest.json",
+      "bundle": {
+        "kind": "recipe",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "greatest-hits-runway"
+        ],
+        "files": []
+      },
+      "triggers": [
+        "use my greatest hits for today's posts",
+        "prepare daily candidates from a greatest-hits source pack"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "greatest-hits source pack",
+            "schema_ref": "inline:greatest-hits-source-pack"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "daily post candidates",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "daily-posts-heartbeat",
+      "version": "0.1.0",
+      "title": "Daily Posts Heartbeat",
+      "summary": "Validate approved daily post copy, schedule it through Threadify MCP after explicit approval, read back status, and capture feedback.",
+      "kind": "skill",
+      "skill_name": "threadify-daily-posts-heartbeat",
+      "entrypoint": "skills/threadify-daily-posts-heartbeat/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-daily-posts-heartbeat/SKILL.md",
+      "source_manifest": "workflows/daily-posts-heartbeat/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "create-my-day"
+        ],
+        "files": [
+          "workflows/daily-posts-heartbeat/README.md"
+        ]
+      },
+      "triggers": [
+        "schedule my approved daily posts",
+        "run my daily posts heartbeat"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "approved post copy",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "follow-through",
+      "version": "0.1.0",
+      "title": "Follow Through",
+      "summary": "Track explicit promises and dates from buyer conversations until a truthful terminal outcome is recorded.",
+      "kind": "skill",
+      "skill_name": "threadify-follow-through",
+      "entrypoint": "skills/threadify-follow-through/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-follow-through/SKILL.md",
+      "source_manifest": "workflows/follow-through/manifest.json",
+      "bundle": {
+        "kind": "conversation",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "agree-next-step"
+        ],
+        "files": [
+          "workflows/follow-through/README.md",
+          "schemas/conversation-records.v1.json",
+          "schemas/conversation-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "show what I promised buyers",
+        "follow through on dated buyer commitments"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "explicit commitment evidence",
+            "schema_ref": "schemas/conversation-records.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "commitment outcome",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "greatest-hits-runway",
+      "version": "0.1.0",
+      "title": "Greatest Hits Runway",
+      "summary": "Public orchestration for Greatest Hits Runway, with review, exact approval and readback.",
+      "kind": "skill",
+      "skill_name": "threadify-greatest-hits-runway",
+      "entrypoint": "skills/threadify-greatest-hits-runway/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-greatest-hits-runway/SKILL.md",
+      "source_manifest": "workflows/greatest-hits-runway/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/greatest-hits-runway/README.md"
+        ]
+      },
+      "triggers": [
+        "prepare my greatest hits runway",
+        "review a seven-day runway of proven posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "greatest-hits selection",
+            "schema_ref": "inline:greatest-hits-selection"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "runway receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "personal-brain-sync-current-self",
+      "version": "0.1.0",
+      "title": "Personal Brain Sync / Current Self Packet",
+      "summary": "Turn an approved personal context packet into small, classified, approval-gated Threadify Brain memories with readback proof and a per-item ledger.",
+      "kind": "skill",
+      "skill_name": "threadify-personal-brain-sync",
+      "entrypoint": "skills/threadify-personal-brain-sync/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-personal-brain-sync/SKILL.md",
+      "source_manifest": "workflows/personal-brain-sync-current-self/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/personal-brain-sync-current-self/README.md"
+        ]
+      },
+      "triggers": [
+        "sync my current self to Threadify Brain",
+        "review personal context before saving memories"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "approved current-self packet",
+            "schema_ref": "inline:current-self-packet"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "memory update ledger",
+            "schema_ref": "schemas/memory-update-ledger.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "qualified-buyer-research",
+      "version": "0.4.1",
+      "title": "Qualified Buyer Research",
+      "summary": "Map the user's offer and voice, search persistently within a hard cap, qualify situation and outcome fit, stage one offer-free reply, stop before send, and learn separately from candidate and message outcomes.",
+      "kind": "skill",
+      "skill_name": "threadify-qualified-buyer-research",
+      "entrypoint": "skills/threadify-qualified-buyer-research/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-qualified-buyer-research/SKILL.md",
+      "source_manifest": "workflows/qualified-buyer-research/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": true,
+        "references": [
+          {
+            "source": "docs/threadify-001.md",
+            "target": "threadify-001.md"
+          },
+          {
+            "source": "workflows/qualified-buyer-research/manifest.json",
+            "target": "workflow-manifest.json"
+          },
+          {
+            "source": "workflows/qualified-buyer-research/README.md",
+            "target": "workflow-readme.md"
+          },
+          {
+            "source": "workflows/qualified-buyer-research/reference-policy.mjs",
+            "target": "reference-policy.mjs"
+          },
+          {
+            "source": "public-rules/qualified-buyer-research.v1.json",
+            "target": "public-rules.v1.json"
+          },
+          {
+            "source": "schemas/qualified-buyer-research.v1.json",
+            "target": "qualified-buyer-research.v1.json"
+          },
+          {
+            "source": "schemas/durable-rule.v1.json",
+            "target": "durable-rule.v1.json"
+          },
+          {
+            "source": "schemas/public-rule-proposal.v1.json",
+            "target": "public-rule-proposal.v1.json"
+          },
+          {
+            "source": "schemas/stable-release-manifest.v1.json",
+            "target": "stable-release-manifest.v1.json"
+          },
+          {
+            "source": "schemas/update-receipt.v1.json",
+            "target": "update-receipt.v1.json"
+          },
+          {
+            "source": "release/release-intent.json",
+            "target": "release-metadata.json"
+          },
+          {
+            "source": "scripts/qualified-buyer-update-on-use.mjs",
+            "target": "update-on-use.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [
+          "offer-builder"
+        ],
+        "files": [
+          "workflows/qualified-buyer-research/README.md",
+          "workflows/qualified-buyer-research/reference-policy.mjs",
+          "public-rules/qualified-buyer-research.v1.json",
+          "schemas/qualified-buyer-research.v1.json"
+        ]
+      },
+      "triggers": [
+        "find qualified buyers on Threads",
+        "research buyer language and stage one reply"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "offer and buyer context",
+            "schema_ref": "schemas/qualified-buyer-research.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "buyer research receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "offer-builder",
+      "version": "0.1.0",
+      "title": "Threadify Offer Builder",
+      "summary": "An adaptive offer interview, local HTML page and optional approved CTA Studio save.",
+      "kind": "skill",
+      "skill_name": "threadify-offer-builder",
+      "entrypoint": "skills/threadify-offer-builder/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-offer-builder/SKILL.md",
+      "source_manifest": "workflows/offer-builder/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/offer-builder/README.md"
+        ]
+      },
+      "triggers": [
+        "build my offer",
+        "interview me and make an offer page"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "offer interview answers",
+            "schema_ref": "inline:offer-interview-answers"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "offer handoff",
+            "schema_ref": "inline:offer-handoff"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "viral-carousel-maker",
+      "version": "0.6.0",
+      "title": "Viral Carousel Maker",
+      "summary": "Create and review a seven-edit controlled-mutation carousel locally with the bundled Viral Carousel Maker v0.2.0, then optionally upload its exact ordered media and schedule it through two separate approval gates.",
+      "kind": "skill",
+      "skill_name": "threadify-viral-carousel-maker",
+      "entrypoint": "skills/threadify-viral-carousel-maker/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-viral-carousel-maker/SKILL.md",
+      "source_manifest": "workflows/viral-carousel-maker/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/viral-carousel-maker/README.md"
+        ]
+      },
+      "triggers": [
+        "make a viral carousel",
+        "create and review a controlled-mutation carousel"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "carousel source evidence",
+            "schema_ref": "inline:carousel-source-evidence"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "carousel review receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "vault-setup",
+      "version": "0.1.0",
+      "title": "Viral Vault Setup",
+      "summary": "Review 10–20 selected Threads/YouTube sources plus a small shared selection before any import; fewer strong sources may proceed with gaps.",
+      "kind": "skill",
+      "skill_name": "threadify-vault-setup",
+      "entrypoint": "skills/threadify-vault-setup/SKILL.md",
+      "source_entrypoint": "skills/threadify-vault-setup/SKILL.md",
+      "source_manifest": "workflows/vault-setup/manifest.json",
+      "bundle": {
+        "kind": "creator",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "docs/creator-system.md",
+          "docs/creator-engine.md",
+          "schemas/creator-records.v1.json",
+          "schemas/creator-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "set up my Viral Vault",
+        "build a starter inspiration Vault"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "source selections",
+            "schema_ref": "inline:vault-source-selections"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "creator lifecycle record",
+            "schema_ref": "schemas/creator-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "weekly-buyer-outcomes",
+      "version": "0.1.0",
+      "title": "Weekly Buyer Outcomes",
+      "summary": "Review the past seven days of buyer actions and commitments while separating owner-reported results from provider-observed evidence.",
+      "kind": "skill",
+      "skill_name": "threadify-weekly-buyer-outcomes",
+      "entrypoint": "skills/threadify-weekly-buyer-outcomes/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-weekly-buyer-outcomes/SKILL.md",
+      "source_manifest": "workflows/weekly-buyer-outcomes/manifest.json",
+      "bundle": {
+        "kind": "conversation",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "follow-through"
+        ],
+        "files": [
+          "workflows/weekly-buyer-outcomes/README.md",
+          "schemas/conversation-records.v1.json",
+          "schemas/conversation-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "review my buyer outcomes for the past seven days",
+        "show this week's provider-observed and owner-reported buyer results"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "action commitment and outcome records",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "seven-day buyer outcome review",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "weekly-winner-replication",
+      "version": "0.1.0",
+      "title": "Weekly Winner Replication",
+      "summary": "Use basic greatest-hits readback where available, prepare an approved replication schedule, and keep advanced analytics strategy paid-gated.",
+      "kind": "skill",
+      "skill_name": "threadify-weekly-winner-replication",
+      "entrypoint": "skills/threadify-weekly-winner-replication/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-weekly-winner-replication/SKILL.md",
+      "source_manifest": "workflows/weekly-winner-replication/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "greatest-hits-runway"
+        ],
+        "files": [
+          "workflows/weekly-winner-replication/README.md"
+        ]
+      },
+      "triggers": [
+        "replicate this week's winners",
+        "prepare transformed drafts from recent winning posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "weekly winner evidence",
+            "schema_ref": "inline:weekly-winner-evidence"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "replication review packet",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "x-article-from-daily-post",
+      "version": "0.1.0",
+      "title": "X Article From Daily Post",
+      "summary": "Turn an approved daily post into a draft-only, bookmark-optimized X Article packet with thumbnail brief, scorecard, manual review gate, and receipt. Live X execution is not part of public v0.",
+      "kind": "skill",
+      "skill_name": "threadify-x-article-from-daily-post",
+      "entrypoint": "skills/threadify-x-article-from-daily-post/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-x-article-from-daily-post/SKILL.md",
+      "source_manifest": "workflows/x-article-from-daily-post/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "create-my-day"
+        ],
+        "files": [
+          "workflows/x-article-from-daily-post/README.md"
+        ]
+      },
+      "triggers": [
+        "turn my daily post into an X Article",
+        "prepare a draft-only X Article packet"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "approved daily post",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "X Article packet",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "youtube-edit",
+      "version": "0.1.0",
+      "title": "YouTube Edit (Eddy)",
+      "summary": "Drive a verified local Eddy engine to produce a YouTube launch kit, then optionally prepare and schedule Threadify promotional posts after explicit final approval. Inspect actual output assets; do not permit unapproved source-media transfers or publishing.",
+      "kind": "skill",
+      "skill_name": "threadify-youtube-edit",
+      "entrypoint": "skills/threadify-youtube-edit/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-youtube-edit/SKILL.md",
+      "source_manifest": "workflows/youtube-edit/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/youtube-edit/README.md"
+        ]
+      },
+      "triggers": [
+        "edit my YouTube video",
+        "prepare an edit plan and Threadify promo posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "video source packet",
+            "schema_ref": "inline:video-source-packet"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "edit and promotion packet",
+            "schema_ref": "schemas/threadify-ready-output.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
+      "workflow_id": "your-next-moves",
+      "version": "0.1.0",
+      "title": "Your Next Moves",
+      "summary": "Use a confirmed offer and supplied conversation evidence to prepare up to three supported actions for one-at-a-time review.",
+      "kind": "skill",
+      "skill_name": "threadify-your-next-moves",
+      "entrypoint": "skills/threadify-your-next-moves/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-your-next-moves/SKILL.md",
+      "source_manifest": "workflows/your-next-moves/manifest.json",
+      "bundle": {
+        "kind": "conversation",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [
+          "offer-builder"
+        ],
+        "files": [
+          "workflows/your-next-moves/README.md",
+          "schemas/conversation-records.v1.json",
+          "schemas/conversation-lifecycle.v1.json"
+        ]
+      },
+      "triggers": [
+        "show my next buyer moves",
+        "review these conversations against my offer"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "offer and conversation evidence",
+            "schema_ref": "schemas/conversation-records.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "action review",
+            "schema_ref": "schemas/conversation-lifecycle.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    }
+  ]
+}

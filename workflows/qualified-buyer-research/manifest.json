@@ -3,6 +3,35 @@
   "version": "0.4.1",
   "title": "Qualified Buyer Research",
   "summary": "Map the user's offer and voice, search persistently within a hard cap, qualify situation and outcome fit, stage one offer-free reply, stop before send, and learn separately from candidate and message outcomes.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-qualified-buyer-research", "source": "plugins/threadify/skills/threadify-qualified-buyer-research/SKILL.md" },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": true,
+    "references": [
+      { "source": "docs/threadify-001.md", "target": "threadify-001.md" },
+      { "source": "workflows/qualified-buyer-research/manifest.json", "target": "workflow-manifest.json" },
+      { "source": "workflows/qualified-buyer-research/README.md", "target": "workflow-readme.md" },
+      { "source": "workflows/qualified-buyer-research/reference-policy.mjs", "target": "reference-policy.mjs" },
+      { "source": "public-rules/qualified-buyer-research.v1.json", "target": "public-rules.v1.json" },
+      { "source": "schemas/qualified-buyer-research.v1.json", "target": "qualified-buyer-research.v1.json" },
+      { "source": "schemas/durable-rule.v1.json", "target": "durable-rule.v1.json" },
+      { "source": "schemas/public-rule-proposal.v1.json", "target": "public-rule-proposal.v1.json" },
+      { "source": "schemas/stable-release-manifest.v1.json", "target": "stable-release-manifest.v1.json" },
+      { "source": "schemas/update-receipt.v1.json", "target": "update-receipt.v1.json" },
+      { "source": "release/release-intent.json", "target": "release-metadata.json" },
+      { "source": "scripts/qualified-buyer-update-on-use.mjs", "target": "update-on-use.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": ["offer-builder"],
+    "files": ["workflows/qualified-buyer-research/README.md", "workflows/qualified-buyer-research/reference-policy.mjs", "public-rules/qualified-buyer-research.v1.json", "schemas/qualified-buyer-research.v1.json"]
+  },
+  "triggers": ["find qualified buyers on Threads", "research buyer language and stage one reply"],
+  "io": {
+    "inputs": [{ "name": "offer and buyer context", "schema_ref": "schemas/qualified-buyer-research.v1.json" }],
+    "outputs": [{ "name": "buyer research receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

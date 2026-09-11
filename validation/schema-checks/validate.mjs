@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import Ajv from 'ajv/dist/2020.js';
 import { readReleaseMetadata } from '../../lib/release-metadata.mjs';
+import { loadWorkflowRegistry } from '../../lib/workflow-registry.mjs';
 import {
   calibrateVoice,
   classifyOwnerEdits,
@@ -72,6 +74,12 @@ const requiredManifestFields = [
   'version',
   'title',
   'summary',
+  'kind',
+  'entrypoint',
+  'bundle',
+  'dependencies',
+  'triggers',
+  'io',
   'supported_adapters',
   'required_mcp_tools',
   'free_capabilities',
@@ -167,6 +175,23 @@ function validateManifest(file) {
     (manifest.receipt?.must_prove ?? []).includes('fallback state'),
     `${rel(file)} receipt must prove fallback state`,
   );
+}
+
+function validateRegistryContracts(manifestFiles) {
+  const schemaFile = path.join(root, 'schemas', 'workflow-manifest.v1.json');
+  const schema = readJson(schemaFile);
+  if (!schema) return;
+  const validate = new Ajv({ strict: true }).compile(schema);
+  for (const file of manifestFiles) {
+    const manifest = readJson(file);
+    if (manifest) assert(validate(manifest), `${rel(file)} violates workflow manifest schema: ${JSON.stringify(validate.errors)}`);
+  }
+  try {
+    const registry = loadWorkflowRegistry({ root });
+    assert(registry.workflows.length === manifestFiles.length, 'registry workflow count does not match canonical manifests');
+  } catch (error) {
+    failures.push(`workflow registry invalid: ${error.message}`);
+  }
 }
 
 function validateReceipt(file) {
@@ -398,8 +423,9 @@ const manifestFiles = files.filter(
   (file) => file.startsWith(path.join(root, 'workflows') + path.sep)
     && file.endsWith(path.join('manifest.json')),
 );
-assert(manifestFiles.length === 16, `expected 16 workflow manifests, found ${manifestFiles.length}`);
+assert(manifestFiles.length > 0, 'expected at least one workflow manifest');
 for (const file of manifestFiles) validateManifest(file);
+validateRegistryContracts(manifestFiles);
 
 for (const file of files) {
   if (/\.(md|json)$/.test(file)) validateRedaction(file);

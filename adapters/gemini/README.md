@@ -1,17 +1,7 @@
-# Gemini Adapter
+# Gemini adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Install with `npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets gemini`, then load the selected manifest. Use supplied sources for the first local run. Follow [Threadify-001](../../docs/threadify-001.md) only when a specific step needs current account access.
 
+Follow the [generic adapter](../generic-mcp/README.md). Keep evidence minimal, review one action at a time, and use only verified tools exposed by the current client. Missing state or provider controls route to the manual review artifact.
 
-Gemini clients should load the manifest and follow the [generic adapter](../generic-mcp/README.md).
-Use supplied sources and confirmed facts for local drafting, or entitled
-Threadify generation when requested.
-
-Default behavior:
-
-- keep private generation prompts and proprietary service logic out of the package
-- explicit final approval before schedule/cancel/reschedule
-- action-proof receipt after status readback
-- fallback artifact when MCP is unavailable
+This adapter is structural guidance. Native Gemini CLI installation, discovery and first-run behavior for the new buyer skills have not yet been observed.

@@ -21,12 +21,13 @@ function parse(argv) {
     else if (value === '--scheduled') options.scheduled = true;
     else if (value === '--skip-jitter') options.skipJitter = true;
     else if (value === '--purge-state') options.purgeState = true;
-    else if (['--targets', '--source-bundle', '--source-manifest', '--version'].includes(value)) {
+    else if (['--targets', '--source-bundle', '--source-manifest', '--version', '--workflows'].includes(value)) {
       const key = {
         '--targets': 'targets',
         '--source-bundle': 'sourceBundle',
         '--source-manifest': 'sourceManifest',
         '--version': 'version',
+        '--workflows': 'workflows',
       }[value];
       options[key] = rest[++index];
     } else {
@@ -40,11 +41,15 @@ function help() {
   return `Threadify Workflows stable updater
 
 Usage:
-  threadify-workflows install [--enable-auto-update|--disable-auto-update] [--targets all]
+  threadify-workflows install [--enable-auto-update|--disable-auto-update] [--targets all] [--workflows all]
   threadify-workflows update [--on-use|--scheduled]
   threadify-workflows status
   threadify-workflows rollback [--version 0.4.0]
   threadify-workflows uninstall [--purge-state]
+  threadify-workflows list [--json]
+  threadify-workflows describe <workflow-id> [--json]
+  threadify-workflows doctor [--json]
+  threadify-workflows conversations <command> --state <private-directory>
 
 The updater installs only validated GitHub stable releases. It never updates unrelated skills.
 `;
@@ -62,6 +67,16 @@ async function main() {
   if (process.argv[2] === 'creator') {
     const { creatorMain } = await import('../lib/creator/cli.mjs');
     await creatorMain(process.argv.slice(3));
+    return;
+  }
+  if (process.argv[2] === 'conversations') {
+    const { conversationMain } = await import('../lib/conversations/cli.mjs');
+    await conversationMain(process.argv.slice(3));
+    return;
+  }
+  if (['list', 'describe', 'doctor'].includes(process.argv[2])) {
+    const { discoveryCommand } = await import('../lib/discovery.mjs');
+    process.stdout.write(`${JSON.stringify(await discoveryCommand(process.argv.slice(2)), null, 2)}\n`);
     return;
   }
   const parsed = parse(process.argv.slice(2));

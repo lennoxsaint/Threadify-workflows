@@ -3,6 +3,15 @@
   "version": "0.6.0",
   "title": "Viral Carousel Maker",
   "summary": "Create and review a seven-edit controlled-mutation carousel locally with the bundled Viral Carousel Maker v0.2.0, then optionally upload its exact ordered media and schedule it through two separate approval gates.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-viral-carousel-maker", "source": "plugins/threadify/skills/threadify-viral-carousel-maker/SKILL.md" },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/viral-carousel-maker/README.md"] },
+  "triggers": ["make a viral carousel", "create and review a controlled-mutation carousel"],
+  "io": {
+    "inputs": [{ "name": "carousel source evidence", "schema_ref": "inline:carousel-source-evidence" }],
+    "outputs": [{ "name": "carousel review receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [],
   "optional_mcp_tools": ["get_connection_defaults", "get_capabilities", "get_best_time", "list_scheduled_posts", "upload_media", "schedule_post", "get_schedule_status"],

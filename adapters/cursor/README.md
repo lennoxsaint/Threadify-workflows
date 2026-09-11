@@ -1,19 +1,7 @@
-# Cursor Adapter
+# Cursor adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Install with `npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets cursor`, then inspect the selected manifest. Start from the supplied offer and conversations; do not require a connection for local work. Follow [Threadify-001](../../docs/threadify-001.md) only for a useful connected step.
 
+Use the [generic adapter](../generic-mcp/README.md) for the shared workflow contract. Keep private state outside the app repository, show one bound action at a time, and use the manual fallback when Cursor cannot expose the local conversation CLI or required provider readback.
 
-Cursor should use this repo as a local workflow library.
-
-Follow the [generic adapter](../generic-mcp/README.md) for local drafting,
-entitlements and exact action gates.
-
-Recommended flow:
-
-1. Open the selected manifest.
-2. Confirm available Threadify MCP tools.
-3. Keep edits local unless the workflow explicitly asks for a receipt artifact.
-4. Stop for approval before schedule/cancel/reschedule.
-5. Do not implement a live runner inside an app repo unless that is a separate approved task.
+This adapter is structural guidance. Native installation, discovery and first-run behavior for the new buyer skills have not yet been observed.

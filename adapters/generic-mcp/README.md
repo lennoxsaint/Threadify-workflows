@@ -1,34 +1,16 @@
-# Generic MCP Adapter
+# Generic MCP adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Use this adapter after loading a workflow manifest. Start with the user's offer and supplied sources. Local drafting and review do not require an MCP connection. Follow [Threadify-001](../../docs/threadify-001.md) when a specific useful step needs current provider data or delivery.
 
+1. Read the selected manifest, including `required_mcp_tools`, `optional_mcp_tools`, dependencies, input/output records and approval display.
+2. Choose an absolute private state directory outside public repositories. Use `node ~/.threadify-workflows/current/cli/bin/threadify-workflows.mjs conversations` when the host supports the macOS/Linux state engine. If `THREADIFY_WORKFLOWS_HOME` was set during installation, resolve the same path below that state root.
+3. Reuse the confirmed offer or run Offer Builder. Import only the minimal source reference and factual conversation evidence.
+4. Prepare the workflow result locally. Your Next Moves may produce up to three evidenced actions, but `review` displays exactly one bound action.
+5. If connected, call `get_connection_defaults` first and inspect the current schemas and access. Use `generate_content` or `save_draft` only when the selected workflow lists them and the requested step needs them.
+6. Before delivery, re-open the source and show the exact recipient, destination, text, action and evidence. For private contact, show recipient interest and channel permission separately. Obtain exact approval for that display.
+7. Persist `attempt_pending` before the host uses an approved external tool. Record only the tool actually called and its readback. An `unknown` result blocks replay.
+8. Keep feedback local unless the owner gives a separate explicit opt-in to the exact feedback. Optional native reminders also require explicit opt-in, prepare review only and never send.
 
-Use this adapter for local drafting and optional connected Threadify services.
-For the primary creator workflows, read the [creator protocol](../../docs/creator-system.md).
+Qualified Buyer Research keeps its existing staging stop before Send. A public question without interest in relevant help or the offer is not a lead. Likes and generic engagement are not sales.
 
-## Agent Instructions
-
-1. Load the workflow manifest.
-2. Distinguish `required_mcp_tools` from `optional_mcp_tools`. Missing optional
-   services do not block local drafting from supplied sources and confirmed facts.
-3. If connected, call `get_connection_defaults` first, then inspect available
-   tool schemas and current entitlements. Never invent missing capabilities.
-4. Prepare the requested blueprint or exact drafts. Use entitled `generate_content`
-   for Brain-informed drafting and authorized `save_draft` for exact host-authored
-   copy. `save_final_draft` is audit-only, not editable storage.
-5. Validate actual post payloads with `validate_post` when connected. Label local
-   checks honestly. Validate the relevant payload for other operations; do not
-   send memory or source-import data to a post validator.
-6. Show exact copy, media, source, account, timezone, time and action for approval.
-   Drafting does not authorize imports, scheduling, uploads or Brain writes.
-7. After exact approval and fresh checks, use only the relevant manifest-listed
-   capability. Preserve pending attempts and reconcile unknown outcomes before retry.
-8. Read back actual provider state, preserving partial success.
-9. Emit a local receipt. Share feedback only after separate explicit opt-in to
-   that exact feedback; service availability alone does not authorize a send.
-
-Keep private prompts, corpora and user state out of public artifacts. Core
-workflows exclude immediate publishing and automatic replies. The manifest
-describes capabilities, not permission to perform every listed action.
+If a required tool, private state interface or readback is unavailable, produce a local review artifact with the missing capability and manual next step. Do not invent a provider ID, delivery, outcome or zero value. See [Buyer workflow capability gaps](../../docs/buyer-capability-gaps.md).

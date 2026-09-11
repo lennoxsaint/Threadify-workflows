@@ -1,0 +1,82 @@
+{
+  "workflow_id": "your-next-moves",
+  "version": "0.1.0",
+  "title": "Your Next Moves",
+  "summary": "Use a confirmed offer and supplied conversation evidence to prepare up to three supported actions for one-at-a-time review.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-your-next-moves",
+    "source": "plugins/threadify/skills/threadify-your-next-moves/SKILL.md"
+  },
+  "bundle": {
+    "kind": "conversation",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": ["offer-builder"],
+    "files": [
+      "workflows/your-next-moves/README.md",
+      "schemas/conversation-records.v1.json",
+      "schemas/conversation-lifecycle.v1.json"
+    ]
+  },
+  "triggers": [
+    "show my next buyer moves",
+    "review these conversations against my offer"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "offer and conversation evidence", "schema_ref": "schemas/conversation-records.v1.json" }
+    ],
+    "outputs": [
+      { "name": "action review", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "list_offers"],
+  "free_capabilities": [
+    "local offer and conversation intake",
+    "lead evidence classification",
+    "up to three supported actions",
+    "one-at-a-time action review",
+    "private revisioned state"
+  ],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "source reference and fresh inspection",
+      "offer fit and lead rationale",
+      "exact action and text",
+      "recipient and destination",
+      "recipient interest and channel permission when applicable",
+      "action hash",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-action-review",
+    "artifact_schema": "conversation-lifecycle.v1",
+    "instructions": [
+      "Keep the offer, minimal evidence, up to three proposed actions and one current review item in a private local artifact.",
+      "Ask the owner to mark the exact displayed action approved or rejected.",
+      "Do not claim that an unavailable provider tool inspected, saved or sent anything."
+    ]
+  },
+  "receipt": {
+    "schema": "conversation-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "state revision",
+      "offer reference",
+      "minimal evidence",
+      "lead rationale",
+      "reviewed action hash",
+      "approval decision",
+      "attempt and readback state",
+      "fallback state"
+    ]
+  }
+}

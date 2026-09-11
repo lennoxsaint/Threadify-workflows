@@ -1,21 +1,23 @@
 {
   "name": "threadify-workflows",
-  "version": "0.7.0",
-  "description": "Public-safe, open-source workflow manifests and agent adapters for Threadify MCP.",
+  "version": "0.8.0",
+  "description": "Local-first buyer-conversation workflows, agent discovery, and optional approved Threadify services.",
   "license": "MIT",
   "type": "module",
   "bin": {
     "threadify-workflows": "./bin/threadify-workflows.mjs"
   },
   "scripts": {
-    "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs",
-    "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check",
+    "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs && node scripts/build-workflow-bundles.mjs",
+    "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check && node scripts/build-workflow-bundles.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
-    "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/proposal.test.mjs",
+    "test:installer": "node --test validation/installer-tests/*.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
-    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder",
-    "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs"
+    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:registry && npm run test:conversations",
+    "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs",
+    "test:registry": "node --test validation/registry-tests/*.test.mjs",
+    "test:conversations": "node --test validation/conversation-tests/*.test.mjs"
   },
   "engines": {
     "node": ">=18"

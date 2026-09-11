@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "title": "Daily Greatest Hits",
   "summary": "Use a user-approved greatest-hits source pack or basic greatest-hits readback, prepare daily post candidates and optional proof/use-case lanes, validate approved copy, schedule only after explicit approval, and return receipts.",
+  "kind": "recipe",
+  "entrypoint": {
+    "skill_id": null,
+    "source": "workflows/daily-greatest-hits/README.md"
+  },
+  "bundle": { "kind": "recipe", "standalone": false },
+  "dependencies": { "workflows": ["greatest-hits-runway"], "files": [] },
+  "triggers": ["use my greatest hits for today's posts", "prepare daily candidates from a greatest-hits source pack"],
+  "io": {
+    "inputs": [{ "name": "greatest-hits source pack", "schema_ref": "inline:greatest-hits-source-pack" }],
+    "outputs": [{ "name": "daily post candidates", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",
