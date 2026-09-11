@@ -11,7 +11,7 @@
     "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs && node scripts/build-workflow-bundles.mjs",
     "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check && node scripts/build-workflow-bundles.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
-    "test:installer": "node --test validation/installer-tests/*.test.mjs",
+    "test:installer": "node --test validation/installer-tests",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
     "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:registry && npm run test:conversations",
