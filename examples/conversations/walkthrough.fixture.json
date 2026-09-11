@@ -1,0 +1,381 @@
+{
+  "schema_version": "conversation-walkthrough-fixture.v1",
+  "init": {
+    "id": "synthetic-buyer-workspace",
+    "account_id": "synthetic-threadify-account",
+    "platform": "threads",
+    "timezone": "Australia/Perth",
+    "now": "2026-09-08T00:00:00Z"
+  },
+  "evidence_import": {
+    "import_key": "synthetic-evidence-set-v1",
+    "imported_at": "2026-09-11T07:45:00Z",
+    "records": [
+      {
+        "schema_version": "conversation-offer.v1",
+        "record_type": "offer",
+        "id": "offer-main",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "status": "active",
+        "checked_at": "2026-09-11T07:40:00Z",
+        "evidence_ref": "synthetic-offer-readback"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "candidate-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "action_candidate",
+        "observed_at": "2026-09-10T02:00:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "I want a simpler way to turn useful replies into a steady buyer conversation.",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-one"
+        },
+        "private_identifiers": ["synthetic-recipient-one"]
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "opportunity-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "opportunity_explored",
+        "observed_at": "2026-09-10T02:01:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "The host inspected the conversation as a possible fit for the active offer.",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-opportunity"
+        },
+        "private_identifiers": ["synthetic-recipient-one"]
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "interest-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "recipient_interest",
+        "observed_at": "2026-09-10T02:05:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "Yes, I would like help setting that up.",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-two"
+        },
+        "private_identifiers": ["synthetic-recipient-one"],
+        "explicit": true,
+        "relevant_to_offer": true
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "permission-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "channel_permission",
+        "observed_at": "2026-09-10T02:06:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "You can send the details to me in a Threads DM.",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-three"
+        },
+        "private_identifiers": ["synthetic-recipient-one"],
+        "explicit": true,
+        "channel": "threads_dm"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "agreed-step-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "agreed_step",
+        "observed_at": "2026-09-10T02:06:30Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "Yes, send the outline here today and I will read it.",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-agreement"
+        },
+        "private_identifiers": ["synthetic-recipient-one"],
+        "explicit": true,
+        "step_key": "send-outline-today"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "promise-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-one",
+        "offer_id": "offer-main",
+        "kind": "commitment",
+        "observed_at": "2026-09-10T02:07:00Z",
+        "evidence_basis": "owner_reported",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-one",
+          "relevant_excerpt": "I will send the short setup outline by Thursday.",
+          "availability": "available",
+          "evidence_ref": "synthetic-owner-note-one"
+        },
+        "private_identifiers": ["synthetic-recipient-one"],
+        "explicit": true
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "candidate-two",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-two",
+        "offer_id": "offer-main",
+        "kind": "action_candidate",
+        "observed_at": "2026-09-10T04:00:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-two",
+          "relevant_excerpt": "What should I say after someone replies to my post?",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-four"
+        },
+        "private_identifiers": ["synthetic-recipient-two"]
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "question-one",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-two",
+        "offer_id": "offer-main",
+        "kind": "question",
+        "observed_at": "2026-09-10T04:01:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-two",
+          "relevant_excerpt": "What should I say after someone replies to my post?",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-five"
+        },
+        "private_identifiers": ["synthetic-recipient-two"],
+        "question_key": "reply-to-next-step"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "promise-two",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-two",
+        "offer_id": "offer-main",
+        "kind": "commitment",
+        "observed_at": "2026-09-10T04:05:00Z",
+        "evidence_basis": "owner_reported",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-two",
+          "relevant_excerpt": "I said I would return with an example, but we did not set a time.",
+          "availability": "available",
+          "evidence_ref": "synthetic-owner-note-two"
+        },
+        "private_identifiers": ["synthetic-recipient-two"],
+        "explicit": true
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "candidate-three",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-three",
+        "offer_id": "offer-main",
+        "kind": "action_candidate",
+        "observed_at": "2026-09-10T06:00:00Z",
+        "evidence_basis": "owner_reported",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-three",
+          "relevant_excerpt": "A public question about keeping track of promised follow-ups.",
+          "availability": "unavailable",
+          "evidence_ref": "synthetic-owner-note-three"
+        },
+        "private_identifiers": ["synthetic-recipient-three"]
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "question-two",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-three",
+        "offer_id": "offer-main",
+        "kind": "question",
+        "observed_at": "2026-09-10T06:01:00Z",
+        "evidence_basis": "owner_reported",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-three",
+          "relevant_excerpt": "How do I move a good public reply into a useful next step?",
+          "availability": "unavailable",
+          "evidence_ref": "synthetic-owner-note-four"
+        },
+        "private_identifiers": ["synthetic-recipient-three"],
+        "question_key": "reply-to-next-step"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "question-three",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-four",
+        "offer_id": "offer-main",
+        "kind": "question",
+        "observed_at": "2026-09-10T07:00:00Z",
+        "evidence_basis": "provider_observed",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-four",
+          "relevant_excerpt": "Do I need to follow up every day?",
+          "availability": "available",
+          "evidence_ref": "synthetic-provider-snapshot-six"
+        },
+        "private_identifiers": ["synthetic-recipient-four"],
+        "question_key": "follow-up-frequency"
+      },
+      {
+        "schema_version": "conversation-evidence.v1",
+        "record_type": "evidence",
+        "id": "silence-three",
+        "account_id": "synthetic-threadify-account",
+        "platform": "threads",
+        "conversation_id": "conversation-three",
+        "offer_id": "offer-main",
+        "kind": "silence",
+        "observed_at": "2026-09-11T01:00:00Z",
+        "evidence_basis": "owner_reported",
+        "source": {
+          "url": "https://example.invalid/threads/conversation-three",
+          "relevant_excerpt": "No response was visible at the time of the owner check.",
+          "availability": "unavailable",
+          "evidence_ref": "synthetic-owner-silence-note"
+        },
+        "private_identifiers": ["synthetic-recipient-three"]
+      }
+    ]
+  },
+  "action": {
+    "id": "action-one",
+    "conversation_id": "conversation-one",
+    "offer_id": "offer-main",
+    "action_type": "agree_next_step",
+    "channel": "threads_dm",
+    "destination": "synthetic-dm-destination-one",
+    "exact_text": "I can send the short setup outline here today. If it fits, we can choose the next step after you read it.",
+    "evidence_ids": ["candidate-one", "interest-one", "permission-one"],
+    "now": "2026-09-11T07:50:00Z"
+  },
+  "decision": {
+    "decision": "approve",
+    "evidence_ref": "synthetic-owner-exact-approval",
+    "at": "2026-09-11T07:52:00Z"
+  },
+  "attempt": {
+    "action_id": "action-one",
+    "now": "2026-09-11T07:54:00Z",
+    "reinspections": [
+      {
+        "source_url": "https://example.invalid/threads/conversation-one",
+        "availability": "available",
+        "checked_at": "2026-09-11T07:53:00Z",
+        "valid_until": "2026-09-11T08:03:00Z",
+        "evidence_ref": "synthetic-fresh-source-readback"
+      }
+    ]
+  },
+  "receipt": {
+    "schema_version": "conversation-action-receipt.v1",
+    "id": "receipt-one",
+    "status": "succeeded",
+    "evidence_basis": "provider_observed",
+    "evidence_ref": "synthetic-host-supplied-provider-readback",
+    "checked_at": "2026-09-11T07:56:00Z",
+    "provider_ref": "synthetic-provider-message-one"
+  },
+  "commitments": [
+    {
+      "schema_version": "conversation-commitment.v1",
+      "id": "commitment-due",
+      "account_id": "synthetic-threadify-account",
+      "platform": "threads",
+      "conversation_id": "conversation-one",
+      "offer_id": "offer-main",
+      "promised_by": "owner",
+      "exact_promise": "Send the short setup outline by Thursday.",
+      "made_at": "2026-09-10T02:07:00Z",
+      "due_at": "2026-09-11T06:00:00Z",
+      "evidence_ids": ["promise-one"]
+    },
+    {
+      "schema_version": "conversation-commitment.v1",
+      "id": "commitment-needs-time",
+      "account_id": "synthetic-threadify-account",
+      "platform": "threads",
+      "conversation_id": "conversation-two",
+      "offer_id": "offer-main",
+      "promised_by": "owner",
+      "exact_promise": "Return with one useful example.",
+      "made_at": "2026-09-10T04:05:00Z",
+      "due_at": null,
+      "evidence_ids": ["promise-two"]
+    }
+  ],
+  "outcome": {
+    "schema_version": "conversation-outcome.v1",
+    "id": "outcome-one",
+    "account_id": "synthetic-threadify-account",
+    "platform": "threads",
+    "conversation_id": "conversation-one",
+    "offer_id": "offer-main",
+    "commitment_id": "commitment-due",
+    "status": "fulfilled",
+    "occurred_at": "2026-09-11T07:56:00Z",
+    "evidence_basis": "provider_observed",
+    "evidence_ref": "synthetic-host-supplied-provider-readback"
+  },
+  "content": {
+    "schema_version": "conversation-content.v1",
+    "id": "content-one",
+    "question_key": "reply-to-next-step",
+    "evidence_ids": ["question-one", "question-two"],
+    "exact_text": "A good reply does not need a hard pitch. Answer the question, name the useful next step, then let the other person choose.",
+    "authorship": "host_authored",
+    "created_at": "2026-09-11T07:57:00Z"
+  },
+  "weekly": {
+    "as_of": "2026-09-11T08:00:00Z",
+    "coverage": {
+      "explored_opportunities": "partial",
+      "leads": "unavailable",
+      "agreed_steps": "partial",
+      "outcomes": "partial"
+    }
+  }
+}

@@ -1,5 +1,15 @@
 # Threadify Workflows stable releases
 
+## 0.8.0
+
+- Makes Your Next Moves the starting point for offer-led buyer conversations, with local preparation before an optional account connection.
+- Adds Agree the Next Step, Follow Through, Buyer Questions to Content and Weekly Buyer Outcomes.
+- Adds private, revision-checked conversation records, exact-action review, separate recipient permission, pending-attempt recovery and evidence-based outcome summaries. The local engine does not perform provider actions.
+- Generates the workflow catalog and compatibility reference from canonical manifests, with JSON list, describe and doctor commands.
+- Installs the full runnable catalog for fresh clients. Existing installations retain their selection until explicit migration; rollback preserves private working state.
+- Includes Greatest Hits Runway and Content Brain Repair in stable assets.
+- Reworks the README and client guides around the first useful conversation review, with explicit current capability gaps.
+
 ## 0.7.0
 
 - Adds Threadify Offer Builder (`threadify-offer-builder`), with the Offer Architect interview.

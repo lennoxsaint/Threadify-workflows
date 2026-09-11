@@ -5,12 +5,12 @@
     {
       "source": "docs/threadify-001.md",
       "target": "threadify-001.md",
-      "sha256": "dc8c3fcbf3d7c6ee0d20a35fd9bc8c74590ed8b9cebd3df4413f7ffb0a115d77"
+      "sha256": "7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b"
     },
     {
       "source": "workflows/qualified-buyer-research/manifest.json",
       "target": "workflow-manifest.json",
-      "sha256": "656fc1ad87a04f3b9a7031f1208989a83064fb527ad2c990fff55379a578d728"
+      "sha256": "9d3b64fa9acb762b5817931d05fab86a055db1a3edb7f93441b62a1285d86795"
     },
     {
       "source": "workflows/qualified-buyer-research/README.md",
@@ -55,7 +55,7 @@
     {
       "source": "release/release-intent.json",
       "target": "release-metadata.json",
-      "sha256": "8847556a7c0479297acf33185a1c4865c9e1cc3623fb562a5d5c455336b318ef"
+      "sha256": "6d9597b198e75b8f32347c5df62062b05f17e81d9ca137450319d228ce921b40"
     },
     {
       "source": "scripts/qualified-buyer-update-on-use.mjs",

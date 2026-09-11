@@ -5,11 +5,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../..', import.meta.url));
 
-test('root plugin discovers four core and seven preserved skills with local references', () => {
+test('root plugin focuses on buyer conversations while preserving skill discovery and local references', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, '.codex-plugin/plugin.json')));
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.mcpServers, './.mcp.json');
-  assert.deepEqual(manifest.interface.defaultPrompt, ['Vault Setup', 'Create My Day', 'Plan My Content']);
+  assert.deepEqual(manifest.interface.defaultPrompt, ['Your Next Moves']);
   assert.ok(manifest.interface.shortDescription.length <= 30);
   const legacy = fs.readdirSync(path.join(root, 'plugins/threadify/skills')).sort();
   const core = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month'];

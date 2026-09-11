@@ -11,7 +11,7 @@ test('every adapter preserves the shared connected and disconnected creator poli
     assert.doesNotMatch(body, /orchestration-only|no Threadify-native generation|no public workflow generation prompts/, adapter);
   }
   const generic = read('adapters/generic-mcp/README.md');
-  assert.match(generic, /local drafting/);
+  assert.match(generic, /local drafting/i);
   assert.match(generic, /generate_content/);
   assert.match(generic, /save_draft/);
   assert.match(generic, /explicit opt-in/);

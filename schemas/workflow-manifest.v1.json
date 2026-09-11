@@ -8,6 +8,12 @@
     "version",
     "title",
     "summary",
+    "kind",
+    "entrypoint",
+    "bundle",
+    "dependencies",
+    "triggers",
+    "io",
     "supported_adapters",
     "required_mcp_tools",
     "free_capabilities",
@@ -21,6 +27,56 @@
     "version": { "type": "string" },
     "title": { "type": "string" },
     "summary": { "type": "string" },
+    "kind": { "enum": ["skill", "recipe"] },
+    "entrypoint": {
+      "type": "object",
+      "required": ["skill_id", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "skill_id": { "type": ["string", "null"], "pattern": "^threadify-[a-z0-9-]+$" },
+        "source": { "type": "string", "pattern": "^(plugins/threadify/skills|skills|workflows)/.+" }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "required": ["kind", "standalone"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["creator", "advanced", "conversation", "recipe"] },
+        "standalone": { "type": "boolean" },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["source", "target"],
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "string" },
+              "target": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "required": ["workflows", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "workflows": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }, "uniqueItems": true },
+        "files": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "triggers": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
+    "io": {
+      "type": "object",
+      "required": ["inputs", "outputs"],
+      "additionalProperties": false,
+      "properties": {
+        "inputs": { "$ref": "#/$defs/ioRecords" },
+        "outputs": { "$ref": "#/$defs/ioRecords" }
+      }
+    },
     "supported_adapters": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
     "required_mcp_tools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
     "optional_mcp_tools": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
@@ -37,7 +93,7 @@
     },
     "fallback": {
       "type": "object",
-      "required": ["mode", "artifact_schema", "instructions"],
+      "required": ["mode", "instructions"],
       "properties": {
         "mode": { "type": "string" },
         "artifact_schema": { "type": "string" },
@@ -50,6 +106,21 @@
       "properties": {
         "schema": { "type": "string" },
         "must_prove": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "ioRecords": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "schema_ref"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "schema_ref": { "type": "string", "minLength": 1 }
+        }
       }
     }
   }

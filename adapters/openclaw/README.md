@@ -1,18 +1,7 @@
-# OpenClaw Adapter
+# OpenClaw adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Install with `npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets openclaw`, then load the selected manifest. Start locally from the confirmed offer and supplied conversations. Follow [Threadify-001](../../docs/threadify-001.md) when a useful step needs a current connection.
 
+Use the [generic adapter](../generic-mcp/README.md). Preserve OpenClaw's device and private-memory controls. Do not export private memory into workflow state or public receipts. If the local CLI, source reinspection or provider readback is unavailable, keep the action as a manual review artifact.
 
-OpenClaw should treat Threadify workflows as external-action guardrails.
-
-Follow the [generic adapter](../generic-mcp/README.md) for local drafting and
-entitled connected services. Preserve OpenClaw's device and private-memory boundaries.
-
-Rules:
-
-- no private memory export into public receipts
-- no live write without explicit user approval
-- use generation only when requested and currently entitled
-- fallback artifact when MCP is missing or unsafe
+This adapter is structural guidance. Native OpenClaw installation, discovery and first-run behavior for the new buyer skills have not yet been observed.

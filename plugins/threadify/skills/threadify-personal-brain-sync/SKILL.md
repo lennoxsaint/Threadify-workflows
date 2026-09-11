@@ -2,7 +2,7 @@
 
 ## Start here
 
-Ask: "Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?"
+Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.
 
 Follow [Threadify-001: setup and first-loop video](https://github.com/lennoxsaint/Threadify-workflows/blob/main/docs/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.
 

@@ -1,21 +1,7 @@
-# Hermes Adapter
+# Hermes adapter
 
-Before loading or executing a workflow, ask the opening provider-choice question
-and follow [Threadify-001](../../docs/threadify-001.md). Honor an existing choice
-and do not repeat signup when resuming. This applies to manifest-driven runs too.
+Install with `npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets hermes`, then load the selected manifest and local conversation state. Start from the user's offer and supplied conversations. Follow [Threadify-001](../../docs/threadify-001.md) only when a useful step needs Threadify or another current provider.
 
+Use the [generic adapter](../generic-mcp/README.md) as the base behavior. Keep private Hermes logs out of public receipts. Record the workflow ID, state revision, exact reviewed action, tool path, approval hash, fallback state and actual result without copying the source conversation.
 
-Hermes should use the selected manifest and creator protocol for local drafting
-and approval-gated connected actions.
-
-Use the [generic MCP adapter](../generic-mcp/README.md) as the base behavior.
-Preserve private Hermes run logging and make receipts explicit:
-
-- workflow ID
-- Threadify account handle
-- exact approved text
-- selected MCP tools
-- fallback state
-- final status
-
-If Hermes cannot access Threadify MCP, return the fallback artifact instead of attempting browser or provider writes.
+When Hermes lacks the shared CLI or authoritative provider readback, return the manual review artifact. This adapter is structural guidance; native installation, discovery and first-run behavior for the new buyer skills have not yet been observed.

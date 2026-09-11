@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "title": "YouTube Edit (Eddy)",
   "summary": "Drive a verified local Eddy engine to produce a YouTube launch kit, then optionally prepare and schedule Threadify promotional posts after explicit final approval. Inspect actual output assets; do not permit unapproved source-media transfers or publishing.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-youtube-edit", "source": "plugins/threadify/skills/threadify-youtube-edit/SKILL.md" },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/youtube-edit/README.md"] },
+  "triggers": ["edit my YouTube video", "prepare an edit plan and Threadify promo posts"],
+  "io": {
+    "inputs": [{ "name": "video source packet", "schema_ref": "inline:video-source-packet" }],
+    "outputs": [{ "name": "edit and promotion packet", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "external_engines": ["eddy"],
   "modes": [

@@ -1,0 +1,77 @@
+{
+  "workflow_id": "follow-through",
+  "version": "0.1.0",
+  "title": "Follow Through",
+  "summary": "Track explicit promises and dates from buyer conversations until a truthful terminal outcome is recorded.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-follow-through",
+    "source": "plugins/threadify/skills/threadify-follow-through/SKILL.md"
+  },
+  "bundle": { "kind": "conversation", "standalone": false },
+  "dependencies": {
+    "workflows": ["agree-next-step"],
+    "files": [
+      "workflows/follow-through/README.md",
+      "schemas/conversation-records.v1.json",
+      "schemas/conversation-lifecycle.v1.json"
+    ]
+  },
+  "triggers": [
+    "show what I promised buyers",
+    "follow through on dated buyer commitments"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "explicit commitment evidence", "schema_ref": "schemas/conversation-records.v1.json" }
+    ],
+    "outputs": [
+      { "name": "commitment outcome", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults"],
+  "free_capabilities": [
+    "local commitment capture",
+    "explicit owner and due-date tracking",
+    "review-only reminder candidate",
+    "truthful terminal outcome recording"
+  ],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "promise source",
+      "commitment owner",
+      "exact commitment",
+      "due date",
+      "proposed follow-up text and destination",
+      "recipient interest and channel permission when applicable",
+      "action hash",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-commitment-review",
+    "artifact_schema": "conversation-lifecycle.v1",
+    "instructions": [
+      "List only explicit commitments with a source, owner and due date.",
+      "Leave missing completion evidence open or record uncertain rather than treating silence as permission or success.",
+      "Use a manual review reminder when host-native reminders are unsupported."
+    ]
+  },
+  "receipt": {
+    "schema": "conversation-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "state revision",
+      "commitment source",
+      "owner and due date",
+      "reviewed follow-up action",
+      "terminal outcome and evidence origin",
+      "fallback state"
+    ]
+  }
+}

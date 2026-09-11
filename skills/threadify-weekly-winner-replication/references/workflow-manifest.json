@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "title": "Weekly Winner Replication",
   "summary": "Use basic greatest-hits readback where available, prepare an approved replication schedule, and keep advanced analytics strategy paid-gated.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-weekly-winner-replication", "source": "plugins/threadify/skills/threadify-weekly-winner-replication/SKILL.md" },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": ["greatest-hits-runway"], "files": ["workflows/weekly-winner-replication/README.md"] },
+  "triggers": ["replicate this week's winners", "prepare transformed drafts from recent winning posts"],
+  "io": {
+    "inputs": [{ "name": "weekly winner evidence", "schema_ref": "inline:weekly-winner-evidence" }],
+    "outputs": [{ "name": "replication review packet", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

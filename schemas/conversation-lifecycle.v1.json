@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/conversation-lifecycle.v1.json",
+  "title": "Private buyer conversation lifecycle v1",
+  "description": "Private POSIX state. Published artifacts and creator state keep their existing formats.",
+  "oneOf": [
+    { "$ref": "#/$defs/workspace" },
+    { "$ref": "#/$defs/state" }
+  ],
+  "$defs": {
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-workspace.v1" },
+        "id": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "account_id": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "platform": { "const": "threads" },
+        "timezone": { "type": "string", "minLength": 1, "pattern": "\\S" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "offers": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/offer" } },
+        "evidence": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/evidence" } },
+        "actions": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/action" } },
+        "commitments": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/commitment" } },
+        "outcomes": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/outcome" } },
+        "content": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/content" } },
+        "imports": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/import" } },
+        "receipts": { "type": "array", "items": { "$ref": "https://threadify.app/schemas/conversation-records.v1.json#/$defs/receipt" } }
+      },
+      "required": ["schema_version", "id", "account_id", "platform", "timezone", "created_at", "offers", "evidence", "actions", "commitments", "outcomes", "content", "imports", "receipts"]
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": { "const": "conversation-state.v1" },
+        "revision": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "payload": { "$ref": "#/$defs/workspace" },
+        "checksum": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "required": ["schema_version", "revision", "payload", "checksum"]
+    }
+  }
+}

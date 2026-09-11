@@ -3,31 +3,20 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadWorkflowRegistry, listWorkflows } from '../lib/workflow-registry.mjs';
 
 const root = path.resolve(fileURLToPath(new URL('..', import.meta.url)));
-const references = path.join(
-  root,
-  'plugins',
-  'threadify',
-  'skills',
-  'threadify-qualified-buyer-research',
-  'references',
-);
 const check = process.argv.includes('--check');
-const sources = [
-  ['docs/threadify-001.md', 'threadify-001.md'],
-  ['workflows/qualified-buyer-research/manifest.json', 'workflow-manifest.json'],
-  ['workflows/qualified-buyer-research/README.md', 'workflow-readme.md'],
-  ['workflows/qualified-buyer-research/reference-policy.mjs', 'reference-policy.mjs'],
-  ['public-rules/qualified-buyer-research.v1.json', 'public-rules.v1.json'],
-  ['schemas/qualified-buyer-research.v1.json', 'qualified-buyer-research.v1.json'],
-  ['schemas/durable-rule.v1.json', 'durable-rule.v1.json'],
-  ['schemas/public-rule-proposal.v1.json', 'public-rule-proposal.v1.json'],
-  ['schemas/stable-release-manifest.v1.json', 'stable-release-manifest.v1.json'],
-  ['schemas/update-receipt.v1.json', 'update-receipt.v1.json'],
-  ['release/release-intent.json', 'release-metadata.json'],
-  ['scripts/qualified-buyer-update-on-use.mjs', 'update-on-use.mjs'],
-];
+const registry = loadWorkflowRegistry({ root });
+const standalone = listWorkflows(registry, { kind: 'skill' })
+  .filter((workflow) => workflow.bundle.standalone);
+if (standalone.length !== 1) {
+  throw new Error(`Expected one standalone skill bundle, found ${standalone.map((workflow) => workflow.workflow_id).join(', ')}`);
+}
+const workflow = standalone[0];
+const references = path.join(root, 'plugins', 'threadify', 'skills', workflow.skill_name, 'references');
+const sources = (workflow.bundle.references ?? []).map(({ source, target }) => [source, target]);
+if (sources.length === 0) throw new Error(`${workflow.workflow_id} has no standalone bundle references`);
 
 function normalize(buffer) {
   const text = buffer.toString('utf8').replace(/\r\n/g, '\n');
@@ -44,7 +33,7 @@ for (const [source, target] of sources) {
 }
 const metadata = {
   record_type: 'SelfContainedSkillBundleV1',
-  skill: 'threadify-qualified-buyer-research',
+  skill: workflow.skill_name,
   generated_from: sources.map(([source, target]) => ({
     source,
     target,

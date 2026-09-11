@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "title": "Viral Vault Setup",
   "summary": "Review 10–20 selected Threads/YouTube sources plus a small shared selection before any import; fewer strong sources may proceed with gaps.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-vault-setup", "source": "skills/threadify-vault-setup/SKILL.md" },
+  "bundle": { "kind": "creator", "standalone": false },
+  "dependencies": {
+    "workflows": [],
+    "files": ["docs/creator-system.md", "docs/creator-engine.md", "schemas/creator-records.v1.json", "schemas/creator-lifecycle.v1.json"]
+  },
+  "triggers": ["set up my Viral Vault", "build a starter inspiration Vault"],
+  "io": {
+    "inputs": [{ "name": "source selections", "schema_ref": "inline:vault-source-selections" }],
+    "outputs": [{ "name": "creator lifecycle record", "schema_ref": "schemas/creator-lifecycle.v1.json" }]
+  },
   "supported_adapters": [
     "generic-mcp",
     "hermes",

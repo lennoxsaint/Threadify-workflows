@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "title": "X Article From Daily Post",
   "summary": "Turn an approved daily post into a draft-only, bookmark-optimized X Article packet with thumbnail brief, scorecard, manual review gate, and receipt. Live X execution is not part of public v0.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-x-article-from-daily-post", "source": "plugins/threadify/skills/threadify-x-article-from-daily-post/SKILL.md" },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": ["create-my-day"], "files": ["workflows/x-article-from-daily-post/README.md"] },
+  "triggers": ["turn my daily post into an X Article", "prepare a draft-only X Article packet"],
+  "io": {
+    "inputs": [{ "name": "approved daily post", "schema_ref": "schemas/threadify-ready-output.v1.json" }],
+    "outputs": [{ "name": "X Article packet", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

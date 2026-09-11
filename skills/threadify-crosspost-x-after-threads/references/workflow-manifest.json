@@ -3,6 +3,18 @@
   "version": "0.1.0",
   "title": "Cross-post To X After Threads",
   "summary": "Read a Threads schedule or publish status and prepare an X-ready fallback artifact. Live X execution is not part of public v0.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-crosspost-x-after-threads",
+    "source": "plugins/threadify/skills/threadify-crosspost-x-after-threads/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/crosspost-x-after-threads/README.md"] },
+  "triggers": ["cross-post my Threads post to X", "prepare an X-ready follow-up"],
+  "io": {
+    "inputs": [{ "name": "Threads post status", "schema_ref": "inline:threads-post-status" }],
+    "outputs": [{ "name": "X-ready artifact", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

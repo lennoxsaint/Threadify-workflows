@@ -3,6 +3,21 @@
   "version": "0.1.0",
   "title": "Create My Month",
   "summary": "Plan 28 days, visibly four weeks, with rolling drafts by default or all drafts upfront.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-create-my-month",
+    "source": "skills/threadify-create-my-month/SKILL.md"
+  },
+  "bundle": { "kind": "creator", "standalone": false },
+  "dependencies": {
+    "workflows": ["create-my-week"],
+    "files": ["docs/creator-system.md", "docs/creator-engine.md", "schemas/creator-records.v1.json", "schemas/creator-lifecycle.v1.json"]
+  },
+  "triggers": ["create my month", "plan four weeks of Threads content"],
+  "io": {
+    "inputs": [{ "name": "creator month request", "schema_ref": "inline:creator-month-request" }],
+    "outputs": [{ "name": "creator records", "schema_ref": "schemas/creator-records.v1.json" }]
+  },
   "supported_adapters": [
     "generic-mcp",
     "hermes",

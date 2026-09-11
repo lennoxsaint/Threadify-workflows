@@ -1,9 +1,20 @@
-# Creator plugin packaging
+# Plugin packaging
 
-The root `.codex-plugin/plugin.json` discovers `skills/` and `.mcp.json`.
-Four creator skills are the primary entrypoints. Seven existing skills retain
-their names as advanced or approved-copy compatibility workflows. The three
-starter prompts are Vault Setup, Create My Day and Plan My Content.
+## Current 0.8.0 package
+
+The root plugin discovers the runnable catalog generated from canonical workflow manifests. A fresh install selects the full catalog. Existing client selections stay unchanged when an upgrade omits `--workflows`; `threadify-workflows install --workflows all` is the explicit full-catalog migration.
+
+The recommended starter is Your Next Moves. It calls Offer Builder when no confirmed offer exists, then returns to the supplied conversation review. The five buyer skills share the local conversation engine and keep their private state outside plugin and release archives.
+
+The root `.codex-plugin/plugin.json` and release bundle include current source skills through the registry. No second handwritten workflow list is authoritative. The plugin still exposes `.mcp.json`, but local preparation does not require authentication. Connect Threadify only when a useful step needs a current hosted capability.
+
+Source validation and extracted archive tests do not prove native client discovery. Codex and Claude Code passed synthetic native walkthroughs of the new starter; see [0.8.0 acceptance](buyer-experience-acceptance.md). Other client adapters are structural-only until separately observed. Local conversation state is supported on macOS and Linux; Windows installation is not state-engine proof.
+
+## Prior packaging evidence
+
+The statements below record earlier release checks. They do not describe the current catalog or prove the 0.8.0 candidate.
+
+In the 0.5.0 packaging design, four creator skills were the primary entrypoints and seven existing skills retained their names as advanced or approved-copy compatibility workflows. Its starter prompts were Vault Setup, Create My Day and Plan My Content.
 
 `npm run bundle:build` renders the QBR compatibility bundle, four creator
 bundles and seven root advanced bundles. `npm run bundle:check` checks parity.

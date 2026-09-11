@@ -10,7 +10,9 @@ const root = fileURLToPath(new URL('../..', import.meta.url));
 test('bundle check and build reject unknown files and symlinks without overwriting them', async (t) => {
   const temp = await mkdtemp(path.join(os.tmpdir(), 'creator-bundle-audit-'));
   t.after(() => rm(temp, { recursive: true, force: true }));
-  for (const directory of ['scripts', 'lib/creator', 'docs', 'skills', 'schemas']) {
+  for (const directory of [
+    'scripts', 'lib', 'docs', 'skills', 'schemas', 'workflows', 'plugins', 'public-rules', 'release',
+  ]) {
     await cp(path.join(root, directory), path.join(temp, directory), { recursive: true });
   }
   const run = (check = true) => spawnSync(process.execPath,

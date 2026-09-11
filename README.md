@@ -1,176 +1,103 @@
 # Threadify Workflows
 
-Threadify Workflows is a public, MCP ready workflow library for running creator workflows through Threadify from agent clients such as Hermes, Gemini, Codex, Claude, OpenClaw, Cursor, and any generic MCP client.
+Threadify Workflows turns an offer and real buyer conversations into small, reviewable next steps. It can prepare the work locally from conversations you supply, so you can get value before connecting an account. Every external action stays tied to the exact item you approved.
 
-The generalized methods and local Node engine are free and open source under the MIT License. Local drafting works from user-supplied sources and confirmed facts without a Threadify account. Hosted Brain, shared corpus, generation, saved drafts, scheduling and analytics require the connected account's current access.
+The library is MCP ready and works with agent clients including Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes. Local drafting and private review state run with Node 18 or newer on macOS and Linux.
 
-This repo includes local planning, review and recovery controls plus approval-gated service orchestration. It does not publish Threadify's private generation logic, private source material, member data, account IDs, credentials or proprietary ranking systems.
+## A synthetic example
 
-## Primary creator workflows
+This example is made up and uses the reserved `example.invalid` domain.
 
-- [Viral Vault Setup](workflows/vault-setup/README.md)
-- [Create My Day](workflows/create-my-day/README.md)
-- [Create My Week](workflows/create-my-week/README.md)
-- [Create My Month](workflows/create-my-month/README.md)
+**Source:** a [fictional Threads conversation](https://example.invalid/threads/conversation-one).
 
-Week means seven days; Month means 28 days, visibly four weeks. Rolling drafts
-are the default. All drafts upfront is optional; neither mode bypasses daily
-review or fresh delivery checks. See [getting started](docs/getting-started.md)
-and the [skill disposition audit](docs/skill-disposition-audit.md).
+**Buyer evidence:** "Yes, I would like help setting that up." The synthetic record also includes permission to use a Threads DM.
 
-## Preserved capabilities
+**Fit rationale:** the person showed explicit interest in help relevant to the confirmed offer. A generic public question would not qualify as a lead.
 
-- Strict workflow manifests for agent-native Threadify execution.
-- Adapter packs for generic MCP, Hermes, Gemini, Codex, Claude, OpenClaw, and Cursor.
-- Approval gates for public actions.
-- Manual/web fallback paths when MCP is unavailable.
-- Receipt templates for recording actual tool calls and verified readbacks; templates alone are not proof.
-- Redacted examples based on real operating patterns, with private details removed.
-- Personal Brain Sync pattern for granular, verified memory updates from approved source artifacts.
-- Daily Greatest Hits workflow for turning approved top-post source material into a daily candidate, approval, schedule, and receipt loop.
-- Draft-only X Article repurposing workflow for turning an approved daily post into an article brief, draft, thumbnail brief, prompt, scorecard, and review receipt.
-- Qualified Buyer Research workflow for finding current problem-language posts, rejecting seller/advice false positives, staging one useful reply, and learning only from completed qualified-progression outcomes.
-- YouTube Edit workflow that drives the Eddy engine (the `engines/eddy` submodule) to turn raw footage into a finished edit, then optionally prepares and schedules Threadify promotional posts about the video after approval.
-- A dependency-free validator for manifests, fixtures, redaction, and launch claims.
-- A dependency-free Node 18+ installer and stable updater for Codex, Claude Code, Cursor, Gemini CLI, OpenClaw, Hermes, and universal Agent Skills.
+**Suggested reply:**
 
-## YouTube support via the Eddy engine
+> I can send the short setup outline here today. If it fits, we can choose the next step after you read it.
 
-The YouTube Edit workflow uses a separately verified [Eddy](https://github.com/lennoxsaint/eddy) installation or a finished launch kit. Source checkouts reference Eddy through the `engines/eddy` submodule; the plugin archive does not include it. Inspect the installed engine's current documentation and processing configuration before starting. Do not permit unapproved source-media transfers or publishing, and claim only output assets that actually exist and have been inspected.
+**State:** `draft` - nothing was sent.
 
-For a source checkout only, initialize the engine with:
+Your Next Moves may present up to three supported actions, but you review the first action by itself.
+
+## Start here
+
+Start with **Your Next Moves**:
+
+> Use Your Next Moves with my offer and the conversations I provide. Keep the work local and show me one action at a time.
+
+If the offer is missing, the workflow runs [Offer Builder](workflows/offer-builder/README.md) first. It then returns to the same conversation review.
+
+## Install for your client
+
+Install the full current catalog for one client:
 
 ```sh
-git clone --recurse-submodules https://github.com/lennoxsaint/Threadify-workflows.git
-# or, in an existing clone:
-git submodule update --init engines/eddy
+npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targets codex
 ```
 
-Do not run these setup commands inside an installed skill directory. Threadify
-is optional for edit-only use; promotional media uploads, scheduling and feedback
-sharing each require approval for that action.
+Change `codex` to `claude`, `cursor`, `gemini`, `openclaw` or `hermes`. Omit `--targets` to use detected clients. A fresh install selects the full runnable catalog. An upgrade with no workflow selection preserves that client's existing selection.
 
-## What Stays In Threadify
-
-Threadify keeps the paid execution layer:
-
-- native post generation and draft editing
-- reply generation
-- advanced analytics and winner strategy
-- additional accounts and platforms
-- any future supported X Article execution (not claimed by this package)
-- premium workflow packs
-- hosted calendar and deeper readback surfaces
-- private quality and voice systems
-
-Public workflows may describe required capabilities and upgrade points. They must not include the internal logic behind those paid systems.
-
-## Current Self / Brain Sync Rule
-
-Large personal context packets are source artifacts, not direct Brain upload payloads. Public workflows must atomize approved packet updates into small memory records, classify them, stop for approval, verify readback, and return a per-item ledger.
-
-Daily Posts workflows may consume only approved clean Threadify-safe packs or verified Brain memories. They must not consume raw Current Self packets, private metrics, private proof paths, account data, or unapproved memory candidates.
-
-## Quick Start
-
-Every workflow begins with one setup question: start with Threadify's free trial,
-connect an existing account, choose another MCP/plugin, or work locally.
-Follow [Threadify-001: setup and first-loop video](docs/threadify-001.md).
-Returning users keep their choice. A free trial is not a permanently free hosted
-account; review the live terms before signup. No signup is needed for local drafts.
-
-### Use Create My Week in Codex
-
-Ask Codex:
-
-> Install the skill at https://github.com/lennoxsaint/Threadify-workflows/tree/main/skills/threadify-create-my-week, then use it to prepare my next seven days of Threads content. Keep everything draft-only for review.
-
-On your next turn, invoke `$threadify-create-my-week`. Node 18+ is required
-for private, resumable local state. You can install the sibling Day, Month and
-Vault Setup skills the same way. Each includes its own engine and references.
-This standalone route does not edit your Codex configuration or require a
-plugin marketplace installation.
-
-The existing Threadify connection is optional. Missing shared-Viral search does
-not block the workflow: it uses qualified Greatest Hits, My Vault or supplied
-sources and explains substitutions. A full week blueprint is seven days;
-rolling mode drafts Day 1 first. Ask for all drafts upfront if desired.
-Neither choice schedules or publishes your posts.
-
-### Stable updater
-
-Install the latest validated stable release:
+From a source checkout, use the local executable:
 
 ```sh
-npx --yes github:lennoxsaint/Threadify-workflows install
+node bin/threadify-workflows.mjs install --workflows all --targets codex
 ```
 
-The installer asks before enabling daily and on-use automatic updates. It installs only GitHub stable releases, verifies hashes and bundle parity, preserves the previous two releases, and never runs a global agent-skill update. See `docs/automatic-updates.md`.
+Windows installation may work through a supported client, but it is not proof that the private conversation state engine ran there. Use the manual conversation fallback when durable local state is unavailable.
 
-Version 0.6.0 includes Day, Week, Month, Vault Setup, and the one-install Viral
-Carousel Maker v0.2.0 controlled-mutation workflow in the full plugin archive.
-The universal standalone installer target still installs Qualified Buyer Research;
-use the direct skill links above for standalone creator installation. Native
-plugin discovery depends on your client. See [packaging status](docs/plugin-packaging.md).
+## Find the supporting workflow
 
-1. Connect Threadify MCP in your agent client.
-2. Pick a workflow under `workflows/`.
-3. Open the matching adapter under `adapters/`.
-4. Let the agent inspect the workflow manifest.
-5. Approve the final action only after the agent shows exact text, account, time, media, and action.
-6. Save the receipt.
+List the catalog or inspect one workflow before running it:
 
-Install development dependencies and validate before publishing or editing:
+```sh
+npx --yes github:lennoxsaint/Threadify-workflows list --json
+npx --yes github:lennoxsaint/Threadify-workflows describe your-next-moves --json
+npx --yes github:lennoxsaint/Threadify-workflows doctor --json
+```
+
+The five buyer workflows are:
+
+- [Your Next Moves](workflows/your-next-moves/README.md)
+- [Agree the Next Step](workflows/agree-next-step/README.md)
+- [Follow Through](workflows/follow-through/README.md)
+- [Buyer Questions to Content](workflows/buyer-questions-to-content/README.md)
+- [Weekly Buyer Outcomes](workflows/weekly-buyer-outcomes/README.md)
+
+The full catalog also includes creator planning, source, offer and approved-delivery workflows. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
+
+From a source checkout, run the synthetic five-workflow example:
+
+```sh
+node examples/conversations/walkthrough.mjs
+```
+
+It creates disposable private state, makes no network call and sends nothing.
+
+## Connect Threadify when it helps
+
+A connection is optional. Use it when a workflow needs a current account capability, then verify the available tools and intended account before relying on them. The current MCP does not supply every conversation or delivery surface; the [capability gaps](docs/buyer-capability-gaps.md) name the manual paths.
+
+For Threadify setup and the current offer, use the fully attributed [Threadify plans page](https://www.threadify.app/plans?utm_source=threadify-workflows&utm_medium=github&utm_campaign=buyer-workflows&utm_content=onboarding__buyer_workflows__default&video_slug=threadify-001&cta_slot=onboarding&entry_angle=buyer_next_moves&lp_variant=plans). Check the live page rather than copying old terms into a workflow.
+
+For installation or workflow trouble, run `npx --yes github:lennoxsaint/Threadify-workflows doctor --json`, read [Threadify-001](docs/threadify-001.md), then open a [GitHub issue](https://github.com/lennoxsaint/Threadify-workflows/issues) without private conversations, account IDs or credentials.
+
+## Safety and proof
+
+Conversation archives stay private. The local engine validates and persists the minimal evidence supplied by the host outside release archives. The host reinspects the source before an action. The engine then records a pending attempt before delivery and blocks replay when an outcome is unknown. An optional native reminder only prepares a review candidate after the owner enables it; it never sends.
+
+Tests, an installed file and a client discovery screen prove different things. Codex and Claude Code passed synthetic native first-run walkthroughs on macOS. See the [0.8.0 acceptance record](docs/buyer-experience-acceptance.md). Other adapters are structural guidance until their own native walkthroughs pass. See [packaging status](docs/plugin-packaging.md) for dated release evidence and remaining checks.
+
+No workflow may ask a provider to import, save, schedule, publish, reply or send until the user approves the exact displayed action. Importing user-supplied evidence into private local state is part of the authorized first run. Qualified Buyer Research still stops with a staged reply before Send. If a required tool is unavailable, keep the useful work local and give the manual next step.
+
+## Development
 
 ```sh
 npm ci
 npm test
-```
-
-Build the exact stable release assets:
-
-```sh
 npm run release:build
 ```
 
-## Local Codex Plugin Wrapper
-
-This repo includes a local dogfood plugin wrapper. The plugin source is the repo
-root so Codex can access both the plugin skills and the workflow manifests. It
-is separate from OpenAI public directory submission.
-
-Install from this repo root:
-
-```sh
-codex plugin marketplace add .
-codex plugin add threadify-workflows@threadify-workflows
-```
-
-Marketplace registration alone does not install the plugin. Start a new task
-after installation to check skill discovery. Local drafting does not require
-a Threadify connection. For connected services, connect Threadify MCP with OAuth at:
-
-```text
-https://www.threadify.app/api/mcp/threadify
-```
-
-Do not commit bearer tokens, OAuth tokens, local proxy config, account IDs, or
-reviewer credentials into this repo.
-
-## Publication Status
-
-This working creator package is not yet release-verified. Before any public
-sync or release announcement, run the checklist in `PUBLICATION_CHECKLIST.md`
-and confirm the owner gates listed there.
-
-## Safety Rule
-
-No workflow may schedule, cancel, reschedule, or otherwise mutate Threadify state until the user gives explicit final approval. If MCP is unavailable, the workflow must produce a Threadify-ready artifact and manual fallback steps instead of pretending the action happened.
-
-## Offer Builder
-
-Use [Threadify Offer Builder](skills/threadify-offer-builder/SKILL.md) to clarify a real offer, create a concise local page, and optionally save approved fields to CTA Studio. The interview asks one question at a time; shortened filming mode asks 1, 2, 3, then 10. See the [workflow and local demo](workflows/offer-builder/README.md). No connection is needed for local preparation.
-
-## Find a workflow from a Proof Loops episode
-
-The [episode 15 onward index](docs/proof-loops-workflows.md) links the demonstrated workflows, including Greatest Hits Runway, Qualified Buyer Research, Create My Day/Week/Month, Content Brain Repair, Viral Carousel Maker and Offer Builder. It also includes the smaller use-case recipes named in the setup episode and explains source versus installed-release availability.
+The MIT-licensed repository contains public workflow methods, local state controls, manifests and adapters. It excludes private generation logic, private sources, credentials, member data and production account identifiers. The [publication checklist](PUBLICATION_CHECKLIST.md) remains the release gate.

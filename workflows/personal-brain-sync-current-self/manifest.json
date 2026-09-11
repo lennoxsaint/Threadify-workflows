@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "title": "Personal Brain Sync / Current Self Packet",
   "summary": "Turn an approved personal context packet into small, classified, approval-gated Threadify Brain memories with readback proof and a per-item ledger.",
+  "kind": "skill",
+  "entrypoint": { "skill_id": "threadify-personal-brain-sync", "source": "plugins/threadify/skills/threadify-personal-brain-sync/SKILL.md" },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/personal-brain-sync-current-self/README.md"] },
+  "triggers": ["sync my current self to Threadify Brain", "review personal context before saving memories"],
+  "io": {
+    "inputs": [{ "name": "approved current-self packet", "schema_ref": "inline:current-self-packet" }],
+    "outputs": [{ "name": "memory update ledger", "schema_ref": "schemas/memory-update-ledger.v1.json" }]
+  },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [
     "get_connection_defaults",

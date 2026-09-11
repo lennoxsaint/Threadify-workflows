@@ -1,7 +1,7 @@
 {
   "name": "threadify-workflows",
-  "version": "0.7.0",
-  "description": "Source-backed creator plans and reviewable drafts, with optional Threadify services and approval-gated scheduling.",
+  "version": "0.8.0",
+  "description": "Clarify your offer, find relevant Threads conversations, and prepare useful replies for approval. Start locally without an account.",
   "author": {
     "name": "Threadify"
   },
@@ -11,7 +11,8 @@
     "threads",
     "mcp",
     "workflows",
-    "creator"
+    "lead-generation",
+    "agent-skills"
   ],
   "license": "MIT",
   "repository": "https://github.com/lennoxsaint/Threadify-workflows",
@@ -19,8 +20,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Threadify Workflows",
-    "shortDescription": "Plan, draft, review your posts",
-    "longDescription": "Set up a source Vault, create a day of posts, or plan seven days or four weeks. Draft locally from confirmed sources without a Threadify account. Connect Threadify for entitled Brain-informed drafting, saved drafts and scheduling after exact approval. Advanced skills preserve buyer research, X artifacts, Brain Sync, YouTube editing and approved-copy scheduling. Public methods and local review controls are MIT licensed; hosted Brain services and the shared corpus are not bundled. No automatic publishing or growth guarantees.",
+    "shortDescription": "Your next buyer conversation",
+    "longDescription": "Start with Your Next Moves. Clarify an offer, inspect supplied conversations, review a useful reply, track agreed next steps and examine actual outcomes. Draft locally without a Threadify account; connect entitled Threadify services when useful. Content, video and Brain workflows remain available. Exact approval is required for external actions. Local records do not prove a message was delivered or a sale occurred.",
     "developerName": "Threadify",
     "category": "Productivity",
     "capabilities": [
@@ -30,9 +31,7 @@
     ],
     "websiteURL": "https://www.threadify.app",
     "defaultPrompt": [
-      "Vault Setup",
-      "Create My Day",
-      "Plan My Content"
+      "Your Next Moves"
     ],
     "brandColor": "#0F172A"
   }
