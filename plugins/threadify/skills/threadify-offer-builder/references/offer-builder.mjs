@@ -63,7 +63,7 @@ export function writeArtifacts(input, directory) {
   fs.writeFileSync(path.join(directory,'offer.html'), render(input), {flag:'wx'});
   fs.writeFileSync(path.join(directory,'owner-handoff.json'), JSON.stringify({...state, mapping:payloadFor(input), owner_notes:input.owner_notes ?? [], action_approval:'not_requested', save_state:'not_attempted', provider_readback:'unavailable', ui_state:'unverified'}, null, 2)+'\n', {flag:'wx'});
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href) {
   if (!process.argv[2] || !process.argv[3]) throw new Error('Usage: node offer-builder.mjs input.json output-directory');
   writeArtifacts(JSON.parse(fs.readFileSync(process.argv[2],'utf8')), process.argv[3]);
 }

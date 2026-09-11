@@ -11,3 +11,22 @@ test('duplicate ambiguity blocks and updates replace full facts',()=>{const old=
 test('readback requires exact account, fields and target',()=>{const p=prepareSave(input,{...context,offers:[{...input,offer_id:'fixture-offer',benefit:'Old'}]});const record={...input,offer_id:'fixture-offer'};assert.equal(verifyReadback(p,record,context.account),true);assert.equal(verifyReadback(p,{...record,link:'https://wrong.org'},context.account),false);assert.equal(verifyReadback(p,record,'wrong'),false);assert.equal(verifyReadback(p,{...record,offer_id:'wrong'},context.account),false);});
 test('HTML escapes supplied content and omits unsafe links and private notes',()=>{const html=render({...input,name:'<script>alert(1)</script>',link:'javascript:alert(1)',owner_notes:['PRIVATE_NOTE']});assert.ok(html.includes('&lt;script&gt;'));assert.ok(!html.includes('<script>'));assert.ok(!html.includes('href='));assert.ok(!html.includes('PRIVATE_NOTE'));for(const link of ['http://site.org','https://user:pass@site.org','https://example.com','https://localhost'])assert.equal(validDestination(link),false);});
 test('mock is visibly labelled and never interview complete',()=>{const demo={...input,mode:'demo'};assert.match(render(demo),/DEMO — fictional example/);assert.equal(inspect(demo).interview_complete,false);assert.throws(()=>prepareSave(demo,context));});
+
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+test('CLI runs through a symlinked installed path and produces actual artifacts',()=>{
+ const root=fs.mkdtempSync(path.join(os.tmpdir(),'offer-cli-'));
+ try {
+  const source=fileURLToPath(new URL('../../plugins/threadify/skills/threadify-offer-builder/references',import.meta.url));
+  const actual=path.join(root,'actual');fs.cpSync(source,actual,{recursive:true});
+  const alias=path.join(root,'alias');fs.symlinkSync(actual,alias,process.platform==='win32'?'junction':'dir');
+  const out=path.join(root,'result');
+  const result=spawnSync(process.execPath,[path.join(alias,'offer-builder.mjs'),path.join(alias,'example.json'),out],{encoding:'utf8'});
+  assert.equal(result.status,0,result.stderr);
+  assert.match(fs.readFileSync(path.join(out,'offer.html'),'utf8'),/DEMO/);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(out,'owner-handoff.json'),'utf8')).save_state,'not_attempted');
+ } finally {fs.rmSync(root,{recursive:true,force:true});}
+});
