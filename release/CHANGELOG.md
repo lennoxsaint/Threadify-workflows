@@ -1,5 +1,13 @@
 # Threadify Workflows stable releases
 
+## 0.7.0
+
+- Adds Threadify Offer Builder (`threadify-offer-builder`), with the Offer Architect interview.
+- Supports ten adaptive questions, shortened filming mode and clearly labelled fictional demos.
+- Creates a responsive local offer page and separate owner handoff without a provider connection.
+- Prepares optional offer saves with duplicate checks, exact approval, stable retry identity and readback checks.
+- Preserves the separate live integration and stable publication gates.
+
 ## 0.6.0
 
 - Bundles the exact public Viral Carousel Maker v0.2.0 runtime, source skill,

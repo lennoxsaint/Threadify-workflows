@@ -1,0 +1,66 @@
+{
+  "workflow_id": "offer-builder",
+  "version": "0.1.0",
+  "title": "Threadify Offer Builder",
+  "summary": "An adaptive offer interview, local HTML page and optional approved CTA Studio save.",
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "list_offers",
+    "create_offer",
+    "update_offer"
+  ],
+  "free_capabilities": [
+    "local interview",
+    "local HTML page",
+    "inspectable offer handoff"
+  ],
+  "paid_capability_stubs": [
+    "Threadify offer storage requires a connected eligible account"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account",
+      "action",
+      "target offer",
+      "name",
+      "benefit",
+      "link",
+      "type",
+      "full facts replacement"
+    ]
+  },
+  "fallback": {
+    "mode": "local-offer-handoff",
+    "instructions": [
+      "Retain local offer.html and owner-handoff.json.",
+      "Connect the client to https://www.threadify.app/api/mcp/threadify using OAuth or manually enter approved fields in CTA Studio.",
+      "Report unavailable authentication, scope, destination or provider readback without claiming a save."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "workflow ID",
+      "interview mode",
+      "answered and skipped questions",
+      "confirmed facts",
+      "account",
+      "action approval",
+      "provider readback",
+      "UI state",
+      "fallback state"
+    ]
+  }
+}

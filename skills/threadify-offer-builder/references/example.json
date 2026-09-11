@@ -1,0 +1,23 @@
+{
+  "mode": "demo",
+  "answered": [],
+  "confirmed": false,
+  "name": "A clearer service page",
+  "buyer": "independent designers whose service page is hard to explain",
+  "benefit": "A rewritten service page that explains what buyers receive.",
+  "delivery": "One page of copy and a recorded walkthrough of the changes.",
+  "cta": "Review the example",
+  "link": null,
+  "type": "other",
+  "facts": [],
+  "terms": null,
+  "limits": null,
+  "unknowns": [
+    "Price",
+    "Destination",
+    "Customer evidence"
+  ],
+  "owner_notes": [
+    "Fictional demo fixture. No interview or provider save occurred."
+  ]
+}
