@@ -1,0 +1,58 @@
+{
+  "workflow_id": "content-brain-repair",
+  "version": "0.1.0",
+  "title": "Content Brain Repair",
+  "summary": "Public orchestration for Content Brain Repair, with review, exact approval and readback.",
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "get_brain_overview",
+    "query_brain",
+    "remember",
+    "correct_memory"
+  ],
+  "free_capabilities": [
+    "local review and preparation from approved sources"
+  ],
+  "paid_capability_stubs": [
+    "Hosted Threadify tools require current connection scopes and plan entitlement"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account",
+      "exact payload",
+      "action",
+      "time or memory category",
+      "source and changed facts"
+    ]
+  },
+  "fallback": {
+    "mode": "local-review-packet",
+    "instructions": [
+      "Use approved local source material when provider tools are unavailable.",
+      "Keep provider operations not attempted and report exact setup or entitlement gaps."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "source",
+      "approved payload",
+      "actual operation",
+      "readback",
+      "fallback state"
+    ]
+  }
+}
