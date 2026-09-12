@@ -13,6 +13,10 @@ Read the shared [creator protocol](../../docs/creator-system.md) and
 [engine command contract](../../docs/creator-engine.md). The matching root skill
 is `skills/threadify-create-my-day/SKILL.md` and bundles its references for isolated use.
 
+Use the [browser editor](../../docs/creator-browser-review.md) for simple manual
+text edits, post-by-post review and one final Submit. The active host validates
+and schedules the exact submitted versions; the browser itself never publishes.
+
 MCP tools are optional for useful local work. Discover current connected tools
 and entitlements before using them. A manifest entry is not deployment proof or
 permission to import, schedule, send feedback or publish. Preserve exact review,

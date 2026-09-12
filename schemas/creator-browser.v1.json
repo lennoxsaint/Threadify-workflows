@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/creator-browser.v1.json",
+  "title": "Creator browser review v1",
+  "description": "Private editor and submitted-intent shapes. Runtime additionally enforces hashes, revisions, current source identity, rights, entitlement and exact provider evidence.",
+  "oneOf": [{ "$ref": "#/$defs/session" }, { "$ref": "#/$defs/submission" }],
+  "$defs": {
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "globalRepost": {
+      "type": "object",
+      "properties": {
+        "known": { "type": "boolean" },
+        "enabled": { "type": "boolean" },
+        "trigger": { "enum": ["time", "likes"] },
+        "delay_minutes": { "type": "integer", "minimum": 5 },
+        "likes_threshold": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["known", "enabled"],
+      "additionalProperties": false
+    },
+    "automation": {
+      "type": "object",
+      "properties": {
+        "available": { "type": "boolean" },
+        "global_repost": { "$ref": "#/$defs/globalRepost" },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "evidence_ref": { "$ref": "#/$defs/text" }
+      },
+      "required": ["available", "global_repost"],
+      "additionalProperties": false
+    },
+    "postAutomation": {
+      "type": ["object", "null"],
+      "properties": {
+        "content": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" },
+        "trigger": { "enum": ["time", "likes"] },
+        "delay_minutes": { "type": "integer", "minimum": 5 },
+        "likes_threshold": { "type": "integer", "minimum": 1 }
+      },
+      "required": ["trigger"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": { "trigger": { "const": "time" } },
+            "required": ["trigger"]
+          },
+          "then": {
+            "required": ["delay_minutes"],
+            "properties": { "delay_minutes": {}, "likes_threshold": false }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": { "trigger": { "const": "likes" } },
+            "required": ["trigger"]
+          },
+          "then": {
+            "required": ["likes_threshold"],
+            "properties": { "likes_threshold": {}, "delay_minutes": false }
+          }
+        }
+      ]
+    },
+    "edit": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/text" },
+        "parts": { "type": "array", "minItems": 1, "items": { "type": "string", "maxLength": 20000 } },
+        "auto_plug": { "type": ["object", "null"] },
+        "auto_repost": { "type": ["object", "null"] },
+        "reviewed": { "type": "boolean" }
+      },
+      "required": ["id", "parts", "auto_plug", "auto_repost", "reviewed"],
+      "additionalProperties": false
+    },
+    "entry": {
+      "type": "object",
+      "properties": {
+        "review_id": { "$ref": "#/$defs/text" },
+        "base_hash": { "$ref": "#/$defs/hash" },
+        "content": { "type": "object" }
+      },
+      "required": ["review_id", "base_hash", "content"],
+      "additionalProperties": false
+    },
+    "submission": {
+      "type": "object",
+      "properties": {
+        "schema_version": { "const": "creator-browser-submission.v1" },
+        "session_id": { "$ref": "#/$defs/text" },
+        "plan_id": { "$ref": "#/$defs/text" },
+        "action": { "enum": ["schedule", "local_handoff"] },
+        "at": { "type": "string", "format": "date-time" },
+        "hash": { "$ref": "#/$defs/hash" },
+        "automation": { "$ref": "#/$defs/automation" },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/entry",
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "object",
+                "properties": {
+                  "parts": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "\\S" }
+                  },
+                  "auto_plug": {
+                    "$ref": "#/$defs/postAutomation",
+                    "type": ["object", "null"],
+                    "required": ["content"],
+                    "properties": { "content": {} }
+                  },
+                  "auto_repost": {
+                    "$ref": "#/$defs/postAutomation",
+                    "type": ["object", "null"],
+                    "properties": { "content": false }
+                  },
+                  "automation_context": { "$ref": "#/$defs/globalRepost" }
+                },
+                "required": ["parts", "auto_plug", "auto_repost", "automation_context"]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "session_id",
+        "plan_id",
+        "action",
+        "at",
+        "hash",
+        "automation",
+        "entries"
+      ],
+      "additionalProperties": false
+    },
+    "session": {
+      "type": "object",
+      "properties": {
+        "schema_version": { "const": "creator-browser-review.v1" },
+        "id": { "$ref": "#/$defs/text" },
+        "plan_id": { "$ref": "#/$defs/text" },
+        "plan_hash": { "$ref": "#/$defs/hash" },
+        "username": { "$ref": "#/$defs/text" },
+        "account_id": { "$ref": "#/$defs/text" },
+        "title": { "type": "string" },
+        "horizon_days": { "type": "integer", "minimum": 1, "maximum": 28 },
+        "prepared_days": { "type": "integer", "minimum": 1, "maximum": 28 },
+        "created_at": { "type": "string", "format": "date-time" },
+        "status": { "enum": ["editing", "submitted"] },
+        "automation": { "$ref": "#/$defs/automation" },
+        "entries": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/entry" } },
+        "edits": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/edit" } },
+        "submission": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/submission" }] }
+      },
+      "required": [
+        "schema_version",
+        "id",
+        "plan_id",
+        "plan_hash",
+        "username",
+        "account_id",
+        "horizon_days",
+        "prepared_days",
+        "created_at",
+        "status",
+        "automation",
+        "entries",
+        "edits",
+        "submission"
+      ],
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "submitted" } }, "required": ["status"] },
+          "then": { "properties": { "submission": { "$ref": "#/$defs/submission" } } },
+          "else": { "properties": { "submission": { "type": "null" } } }
+        }
+      ]
+    }
+  }
+}
