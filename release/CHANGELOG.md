@@ -1,10 +1,10 @@
 # Threadify Workflows stable releases
 
-## 0.9.0 candidate (not released)
+## 0.9.0
 
 - Adds exact-copy browser review for Day, Week and Month, optional automation controls, durable Submit approval and verified host delivery handoff.
 - Preserves the v0.8.0 workflow catalog, buyer-conversation engine, carousel workflow and current onboarding.
-- Keeps release intent disabled pending owner approval; no live scheduling or deployment is implied.
+- Published through the owner-approved release process; no live content scheduling or app deployment is implied.
 
 ## 0.8.0
 

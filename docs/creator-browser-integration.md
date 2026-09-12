@@ -4,4 +4,4 @@ The CLI routes `creator` commands to `lib/creator/cli.mjs`. Browser commands per
 
 The manifest registry selects creator skills. `build-creator-bundles.mjs` copies the shared engine, browser assets and references into those skills. Release builders include these generated bundles alongside the newer conversation and carousel workflows.
 
-This integration carries the reviewed editor onto the v0.8.0 baseline without replacing its registry, catalog, buyer workflows or onboarding. The next candidate is v0.9.0; release intent stays disabled. Existing private review state is not migrated, submitted or delivered by this change. Old proposed times require a fresh review before live delivery.
+This integration carries the reviewed editor onto the v0.8.0 baseline without replacing its registry, catalog, buyer workflows or onboarding. The v0.9.0 release was explicitly approved by the owner. Existing private review state is not migrated, submitted or delivered by this change. Old proposed times require a fresh review before live delivery.
