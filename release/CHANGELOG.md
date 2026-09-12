@@ -1,5 +1,11 @@
 # Threadify Workflows stable releases
 
+## 0.9.0
+
+- Adds exact-copy browser review for Day, Week and Month, optional automation controls, durable Submit approval and verified host delivery handoff.
+- Preserves the v0.8.0 workflow catalog, buyer-conversation engine, carousel workflow and current onboarding.
+- Published through the owner-approved release process; no live content scheduling or app deployment is implied.
+
 ## 0.8.0
 
 - Makes Your Next Moves the starting point for offer-led buyer conversations, with local preparation before an optional account connection.

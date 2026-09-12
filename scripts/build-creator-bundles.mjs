@@ -9,13 +9,15 @@ const names = listWorkflows(registry, { kind: 'skill', bundle: 'creator' })
   .map((workflow) => workflow.skill_name);
 const engine = fs.readdirSync(path.join(root, 'lib/creator')).filter((f) => f.endsWith('.mjs')).sort();
 const expected = new Map(engine.map((name) => [`scripts/engine/${name}`, fs.readFileSync(path.join(root, 'lib/creator', name))]));
-for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
+for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md', 'creator-browser-review.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
+for (const name of ['index.html', 'review.css', 'review.js']) expected.set(`scripts/engine/browser/${name}`, fs.readFileSync(path.join(root, 'lib/creator/browser', name)));
+expected.set('references/creator-browser.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-browser.v1.json')));
 expected.set('references/creator-records.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-records.v1.json')));
 expected.set('references/creator-lifecycle.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-lifecycle.v1.json')));
 expected.set('scripts/creator.mjs', Buffer.from("import { creatorMain } from './engine/cli.mjs';\ncreatorMain(process.argv.slice(2)).catch((error) => { process.stderr.write(JSON.stringify({ status: 'failed', error: error.message }) + '\\n'); process.exitCode = 1; });\n"));
 const failures = [];
 const allowedFiles = new Set(['SKILL.md', ...expected.keys()]);
-const allowedDirectories = new Set(['', 'scripts', 'scripts/engine', 'references']);
+const allowedDirectories = new Set(['', 'scripts', 'scripts/engine', 'scripts/engine/browser', 'references']);
 
 // Audit every destination before writing any bundle. Never follow links or
 // silently retain extra material that would become part of a public package.

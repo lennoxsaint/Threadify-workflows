@@ -1,5 +1,7 @@
 # Threadify Workflows
 
+Day, Week and Month include a private [browser review editor](docs/creator-browser-review.md). Edit exact text, review every prepared post, then Submit approval for the active host to validate and schedule.
+
 Threadify Workflows turns an offer and real buyer conversations into small, reviewable next steps. It can prepare the work locally from conversations you supply, so you can get value before connecting an account. Every external action stays tied to the exact item you approved.
 
 The library is MCP ready and works with agent clients including Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes. Local drafting and private review state run with Node 18 or newer on macOS and Linux.

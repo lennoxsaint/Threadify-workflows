@@ -40,6 +40,8 @@ Ground claims, resolve every placeholder and check source availability. For evid
 
 ## Review and deliver
 
+For Day, Week and Month on a host with local Node and an in-app browser, use the [browser review protocol](creator-browser-review.md) by default. It presents editable Threads-style cards and one final Submit for the prepared posts. Keep the host active to receive the submitted intent and continue exact-content delivery. Without those capabilities, retain the conversation review below and name the unavailable browser surface; never pretend the editor opened.
+
 After `add-review`, run fresh checks and persist their exact-card evidence with `record-validation`. Use `kind: local` for disconnected checks, never a fabricated provider result. Connected checks use `kind: threadify` with the matching editable draft and actual `validate_post` evidence. A failed check names its issues and returns only that card to draft, revoking its approval. Fix it before proceeding. A passing check is validated, not owner-approved. Retain validation history and refresh it again before delivery.
 
 `display` returns the full daily batch by default; individual cards are optional. Present exact copy/media, source links, adaptation mode, meaningful gaps, account, timezone and times. Keep technical evidence expandable but available. Approval applies only to the displayed version. Record exact approval with `approve`; do not infer approval from silence or a reminder.
