@@ -710,6 +710,85 @@
       ]
     },
     {
+      "workflow_id": "inbound-replies",
+      "version": "0.2.0",
+      "title": "Threadify Inbound Replies",
+      "summary": "Review Threads inbound grouped beneath its source post, preserve exact edits locally, and use only a currently advertised Threadify delivery capability for an explicitly approved reply set.",
+      "kind": "skill",
+      "skill_name": "threadify-inbound-replies",
+      "entrypoint": "skills/threadify-inbound-replies/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-inbound-replies/SKILL.md",
+      "source_manifest": "workflows/inbound-replies/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "workflows/inbound-replies/CONTRACT.md",
+            "target": "references/inbound-contract.md"
+          },
+          {
+            "source": "tools/inbound/cli.mjs",
+            "target": "scripts/cli.mjs"
+          },
+          {
+            "source": "tools/inbound/store.mjs",
+            "target": "scripts/store.mjs"
+          },
+          {
+            "source": "tools/inbound/server.mjs",
+            "target": "scripts/server.mjs"
+          },
+          {
+            "source": "tools/inbound/app.js",
+            "target": "scripts/app.js"
+          },
+          {
+            "source": "tools/inbound/index.html",
+            "target": "scripts/index.html"
+          },
+          {
+            "source": "tools/inbound/style.css",
+            "target": "scripts/style.css"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/inbound-replies/README.md",
+          "workflows/inbound-replies/CONTRACT.md"
+        ]
+      },
+      "triggers": [
+        "review my Threads reply backlog",
+        "use Threadify inbound replies"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "bounded Threads inbound timeframe",
+            "schema_ref": "inline:inbound-timeframe"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private grouped reply review receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "hermes",
+        "gemini",
+        "openclaw"
+      ]
+    },
+    {
       "workflow_id": "offer-builder",
       "version": "0.1.0",
       "title": "Threadify Offer Builder",

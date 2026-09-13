@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Local-first buyer-conversation workflows, agent discovery, and optional approved Threadify services.",
   "license": "MIT",
   "type": "module",

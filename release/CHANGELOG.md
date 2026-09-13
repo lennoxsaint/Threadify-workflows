@@ -1,5 +1,12 @@
 # Threadify Workflows stable releases
 
+## 0.10.0
+
+- Adds Inbound Replies to the public workflow catalog with grouped post context, exact local editing and approval, deferral and suppression, and private resumable state.
+- Ships the complete local UI and CLI inside the installed skill, including paths with spaces and fresh-install execution.
+- Discovers current Threadify read, draft and delivery capabilities through the dispatcher; unavailable capabilities remain explicit and no historical tool name is treated as live authority.
+- Preserves idempotent delivery preparation, ambiguous-outcome reconciliation and body-free public receipts. This release does not send a live reply or deploy Threadify application code.
+
 ## 0.9.0
 
 - Adds exact-copy browser review for Day, Week and Month, optional automation controls, durable Submit approval and verified host delivery handoff.

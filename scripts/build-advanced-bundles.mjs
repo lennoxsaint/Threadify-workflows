@@ -25,6 +25,14 @@ for (const workflow of workflows) {
   const source = path.dirname(path.join(root, workflow.source_entrypoint));
   let skill = fs.readFileSync(path.join(source, 'SKILL.md'), 'utf8');
   for (const [relative, content] of collectSourceFiles(source)) expected.set(`${name}/${relative}`, content);
+  for (const reference of workflow.bundle.standalone ? [] : (workflow.bundle.references ?? [])) {
+    const relative = `${name}/${reference.target}`;
+    const content = fs.readFileSync(path.join(root, reference.source));
+    if (expected.has(relative) && !expected.get(relative).equals(content)) {
+      throw new Error(`Conflicting advanced bundle target: ${relative}`);
+    }
+    expected.set(relative, content);
+  }
   if (!/^---\r?\n/.test(skill)) {
     const paragraph = skill.split(/\r?\n\r?\n/).find((text) =>
       text.trim() && !text.startsWith('#') && !text.startsWith('Ask:') &&

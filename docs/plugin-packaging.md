@@ -1,8 +1,8 @@
 # Plugin packaging
 
-## Current 0.8.0 package
+## Current 0.10.0 package
 
-The root plugin discovers the runnable catalog generated from canonical workflow manifests. A fresh install selects the full catalog. Existing client selections stay unchanged when an upgrade omits `--workflows`; `threadify-workflows install --workflows all` is the explicit full-catalog migration.
+The root plugin discovers the runnable catalog generated from canonical workflow manifests. A fresh install selects the full catalog, including Inbound Replies. Existing client selections stay unchanged when an upgrade omits `--workflows`; `threadify-workflows install --workflows all` is the explicit full-catalog migration.
 
 The recommended starter is Your Next Moves. It calls Offer Builder when no confirmed offer exists, then returns to the supplied conversation review. The five buyer skills share the local conversation engine and keep their private state outside plugin and release archives.
 

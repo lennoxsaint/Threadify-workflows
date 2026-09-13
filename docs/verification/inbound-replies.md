@@ -1,10 +1,10 @@
 # Inbound Replies verification
 
-Implementation checked on 2026-09-10. This is a local implementation receipt, not public release or live-send proof.
+Implementation rechecked on 2026-09-13. This is local implementation evidence; public release and live-send status require separate readback.
 
-- Repository manifest/redaction validation: eight workflows.
-- All 30 Node tests pass. They cover the state interface, fresh-directory CLI execution, exact text/revision handling, grouped identity, coverage, account isolation, deferral and suppression, send attempts, partial failures, feedback and loopback protection.
-- Browser exercise: 120 synthetic comments, five/all mode, grouped post context across rounds, autosave/approve/reload, desktop 1280×1000 and mobile 390×844, no horizontal overflow, keyboard focus and no browser console errors.
+- Repository validation: 22 workflows and 463 public files.
+- All 30 Inbound Node tests and the full repository suite pass. They cover the state interface, isolated installed-skill execution, paths with spaces, exact text/revision handling, grouped identity, coverage, account isolation, deferral and suppression, prepared delivery attempts, partial failures, feedback and loopback protection.
+- The 2026-09-10 browser exercise covered 120 synthetic comments, five/all mode, grouped post context across rounds, autosave/approve/reload, desktop 1280×1000 and mobile 390×844, no horizontal overflow, keyboard focus and no browser console errors. It was not rerun on 2026-09-13 because Playwright was not installed on the release host.
 - Untrusted comment markup was rendered as text, not executed.
 - Current Threadify connection and one live comment read succeeded. No live reply or live feedback was sent as part of verification. Provider send behavior remains unverified by this implementation run.
 
