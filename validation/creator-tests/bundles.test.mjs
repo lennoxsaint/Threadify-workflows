@@ -11,7 +11,7 @@ test('bundle check and build reject unknown files and symlinks without overwriti
   const temp = await mkdtemp(path.join(os.tmpdir(), 'creator-bundle-audit-'));
   t.after(() => rm(temp, { recursive: true, force: true }));
   for (const directory of [
-    'scripts', 'lib', 'docs', 'skills', 'schemas', 'workflows', 'plugins', 'public-rules', 'release',
+    'scripts', 'lib', 'docs', 'skills', 'schemas', 'workflows', 'plugins', 'public-rules', 'release', 'tools',
   ]) {
     await cp(path.join(root, directory), path.join(temp, directory), { recursive: true });
   }
