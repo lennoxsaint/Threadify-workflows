@@ -1,5 +1,13 @@
 # Threadify Workflows stable releases
 
+## 0.11.0 (candidate)
+
+- Adds Find Your Niche, a read-only workflow that analyzes bounded owned Threads posts, audience comments and creator replies.
+- Produces one recommended niche, one ideal-client avatar and three content pillars as private JSON, Markdown and self-contained HTML.
+- Defaults to 90 days, expands only until 20 owned posts or a 365-day cap, and preserves incomplete coverage and unknown metrics.
+- Keeps engagement separate from purchase intent and performs no draft save, profile edit, reply, schedule or publication.
+- This candidate has not been pushed, released or verified against a live connected Threadify account.
+
 ## 0.10.0
 
 - Adds Inbound Replies to the public workflow catalog with grouped post context, exact local editing and approval, deferral and suppression, and private resumable state.
