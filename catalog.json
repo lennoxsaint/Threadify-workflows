@@ -459,6 +459,70 @@
       ]
     },
     {
+      "workflow_id": "find-your-niche",
+      "version": "0.1.0",
+      "title": "Find Your Niche",
+      "summary": "Use owned Threads posts and conversations to recommend one evidence-backed niche, one ideal-client avatar and a private saveable report.",
+      "kind": "skill",
+      "skill_name": "threadify-find-your-niche",
+      "entrypoint": "skills/threadify-find-your-niche/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-find-your-niche/SKILL.md",
+      "source_manifest": "workflows/find-your-niche/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "workflows/find-your-niche/CONTRACT.md",
+            "target": "references/niche-contract.md"
+          },
+          {
+            "source": "schemas/niche-report.v1.json",
+            "target": "references/niche-report.v1.json"
+          },
+          {
+            "source": "tools/niche-report/cli.mjs",
+            "target": "scripts/cli.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/find-your-niche/README.md",
+          "workflows/find-your-niche/CONTRACT.md",
+          "schemas/niche-report.v1.json"
+        ]
+      },
+      "triggers": [
+        "find my niche from my Threads data",
+        "use my best Threads posts and comments to find my niche"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "bounded owned Threads evidence",
+            "schema_ref": "inline:owned-threads-evidence"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private niche report",
+            "schema_ref": "schemas/niche-report.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "hermes",
+        "gemini",
+        "openclaw"
+      ]
+    },
+    {
       "workflow_id": "follow-through",
       "version": "0.1.0",
       "title": "Follow Through",

@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Local-first buyer-conversation workflows, agent discovery, and optional approved Threadify services.",
   "license": "MIT",
   "type": "module",
@@ -14,10 +14,11 @@
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/catalog.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
-    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:registry && npm run test:conversations",
+    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:registry && npm run test:conversations && npm run test:niche",
     "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs",
     "test:registry": "node --test validation/registry-tests/*.test.mjs",
-    "test:conversations": "node --test validation/conversation-tests/*.test.mjs"
+    "test:conversations": "node --test validation/conversation-tests/*.test.mjs",
+    "test:niche": "node --test validation/niche-tests/*.test.mjs"
   },
   "engines": {
     "node": ">=18"

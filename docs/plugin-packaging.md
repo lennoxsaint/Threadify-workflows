@@ -1,6 +1,10 @@
 # Plugin packaging
 
-## Current 0.10.0 package
+## Current 0.11.0 package
+
+The owner-approved release adds Find Your Niche to the generated full catalog. It bundles a private report renderer and schema, requires no new MCP endpoint, and falls back to an owner-supplied export when connected read capabilities are unavailable. Live connected-account acceptance remains pending.
+
+## Prior 0.10.0 package
 
 The root plugin discovers the runnable catalog generated from canonical workflow manifests. A fresh install selects the full catalog, including Inbound Replies. Existing client selections stay unchanged when an upgrade omits `--workflows`; `threadify-workflows install --workflows all` is the explicit full-catalog migration.
 
