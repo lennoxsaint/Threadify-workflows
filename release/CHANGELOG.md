@@ -1,5 +1,14 @@
 # Threadify Workflows stable releases
 
+## 0.12.0
+
+- Adds Refresh Your Threads Profile, which interviews the creator and combines their current niche with a bounded, priority-ordered set of approved context.
+- Produces exactly three coherent clarity-, authority-, and personality-led bio-and-picture systems for explicit owner selection.
+- Renders private JSON, Markdown, self-contained HTML, a circular small-avatar preview grid, a selected square SVG, and a body-free receipt.
+- Freezes consented image assets by SHA-256, discloses external likeness processing, requires transfer consent, and preserves a no-upload visual fallback.
+- Keeps live profile editing separate from preparation: current UI discovery, exact-account verification, sync/verification review, rollback state, one final confirmation, and readback are required. Ambiguous or mismatched results are never retried blindly.
+- Does not claim that profile copy or imagery causes growth, conversion, or trust, and does not assume an official Threads profile-write API.
+
 ## 0.11.0
 
 - Adds Find Your Niche, a read-only workflow that analyzes bounded owned Threads posts, audience comments and creator replies.

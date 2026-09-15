@@ -774,6 +774,78 @@
       ]
     },
     {
+      "workflow_id": "refresh-your-threads-profile",
+      "version": "0.1.0",
+      "title": "Refresh Your Threads Profile",
+      "summary": "Interview a creator and turn their niche and approved context into three coherent bio-and-profile-picture systems with a safe review-and-apply path.",
+      "kind": "skill",
+      "skill_name": "threadify-refresh-your-threads-profile",
+      "entrypoint": "skills/threadify-refresh-your-threads-profile/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-refresh-your-threads-profile/SKILL.md",
+      "source_manifest": "workflows/refresh-your-threads-profile/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "workflows/refresh-your-threads-profile/CONTRACT.md",
+            "target": "references/profile-contract.md"
+          },
+          {
+            "source": "schemas/profile-plan.v1.json",
+            "target": "references/profile-plan.v1.json"
+          },
+          {
+            "source": "docs/research/threads-profile-bios-and-pictures.md",
+            "target": "references/profile-research.md"
+          },
+          {
+            "source": "tools/profile-plan/cli.mjs",
+            "target": "scripts/cli.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [
+          "find-your-niche"
+        ],
+        "files": [
+          "workflows/refresh-your-threads-profile/README.md",
+          "workflows/refresh-your-threads-profile/CONTRACT.md",
+          "schemas/profile-plan.v1.json",
+          "docs/research/threads-profile-bios-and-pictures.md"
+        ]
+      },
+      "triggers": [
+        "refresh my Threads bio and profile picture",
+        "redesign my Threads profile from my niche",
+        "help me safely apply a new Threads profile"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "interview and approved profile context",
+            "schema_ref": "inline:approved-profile-context"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private profile plan",
+            "schema_ref": "schemas/profile-plan.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "hermes",
+        "gemini",
+        "openclaw"
+      ]
+    },
+    {
       "workflow_id": "inbound-replies",
       "version": "0.2.0",
       "title": "Threadify Inbound Replies",

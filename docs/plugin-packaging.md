@@ -1,6 +1,10 @@
 # Plugin packaging
 
-## Current 0.11.0 package
+## Current 0.12.0 release candidate
+
+The local v0.12.0 candidate adds Refresh Your Threads Profile to the generated full catalog. It bundles an interview-and-context contract, a validated private plan renderer, three fixed profile-system strategies, circular picture previews, image-rights and external-transfer gates, and a manual or safely agent-assisted UI apply path. A profile write still requires current capability discovery, a captured baseline and explicit rollback state, exact-account verification, sync/verification review, one final confirmation, and matching readback. No public v0.12.0 release, connected account update, or causal growth outcome is claimed by local candidate checks.
+
+## Prior 0.11.0 package
 
 The owner-approved release adds Find Your Niche to the generated full catalog. It bundles a private report renderer and schema, requires no new MCP endpoint, and falls back to an owner-supplied export when connected read capabilities are unavailable. Live connected-account acceptance remains pending.
 
