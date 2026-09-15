@@ -11,6 +11,9 @@ test('root plugin focuses on buyer conversations while preserving skill discover
   assert.equal(manifest.mcpServers, './.mcp.json');
   assert.deepEqual(manifest.interface.defaultPrompt, ['Your Next Moves']);
   assert.ok(manifest.interface.shortDescription.length <= 30);
+  const compatibilityManifest = JSON.parse(fs.readFileSync(path.join(root, 'plugins/threadify/.codex-plugin/plugin.json')));
+  assert.equal(compatibilityManifest.name, manifest.name);
+  assert.equal(compatibilityManifest.version, manifest.version);
   const legacy = fs.readdirSync(path.join(root, 'plugins/threadify/skills')).sort();
   const core = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month'];
   assert.deepEqual(fs.readdirSync(path.join(root, 'skills')).sort(), [...legacy, ...core].sort());

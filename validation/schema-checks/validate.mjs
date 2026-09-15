@@ -416,6 +416,9 @@ function validateDurableRuleContracts() {
   assert(releaseIntent?.rules_version === ruleset.rules_version, `${rel(releaseIntentFile)} rules version drift`);
   const plugin = readJson(path.join(root, '.codex-plugin', 'plugin.json'));
   assert(plugin?.version === releaseIntent?.plugin_version, 'Codex plugin version must match release intent');
+  const compatibilityPlugin = readJson(path.join(root, 'plugins', 'threadify', '.codex-plugin', 'plugin.json'));
+  assert(compatibilityPlugin?.name === plugin?.name, 'Threadify compatibility plugin name must match root plugin');
+  assert(compatibilityPlugin?.version === releaseIntent?.plugin_version, 'Threadify compatibility plugin version must match release intent');
 }
 
 const files = walk(root);
