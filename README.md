@@ -68,7 +68,7 @@ The five buyer workflows are:
 - [Buyer Questions to Content](workflows/buyer-questions-to-content/README.md)
 - [Weekly Buyer Outcomes](workflows/weekly-buyer-outcomes/README.md)
 
-The full catalog also includes creator planning, source, offer and approved-delivery workflows. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, and [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
+The full catalog also includes creator planning, source, offer and approved-delivery workflows. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems, and [Choose Your First Offer](workflows/choose-your-first-offer/README.md) compares an intensive, guided lab, and self-serve kit with one fixed scorecard. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
 
 From a source checkout, run the synthetic five-workflow example:
 

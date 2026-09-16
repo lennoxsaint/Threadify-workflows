@@ -1,5 +1,12 @@
 # Threadify Workflows stable releases
 
+## 0.13.0
+
+- Adds Choose Your First Offer, a distinct niche-to-offer decision workflow for creators choosing between an intensive, guided lab, and self-serve kit.
+- Uses one fixed scorecard across all three models: audience-evidence fit, speed to a valid signal, credible deliverability now, fulfillment simplicity, and scalability.
+- Produces a ranked decision, Proof Loop Map, inactive validation page, and body-free receipt without creating an offer record or publishing anything.
+- Preserves incomplete evidence as a constraint-led hypothesis and keeps engagement separate from demand, sales, conversion, product-market fit, and virality.
+
 ## 0.12.0
 
 - Adds Refresh Your Threads Profile, which interviews the creator and combines their current niche with a bounded, priority-ordered set of approved context.
