@@ -6,6 +6,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | --- | --- | --- | --- | --- |
 | Agree the Next Step (`agree-next-step`) | skill | `threadify-agree-next-step` | conversation | agree the next step with this buyer; prepare one clear next step from this conversation |
 | Buyer Questions to Content (`buyer-questions-to-content`) | skill | `threadify-buyer-questions-to-content` | conversation | turn buyer questions into content; draft a post from these deidentified questions |
+| Choose Your First Offer (`choose-your-first-offer`) | skill | `threadify-choose-your-first-offer` | advanced | choose my first offer; compare an intensive, cohort, and digital product; what should I sell first |
 | Content Brain Repair (`content-brain-repair`) | skill | `threadify-content-brain-repair` | advanced | repair my Content Brain; compare content before and after a Brain repair |
 | Create My Day (`create-my-day`) | skill | `threadify-create-my-day` | creator | create my day; prepare today's Threads posts |
 | Create My Month (`create-my-month`) | skill | `threadify-create-my-month` | creator | create my month; plan four weeks of Threads content |

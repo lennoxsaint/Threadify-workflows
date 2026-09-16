@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.12.0",
-  "skill_version": "0.4.0",
-  "plugin_version": "0.12.0",
+  "release_version": "0.13.0",
+  "skill_version": "0.5.0",
+  "plugin_version": "0.13.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "v0.12.0 adds a private interview-to-profile workflow with three coherent Threads bio and picture systems, consented visual handling, and a confirmed UI apply/readback path."
+  "summary": "v0.13.0 adds Choose Your First Offer: a fixed three-model scorecard, Proof Loop Map, and inactive validation page that choose what to test without claiming demand."
 }
