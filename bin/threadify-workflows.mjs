@@ -74,6 +74,11 @@ async function main() {
     await conversationMain(process.argv.slice(3));
     return;
   }
+  if (process.argv[2] === 'lead-desk') {
+    const { leadDeskMain } = await import('../lib/lead-desk-cli.mjs');
+    await leadDeskMain(process.argv.slice(3));
+    return;
+  }
   if (['list', 'describe', 'doctor'].includes(process.argv[2])) {
     const { discoveryCommand } = await import('../lib/discovery.mjs');
     process.stdout.write(`${JSON.stringify(await discoveryCommand(process.argv.slice(2)), null, 2)}\n`);

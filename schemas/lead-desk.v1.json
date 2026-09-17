@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/lead-desk.v1.json",
+  "title": "Anti-Spam Lead Desk v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "workflow_id", "status", "route", "cards", "external_effects"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "workflow_id": { "const": "anti-spam-lead-desk" },
+    "status": { "enum": ["review_ready", "action_draft_required", "cold_research_required", "no_qualified_candidate"] },
+    "route": { "enum": ["warm_inbound", "cold_research"] },
+    "cards": { "type": "array", "maxItems": 5 },
+    "external_effects": {
+      "type": "object",
+      "properties": {
+        "searched": { "const": false },
+        "messaged": { "const": false },
+        "scheduled": { "const": false },
+        "sent": { "const": false }
+      },
+      "required": ["searched", "messaged", "scheduled", "sent"]
+    }
+  }
+}

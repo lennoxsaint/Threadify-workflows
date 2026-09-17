@@ -5,6 +5,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Workflow | Type | Skill or recipe | Bundle | Triggers |
 | --- | --- | --- | --- | --- |
 | Agree the Next Step (`agree-next-step`) | skill | `threadify-agree-next-step` | conversation | agree the next step with this buyer; prepare one clear next step from this conversation |
+| Anti-Spam Lead Desk (`anti-spam-lead-desk`) | skill | `threadify-anti-spam-lead-desk` | conversation | review my warm Threads comments; build an anti-spam lead desk |
 | Buyer Questions to Content (`buyer-questions-to-content`) | skill | `threadify-buyer-questions-to-content` | conversation | turn buyer questions into content; draft a post from these deidentified questions |
 | Choose Your First Offer (`choose-your-first-offer`) | skill | `threadify-choose-your-first-offer` | advanced | choose my first offer; compare an intensive, cohort, and digital product; what should I sell first |
 | Content Brain Repair (`content-brain-repair`) | skill | `threadify-content-brain-repair` | advanced | repair my Content Brain; compare content before and after a Brain repair |

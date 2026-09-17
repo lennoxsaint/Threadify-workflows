@@ -1,5 +1,12 @@
 # Threadify Workflows stable releases
 
+## 0.14.0
+
+- Adds Anti-Spam Lead Desk: a bounded five-card classifier for current public Threads evidence.
+- Uses a verified-account/comment-read gate for warm owned-post comments, with current public browser profile inspection and an explicit Qualified Buyer Research fallback.
+- Produces local JSON, Markdown and self-contained HTML plus at most one unsent useful public-reply draft.
+- Does not scrape, automate research, DM, schedule, send, or claim leads, bookings, sales, or revenue.
+
 ## 0.13.0
 
 - Adds Choose Your First Offer, a distinct niche-to-offer decision workflow for creators choosing between an intensive, guided lab, and self-serve kit.

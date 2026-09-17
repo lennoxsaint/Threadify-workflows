@@ -1,0 +1,51 @@
+{
+  "workflow_id": "anti-spam-lead-desk",
+  "version": "0.1.0",
+  "title": "Anti-Spam Lead Desk",
+  "summary": "Read a small set of owned-post comments, inspect current public profile context, classify up to five candidates, and prepare one unsent useful reply.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-anti-spam-lead-desk",
+    "source": "plugins/threadify/skills/threadify-anti-spam-lead-desk/SKILL.md"
+  },
+  "bundle": {
+    "kind": "conversation",
+    "standalone": false,
+    "references": [{
+      "source": "workflows/anti-spam-lead-desk/chatgpt-template.md",
+      "target": "references/chatgpt-template.md"
+    }]
+  },
+  "dependencies": {
+    "workflows": ["qualified-buyer-research", "your-next-moves", "agree-next-step"],
+    "files": [
+      "workflows/anti-spam-lead-desk/README.md",
+      "workflows/anti-spam-lead-desk/chatgpt-template.md",
+      "schemas/lead-desk.v1.json"
+    ]
+  },
+  "triggers": ["review my warm Threads comments", "build an anti-spam lead desk"],
+  "io": {
+    "inputs": [{ "name": "verified account, confirmed offer, and current public evidence", "schema_ref": "schemas/lead-desk.v1.json" }],
+    "outputs": [{ "name": "five-card lead desk and one unsent review action", "schema_ref": "schemas/lead-desk.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools"],
+  "free_capabilities": ["bounded comment triage", "current-public-profile inspection", "cold-research handoff", "five-card local artifact", "one unsent action draft"],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["current source and profile URLs", "inspection timestamps", "qualification lane", "exact draft text", "destination", "evidence limitations"]
+  },
+  "fallback": {
+    "mode": "manual-action-review",
+    "artifact_schema": "lead-desk.v1",
+    "instructions": ["If a comment-read capability is unavailable, do not pretend it ran. Use the cold research route only with current public browser evidence, or return no qualified candidate.", "Never send, schedule, scrape, or create a private-contact action from this workflow."]
+  },
+  "receipt": {
+    "schema": "lead-desk.v1",
+    "must_prove": ["route", "bounded cards", "current source and profile inspection", "one draft or no action", "no external effects", "fallback state"]
+  }
+}
