@@ -29,6 +29,8 @@ test('three lanes render and exact final text persists across review instances',
     assert.match(source.html, /Research <span>1<\/span>/);
     assert.match(source.html, /Reject <span>1<\/span>/);
     assert.match(source.html, /Mark Final for Review/);
+    assert.match(source.html, /body\{width:100%;overflow-wrap:anywhere\}/);
+    assert.match(source.html, /grid-template-columns:minmax\(0,1fr\)/);
     assert.match(source.html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
     assert.doesNotMatch(source.html, /<script>alert\(1\)<\/script>/);
     review.initialize(source);
