@@ -50,6 +50,9 @@ Usage:
   threadify-workflows describe <workflow-id> [--json]
   threadify-workflows doctor [--json]
   threadify-workflows conversations <command> --state <private-directory>
+  threadify-workflows lead-desk < input.json
+  threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
+  threadify-workflows lead-desk status --state /absolute/review.json
 
 The updater installs only validated GitHub stable releases. It never updates unrelated skills.
 `;

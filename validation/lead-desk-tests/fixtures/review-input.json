@@ -1,0 +1,30 @@
+{
+  "as_of": "2026-09-17T08:00:00Z",
+  "account": { "label": "@example", "verified": true, "comment_read_tool": "synthetic_fixture" },
+  "offer": { "id": "synthetic-offer", "statement": "Help with a fictional content workflow.", "confirmed": true },
+  "route": "warm_inbound",
+  "signals": [
+    {
+      "id": "fictional-ready",
+      "source": { "url": "https://www.threads.com/@example/post/fictional-ready", "text": "Could you help me decide what to reply to this buyer question?", "observed_at": "2026-09-17T07:58:00Z", "safe_to_show": true },
+      "profile": { "url": "https://www.threads.com/@example", "inspected_at": "2026-09-17T07:59:00Z", "public_context_complete": true },
+      "evidence": { "authored_problem": true, "offer_relevant": true, "explicit_interest": true, "supporting_signal": true },
+      "review_note": "Synthetic fixture - useful public answer, not buyer qualification.",
+      "suggested_action": { "type": "public_reply", "destination": "https://www.threads.com/@example/post/fictional-ready", "exact_text": "What did they ask, and what would help them take one useful step?" }
+    },
+    {
+      "id": "fictional-research",
+      "source": { "url": "https://www.threads.com/@example/post/fictional-research", "text": "I keep getting the same question from readers.", "observed_at": "2026-09-17T07:58:00Z", "safe_to_show": true },
+      "profile": { "url": "https://www.threads.com/@example", "inspected_at": "2026-09-17T07:59:00Z", "public_context_complete": true },
+      "evidence": { "authored_problem": true, "offer_relevant": true, "explicit_interest": false, "supporting_signal": true },
+      "review_note": "Synthetic fixture - no direct request yet."
+    },
+    {
+      "id": "fictional-reject",
+      "source": { "url": "https://www.threads.com/@example/post/fictional-reject", "text": "Nice post!", "observed_at": "2026-09-17T07:58:00Z", "safe_to_show": true },
+      "profile": { "url": "https://www.threads.com/@example", "inspected_at": "2026-09-17T07:59:00Z", "public_context_complete": true },
+      "evidence": { "authored_problem": false, "offer_relevant": false, "explicit_interest": false, "supporting_signal": false },
+      "review_note": "Synthetic fixture - generic praise is not a lead."
+    }
+  ]
+}

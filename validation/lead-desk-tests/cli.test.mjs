@@ -14,7 +14,7 @@ test('lead-desk CLI accepts JSON on stdin and reports no external effects', () =
       source: { kind: 'public_browser', url: 'https://www.threads.com/@candidate/post/1', observed_at: '2026-09-17T07:58:00Z', safe_to_show: true },
       profile: { url: 'https://www.threads.com/@candidate', inspected_at: '2026-09-17T07:59:00Z', public_context_complete: true },
       evidence: { authored_problem: true, offer_relevant: true, supporting_signal: true },
-      suggested_action: { type: 'public_reply', destination: 'threads_public', exact_text: 'I can share a one-step checklist if useful.' },
+      suggested_action: { type: 'public_reply', destination: 'https://www.threads.com/@candidate/post/1', exact_text: 'I can share a one-step checklist if useful.' },
     }],
   };
   const result = spawnSync(process.execPath, ['bin/threadify-workflows.mjs', 'lead-desk'], {

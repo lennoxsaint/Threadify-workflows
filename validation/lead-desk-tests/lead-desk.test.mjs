@@ -22,7 +22,7 @@ function signal(id, overrides = {}) {
 
 test('Lead Desk classifies a bounded warm-comment set and exposes one unsent review action', () => {
   const desk = buildLeadDesk({ ...base, signals: [
-    signal('ready', { evidence: { authored_problem: true, offer_relevant: true, explicit_interest: true, supporting_signal: true }, suggested_action: { type: 'public_reply', destination: 'threads_public', exact_text: 'I can share the one-step checklist I use for this.' } }),
+    signal('ready', { evidence: { authored_problem: true, offer_relevant: true, explicit_interest: true, supporting_signal: true }, suggested_action: { type: 'public_reply', destination: 'https://www.threads.com/@reader/post/ready', exact_text: 'I can share the one-step checklist I use for this.' } }),
     signal('research'),
     signal('seller', { evidence: { authored_problem: true, offer_relevant: true, explicit_interest: true, supporting_signal: true, seller_funnel: true } }),
   ] });
@@ -32,7 +32,7 @@ test('Lead Desk classifies a bounded warm-comment set and exposes one unsent rev
     ['ready', 'ready'], ['research', 'research'], ['seller', 'reject'],
   ]);
   assert.deepEqual(desk.review_action, {
-    signal_id: 'ready', type: 'public_reply', destination: 'threads_public',
+    signal_id: 'ready', type: 'public_reply', destination: 'https://www.threads.com/@reader/post/ready',
     exact_text: 'I can share the one-step checklist I use for this.', state: 'draft', send_performed: false,
   });
   assert.match(desk.markdown, /Ready/);
@@ -53,4 +53,14 @@ test('Lead Desk fails closed on unverified sources, unsafe content, and more tha
   assert.throws(() => buildLeadDesk({ ...base, signals: [signal('unsafe', { source: { kind: 'owned_thread_comment', url: 'https://www.threads.com/@reader/post/unsafe', observed_at: '2026-09-17T07:58:00Z', safe_to_show: false } })] }), /safe_to_show/);
   assert.throws(() => buildLeadDesk({ ...base, signals: Array.from({ length: 6 }, (_, index) => signal(`signal-${index}`)) }), /at most five/);
   assert.throws(() => buildLeadDesk({ ...base, account: { ...base.account, verified: false }, signals: [] }), /verified account/);
+});
+
+test('already-replied comments cannot become Ready or create a send draft', () => {
+  const desk = buildLeadDesk({ ...base, signals: [signal('answered', {
+    evidence: { authored_problem: true, offer_relevant: true, explicit_interest: true, supporting_signal: true, owner_already_replied: true },
+    suggested_action: { type: 'public_reply', destination: 'https://www.threads.com/@reader/post/answered', exact_text: 'Do not send this twice.' },
+  })] });
+  assert.equal(desk.cards[0].lane, 'reject');
+  assert.equal(desk.cards[0].reinspection_state, 'current_public_context_verified');
+  assert.equal(desk.review_action, null);
 });

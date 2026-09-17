@@ -57,9 +57,9 @@
     },
     {
       "workflow_id": "anti-spam-lead-desk",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Anti-Spam Lead Desk",
-      "summary": "Read a small set of owned-post comments, inspect current public profile context, classify up to five candidates, and prepare one unsent useful reply.",
+      "summary": "Review bounded owned-post comments, classify up to five candidates across three lanes, and persist one exact public-reply draft for owner review.",
       "kind": "skill",
       "skill_name": "threadify-anti-spam-lead-desk",
       "entrypoint": "skills/threadify-anti-spam-lead-desk/SKILL.md",
