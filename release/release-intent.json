@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.14.0",
-  "skill_version": "0.5.0",
-  "plugin_version": "0.14.0",
+  "release_version": "0.14.1",
+  "skill_version": "0.5.1",
+  "plugin_version": "0.14.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "v0.14.0 adds Anti-Spam Lead Desk: bounded current-public evidence, warm-comment triage, cold-research fallback and one unsent review action."
+  "summary": "v0.14.1 adds a three-lane editable Lead Desk page, private exact-text final readback, and a separately verified public-send handoff."
 }

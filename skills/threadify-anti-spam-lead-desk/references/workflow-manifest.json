@@ -1,8 +1,8 @@
 {
   "workflow_id": "anti-spam-lead-desk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Anti-Spam Lead Desk",
-  "summary": "Read a small set of owned-post comments, inspect current public profile context, classify up to five candidates, and prepare one unsent useful reply.",
+  "summary": "Review bounded owned-post comments, classify up to five candidates across three lanes, and persist one exact public-reply draft for owner review.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-anti-spam-lead-desk",
@@ -32,7 +32,7 @@
   "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
   "required_mcp_tools": [],
   "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools"],
-  "free_capabilities": ["bounded comment triage", "current-public-profile inspection", "cold-research handoff", "five-card local artifact", "one unsent action draft"],
+  "free_capabilities": ["bounded comment triage", "current-public-profile inspection", "cold-research handoff", "five-card three-lane HTML review", "private exact-text final readback", "one unsent action draft"],
   "paid_capability_stubs": [],
   "approval_gate": {
     "required": true,

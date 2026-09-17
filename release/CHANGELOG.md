@@ -1,5 +1,12 @@
 # Threadify Workflows stable releases
 
+## 0.14.1
+
+- Adds an editable three-category Anti-Spam Lead Desk page served locally with private, revision-checked exact-text persistence.
+- A final mark records the exact reply and hash for later readback; any edit revokes final status. The page itself never sends.
+- Clarifies bounded two-week scans, coverage limits, already-replied exclusions, and historical filter examples.
+- Live public replies require a separate owner send request, fresh account/target/safety checks, and provider readback.
+
 ## 0.14.0
 
 - Adds Anti-Spam Lead Desk: a bounded five-card classifier for current public Threads evidence.
