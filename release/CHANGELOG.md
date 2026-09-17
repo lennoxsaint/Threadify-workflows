@@ -1,5 +1,9 @@
 # Threadify Workflows stable releases
 
+## 0.14.2
+
+- Fixes horizontal clipping in the Lead Desk review page at narrow mobile widths. Cards, the reply editor and long destination links now wrap within the viewport.
+
 ## 0.14.1
 
 - Adds an editable three-category Anti-Spam Lead Desk page served locally with private, revision-checked exact-text persistence.
