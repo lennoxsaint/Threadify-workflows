@@ -1,5 +1,12 @@
 # Threadify Workflows stable releases
 
+## 0.15.0
+
+- Adds Post This Next, a read-only workflow that evaluates every eligible draft from one verified Threadify account before recommending what to review next.
+- Supports three explicit goals: most useful now, best match to owned engagement patterns, and closest to ready. Comparison mode can show all three without treating pattern fit as a traffic forecast.
+- Uses a portable Jev adapter for typed scoring, abstains to the top two when confidence or separation is weak, and preserves a clearly labelled manual shortlist when Jev is unavailable.
+- Binds evaluations to complete pagination and exact content hashes, rechecks the selected draft before display, keeps artifacts private and performs no draft edit, save, schedule, publish or delete action.
+
 ## 0.14.2
 
 - Fixes horizontal clipping in the Lead Desk review page at narrow mobile widths. Cards, the reply editor and long destination links now wrap within the viewport.

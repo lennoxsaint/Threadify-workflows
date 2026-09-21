@@ -790,6 +790,70 @@
       ]
     },
     {
+      "workflow_id": "post-this-next",
+      "version": "0.1.0",
+      "title": "Post This Next",
+      "summary": "Review every eligible Threadify draft and recommend the next draft to finish for usefulness, owned engagement-pattern fit, or readiness without predicting performance.",
+      "kind": "skill",
+      "skill_name": "threadify-post-this-next",
+      "entrypoint": "skills/threadify-post-this-next/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-post-this-next/SKILL.md",
+      "source_manifest": "workflows/post-this-next/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "schemas/post-this-next.v1.json",
+            "target": "references/post-this-next.v1.json"
+          },
+          {
+            "source": "lib/post-this-next.mjs",
+            "target": "scripts/post-this-next.mjs"
+          },
+          {
+            "source": "lib/post-this-next-cli.mjs",
+            "target": "scripts/post-this-next-cli.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/post-this-next/README.md",
+          "schemas/post-this-next.v1.json"
+        ]
+      },
+      "triggers": [
+        "post this next",
+        "choose my next Threadify draft",
+        "review every draft and tell me what to finish next"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "complete eligible draft snapshot and normalized decision evaluations",
+            "schema_ref": "inline:post-this-next-input-v1"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private advisory draft decision",
+            "schema_ref": "schemas/post-this-next.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "hermes",
+        "gemini",
+        "openclaw"
+      ]
+    },
+    {
       "workflow_id": "qualified-buyer-research",
       "version": "0.4.1",
       "title": "Qualified Buyer Research",

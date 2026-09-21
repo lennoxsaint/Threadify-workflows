@@ -19,6 +19,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Follow Through (`follow-through`) | skill | `threadify-follow-through` | conversation | show what I promised buyers; follow through on dated buyer commitments |
 | Greatest Hits Runway (`greatest-hits-runway`) | skill | `threadify-greatest-hits-runway` | advanced | prepare my greatest hits runway; review a seven-day runway of proven posts |
 | Personal Brain Sync / Current Self Packet (`personal-brain-sync-current-self`) | skill | `threadify-personal-brain-sync` | advanced | sync my current self to Threadify Brain; review personal context before saving memories |
+| Post This Next (`post-this-next`) | skill | `threadify-post-this-next` | advanced | post this next; choose my next Threadify draft; review every draft and tell me what to finish next |
 | Qualified Buyer Research (`qualified-buyer-research`) | skill | `threadify-qualified-buyer-research` | advanced + standalone | find qualified buyers on Threads; research buyer language and stage one reply |
 | Refresh Your Threads Profile (`refresh-your-threads-profile`) | skill | `threadify-refresh-your-threads-profile` | advanced | refresh my Threads bio and profile picture; redesign my Threads profile from my niche; help me safely apply a new Threads profile |
 | Threadify Inbound Replies (`inbound-replies`) | skill | `threadify-inbound-replies` | advanced | review my Threads reply backlog; use Threadify inbound replies |

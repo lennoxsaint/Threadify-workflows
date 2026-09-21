@@ -26,6 +26,9 @@ const allowedTools = new Set([
   'get_capabilities',
   'get_best_time',
   'list_accounts',
+  'list_drafts',
+  'read_post_performance',
+  'get_audience_demographics',
   'list_dispatcher_tools',
   'call_agent_action',
   'query_brain',
@@ -60,6 +63,10 @@ const allowedTools = new Set([
   'get_auto_reply_status',
   'record_feedback',
   'audit_log',
+  'assess_jev_fit',
+  'evaluate_with_jev',
+  'jev_score',
+  'jev_ask',
 ]);
 
 const disallowedPublicTools = new Set([

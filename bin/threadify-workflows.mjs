@@ -53,6 +53,7 @@ Usage:
   threadify-workflows lead-desk < input.json
   threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
   threadify-workflows lead-desk status --state /absolute/review.json
+  threadify-workflows post-this-next review --input /absolute/input.json --output-dir /absolute/private-directory
 
 The updater installs only validated GitHub stable releases. It never updates unrelated skills.
 `;
@@ -80,6 +81,11 @@ async function main() {
   if (process.argv[2] === 'lead-desk') {
     const { leadDeskMain } = await import('../lib/lead-desk-cli.mjs');
     await leadDeskMain(process.argv.slice(3));
+    return;
+  }
+  if (process.argv[2] === 'post-this-next') {
+    const { postThisNextMain } = await import('../lib/post-this-next-cli.mjs');
+    process.stdout.write(`${JSON.stringify(postThisNextMain(process.argv.slice(3)), null, 2)}\n`);
     return;
   }
   if (['list', 'describe', 'doctor'].includes(process.argv[2])) {
