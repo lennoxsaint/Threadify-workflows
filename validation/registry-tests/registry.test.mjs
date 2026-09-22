@@ -38,6 +38,19 @@ test('catalog records expose install entrypoints and preserve standalone QBR', (
   assert.throws(() => describeWorkflow(registry, 'missing-workflow'), /unknown_workflow/);
 });
 
+test('active catalog replaces Post This Next with Reply First while preserving the archive', () => {
+  const registry = loadWorkflowRegistry({ root });
+  const catalog = buildCatalogDocument(registry);
+  const ids = catalog.workflows.map((workflow) => workflow.workflow_id);
+  const skills = catalog.workflows.map((workflow) => workflow.skill_name).filter(Boolean);
+  assert.ok(ids.includes('reply-first'));
+  assert.ok(skills.includes('threadify-reply-first'));
+  assert.equal(ids.includes('post-this-next'), false);
+  assert.equal(skills.includes('threadify-post-this-next'), false);
+  assert.ok(fs.existsSync(path.join(root, 'archive', 'workflows', 'post-this-next', 'manifest.json')));
+  assert.ok(fs.existsSync(path.join(root, 'archive', 'canonical-skills', 'threadify-post-this-next', 'SKILL.md')));
+});
+
 test('loader discovers a new manifest without a registry list edit', (t) => {
   const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'threadify-registry-'));
   t.after(() => fs.rmSync(fixture, { recursive: true, force: true }));

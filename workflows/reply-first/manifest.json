@@ -1,0 +1,101 @@
+{
+  "workflow_id": "reply-first",
+  "version": "0.1.0",
+  "title": "Reply First",
+  "summary": "Sort recent owned-post comments into a complete private review queue by question type, offer relevance and recency without inferring purchase intent or sending replies.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-reply-first",
+    "source": "plugins/threadify/skills/threadify-reply-first/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "workflows/reply-first/EXPERIMENT.md", "target": "references/EXPERIMENT.md" },
+      { "source": "workflows/reply-first/MEASUREMENTS.json", "target": "references/MEASUREMENTS.json" },
+      { "source": "lib/reply-first.mjs", "target": "scripts/reply-first.mjs" },
+      { "source": "lib/reply-first-cli.mjs", "target": "scripts/reply-first-cli.mjs" },
+      { "source": "lib/reply-first-provider.mjs", "target": "scripts/reply-first-provider.mjs" },
+      { "source": "lib/reply-first-source.mjs", "target": "scripts/reply-first-source.mjs" },
+      { "source": "lib/reply-first-benchmark.mjs", "target": "scripts/reply-first-benchmark.mjs" },
+      { "source": "lib/reply-first-browser.mjs", "target": "scripts/reply-first-browser.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/reply-first/README.md",
+      "workflows/reply-first/EXPERIMENT.md",
+      "workflows/reply-first/MEASUREMENTS.json",
+      "lib/reply-first.mjs",
+      "lib/reply-first-cli.mjs",
+      "lib/reply-first-provider.mjs",
+      "lib/reply-first-source.mjs",
+      "lib/reply-first-benchmark.mjs",
+      "lib/reply-first-browser.mjs"
+    ]
+  },
+  "triggers": [
+    "reply first",
+    "sort my recent Threads comments",
+    "show me which comments need a reply first"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "confirmed account, offer and comments with parent-post context", "schema_ref": "inline:reply-first-input-v1" }
+    ],
+    "outputs": [
+      { "name": "private complete comment review queue and local review page", "schema_ref": "inline:reply-first-result-v1" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "list_comments"],
+  "free_capabilities": [
+    "private file replay",
+    "five fixed comment categories",
+    "separate offer-relevance decision",
+    "complete review queue ordered by category then recency",
+    "compact local review page"
+  ],
+  "paid_capability_stubs": [
+    "live comment retrieval depends on current Threadify connection scopes and entitlement",
+    "Jev evaluation through Vercel AI Gateway depends on the selected privacy route and current provider pricing"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "verified account",
+      "confirmed offer",
+      "comment count and parent-context coverage",
+      "file replay or live retrieval label",
+      "provider and privacy route",
+      "comment, parent-post and offer fields leaving local storage",
+      "bounded live account, date window and item count",
+      "zero-send boundary"
+    ]
+  },
+  "fallback": {
+    "mode": "local-manual-review",
+    "instructions": [
+      "Keep the complete input in private local state.",
+      "If provider access or the selected privacy route is unavailable, leave affected comments as uncertain for human review.",
+      "Do not relabel a manual review as Jev output, a benchmark pass or purchase intent."
+    ]
+  },
+  "receipt": {
+    "schema": "reply-first-result-v1",
+    "must_prove": [
+      "verified account label",
+      "input and rubric hashes",
+      "file replay or live retrieval state",
+      "provider, model and privacy route",
+      "processed, excluded and missing counts",
+      "retry and cache state",
+      "external action count",
+      "fallback state"
+    ]
+  }
+}

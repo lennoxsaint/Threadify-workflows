@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reply First"
+  short_description: "Sort comments before drafting any reply"
+  default_prompt: "Use $threadify-reply-first to sort my recent owned-post comments into a private review queue. Do not draft or send replies."
