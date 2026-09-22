@@ -27,6 +27,7 @@ const allowedTools = new Set([
   'get_best_time',
   'list_accounts',
   'list_drafts',
+  'list_comments',
   'read_post_performance',
   'get_audience_demographics',
   'list_dispatcher_tools',

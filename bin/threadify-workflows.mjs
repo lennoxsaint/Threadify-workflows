@@ -53,7 +53,12 @@ Usage:
   threadify-workflows lead-desk < input.json
   threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
   threadify-workflows lead-desk status --state /absolute/review.json
-  threadify-workflows post-this-next review --input /absolute/input.json --output-dir /absolute/private-directory
+  threadify-workflows reply-first setup
+  threadify-workflows reply-first doctor --privacy zdr|non-zdr
+  threadify-workflows reply-first challenge --fixture /absolute/challenge.json --state /absolute/private-directory --privacy zdr|non-zdr
+  threadify-workflows reply-first run --input /absolute/input.json --state /absolute/private-directory --privacy zdr|non-zdr
+  threadify-workflows reply-first benchmark --input /absolute/input.json --labels /absolute/labels.json --baseline-model MODEL --state /absolute/private-directory --privacy zdr|non-zdr
+  threadify-workflows post-this-next review --input /absolute/input.json --output-dir /absolute/private-directory (deprecated)
 
 The updater installs only validated GitHub stable releases. It never updates unrelated skills.
 `;
@@ -68,6 +73,13 @@ async function resolveConsent(command, options) {
 }
 
 async function main() {
+  if (process.argv[2] === 'reply-first') {
+    const { replyFirstMain } = await import('../lib/reply-first-cli.mjs');
+    const result = await replyFirstMain(process.argv.slice(3));
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (['partial', 'blocked', 'challenge_failed'].includes(result.status)) process.exitCode = 1;
+    return;
+  }
   if (process.argv[2] === 'creator') {
     const { creatorMain } = await import('../lib/creator/cli.mjs');
     await creatorMain(process.argv.slice(3));
@@ -84,6 +96,7 @@ async function main() {
     return;
   }
   if (process.argv[2] === 'post-this-next') {
+    process.stderr.write('Deprecated: Post This Next is no longer installed for new users. The legacy review command remains available; its output is not a validated global draft ranking.\n');
     const { postThisNextMain } = await import('../lib/post-this-next-cli.mjs');
     process.stdout.write(`${JSON.stringify(postThisNextMain(process.argv.slice(3)), null, 2)}\n`);
     return;

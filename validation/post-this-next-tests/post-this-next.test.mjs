@@ -184,13 +184,13 @@ test('the package CLI exposes post-this-next as a stable command', () => {
   assert.equal(fs.existsSync(JSON.parse(run.stdout).result), true);
 });
 
-test('the generated installed skill carries a self-contained runnable CLI', () => {
+test('the archived generated skill preserves its self-contained legacy CLI', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'post-this-next-installed-'));
   const inputFile = path.join(directory, 'input.json');
   const outputDirectory = path.join(directory, 'output');
   fs.writeFileSync(inputFile, `${JSON.stringify(fixture())}\n`, { mode: 0o600 });
   const run = spawnSync(process.execPath, [
-    path.resolve('skills/threadify-post-this-next/scripts/post-this-next-cli.mjs'),
+    path.resolve('archive/generated-skills/threadify-post-this-next/scripts/post-this-next-cli.mjs'),
     'review',
     '--input',
     inputFile,

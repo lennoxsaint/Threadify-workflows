@@ -8,15 +8,20 @@ import { discoveryCommand } from '../../lib/discovery.mjs';
 
 const qbr = 'threadify-qualified-buyer-research';
 const next = 'threadify-your-next-moves';
+const retired = 'threadify-post-this-next';
 const rows = [qbr, next].map((skill_name) => ({ kind: 'skill', skill_name, workflow_id: skill_name.slice(9) }));
 const catalog = { record_type: 'ThreadifyWorkflowCatalogV1', workflows: [...rows, { kind: 'recipe', workflow_id: 'recipe-only' }] };
 
-function fixture(version, modern = true) {
+function fixture(version, modern = true, releaseCatalog = catalog) {
   const contents = { 'skill/SKILL.md': `---\nname: ${qbr}\n---\nLegacy research`,
     'plugin/.codex-plugin/plugin.json': JSON.stringify({ name: 'threadify-workflows', version }) };
   if (modern) {
-    contents['plugin/catalog.json'] = JSON.stringify(catalog);
-    for (const name of [qbr, next]) contents[`plugin/skills/${name}/SKILL.md`] = `---\nname: ${name}\n---\nLocal preparation`;
+    contents['plugin/catalog.json'] = JSON.stringify(releaseCatalog);
+    for (const { skill_name: name } of releaseCatalog.workflows.filter((row) => row.kind === 'skill')) {
+      contents[`plugin/skills/${name}/SKILL.md`] = `---\nname: ${name}\n---\nLocal preparation`;
+    }
+    // A release payload is not install authority. Only catalog membership is.
+    contents[`plugin/skills/${retired}/SKILL.md`] ??= `---\nname: ${retired}\n---\nDeprecated legacy skill`;
   }
   const files = Object.fromEntries(Object.entries(contents).map(([file, value]) => {
     const content = Buffer.from(value);
@@ -39,6 +44,7 @@ test('fresh standalone clients install every catalog skill, excluding recipes', 
   await install({ ...options, targets: 'claude,agents', release: fixture('0.8.0') });
   for (const client of ['.claude', '.agents']) {
     assert.deepEqual(fs.readdirSync(path.join(options.home, client, 'skills')).sort(), [qbr, next].sort());
+    assert.equal(fs.existsSync(path.join(options.home, client, 'skills', retired)), false);
   }
   assert.deepEqual(status(options).workflow_selection, { claude: 'all', agents: 'all' });
 });
@@ -63,6 +69,25 @@ test('legacy selection survives upgrade; explicit all migration and rollback pre
   rollback({ ...options, version: '0.7.0' });
   assert.deepEqual(fs.readdirSync(skills), [qbr]);
   assert.equal(fs.readFileSync(path.join(privateDir, 'proof.json'), 'utf8'), 'private-state');
+});
+
+test('full-catalog upgrade removes the retired managed skill and keeps active skills', async (t) => {
+  const options = isolated(t);
+  const oldCatalog = {
+    ...catalog,
+    workflows: [
+      ...catalog.workflows,
+      { kind: 'skill', skill_name: retired, workflow_id: 'post-this-next' },
+    ],
+  };
+  await install({ ...options, targets: 'claude', release: fixture('0.8.0', true, oldCatalog) });
+  const skills = path.join(options.home, '.claude', 'skills');
+  assert.equal(fs.existsSync(path.join(skills, retired, 'SKILL.md')), true);
+
+  await install({ ...options, release: fixture('0.8.1') });
+  assert.equal(fs.existsSync(path.join(skills, retired)), false);
+  assert.equal(fs.existsSync(path.join(skills, qbr, 'SKILL.md')), true);
+  assert.equal(fs.existsSync(path.join(skills, next, 'SKILL.md')), true);
 });
 
 test('explicit full catalog cannot silently fall back to old standalone assets', async (t) => {

@@ -790,70 +790,6 @@
       ]
     },
     {
-      "workflow_id": "post-this-next",
-      "version": "0.1.0",
-      "title": "Post This Next",
-      "summary": "Review every eligible Threadify draft and recommend the next draft to finish for usefulness, owned engagement-pattern fit, or readiness without predicting performance.",
-      "kind": "skill",
-      "skill_name": "threadify-post-this-next",
-      "entrypoint": "skills/threadify-post-this-next/SKILL.md",
-      "source_entrypoint": "plugins/threadify/skills/threadify-post-this-next/SKILL.md",
-      "source_manifest": "workflows/post-this-next/manifest.json",
-      "bundle": {
-        "kind": "advanced",
-        "standalone": false,
-        "references": [
-          {
-            "source": "schemas/post-this-next.v1.json",
-            "target": "references/post-this-next.v1.json"
-          },
-          {
-            "source": "lib/post-this-next.mjs",
-            "target": "scripts/post-this-next.mjs"
-          },
-          {
-            "source": "lib/post-this-next-cli.mjs",
-            "target": "scripts/post-this-next-cli.mjs"
-          }
-        ]
-      },
-      "dependencies": {
-        "workflows": [],
-        "files": [
-          "workflows/post-this-next/README.md",
-          "schemas/post-this-next.v1.json"
-        ]
-      },
-      "triggers": [
-        "post this next",
-        "choose my next Threadify draft",
-        "review every draft and tell me what to finish next"
-      ],
-      "io": {
-        "inputs": [
-          {
-            "name": "complete eligible draft snapshot and normalized decision evaluations",
-            "schema_ref": "inline:post-this-next-input-v1"
-          }
-        ],
-        "outputs": [
-          {
-            "name": "private advisory draft decision",
-            "schema_ref": "schemas/post-this-next.v1.json"
-          }
-        ]
-      },
-      "supported_adapters": [
-        "generic-mcp",
-        "codex",
-        "claude",
-        "cursor",
-        "hermes",
-        "gemini",
-        "openclaw"
-      ]
-    },
-    {
       "workflow_id": "qualified-buyer-research",
       "version": "0.4.1",
       "title": "Qualified Buyer Research",
@@ -1015,6 +951,97 @@
           {
             "name": "private profile plan",
             "schema_ref": "schemas/profile-plan.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "hermes",
+        "gemini",
+        "openclaw"
+      ]
+    },
+    {
+      "workflow_id": "reply-first",
+      "version": "0.1.0",
+      "title": "Reply First",
+      "summary": "Sort recent owned-post comments into a complete private review queue by question type, offer relevance and recency without inferring purchase intent or sending replies.",
+      "kind": "skill",
+      "skill_name": "threadify-reply-first",
+      "entrypoint": "skills/threadify-reply-first/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-reply-first/SKILL.md",
+      "source_manifest": "workflows/reply-first/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "workflows/reply-first/EXPERIMENT.md",
+            "target": "references/EXPERIMENT.md"
+          },
+          {
+            "source": "workflows/reply-first/MEASUREMENTS.json",
+            "target": "references/MEASUREMENTS.json"
+          },
+          {
+            "source": "lib/reply-first.mjs",
+            "target": "scripts/reply-first.mjs"
+          },
+          {
+            "source": "lib/reply-first-cli.mjs",
+            "target": "scripts/reply-first-cli.mjs"
+          },
+          {
+            "source": "lib/reply-first-provider.mjs",
+            "target": "scripts/reply-first-provider.mjs"
+          },
+          {
+            "source": "lib/reply-first-source.mjs",
+            "target": "scripts/reply-first-source.mjs"
+          },
+          {
+            "source": "lib/reply-first-benchmark.mjs",
+            "target": "scripts/reply-first-benchmark.mjs"
+          },
+          {
+            "source": "lib/reply-first-browser.mjs",
+            "target": "scripts/reply-first-browser.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/reply-first/README.md",
+          "workflows/reply-first/EXPERIMENT.md",
+          "workflows/reply-first/MEASUREMENTS.json",
+          "lib/reply-first.mjs",
+          "lib/reply-first-cli.mjs",
+          "lib/reply-first-provider.mjs",
+          "lib/reply-first-source.mjs",
+          "lib/reply-first-benchmark.mjs",
+          "lib/reply-first-browser.mjs"
+        ]
+      },
+      "triggers": [
+        "reply first",
+        "sort my recent Threads comments",
+        "show me which comments need a reply first"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "confirmed account, offer and comments with parent-post context",
+            "schema_ref": "inline:reply-first-input-v1"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private complete comment review queue and local review page",
+            "schema_ref": "inline:reply-first-result-v1"
           }
         ]
       },
