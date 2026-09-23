@@ -1,5 +1,7 @@
 # Threadify Workflows
 
+The **30-Day Viral Vault** plans six rights-cleared posts per day while showing only the next post to edit, approve, skip or reject. It creates a 30-day slot blueprint, drafts one day at a time, and keeps scheduling behind exact per-card approval and readback. [See the workflow](workflows/30-day-viral-vault/README.md).
+
 Day, Week and Month include a private [browser review editor](docs/creator-browser-review.md). Edit exact text, review every prepared post, then Submit approval for the active host to validate and schedule.
 
 Threadify Workflows turns an offer and real buyer conversations into small, reviewable next steps. It can prepare the work locally from conversations you supply, so you can get value before connecting an account. Every external action stays tied to the exact item you approved.
@@ -57,6 +59,7 @@ List the catalog or inspect one workflow before running it:
 ```sh
 npx --yes github:lennoxsaint/Threadify-workflows list --json
 npx --yes github:lennoxsaint/Threadify-workflows describe your-next-moves --json
+npx --yes github:lennoxsaint/Threadify-workflows describe 30-day-viral-vault --json
 npx --yes github:lennoxsaint/Threadify-workflows doctor --json
 ```
 
@@ -68,7 +71,7 @@ The five buyer workflows are:
 - [Buyer Questions to Content](workflows/buyer-questions-to-content/README.md)
 - [Weekly Buyer Outcomes](workflows/weekly-buyer-outcomes/README.md)
 
-The full catalog also includes creator planning, source, offer and approved-delivery workflows. [Post This Next](workflows/post-this-next/README.md) compares every eligible draft in one verified Threadify account without editing or publishing it. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems, and [Choose Your First Offer](workflows/choose-your-first-offer/README.md) compares an intensive, guided lab, and self-serve kit with one fixed scorecard. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
+The full catalog also includes creator planning, source, offer and approved-delivery workflows. [30-Day Viral Vault](workflows/30-day-viral-vault/README.md) prepares a six-card daily queue with one-card-at-a-time review. [Post This Next](workflows/post-this-next/README.md) compares every eligible draft in one verified Threadify account without editing or publishing it. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems, and [Choose Your First Offer](workflows/choose-your-first-offer/README.md) compares an intensive, guided lab, and self-serve kit with one fixed scorecard. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
 
 From a source checkout, run the synthetic five-workflow example:
 

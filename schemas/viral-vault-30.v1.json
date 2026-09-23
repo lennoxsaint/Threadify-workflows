@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/viral-vault-30.v1.json",
+  "title": "30-Day Viral Vault records",
+  "oneOf": [
+    { "$ref": "#/$defs/plan" },
+    { "$ref": "#/$defs/packet" },
+    { "$ref": "#/$defs/display" }
+  ],
+  "$defs": {
+    "plan": {
+      "type": "object",
+      "required": ["schema_version", "id", "protocol", "preferences", "days"],
+      "properties": {
+        "schema_version": { "const": "viral-vault-30-plan.v1" },
+        "id": { "type": "string", "minLength": 1 },
+        "protocol": { "const": "literal-template-public-v1" },
+        "preferences": {
+          "type": "object",
+          "required": ["account_id", "timezone", "goal", "times"],
+          "properties": {
+            "account_id": { "type": "string", "minLength": 1 },
+            "timezone": { "type": "string", "minLength": 1 },
+            "goal": { "enum": ["reach_first", "balanced", "lead_first"] },
+            "times": { "type": "array", "minItems": 6, "maxItems": 6, "uniqueItems": true, "items": { "type": "string", "pattern": "^(?:[01]\\d|2[0-3]):[0-5]\\d$" } }
+          }
+        },
+        "days": { "type": "array", "minItems": 30, "maxItems": 30 }
+      }
+    },
+    "packet": {
+      "type": "object",
+      "required": ["schema_version", "id", "plan_id", "day", "date", "cards"],
+      "properties": {
+        "schema_version": { "const": "viral-vault-30-packet.v1" },
+        "id": { "type": "string", "minLength": 1 },
+        "plan_id": { "type": "string", "minLength": 1 },
+        "day": { "type": "integer", "minimum": 1, "maximum": 30 },
+        "date": { "type": "string", "format": "date" },
+        "cards": { "type": "array", "minItems": 6, "maxItems": 6 }
+      }
+    },
+    "display": {
+      "type": "object",
+      "required": ["schema_version", "packet_id"],
+      "properties": {
+        "schema_version": { "const": "viral-vault-30-display.v1" },
+        "packet_id": { "type": "string", "minLength": 1 },
+        "position": { "type": "integer", "minimum": 1, "maximum": 6 },
+        "total": { "const": 6 },
+        "display_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import { localClock, resolveLocalTime } from './time.mjs';
 import { createSetup, displaySetup, approveSetup, beginImport, reconcileImport } from './setup.mjs';
 import { createFeedback, prepareFeedbackShare, reconcileFeedbackShare, prepareReminder } from './learning.mjs';
 import { recordOutcome } from './outcomes.mjs';
+import { isViralVaultCommand, runViralVaultCommand } from './viral-vault-30.mjs';
 
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const RESOLVED = new Set(['scheduled', 'published', 'observed', 'reviewed_local']);
@@ -113,6 +114,7 @@ function validateReuse(card, proof, now = proof?.context?.now) {
 }
 
 export async function runCreatorCommand(command, { root, revision, input = {} }) {
+  if (isViralVaultCommand(command)) return runViralVaultCommand(command, { root, revision, input });
   assert(MUTATIONS.has(command) || READS.has(command), 'Unsupported creator command. No publish command exists.');
   let browserSession;
   if (command === 'apply-browser-review') {

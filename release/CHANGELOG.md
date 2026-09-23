@@ -1,5 +1,13 @@
 # Threadify Workflows stable releases
 
+## 0.16.0
+
+- Adds 30-Day Viral Vault: a slot-only 30-day blueprint that prepares the current day's six posts instead of creating 180 drafts upfront.
+- Requires exactly two owned Greatest Hits, two eligible Viral Vault sources and two eligible My Vault sources, with reach-first, balanced and lead-first composition modes.
+- Preserves exact owned reposts and rights-gated literal fill-in templates while blocking missing permission, placeholder coverage, claims evidence or replacement facts.
+- Reveals only the current card and persists edit, approval, skip, rejection, local handoff and idempotent scheduling states; ambiguous delivery blocks retries and never becomes a publication claim.
+- Installs through the existing full catalog for Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes, with a generic MCP-compatible operating contract.
+
 ## 0.15.0
 
 - Adds Post This Next, a read-only workflow that evaluates every eligible draft from one verified Threadify account before recommending what to review next.

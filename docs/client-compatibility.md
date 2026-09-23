@@ -4,6 +4,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 
 | Workflow | claude | codex | cursor | gemini | generic-mcp | hermes | openclaw |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| 30-Day Viral Vault | yes | yes | yes | yes | yes | yes | yes |
 | Agree the Next Step | yes | yes | yes | yes | yes | yes | yes |
 | Anti-Spam Lead Desk | yes | yes | yes | yes | yes | yes | yes |
 | Buyer Questions to Content | yes | yes | yes | yes | yes | yes | yes |

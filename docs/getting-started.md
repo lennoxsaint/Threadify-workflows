@@ -17,6 +17,7 @@ Check what the installed release exposes:
 ```sh
 npx --yes github:lennoxsaint/Threadify-workflows list --json
 npx --yes github:lennoxsaint/Threadify-workflows describe your-next-moves --json
+npx --yes github:lennoxsaint/Threadify-workflows describe 30-day-viral-vault --json
 npx --yes github:lennoxsaint/Threadify-workflows doctor --json
 ```
 
@@ -46,6 +47,16 @@ node examples/conversations/walkthrough.mjs
 
 Its inputs are in `examples/conversations/walkthrough.fixture.json`. The example uses `example.invalid`, creates disposable state, makes no network call and sends nothing.
 
+## Run the 30-Day Viral Vault
+
+Ask the client:
+
+> Set up my 30-day viral vault. Prepare six posts per day, but show me only the next post to review.
+
+The workflow confirms your account, timezone, goal, six daily times, source rights and offer when needed. It creates 30 days of slots but drafts only the current day's six posts. Each day requires two owned Greatest Hits, two eligible Viral Vault sources and two eligible My Vault sources. Literal reuse stops when ownership, license, permission, placeholder coverage or replacement facts are missing.
+
+Use a dedicated private state directory. The installed skill drives the bundled creator engine through the `vault30-*` commands documented in [the creator engine contract](creator-engine.md). Local mode can complete an exact review handoff, but it does not claim a Threadify draft or schedule exists. Connected scheduling still requires fresh validation, exact approval, a persisted idempotent attempt and matching readback.
+
 ## Use the other buyer workflows
 
 - [Agree the Next Step](../workflows/agree-next-step/README.md) binds one proposed message or action to the current evidence and approval.
@@ -63,6 +74,6 @@ Any import, provider save, schedule, publication, reply or send requires the exa
 
 ## Creator and source workflows
 
-The catalog also includes Viral Vault Setup, Create My Day, Create My Week, Create My Month, Offer Builder and advanced approved-delivery workflows. Their existing creator protocol, rolling draft rules and schedule approval gates remain in force. See [creator system](creator-system.md), [creator engine](creator-engine.md) and [Proof Loops catalog](proof-loops-workflows.md).
+The catalog also includes 30-Day Viral Vault, Viral Vault Setup, Create My Day, Create My Week, Create My Month, Offer Builder and advanced approved-delivery workflows. Their existing creator protocol, rolling draft rules and schedule approval gates remain in force. See [creator system](creator-system.md), [creator engine](creator-engine.md) and [Proof Loops catalog](proof-loops-workflows.md).
 
 Local installation and passing tests do not prove native discovery or a provider action. See [packaging status](plugin-packaging.md) for current proof limits.

@@ -4,6 +4,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 
 | Workflow | Type | Skill or recipe | Bundle | Triggers |
 | --- | --- | --- | --- | --- |
+| 30-Day Viral Vault (`30-day-viral-vault`) | skill | `threadify-30-day-viral-vault` | creator | set up my 30-day viral vault; prepare my six daily posts one at a time; show my next Viral Vault post |
 | Agree the Next Step (`agree-next-step`) | skill | `threadify-agree-next-step` | conversation | agree the next step with this buyer; prepare one clear next step from this conversation |
 | Anti-Spam Lead Desk (`anti-spam-lead-desk`) | skill | `threadify-anti-spam-lead-desk` | conversation | review my warm Threads comments; build an anti-spam lead desk |
 | Buyer Questions to Content (`buyer-questions-to-content`) | skill | `threadify-buyer-questions-to-content` | conversation | turn buyer questions into content; draft a post from these deidentified questions |

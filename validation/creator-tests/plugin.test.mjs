@@ -15,7 +15,8 @@ test('root plugin focuses on buyer conversations while preserving skill discover
   assert.equal(compatibilityManifest.name, manifest.name);
   assert.equal(compatibilityManifest.version, manifest.version);
   const legacy = fs.readdirSync(path.join(root, 'plugins/threadify/skills')).sort();
-  const core = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month'];
+  const core = ['threadify-vault-setup', 'threadify-create-my-day', 'threadify-create-my-week', 'threadify-create-my-month',
+    'threadify-30-day-viral-vault'];
   assert.deepEqual(fs.readdirSync(path.join(root, 'skills')).sort(), [...legacy, ...core].sort());
   for (const name of [...legacy, ...core]) {
     const directory = path.join(root, 'skills', name);
