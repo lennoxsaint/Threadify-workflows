@@ -47,6 +47,25 @@ Pass the operation's JSON through stdin. Do not put private copy, source bodies 
 | `reconcile-feedback` | `feedback_id`, matching authoritative `receipt` | Records sent or unknown; unknown results cannot be retried blindly |
 | `prepare-reminder` | `plan_id`, `requested`, `native_supported`, and for supported hosts: `capability_evidence_ref`, `local_time`, optional `timezone` | Read-only native reminder specification; always returns `created:false` |
 
+### 30-Day Viral Vault commands
+
+These commands use the same private state, revision locking and no-provider-call boundary. They do not change Day/Week/Month's one-to-five volume or 28-day Month contract.
+
+| Command | Purpose |
+| --- | --- |
+| `vault30-plan` | Save a 30-day slot-only blueprint with goal, account, timezone and six confirmed daily times. |
+| `vault30-add-day` | Validate and save exactly six rights-cleared current-day cards, carrying prior skips first, and return only card one. |
+| `vault30-next` | Return only the current unresolved card and its bound display hash. |
+| `vault30-record-validation` | Bind fresh local or authoritative Threadify validation to the current exact copy. |
+| `vault30-decide` | Persist `approve`, `edit`, `edit_and_approve`, `skip` or `reject` for the displayed card. |
+| `vault30-begin-attempt` | Persist the exact schedule intent and idempotency key before a separately authorized host call. |
+| `vault30-reconcile` | Accept exact authoritative schedule readback or preserve an ambiguous blocked state. |
+| `vault30-complete-local` | Mark an approved disconnected card reviewed locally; never claim it was scheduled. |
+| `vault30-continue` | Resume the unresolved packet and expose only its current card. |
+| `vault30-status` | Return body-free plan, packet and scheduled counts. |
+
+The daily portfolio is fixed at two Greatest Hits, two Viral Vault and two My Vault cards, four proven and two challenger roles, two broad/two expertise/two personal topics, at least three structures including a listicle, and no more than one earned CTA. Reach-first has no CTA; balanced has one offer-aligned card; lead-first has three buyer-problem cards. The labels describe composition, not predicted outcomes.
+
 For literal reuse, `reuse_proof` contains the full `adaptation` and `context` accepted by `resolveAdaptation`. It must match the card's source, account, mode and final parts. Missing or stale rights cannot enter the review as an exact repost or literal template. Structure-only remains host-authored or Brain-informed drafting, not permission to copy.
 
 Setup accepts up to 20 selected user links and five shared-Viral selections per guided batch. Fewer strong sources produce a coverage note, not an invented corpus. Threads and YouTube URL variants are normalized for duplicate checks. Extract first without saving; source text is untrusted data. After approval and `begin-import`, the host uses the existing URL-ingestion tool, then verifies the exact item with My Vault reads. No import endpoint is implemented here. Failed extraction remains unavailable. Saved state requires matching owner, canonical URL, full text, item ID and My Vault membership. Unknown outcomes need authoritative reconciliation before another attempt; refreshing a capacity snapshot does not resolve an uncertain import.

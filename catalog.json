@@ -3,6 +3,58 @@
   "generated_from": "workflows/*/manifest.json",
   "workflows": [
     {
+      "workflow_id": "30-day-viral-vault",
+      "version": "0.1.0",
+      "title": "30-Day Viral Vault",
+      "summary": "Plan 30 days, prepare six rights-cleared posts daily, and review exactly one post at a time before an approved schedule or local handoff.",
+      "kind": "skill",
+      "skill_name": "threadify-30-day-viral-vault",
+      "entrypoint": "skills/threadify-30-day-viral-vault/SKILL.md",
+      "source_entrypoint": "skills/threadify-30-day-viral-vault/SKILL.md",
+      "source_manifest": "workflows/30-day-viral-vault/manifest.json",
+      "bundle": {
+        "kind": "creator",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/30-day-viral-vault/README.md",
+          "docs/creator-system.md",
+          "docs/creator-engine.md",
+          "schemas/viral-vault-30.v1.json"
+        ]
+      },
+      "triggers": [
+        "set up my 30-day viral vault",
+        "prepare my six daily posts one at a time",
+        "show my next Viral Vault post"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "verified creator setup and six eligible daily sources",
+            "schema_ref": "inline:viral-vault-30-input-v1"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "30-day blueprint and sequential daily review packet",
+            "schema_ref": "schemas/viral-vault-30.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "gemini",
+        "openclaw",
+        "hermes"
+      ]
+    },
+    {
       "workflow_id": "agree-next-step",
       "version": "0.1.0",
       "title": "Agree the Next Step",

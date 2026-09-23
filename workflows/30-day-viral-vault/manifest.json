@@ -1,0 +1,88 @@
+{
+  "workflow_id": "30-day-viral-vault",
+  "version": "0.1.0",
+  "title": "30-Day Viral Vault",
+  "summary": "Plan 30 days, prepare six rights-cleared posts daily, and review exactly one post at a time before an approved schedule or local handoff.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-30-day-viral-vault",
+    "source": "skills/threadify-30-day-viral-vault/SKILL.md"
+  },
+  "bundle": { "kind": "creator", "standalone": false },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/30-day-viral-vault/README.md",
+      "docs/creator-system.md",
+      "docs/creator-engine.md",
+      "schemas/viral-vault-30.v1.json"
+    ]
+  },
+  "triggers": [
+    "set up my 30-day viral vault",
+    "prepare my six daily posts one at a time",
+    "show my next Viral Vault post"
+  ],
+  "io": {
+    "inputs": [{ "name": "verified creator setup and six eligible daily sources", "schema_ref": "inline:viral-vault-30-input-v1" }],
+    "outputs": [{ "name": "30-day blueprint and sequential daily review packet", "schema_ref": "schemas/viral-vault-30.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "gemini", "openclaw", "hermes"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "list_viral_items",
+    "get_viral_item",
+    "list_vault_items",
+    "get_vault_item",
+    "save_draft",
+    "validate_post",
+    "get_best_time",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "free_capabilities": [
+    "local 30-day slot blueprint",
+    "rights-gated literal template resolution",
+    "private one-card-at-a-time review",
+    "durable local approval and recovery state"
+  ],
+  "paid_capability_stubs": [
+    "connected source reads, editable drafts, validation, best-time evidence, and scheduling depend on current Threadify scopes and entitlement"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "verified account and timezone",
+      "current source and rights basis",
+      "literal placeholder mapping",
+      "exact resolved post",
+      "validation state",
+      "exact proposed time and action"
+    ]
+  },
+  "fallback": {
+    "mode": "local-sequential-review",
+    "artifact_schema": "viral-vault-30.v1",
+    "instructions": [
+      "Use user-supplied owned, licensed, or permissioned sources and verified facts.",
+      "Keep the exact current card local and report unavailable provider capabilities.",
+      "Never claim a draft was saved, validated, scheduled, published, viral, or lead-generating without matching evidence."
+    ]
+  },
+  "receipt": {
+    "schema": "viral-vault-30.v1",
+    "must_prove": [
+      "account and timezone",
+      "goal and six confirmed daily times",
+      "two-two-two source portfolio",
+      "source rights and exact copy hash",
+      "one-card display and owner decision",
+      "schedule readback or local fallback state",
+      "fallback state"
+    ]
+  }
+}

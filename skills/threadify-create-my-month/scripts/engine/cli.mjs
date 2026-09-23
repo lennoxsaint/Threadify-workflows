@@ -13,6 +13,8 @@ Writes: plan, refresh-day, add-review, record-validation, approve, edit, begin-a
         setup, approve-setup, begin-import, reconcile-import,
         record-feedback, begin-feedback-share, reconcile-feedback
 Writes require the revision returned by status or the previous command.
+30-Day Viral Vault: vault30-plan, vault30-add-day, vault30-status, vault30-continue, vault30-next,
+        vault30-record-validation, vault30-decide, vault30-begin-attempt, vault30-reconcile, vault30-complete-local
 This engine never calls Threadify or publishes. Persist an attempt before a separately approved host provider call.
 `);
     return;
