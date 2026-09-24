@@ -170,8 +170,10 @@ export function buildCoverage(items, sources) {
     const [platform, formatFamily] = key.split('\u0000');
     let primaryMetric = null;
     let values = [];
+    let availableMetricCount = 0;
     for (const metric of METRIC_PRIORITY) {
       const candidate = group.map((item) => item.metrics[metric]).filter(Number.isInteger);
+      availableMetricCount = Math.max(availableMetricCount, candidate.length);
       if (candidate.length >= 20) { primaryMetric = metric; values = candidate; break; }
     }
     const comparable = primaryMetric !== null;
@@ -184,7 +186,7 @@ export function buildCoverage(items, sources) {
       format_family: formatFamily,
       unique_count: group.length,
       primary_metric: primaryMetric,
-      metric_valid_count: values.length,
+      metric_valid_count: comparable ? values.length : availableMetricCount,
       comparison_status: comparable ? 'comparative' : 'descriptive_only',
       median: round(median(values)),
       top_decile_mean: comparable ? round(mean(sorted.slice(-topCount))) : null,

@@ -98,6 +98,7 @@ test('labels small cohorts descriptive-only and rejects aggregate claims for the
   const result = runForensics(input);
   assert.equal(result.coverage.cohorts[0].comparison_status, 'descriptive_only');
   assert.equal(result.coverage.cohorts[0].primary_metric, null);
+  assert.equal(result.coverage.cohorts[0].metric_valid_count, 12);
   input.finding_candidates[0].evidence_ids = ['aggregate:threads:root_post:views'];
   assert.throws(() => runForensics(input), /finding_unknown_evidence/);
 });
