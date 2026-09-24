@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.16.0",
+  "release_version": "0.17.0",
   "skill_version": "0.7.0",
-  "plugin_version": "0.16.0",
+  "plugin_version": "0.17.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "v0.16.0 adds 30-Day Viral Vault: a rolling six-post daily workflow with rights-gated literal adaptation, one-card review, and exact approved scheduling recovery."
+  "summary": "v0.17.0 adds AI Content Forensics: local-first creator-corpus analysis with platform-separated evidence, a verified ten-post template, optional visuals, and a bounded BYO-key live read path."
 }

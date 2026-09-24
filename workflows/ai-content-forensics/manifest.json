@@ -1,0 +1,90 @@
+{
+  "workflow_id": "ai-content-forensics",
+  "version": "0.1.0",
+  "title": "AI Content Forensics",
+  "summary": "Reverse-engineer an inspectable creator corpus into evidence-linked content rules, copyable templates, and one verified ten-post thread without predicting performance.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-ai-content-forensics",
+    "source": "plugins/threadify/skills/threadify-ai-content-forensics/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "schemas/ai-content-forensics.v1.json", "target": "references/ai-content-forensics.v1.json" },
+      { "source": "lib/ai-content-forensics.mjs", "target": "scripts/ai-content-forensics.mjs" },
+      { "source": "lib/ai-content-forensics-cli.mjs", "target": "scripts/ai-content-forensics-cli.mjs" },
+      { "source": "lib/ai-content-forensics-import.mjs", "target": "scripts/ai-content-forensics-import.mjs" },
+      { "source": "docs/ai-content-forensics-attribution.md", "target": "references/upstream-attribution.md" }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/ai-content-forensics/README.md",
+      "schemas/ai-content-forensics.v1.json",
+      "docs/ai-content-forensics-attribution.md"
+    ]
+  },
+  "triggers": [
+    "run AI Content Forensics",
+    "reverse-engineer this creator's content",
+    "turn this creator corpus into copyable templates"
+  ],
+  "io": {
+    "inputs": [{ "name": "bounded local or connected creator corpus and evidence-linked finding candidates", "schema_ref": "schemas/ai-content-forensics.v1.json" }],
+    "outputs": [{ "name": "constitutions, insight audit, exact ten-post thread, optional visuals, and body-free receipt", "schema_ref": "schemas/ai-content-forensics.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "gemini", "openclaw", "hermes"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_audience_demographics"
+  ],
+  "free_capabilities": [
+    "local JSON, JSONL, or CSV corpus preparation",
+    "platform-separated deterministic coverage and cohort analysis",
+    "evidence-bound constitutions and ten-post thread validation",
+    "body-free receipt and optional local SVG/HTML visuals"
+  ],
+  "paid_capability_stubs": [
+    "connected owned-account reads depend on current Threadify scopes and entitlement",
+    "live multi-platform public collection can use a separately configured host connector such as Scrape Creators with its own account and credits"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "target creator and corpus coverage",
+      "provider, observation time, and source rights",
+      "metric-valid subset and limitations",
+      "seven findings and their evidence IDs",
+      "exact ten-post draft and destination platform",
+      "draft-only and no-causation boundary"
+    ]
+  },
+  "fallback": {
+    "mode": "local-export-analysis",
+    "artifact_schema": "ai-content-forensics.v1",
+    "instructions": [
+      "Ask for an owner-approved local export or bounded URL manifest when connected reads are unavailable.",
+      "Keep incomplete coverage and unavailable metrics explicit; use descriptive analysis when comparative evidence is insufficient.",
+      "Return the complete local draft package without claiming a provider save, schedule, publication, causation, or future result."
+    ]
+  },
+  "receipt": {
+    "schema": "ai-content-forensics.v1",
+    "must_prove": [
+      "creator and destination platform",
+      "providers, coverage, and observation times",
+      "deduped and metric-valid counts",
+      "evidence-linked selected findings",
+      "exact ten-post draft hash",
+      "zero provider writes",
+      "fallback state"
+    ]
+  }
+}
