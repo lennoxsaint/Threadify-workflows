@@ -26,6 +26,12 @@ only the bounded read result and record vendor, endpoint, query, requested limit
 observation time, cache/freshness information, and gaps. An unavailable connector
 routes to local export; it does not weaken the evidence gate.
 
+When the key is stored in 1Password, let the host resolve an `op://` secret
+reference only for the connector process at execution time. Never copy the secret
+value into chat, shell history, an environment file, the normalized packet, logs,
+receipts, or release artifacts. Record only that the auth mode was `byo_key` and
+whether the bounded provider read succeeded.
+
 ## Build the case file
 
 Normalize local JSON, JSONL, or CSV exports with

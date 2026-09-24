@@ -48,6 +48,11 @@
         "returned_count": { "type": "integer", "minimum": 0 },
         "complete": { "type": "boolean" },
         "cache_status": { "type": ["string", "null"] },
+        "endpoint": { "type": ["string", "null"] },
+        "query_scope": { "type": ["string", "null"] },
+        "freshness_status": { "type": ["string", "null"] },
+        "gaps": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "retention_policy": { "type": ["string", "null"] },
         "evidence_ref": { "type": "string", "minLength": 1 }
       },
       "additionalProperties": false

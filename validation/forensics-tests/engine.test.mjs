@@ -71,6 +71,10 @@ test('prepares an exact evidence-bound ten-post package and body-free receipt', 
   assert.equal(result.insight_audit.runner_ups.length, 3);
   assert.equal(result.receipt.provider_writes_performed, false);
   assert.equal(result.receipt.raw_bodies_retained_in_receipt, false);
+  assert.equal(result.receipt.source_receipts.length, 1);
+  assert.equal(result.receipt.source_receipts[0].provider, 'local');
+  assert.match(result.receipt.source_receipts[0].evidence_ref_sha256, /^[0-9a-f]{64}$/);
+  assert.equal('evidence_ref' in result.receipt.source_receipts[0], false);
   assert.equal(JSON.stringify(result.receipt).includes('Specific owned example'), false);
 });
 
@@ -128,6 +132,25 @@ test('rejects ambiguous evidence identities and source coverage drift', () => {
   const tooFewCandidates = packet();
   tooFewCandidates.finding_candidates.pop();
   assert.throws(() => runForensics(tooFewCandidates), /at_least_ten_findings_required/);
+});
+
+test('records bounded BYO-key provenance without retaining a key or raw evidence reference', () => {
+  const input = packet();
+  input.sources[0] = {
+    ...input.sources[0],
+    provider: 'scrape_creators', auth_mode: 'byo_key',
+    endpoint: '/v1/youtube/channel/videos', query_scope: 'one user-selected public channel; limit 24',
+    freshness_status: 'fresh_provider_read', gaps: ['transcripts not requested'],
+    retention_policy: 'raw response discarded after local normalization',
+    evidence_ref: 'provider-read:opaque-request-receipt',
+  };
+  const result = runForensics(input);
+  const receipt = result.receipt.source_receipts[0];
+  assert.equal(receipt.auth_mode, 'byo_key');
+  assert.equal(receipt.endpoint, '/v1/youtube/channel/videos');
+  assert.deepEqual(receipt.gaps, ['transcripts not requested']);
+  assert.equal(JSON.stringify(result).includes('op://'), false);
+  assert.equal(JSON.stringify(result).includes('opaque-request-receipt'), false);
 });
 
 test('writes ten optional SVG and HTML cards with evidence hashes', () => {

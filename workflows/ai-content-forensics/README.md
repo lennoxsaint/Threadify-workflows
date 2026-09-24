@@ -31,7 +31,10 @@ sample from Scrape Creators.
   cap the sample, record vendor/freshness/cache state, and delete or retain raw
   responses according to the user's chosen private storage policy.
 
+If the key lives in 1Password, the host may resolve its `op://` reference only for
+the connector process at execution time. The secret value must never enter a
+packet, argument, log, receipt, environment file, or release artifact.
+
 Do not ingest private messages, customer material, private profiles, demographic
 enrichment, login cookies, or an unbounded audience. Do not redistribute whole
 third-party corpora, transcripts, or media in workflow bundles or public receipts.
-
