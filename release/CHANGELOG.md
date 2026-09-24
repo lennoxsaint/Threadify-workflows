@@ -1,5 +1,13 @@
 # Threadify Workflows stable releases
 
+## 0.17.0
+
+- Adds AI Content Forensics: a local-first workflow for turning an inspectable creator corpus into evidence-linked content rules and copyable templates.
+- Keeps metrics platform- and format-specific, requires 20 unique metric-valid items for comparative claims, and labels every relationship as observed rather than causal or predictive.
+- Produces five constitutions, an insight audit, exactly ten posts with seven `copy this:` templates, a body-free receipt, and optional local SVG/HTML visuals.
+- Supports approved exports and read-only Threadify evidence by default, with an optional bounded Scrape Creators BYO-key adapter that never persists or prints credentials.
+- Installs through the full catalog for Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes while keeping all outputs draft-only.
+
 ## 0.16.0
 
 - Adds 30-Day Viral Vault: a slot-only 30-day blueprint that prepares the current day's six posts instead of creating 180 drafts upfront.

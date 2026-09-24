@@ -55,6 +55,79 @@
       ]
     },
     {
+      "workflow_id": "ai-content-forensics",
+      "version": "0.1.0",
+      "title": "AI Content Forensics",
+      "summary": "Reverse-engineer an inspectable creator corpus into evidence-linked content rules, copyable templates, and one verified ten-post thread without predicting performance.",
+      "kind": "skill",
+      "skill_name": "threadify-ai-content-forensics",
+      "entrypoint": "skills/threadify-ai-content-forensics/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-ai-content-forensics/SKILL.md",
+      "source_manifest": "workflows/ai-content-forensics/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "schemas/ai-content-forensics.v1.json",
+            "target": "references/ai-content-forensics.v1.json"
+          },
+          {
+            "source": "lib/ai-content-forensics.mjs",
+            "target": "scripts/ai-content-forensics.mjs"
+          },
+          {
+            "source": "lib/ai-content-forensics-cli.mjs",
+            "target": "scripts/ai-content-forensics-cli.mjs"
+          },
+          {
+            "source": "lib/ai-content-forensics-import.mjs",
+            "target": "scripts/ai-content-forensics-import.mjs"
+          },
+          {
+            "source": "docs/ai-content-forensics-attribution.md",
+            "target": "references/upstream-attribution.md"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/ai-content-forensics/README.md",
+          "schemas/ai-content-forensics.v1.json",
+          "docs/ai-content-forensics-attribution.md"
+        ]
+      },
+      "triggers": [
+        "run AI Content Forensics",
+        "reverse-engineer this creator's content",
+        "turn this creator corpus into copyable templates"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "bounded local or connected creator corpus and evidence-linked finding candidates",
+            "schema_ref": "schemas/ai-content-forensics.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "constitutions, insight audit, exact ten-post thread, optional visuals, and body-free receipt",
+            "schema_ref": "schemas/ai-content-forensics.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "gemini",
+        "openclaw",
+        "hermes"
+      ]
+    },
+    {
       "workflow_id": "agree-next-step",
       "version": "0.1.0",
       "title": "Agree the Next Step",
