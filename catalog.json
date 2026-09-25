@@ -292,7 +292,7 @@
     },
     {
       "workflow_id": "choose-your-first-offer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Choose Your First Offer",
       "summary": "Compare an intensive, lab, and kit with one evidence-bound scorecard and choose the fastest truthful offer hypothesis to validate.",
       "kind": "skill",
