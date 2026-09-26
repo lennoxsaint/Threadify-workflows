@@ -77,15 +77,20 @@ performance guarantee.
 
 ## Review and act
 
-Show one action at a time with verified account, destination, lane, evidence,
-every gate, exact copy, action hash, idempotency key, sender identity, unsubscribe
-path, suppression result, and consequence. Any text or destination change revokes
-approval.
+Show one action at a time with verified account, destination, lane, current role,
+evidence, every gate, exact copy, action hash, idempotency key, sender identity,
+unsubscribe path, suppression result, and consequence. The binding includes the
+account, target, evidence hashes, permission/compliance state, channel, and copy;
+changing any of them requires a new build or approval.
 
-Immediately before an authorized provider action, read the same state again and
-persist `attempt_pending`. Then call the provider once. Reconcile through an
-authoritative readback as `succeeded`, `confirmed_not_sent`, or `unknown`. Unknown
-blocks retry. Never infer success from a timeout, UI disappearance, or source code.
+Immediately before an authorized provider action, re-read the exact account and
+pass that fresh identity proof while persisting `attempt_pending`. Then call the
+provider once. Reconcile through an authoritative readback as `succeeded`,
+`confirmed_not_sent`, or `unknown`. Unknown blocks retry but the same attempt can
+later be resolved by decisive readback. Never infer success from a timeout, UI
+disappearance, or source code. Refresh the body-free receipt after every state
+transition so it reports `false`, `null` for pending/unknown, or `true` only from
+authoritative reconciliation.
 
 Return a body-free receipt even when no candidate is ready, Treg is unavailable,
 or every action remains draft-only. Say `prepared privately`, not generated leads,

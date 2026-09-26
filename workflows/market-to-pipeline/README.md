@@ -26,8 +26,8 @@ The workflow does not promise a number of leads, replies, calls, customers, or r
 6. Normalize evidence locally, deduplicate stable company plus destination identities, rank eligible candidates, and select at most 10.
 7. Route every candidate to `ready_for_approval`, `research`, or `rejected`. A score orders candidates; it cannot override a missing hard gate.
 8. Aggregate recurring evidence into de-identified themes and prepare exactly seven posts. No prospect name, company name, contact destination, or private source body may appear in a campaign post.
-9. Show the exact action and hash. Approval binds only that account, destination, evidence set, channel, and text.
-10. Persist `attempt_pending` before a provider call. Reconcile to `succeeded`, `confirmed_not_sent`, or `unknown`. An unknown result blocks retry until authoritative reconciliation.
+9. Show the exact action and hash. Approval binds only that account, destination, current role and compliance state, evidence set, channel, and text.
+10. Re-read the exact account, persist `attempt_pending` before a provider call, and reconcile to `succeeded`, `confirmed_not_sent`, or `unknown`. An unknown result blocks retry but can be resolved later by an authoritative readback of that same attempt.
 
 ## Warm and cold B2B lanes
 
@@ -71,10 +71,11 @@ Immediately before the host calls a provider, persist the attempt:
 ```sh
 node bin/threadify-workflows.mjs market-to-pipeline begin-attempt \
   --state /absolute/private/market-to-pipeline/pipeline.private.json \
-  --action ACTION_ID --hash EXACT_SHA256 --attempt UNIQUE_ID --at ISO_TIME
+  --action ACTION_ID --hash EXACT_SHA256 --attempt UNIQUE_ID --at ISO_TIME \
+  --account-ref EXACT_ACCOUNT_REF --account-verified-at FRESH_ISO_TIME
 ```
 
-Then reconcile from authoritative provider evidence. Never repeat an ambiguous action:
+Then reconcile from authoritative provider evidence. Never repeat an ambiguous action. If the first readback is `unknown`, run `reconcile` again for the same attempt only after a later authoritative readback resolves it:
 
 ```sh
 node bin/threadify-workflows.mjs market-to-pipeline reconcile \

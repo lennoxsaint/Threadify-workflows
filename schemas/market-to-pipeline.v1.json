@@ -58,7 +58,7 @@
         "signal_id": { "type": "string", "minLength": 1 },
         "source_id": { "type": "string", "minLength": 1 },
         "observed_at": { "type": "string", "format": "date-time" },
-        "kind": { "enum": ["problem", "failed_attempt", "desired_outcome", "recipient_interest", "channel_permission", "company_fit", "work_contact_verification", "lawful_basis"] },
+        "kind": { "enum": ["problem", "failed_attempt", "desired_outcome", "recipient_interest", "channel_permission", "company_fit", "current_role", "work_contact_verification", "lawful_basis"] },
         "summary": { "type": "string", "minLength": 1 },
         "public_url": { "type": ["string", "null"] },
         "rights_basis": { "type": "string", "minLength": 1 },
@@ -137,13 +137,14 @@
     },
     "publicReceipt": {
       "type": "object",
-      "required": ["record_type", "schema_version", "run_id", "status", "provider_writes_performed", "raw_signal_bodies_retained_in_receipt", "contact_destinations_retained_in_receipt"],
+      "required": ["record_type", "schema_version", "run_id", "status", "provider_write_status", "provider_writes_performed", "raw_signal_bodies_retained_in_receipt", "contact_destinations_retained_in_receipt"],
       "properties": {
         "record_type": { "const": "MarketToPipelinePublicReceiptV1" },
         "schema_version": { "const": 1 },
         "run_id": { "type": "string" },
-        "status": { "const": "prepared_privately" },
-        "provider_writes_performed": { "const": false },
+        "status": { "enum": ["prepared_privately", "provider_attempt_pending", "provider_write_unknown", "provider_write_reconciled"] },
+        "provider_write_status": { "enum": ["none_confirmed", "attempt_pending", "unknown", "succeeded"] },
+        "provider_writes_performed": { "type": ["boolean", "null"] },
         "raw_signal_bodies_retained_in_receipt": { "const": false },
         "contact_destinations_retained_in_receipt": { "const": false }
       },

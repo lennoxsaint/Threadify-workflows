@@ -67,12 +67,31 @@
       "limitations": ["Synthetic result; company fit still requires offer evidence."]
     },
     {
+      "source_id": "treg-person",
+      "provider": "treg",
+      "stage": "person",
+      "sequence": 3,
+      "endpoint": "synthetic.people.search",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "requested_count": 3,
+      "returned_count": 3,
+      "complete": true,
+      "auth_mode": "host_registry_token",
+      "pricing_status": "quoted",
+      "quoted_micro": 50000,
+      "charged_micro": 40000,
+      "call_id": "synthetic-treg-call-person",
+      "evidence_ref": "synthetic:treg-person-result",
+      "fit_gate_prospect_ids": ["prospect-cold-unlawful", "prospect-cold-ready", "prospect-excluded"],
+      "limitations": ["Synthetic result; current role evidence does not authorize contact."]
+    },
+    {
       "source_id": "treg-contact",
       "provider": "treg",
       "stage": "contact",
-      "sequence": 3,
+      "sequence": 4,
       "endpoint": "synthetic.work.contact.verify",
-      "observed_at": "2026-09-26T03:52:00Z",
+      "observed_at": "2026-09-26T03:53:00Z",
       "requested_count": 4,
       "returned_count": 4,
       "complete": true,
@@ -166,9 +185,48 @@
       "prospect_ids": ["prospect-excluded"]
     },
     {
+      "signal_id": "signal-role-unlawful",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public business record identifies a growth role relevant to the offer.",
+      "public_url": "https://example.invalid/person/one",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-unlawful"]
+    },
+    {
+      "signal_id": "signal-role-ready",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public business record identifies a revenue operations role relevant to the offer.",
+      "public_url": "https://example.invalid/person/two",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-ready"]
+    },
+    {
+      "signal_id": "signal-role-excluded",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public creator record remains outside the offer profile.",
+      "public_url": "https://example.invalid/person/three",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": false,
+      "channel": null,
+      "prospect_ids": ["prospect-excluded"]
+    },
+    {
       "signal_id": "signal-contact-unlawful",
       "source_id": "treg-contact",
-      "observed_at": "2026-09-26T03:52:00Z",
+      "observed_at": "2026-09-26T03:53:00Z",
       "kind": "work_contact_verification",
       "summary": "The work email was verified recently; no lawful-basis record was supplied.",
       "public_url": null,
@@ -181,7 +239,7 @@
     {
       "signal_id": "signal-contact-ready",
       "source_id": "treg-contact",
-      "observed_at": "2026-09-26T03:52:00Z",
+      "observed_at": "2026-09-26T03:53:00Z",
       "kind": "work_contact_verification",
       "summary": "The work email was verified recently for the current business role.",
       "public_url": null,
@@ -194,7 +252,7 @@
     {
       "signal_id": "signal-lawful-ready",
       "source_id": "treg-contact",
-      "observed_at": "2026-09-26T03:52:00Z",
+      "observed_at": "2026-09-26T03:53:00Z",
       "kind": "lawful_basis",
       "summary": "Synthetic documented legitimate-interest assessment for a relevant B2B role, subject to sender and opt-out controls.",
       "public_url": null,
@@ -207,7 +265,7 @@
     {
       "signal_id": "signal-lawful-excluded",
       "source_id": "treg-contact",
-      "observed_at": "2026-09-26T03:52:00Z",
+      "observed_at": "2026-09-26T03:53:00Z",
       "kind": "lawful_basis",
       "summary": "Synthetic record retained to prove that compliance metadata cannot override an offer exclusion or suppression.",
       "public_url": null,
@@ -234,7 +292,7 @@
     {
       "theme_id": "theme-fit-before-spend",
       "summary": "Company fit should be tested before paying for person or contact enrichment.",
-      "signal_ids": ["signal-fit-unlawful", "signal-fit-ready", "signal-fit-excluded"],
+      "signal_ids": ["signal-fit-unlawful", "signal-fit-ready", "signal-fit-excluded", "signal-role-unlawful", "signal-role-ready"],
       "deidentified": true
     }
   ],
@@ -259,6 +317,7 @@
         "permission_signal_id": null,
         "lawful_basis_signal_id": null,
         "jurisdiction": "AU",
+        "provider_account_ref": "synthetic:threadify-account",
         "sender_identity": "Threadify team",
         "sender_contact": "help@example.invalid",
         "unsubscribe_supported": false,
@@ -292,6 +351,7 @@
         "permission_signal_id": null,
         "lawful_basis_signal_id": null,
         "jurisdiction": "US",
+        "provider_account_ref": "synthetic:threadify-account",
         "sender_identity": "Threadify team",
         "sender_contact": "help@example.invalid",
         "unsubscribe_supported": false,
@@ -312,7 +372,7 @@
       "company_name": "Cedar Example LLC",
       "role": "Growth Lead",
       "lane": "cold_b2b",
-      "signal_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-contact-unlawful"],
+      "signal_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-role-unlawful", "signal-contact-unlawful"],
       "fit_score": 84,
       "fit_reasons": ["Public current problem", "Current relevant business role"],
       "excluded": false,
@@ -320,11 +380,12 @@
         "channel": "email",
         "destination": "casey@example.invalid",
         "work_contact_verified": true,
-        "verified_at": "2026-09-26T03:52:00Z",
+        "verified_at": "2026-09-26T03:53:00Z",
         "verifier": "synthetic.work.contact.verify",
         "permission_signal_id": null,
         "lawful_basis_signal_id": null,
         "jurisdiction": "US",
+        "provider_account_ref": "synthetic:email-sender",
         "sender_identity": "Threadify team",
         "sender_contact": "help@example.invalid",
         "unsubscribe_supported": true,
@@ -335,7 +396,7 @@
         "action_id": "action-cold-unlawful",
         "action_type": "relevant_b2b_email",
         "exact_text": "I saw your public note about losing track of high-intent replies. We built a review-first workflow for that problem. If this is not relevant, reply no and I will not follow up.",
-        "evidence_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-contact-unlawful"]
+        "evidence_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-role-unlawful", "signal-contact-unlawful"]
       }
     },
     {
@@ -345,7 +406,7 @@
       "company_name": "Delta Example Inc",
       "role": "Revenue Operations Lead",
       "lane": "cold_b2b",
-      "signal_ids": ["signal-fit-ready", "signal-contact-ready", "signal-lawful-ready"],
+      "signal_ids": ["signal-fit-ready", "signal-role-ready", "signal-contact-ready", "signal-lawful-ready"],
       "fit_score": 81,
       "fit_reasons": ["Current relevant business role", "Documented B2B relevance and controls"],
       "excluded": false,
@@ -353,11 +414,12 @@
         "channel": "email",
         "destination": "devon@example.invalid",
         "work_contact_verified": true,
-        "verified_at": "2026-09-26T03:52:00Z",
+        "verified_at": "2026-09-26T03:53:00Z",
         "verifier": "synthetic.work.contact.verify",
         "permission_signal_id": null,
         "lawful_basis_signal_id": "signal-lawful-ready",
         "jurisdiction": "US",
+        "provider_account_ref": "synthetic:email-sender",
         "sender_identity": "Threadify team",
         "sender_contact": "help@example.invalid",
         "unsubscribe_supported": true,
@@ -368,7 +430,7 @@
         "action_id": "action-cold-ready",
         "action_type": "relevant_b2b_email",
         "exact_text": "Your role looks close to a workflow problem we solve: turning public buyer signals into a reviewable pipeline and content plan. If that is not relevant, reply no and I will not follow up.",
-        "evidence_ids": ["signal-fit-ready", "signal-lawful-ready"]
+        "evidence_ids": ["signal-fit-ready", "signal-role-ready", "signal-contact-ready", "signal-lawful-ready"]
       }
     },
     {
@@ -378,7 +440,7 @@
       "company_name": "Echo Example Media",
       "role": "Creator",
       "lane": "cold_b2b",
-      "signal_ids": ["signal-fit-excluded", "signal-lawful-excluded"],
+      "signal_ids": ["signal-fit-excluded", "signal-role-excluded", "signal-lawful-excluded"],
       "fit_score": 42,
       "fit_reasons": ["Consumer entertainment account is outside the offer"],
       "excluded": true,
@@ -391,6 +453,7 @@
         "permission_signal_id": null,
         "lawful_basis_signal_id": "signal-lawful-excluded",
         "jurisdiction": "AU",
+        "provider_account_ref": "synthetic:email-sender",
         "sender_identity": "Threadify team",
         "sender_contact": "help@example.invalid",
         "unsubscribe_supported": true,
@@ -401,7 +464,7 @@
         "action_id": "action-excluded",
         "action_type": "relevant_b2b_email",
         "exact_text": "This synthetic action must remain blocked.",
-        "evidence_ids": ["signal-fit-excluded", "signal-lawful-excluded"]
+        "evidence_ids": ["signal-fit-excluded", "signal-role-excluded", "signal-lawful-excluded"]
       }
     }
   ],
