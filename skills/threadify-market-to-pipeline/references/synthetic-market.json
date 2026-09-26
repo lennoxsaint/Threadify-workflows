@@ -1,0 +1,525 @@
+{
+  "record_type": "MarketToPipelineInputV1",
+  "schema_version": 1,
+  "run_id": "synthetic-market-to-pipeline-001",
+  "observed_at": "2026-09-26T04:00:00Z",
+  "offer": {
+    "offer_id": "threadify-creator-plan",
+    "version": "2026-09-26",
+    "name": "Threadify Creator Plan",
+    "outcome": "Turn buyer signals into reviewed content and permission-first conversations.",
+    "ideal_customer": "Offer-led creators and small service businesses using Threads.",
+    "exclusions": ["consumer-only entertainment accounts", "people who did not express an offer-relevant problem"]
+  },
+  "market_scope": {
+    "label": "English-speaking offer-led creators using Threads",
+    "geographies": ["Australia", "United States"],
+    "jurisdictions": ["AU", "US"],
+    "window_start": "2026-09-19T00:00:00Z",
+    "window_end": "2026-09-26T04:00:00Z",
+    "raw_signal_cap": 50,
+    "qualified_cap": 10,
+    "spend_cap_micro": 3000000,
+    "currency": "USD"
+  },
+  "account": {
+    "threadify_account_ref": "synthetic:threadify-account",
+    "verified_at": "2026-09-26T03:55:00Z",
+    "capabilities": ["read owned replies", "generate content"]
+  },
+  "sources": [
+    {
+      "source_id": "threadify-signals",
+      "provider": "threadify",
+      "stage": "buyer_signal",
+      "sequence": 1,
+      "endpoint": "host-discovered read-only replies",
+      "observed_at": "2026-09-26T03:50:00Z",
+      "requested_count": 3,
+      "returned_count": 3,
+      "complete": true,
+      "auth_mode": "owned_account",
+      "pricing_status": "free",
+      "quoted_micro": 0,
+      "charged_micro": 0,
+      "call_id": null,
+      "evidence_ref": "synthetic:threadify-read",
+      "fit_gate_prospect_ids": [],
+      "limitations": ["Synthetic fixture; no live account read occurred."]
+    },
+    {
+      "source_id": "treg-company-fit",
+      "provider": "treg",
+      "stage": "company_fit",
+      "sequence": 2,
+      "endpoint": "synthetic.company.search",
+      "observed_at": "2026-09-26T03:51:00Z",
+      "requested_count": 3,
+      "returned_count": 3,
+      "complete": true,
+      "auth_mode": "host_registry_token",
+      "pricing_status": "quoted",
+      "quoted_micro": 100000,
+      "charged_micro": 80000,
+      "call_id": "synthetic-treg-call-company",
+      "evidence_ref": "synthetic:treg-company-result",
+      "fit_gate_prospect_ids": [],
+      "limitations": ["Synthetic result; company fit still requires offer evidence."]
+    },
+    {
+      "source_id": "treg-person",
+      "provider": "treg",
+      "stage": "person",
+      "sequence": 3,
+      "endpoint": "synthetic.people.search",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "requested_count": 3,
+      "returned_count": 3,
+      "complete": true,
+      "auth_mode": "host_registry_token",
+      "pricing_status": "quoted",
+      "quoted_micro": 50000,
+      "charged_micro": 40000,
+      "call_id": "synthetic-treg-call-person",
+      "evidence_ref": "synthetic:treg-person-result",
+      "fit_gate_prospect_ids": ["prospect-cold-unlawful", "prospect-cold-ready", "prospect-excluded"],
+      "limitations": ["Synthetic result; current role evidence does not authorize contact."]
+    },
+    {
+      "source_id": "treg-contact",
+      "provider": "treg",
+      "stage": "contact",
+      "sequence": 4,
+      "endpoint": "synthetic.work.contact.verify",
+      "observed_at": "2026-09-26T03:53:00Z",
+      "requested_count": 4,
+      "returned_count": 4,
+      "complete": true,
+      "auth_mode": "host_registry_token",
+      "pricing_status": "quoted",
+      "quoted_micro": 200000,
+      "charged_micro": 150000,
+      "call_id": "synthetic-treg-call-contact",
+      "evidence_ref": "synthetic:treg-contact-result",
+      "fit_gate_prospect_ids": ["prospect-cold-unlawful", "prospect-cold-ready", "prospect-excluded"],
+      "limitations": ["A verified work contact is not consent and does not by itself authorize outreach."]
+    }
+  ],
+  "signals": [
+    {
+      "signal_id": "signal-warm-reply",
+      "source_id": "threadify-signals",
+      "observed_at": "2026-09-25T11:00:00Z",
+      "kind": "recipient_interest",
+      "summary": "The person explicitly asked for a practical way to turn replies into a review queue.",
+      "public_url": "https://example.invalid/threads/warm-reply",
+      "rights_basis": "synthetic owned-post public reply",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": "public_reply",
+      "prospect_ids": ["prospect-warm-ready"]
+    },
+    {
+      "signal_id": "signal-warm-dm-interest",
+      "source_id": "threadify-signals",
+      "observed_at": "2026-09-25T12:00:00Z",
+      "kind": "recipient_interest",
+      "summary": "The person asked how the workflow handles buyer signals but did not invite a private message.",
+      "public_url": "https://example.invalid/threads/warm-dm",
+      "rights_basis": "synthetic owned-post public reply",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": "public_reply",
+      "prospect_ids": ["prospect-warm-no-permission"]
+    },
+    {
+      "signal_id": "signal-cold-problem",
+      "source_id": "threadify-signals",
+      "observed_at": "2026-09-24T12:00:00Z",
+      "kind": "problem",
+      "summary": "A public business post describes losing track of high-intent replies after content performs.",
+      "public_url": "https://example.invalid/threads/cold-problem",
+      "rights_basis": "synthetic public business context",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-unlawful"]
+    },
+    {
+      "signal_id": "signal-fit-unlawful",
+      "source_id": "treg-company-fit",
+      "observed_at": "2026-09-26T03:51:00Z",
+      "kind": "company_fit",
+      "summary": "The business and role match the bounded offer profile.",
+      "public_url": "https://example.invalid/company/one",
+      "rights_basis": "synthetic public company data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-unlawful"]
+    },
+    {
+      "signal_id": "signal-fit-ready",
+      "source_id": "treg-company-fit",
+      "observed_at": "2026-09-26T03:51:00Z",
+      "kind": "company_fit",
+      "summary": "The business and current revenue role match the bounded offer profile.",
+      "public_url": "https://example.invalid/company/two",
+      "rights_basis": "synthetic public company data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-ready"]
+    },
+    {
+      "signal_id": "signal-fit-excluded",
+      "source_id": "treg-company-fit",
+      "observed_at": "2026-09-26T03:51:00Z",
+      "kind": "company_fit",
+      "summary": "The account is consumer entertainment and outside the offer exclusions.",
+      "public_url": "https://example.invalid/company/three",
+      "rights_basis": "synthetic public company data",
+      "explicit": true,
+      "relevant_to_offer": false,
+      "channel": null,
+      "prospect_ids": ["prospect-excluded"]
+    },
+    {
+      "signal_id": "signal-role-unlawful",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public business record identifies a growth role relevant to the offer.",
+      "public_url": "https://example.invalid/person/one",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-unlawful"]
+    },
+    {
+      "signal_id": "signal-role-ready",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public business record identifies a revenue operations role relevant to the offer.",
+      "public_url": "https://example.invalid/person/two",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": null,
+      "prospect_ids": ["prospect-cold-ready"]
+    },
+    {
+      "signal_id": "signal-role-excluded",
+      "source_id": "treg-person",
+      "observed_at": "2026-09-26T03:52:00Z",
+      "kind": "current_role",
+      "summary": "A current public creator record remains outside the offer profile.",
+      "public_url": "https://example.invalid/person/three",
+      "rights_basis": "synthetic public professional data",
+      "explicit": true,
+      "relevant_to_offer": false,
+      "channel": null,
+      "prospect_ids": ["prospect-excluded"]
+    },
+    {
+      "signal_id": "signal-contact-unlawful",
+      "source_id": "treg-contact",
+      "observed_at": "2026-09-26T03:53:00Z",
+      "kind": "work_contact_verification",
+      "summary": "The work email was verified recently; no lawful-basis record was supplied.",
+      "public_url": null,
+      "rights_basis": "synthetic work-contact verification",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": "email",
+      "prospect_ids": ["prospect-cold-unlawful"]
+    },
+    {
+      "signal_id": "signal-contact-ready",
+      "source_id": "treg-contact",
+      "observed_at": "2026-09-26T03:53:00Z",
+      "kind": "work_contact_verification",
+      "summary": "The work email was verified recently for the current business role.",
+      "public_url": null,
+      "rights_basis": "synthetic work-contact verification",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": "email",
+      "prospect_ids": ["prospect-cold-ready"]
+    },
+    {
+      "signal_id": "signal-lawful-ready",
+      "source_id": "treg-contact",
+      "observed_at": "2026-09-26T03:53:00Z",
+      "kind": "lawful_basis",
+      "summary": "Synthetic documented legitimate-interest assessment for a relevant B2B role, subject to sender and opt-out controls.",
+      "public_url": null,
+      "rights_basis": "synthetic compliance record",
+      "explicit": true,
+      "relevant_to_offer": true,
+      "channel": "email",
+      "prospect_ids": ["prospect-cold-ready"]
+    },
+    {
+      "signal_id": "signal-lawful-excluded",
+      "source_id": "treg-contact",
+      "observed_at": "2026-09-26T03:53:00Z",
+      "kind": "lawful_basis",
+      "summary": "Synthetic record retained to prove that compliance metadata cannot override an offer exclusion or suppression.",
+      "public_url": null,
+      "rights_basis": "synthetic compliance record",
+      "explicit": true,
+      "relevant_to_offer": false,
+      "channel": "email",
+      "prospect_ids": ["prospect-excluded"]
+    }
+  ],
+  "themes": [
+    {
+      "theme_id": "theme-review-queue",
+      "summary": "Small teams need a reviewable queue between buyer signals and outreach.",
+      "signal_ids": ["signal-warm-reply", "signal-warm-dm-interest"],
+      "deidentified": true
+    },
+    {
+      "theme_id": "theme-permission-gap",
+      "summary": "Interest, channel permission, contact verification, and lawful basis are different gates.",
+      "signal_ids": ["signal-warm-dm-interest", "signal-contact-unlawful", "signal-lawful-ready"],
+      "deidentified": true
+    },
+    {
+      "theme_id": "theme-fit-before-spend",
+      "summary": "Company fit should be tested before paying for person or contact enrichment.",
+      "signal_ids": ["signal-fit-unlawful", "signal-fit-ready", "signal-fit-excluded", "signal-role-unlawful", "signal-role-ready"],
+      "deidentified": true
+    }
+  ],
+  "prospects": [
+    {
+      "prospect_id": "prospect-warm-ready",
+      "display_name": "Ada Example",
+      "stable_company_id": "company-warm-one",
+      "company_name": "Atlas Example Studio",
+      "role": "Founder",
+      "lane": "warm",
+      "signal_ids": ["signal-warm-reply"],
+      "fit_score": 95,
+      "fit_reasons": ["Explicit current problem", "Offer-relevant desired workflow"],
+      "excluded": false,
+      "contact": {
+        "channel": "public_reply",
+        "destination": "https://example.invalid/threads/warm-reply",
+        "work_contact_verified": false,
+        "verified_at": null,
+        "verifier": null,
+        "permission_signal_id": null,
+        "lawful_basis_signal_id": null,
+        "jurisdiction": "AU",
+        "provider_account_ref": "synthetic:threadify-account",
+        "sender_identity": "Threadify team",
+        "sender_contact": "help@example.invalid",
+        "unsubscribe_supported": false,
+        "suppression_checked": true,
+        "suppressed": false
+      },
+      "action": {
+        "action_id": "action-warm-reply",
+        "action_type": "useful_public_reply",
+        "exact_text": "A simple fix is to separate the signal, qualification, and action into three review states. That keeps a strong reply from turning into an automatic pitch.",
+        "evidence_ids": ["signal-warm-reply"]
+      }
+    },
+    {
+      "prospect_id": "prospect-warm-no-permission",
+      "display_name": "Ben Example",
+      "stable_company_id": "company-warm-two",
+      "company_name": "Beacon Example Co",
+      "role": "Consultant",
+      "lane": "warm",
+      "signal_ids": ["signal-warm-dm-interest"],
+      "fit_score": 88,
+      "fit_reasons": ["Explicit current question", "No private-channel invitation"],
+      "excluded": false,
+      "contact": {
+        "channel": "threads_dm",
+        "destination": "synthetic:threads-profile-ben",
+        "work_contact_verified": false,
+        "verified_at": null,
+        "verifier": null,
+        "permission_signal_id": null,
+        "lawful_basis_signal_id": null,
+        "jurisdiction": "US",
+        "provider_account_ref": "synthetic:threadify-account",
+        "sender_identity": "Threadify team",
+        "sender_contact": "help@example.invalid",
+        "unsubscribe_supported": false,
+        "suppression_checked": true,
+        "suppressed": false
+      },
+      "action": {
+        "action_id": "action-warm-dm",
+        "action_type": "private_resource_offer",
+        "exact_text": "I can share the short review-state outline here if that would help.",
+        "evidence_ids": ["signal-warm-dm-interest"]
+      }
+    },
+    {
+      "prospect_id": "prospect-cold-unlawful",
+      "display_name": "Casey Example",
+      "stable_company_id": "company-cold-one",
+      "company_name": "Cedar Example LLC",
+      "role": "Growth Lead",
+      "lane": "cold_b2b",
+      "signal_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-role-unlawful", "signal-contact-unlawful"],
+      "fit_score": 84,
+      "fit_reasons": ["Public current problem", "Current relevant business role"],
+      "excluded": false,
+      "contact": {
+        "channel": "email",
+        "destination": "casey@example.invalid",
+        "work_contact_verified": true,
+        "verified_at": "2026-09-26T03:53:00Z",
+        "verifier": "synthetic.work.contact.verify",
+        "permission_signal_id": null,
+        "lawful_basis_signal_id": null,
+        "jurisdiction": "US",
+        "provider_account_ref": "synthetic:email-sender",
+        "sender_identity": "Threadify team",
+        "sender_contact": "help@example.invalid",
+        "unsubscribe_supported": true,
+        "suppression_checked": true,
+        "suppressed": false
+      },
+      "action": {
+        "action_id": "action-cold-unlawful",
+        "action_type": "relevant_b2b_email",
+        "exact_text": "I saw your public note about losing track of high-intent replies. We built a review-first workflow for that problem. If this is not relevant, reply no and I will not follow up.",
+        "evidence_ids": ["signal-cold-problem", "signal-fit-unlawful", "signal-role-unlawful", "signal-contact-unlawful"]
+      }
+    },
+    {
+      "prospect_id": "prospect-cold-ready",
+      "display_name": "Devon Example",
+      "stable_company_id": "company-cold-two",
+      "company_name": "Delta Example Inc",
+      "role": "Revenue Operations Lead",
+      "lane": "cold_b2b",
+      "signal_ids": ["signal-fit-ready", "signal-role-ready", "signal-contact-ready", "signal-lawful-ready"],
+      "fit_score": 81,
+      "fit_reasons": ["Current relevant business role", "Documented B2B relevance and controls"],
+      "excluded": false,
+      "contact": {
+        "channel": "email",
+        "destination": "devon@example.invalid",
+        "work_contact_verified": true,
+        "verified_at": "2026-09-26T03:53:00Z",
+        "verifier": "synthetic.work.contact.verify",
+        "permission_signal_id": null,
+        "lawful_basis_signal_id": "signal-lawful-ready",
+        "jurisdiction": "US",
+        "provider_account_ref": "synthetic:email-sender",
+        "sender_identity": "Threadify team",
+        "sender_contact": "help@example.invalid",
+        "unsubscribe_supported": true,
+        "suppression_checked": true,
+        "suppressed": false
+      },
+      "action": {
+        "action_id": "action-cold-ready",
+        "action_type": "relevant_b2b_email",
+        "exact_text": "Your role looks close to a workflow problem we solve: turning public buyer signals into a reviewable pipeline and content plan. If that is not relevant, reply no and I will not follow up.",
+        "evidence_ids": ["signal-fit-ready", "signal-role-ready", "signal-contact-ready", "signal-lawful-ready"]
+      }
+    },
+    {
+      "prospect_id": "prospect-excluded",
+      "display_name": "Elliot Example",
+      "stable_company_id": "company-excluded",
+      "company_name": "Echo Example Media",
+      "role": "Creator",
+      "lane": "cold_b2b",
+      "signal_ids": ["signal-fit-excluded", "signal-role-excluded", "signal-lawful-excluded"],
+      "fit_score": 42,
+      "fit_reasons": ["Consumer entertainment account is outside the offer"],
+      "excluded": true,
+      "contact": {
+        "channel": "email",
+        "destination": "elliot@example.invalid",
+        "work_contact_verified": false,
+        "verified_at": null,
+        "verifier": null,
+        "permission_signal_id": null,
+        "lawful_basis_signal_id": "signal-lawful-excluded",
+        "jurisdiction": "AU",
+        "provider_account_ref": "synthetic:email-sender",
+        "sender_identity": "Threadify team",
+        "sender_contact": "help@example.invalid",
+        "unsubscribe_supported": true,
+        "suppression_checked": true,
+        "suppressed": true
+      },
+      "action": {
+        "action_id": "action-excluded",
+        "action_type": "relevant_b2b_email",
+        "exact_text": "This synthetic action must remain blocked.",
+        "evidence_ids": ["signal-fit-excluded", "signal-role-excluded", "signal-lawful-excluded"]
+      }
+    }
+  ],
+  "campaign": {
+    "platform": "threads",
+    "posts": [
+      {
+        "post_id": "campaign-1",
+        "angle": "problem",
+        "exact_text": "The expensive part of lead generation is not finding more names. It is proving which signals deserve a human next step before anyone gets contacted.",
+        "evidence_theme_ids": ["theme-review-queue"],
+        "limitation": "Derived from a bounded synthetic demonstration, not a conversion claim."
+      },
+      {
+        "post_id": "campaign-2",
+        "angle": "permission",
+        "exact_text": "Four different things get collapsed into one word: interest, permission, a verified work contact, and a lawful reason to reach out. They need four separate checks.",
+        "evidence_theme_ids": ["theme-permission-gap"],
+        "limitation": "General workflow principle; jurisdiction-specific review is still required."
+      },
+      {
+        "post_id": "campaign-3",
+        "angle": "economics",
+        "exact_text": "Enrichment should come after fit. First test the company and situation. Only then spend money finding the right role or current work contact.",
+        "evidence_theme_ids": ["theme-fit-before-spend"],
+        "limitation": "The best sequence depends on available sources and current provider pricing."
+      },
+      {
+        "post_id": "campaign-4",
+        "angle": "workflow",
+        "exact_text": "A useful AI pipeline has three visible lanes: ready, research, reject. A score can rank people inside the lanes. It cannot erase a missing permission or compliance gate.",
+        "evidence_theme_ids": ["theme-review-queue", "theme-permission-gap"],
+        "limitation": "A local decision aid does not replace human or legal review."
+      },
+      {
+        "post_id": "campaign-5",
+        "angle": "content",
+        "exact_text": "The same market evidence can produce content without leaking the people inside it. Aggregate the recurring problem, remove identifiers, and bind every post to a de-identified theme.",
+        "evidence_theme_ids": ["theme-review-queue"],
+        "limitation": "De-identification must be checked against the full source context."
+      },
+      {
+        "post_id": "campaign-6",
+        "angle": "delivery safety",
+        "exact_text": "Before an agent sends anything, save a pending attempt with the exact text hash. If the provider result is ambiguous, stop. Reconcile first; never blindly retry.",
+        "evidence_theme_ids": ["theme-permission-gap"],
+        "limitation": "This describes the workflow's local delivery control, not a completed send."
+      },
+      {
+        "post_id": "campaign-7",
+        "angle": "call to action",
+        "exact_text": "Give the workflow one offer and one bounded market. It returns a private pipeline, exact next actions, seven evidence-linked posts, and a public receipt with no contact details.",
+        "evidence_theme_ids": ["theme-review-queue", "theme-fit-before-spend"],
+        "limitation": "Outputs are prepared for review; no lead count, response, or revenue is promised."
+      }
+    ]
+  }
+}

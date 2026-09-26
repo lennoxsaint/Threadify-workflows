@@ -1,5 +1,11 @@
 # Threadify Workflows
 
+**Market to Pipeline** turns one versioned offer and one bounded market into a
+private qualified pipeline, exact permission-aware actions, exactly seven
+de-identified posts, and body-free receipts. It combines normalized Threadify
+buyer signals with optional, price-previewed Treg research while keeping provider
+calls and sends outside the local engine. [See the workflow](workflows/market-to-pipeline/README.md).
+
 **AI Content Forensics** turns an inspectable creator corpus into evidence-linked
 content rules, reusable `copy this:` templates, and one exact ten-post draft.
 It works from local exports, optional read-only Threadify evidence, or a bounded
@@ -67,6 +73,7 @@ npx --yes github:lennoxsaint/Threadify-workflows list --json
 npx --yes github:lennoxsaint/Threadify-workflows describe your-next-moves --json
 npx --yes github:lennoxsaint/Threadify-workflows describe 30-day-viral-vault --json
 npx --yes github:lennoxsaint/Threadify-workflows describe ai-content-forensics --json
+npx --yes github:lennoxsaint/Threadify-workflows describe market-to-pipeline --json
 npx --yes github:lennoxsaint/Threadify-workflows doctor --json
 ```
 
@@ -78,7 +85,7 @@ The five buyer workflows are:
 - [Buyer Questions to Content](workflows/buyer-questions-to-content/README.md)
 - [Weekly Buyer Outcomes](workflows/weekly-buyer-outcomes/README.md)
 
-The full catalog also includes creator planning, source, offer and approved-delivery workflows. [AI Content Forensics](workflows/ai-content-forensics/README.md) analyzes a bounded creator corpus without turning correlation into a forecast. [30-Day Viral Vault](workflows/30-day-viral-vault/README.md) prepares a six-card daily queue with one-card-at-a-time review. [Post This Next](workflows/post-this-next/README.md) compares every eligible draft in one verified Threadify account without editing or publishing it. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems, and [Choose Your First Offer](workflows/choose-your-first-offer/README.md) compares an intensive, guided lab, and self-serve kit with one fixed scorecard. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
+The full catalog also includes creator planning, source, offer and approved-delivery workflows. [Market to Pipeline](workflows/market-to-pipeline/README.md) turns one bounded offer and market into a private permission-aware pipeline and seven-post campaign without treating verified contact data as consent. [AI Content Forensics](workflows/ai-content-forensics/README.md) analyzes a bounded creator corpus without turning correlation into a forecast. [30-Day Viral Vault](workflows/30-day-viral-vault/README.md) prepares a six-card daily queue with one-card-at-a-time review. [Post This Next](workflows/post-this-next/README.md) compares every eligible draft in one verified Threadify account without editing or publishing it. [Find Your Niche](workflows/find-your-niche/README.md) can establish a positioning direction, [Refresh Your Threads Profile](workflows/refresh-your-threads-profile/README.md) turns it into three reviewed bio-and-picture systems, and [Choose Your First Offer](workflows/choose-your-first-offer/README.md) compares an intensive, guided lab, and self-serve kit with one fixed scorecard. See the [getting started guide](docs/getting-started.md), [generated workflow catalog](docs/workflow-catalog.md) and [Proof Loops catalog](docs/proof-loops-workflows.md).
 
 From a source checkout, run the synthetic five-workflow example:
 

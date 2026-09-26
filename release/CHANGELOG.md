@@ -1,5 +1,14 @@
 # Threadify Workflows stable releases
 
+## 0.18.0
+
+- Adds Market to Pipeline: a local-first workflow for turning one offer and one bounded market into a private qualified pipeline, exact next actions, and exactly seven evidence-linked posts.
+- Combines normalized Threadify-owned buyer signals with host-supplied Treg discovery and enrichment while keeping every network call, credential, and raw private payload outside the bundled engine.
+- Caps each run at 50 raw signals, 10 selected prospects, and a caller-confirmed price-previewed budget no greater than US$3.00; company fit must precede person or contact enrichment.
+- Keeps warm interest, private-channel permission, current work-contact verification, lawful basis, suppression, sender identity, and unsubscribe controls as separate gates. A verified email is never treated as consent.
+- Binds approval to the exact action hash, persists a pending attempt before delivery, blocks ambiguous retries until reconciliation, and emits public receipts without bodies or contact destinations.
+- Ships deterministic synthetic proof, private JSON/CSV/HTML review artifacts, and full Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes bundles.
+
 ## 0.17.0
 
 - Adds AI Content Forensics: a local-first workflow for turning an inspectable creator corpus into evidence-linked content rules and copyable templates.

@@ -54,6 +54,8 @@ Usage:
   threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
   threadify-workflows lead-desk status --state /absolute/review.json
   threadify-workflows post-this-next review --input /absolute/input.json --output-dir /absolute/private-directory
+  threadify-workflows market-to-pipeline build --input input.json --output-dir /absolute/private-directory
+  threadify-workflows market-to-pipeline status --state /absolute/pipeline.private.json
 
 The updater installs only validated GitHub stable releases. It never updates unrelated skills.
 `;
@@ -86,6 +88,11 @@ async function main() {
   if (process.argv[2] === 'post-this-next') {
     const { postThisNextMain } = await import('../lib/post-this-next-cli.mjs');
     process.stdout.write(`${JSON.stringify(postThisNextMain(process.argv.slice(3)), null, 2)}\n`);
+    return;
+  }
+  if (process.argv[2] === 'market-to-pipeline') {
+    const { marketToPipelineMain } = await import('../lib/market-to-pipeline-cli.mjs');
+    process.stdout.write(`${JSON.stringify(marketToPipelineMain(process.argv.slice(3)), null, 2)}\n`);
     return;
   }
   if (['list', 'describe', 'doctor'].includes(process.argv[2])) {
