@@ -20,6 +20,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Find Your Niche | yes | yes | yes | yes | yes | yes | yes |
 | Follow Through | yes | yes | yes | yes | yes | yes | yes |
 | Greatest Hits Runway | yes | yes | yes | yes | yes | yes | yes |
+| Market to Pipeline | yes | yes | yes | yes | yes | yes | yes |
 | Personal Brain Sync / Current Self Packet | yes | yes | yes | yes | yes | yes | yes |
 | Post This Next | yes | yes | yes | yes | yes | yes | yes |
 | Qualified Buyer Research | yes | yes | yes | yes | yes | yes | yes |

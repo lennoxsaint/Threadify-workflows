@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.17.0",
-  "skill_version": "0.7.0",
-  "plugin_version": "0.17.0",
+  "release_version": "0.18.0",
+  "skill_version": "0.8.0",
+  "plugin_version": "0.18.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "v0.17.0 adds AI Content Forensics: local-first creator-corpus analysis with platform-separated evidence, a verified ten-post template, optional visuals, and a bounded BYO-key live read path."
+  "summary": "v0.18.0 adds Market to Pipeline: one bounded offer-to-market workflow that combines normalized Threadify buyer signals with price-previewed Treg discovery, a private qualified pipeline, exact actions, seven de-identified posts, and body-free receipts."
 }

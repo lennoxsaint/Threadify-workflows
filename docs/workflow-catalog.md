@@ -20,6 +20,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Find Your Niche (`find-your-niche`) | skill | `threadify-find-your-niche` | advanced | find my niche from my Threads data; use my best Threads posts and comments to find my niche |
 | Follow Through (`follow-through`) | skill | `threadify-follow-through` | conversation | show what I promised buyers; follow through on dated buyer commitments |
 | Greatest Hits Runway (`greatest-hits-runway`) | skill | `threadify-greatest-hits-runway` | advanced | prepare my greatest hits runway; review a seven-day runway of proven posts |
+| Market to Pipeline (`market-to-pipeline`) | skill | `threadify-market-to-pipeline` | advanced | turn this market into a qualified pipeline; run Market to Pipeline with Threadify and Treg; find permission-aware leads and build seven posts |
 | Personal Brain Sync / Current Self Packet (`personal-brain-sync-current-self`) | skill | `threadify-personal-brain-sync` | advanced | sync my current self to Threadify Brain; review personal context before saving memories |
 | Post This Next (`post-this-next`) | skill | `threadify-post-this-next` | advanced | post this next; choose my next Threadify draft; review every draft and tell me what to finish next |
 | Qualified Buyer Research (`qualified-buyer-research`) | skill | `threadify-qualified-buyer-research` | advanced + standalone | find qualified buyers on Threads; research buyer language and stage one reply |

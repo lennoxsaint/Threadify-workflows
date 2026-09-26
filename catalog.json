@@ -867,6 +867,84 @@
       ]
     },
     {
+      "workflow_id": "market-to-pipeline",
+      "version": "0.1.0",
+      "title": "Market to Pipeline",
+      "summary": "Turn one offer and one bounded market into a private qualified pipeline, exact permission-aware actions, seven de-identified posts, and body-free receipts using normalized Threadify and optional Treg evidence.",
+      "kind": "skill",
+      "skill_name": "threadify-market-to-pipeline",
+      "entrypoint": "skills/threadify-market-to-pipeline/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-market-to-pipeline/SKILL.md",
+      "source_manifest": "workflows/market-to-pipeline/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "schemas/market-to-pipeline.v1.json",
+            "target": "references/market-to-pipeline.v1.json"
+          },
+          {
+            "source": "lib/market-to-pipeline.mjs",
+            "target": "scripts/market-to-pipeline.mjs"
+          },
+          {
+            "source": "lib/market-to-pipeline-cli.mjs",
+            "target": "scripts/market-to-pipeline-cli.mjs"
+          },
+          {
+            "source": "docs/market-to-pipeline-treg-attribution.md",
+            "target": "references/treg-attribution.md"
+          },
+          {
+            "source": "workflows/market-to-pipeline/synthetic-market.json",
+            "target": "references/synthetic-market.json"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [
+          "offer-builder",
+          "qualified-buyer-research",
+          "agree-next-step"
+        ],
+        "files": [
+          "workflows/market-to-pipeline/README.md",
+          "workflows/market-to-pipeline/synthetic-market.json",
+          "schemas/market-to-pipeline.v1.json",
+          "docs/market-to-pipeline-treg-attribution.md"
+        ]
+      },
+      "triggers": [
+        "turn this market into a qualified pipeline",
+        "run Market to Pipeline with Threadify and Treg",
+        "find permission-aware leads and build seven posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "one versioned offer, one bounded market, normalized Threadify and optional Treg evidence",
+            "schema_ref": "schemas/market-to-pipeline.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private pipeline, exact actions, seven-post campaign, action lifecycle, and body-free receipts",
+            "schema_ref": "schemas/market-to-pipeline.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "gemini",
+        "openclaw",
+        "hermes"
+      ]
+    },
+    {
       "workflow_id": "personal-brain-sync-current-self",
       "version": "0.1.0",
       "title": "Personal Brain Sync / Current Self Packet",
