@@ -1,6 +1,6 @@
 {
   "workflow_id": "market-to-pipeline",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Market to Pipeline",
   "summary": "Turn one offer and one bounded market into a private qualified pipeline, exact permission-aware actions, seven de-identified posts, and body-free receipts using normalized Threadify and optional Treg evidence.",
   "kind": "skill",
@@ -12,15 +12,38 @@
     "kind": "advanced",
     "standalone": false,
     "references": [
-      { "source": "schemas/market-to-pipeline.v1.json", "target": "references/market-to-pipeline.v1.json" },
-      { "source": "lib/market-to-pipeline.mjs", "target": "scripts/market-to-pipeline.mjs" },
-      { "source": "lib/market-to-pipeline-cli.mjs", "target": "scripts/market-to-pipeline-cli.mjs" },
-      { "source": "docs/market-to-pipeline-treg-attribution.md", "target": "references/treg-attribution.md" },
-      { "source": "workflows/market-to-pipeline/synthetic-market.json", "target": "references/synthetic-market.json" }
+      {
+        "source": "schemas/market-to-pipeline.v1.json",
+        "target": "references/market-to-pipeline.v1.json"
+      },
+      {
+        "source": "lib/market-to-pipeline.mjs",
+        "target": "scripts/market-to-pipeline.mjs"
+      },
+      {
+        "source": "lib/market-to-pipeline-cli.mjs",
+        "target": "scripts/market-to-pipeline-cli.mjs"
+      },
+      {
+        "source": "docs/market-to-pipeline-treg-attribution.md",
+        "target": "references/treg-attribution.md"
+      },
+      {
+        "source": "workflows/market-to-pipeline/synthetic-market.json",
+        "target": "references/synthetic-market.json"
+      },
+      {
+        "source": "lib/market-content.mjs",
+        "target": "scripts/market-content.mjs"
+      }
     ]
   },
   "dependencies": {
-    "workflows": ["offer-builder", "qualified-buyer-research", "agree-next-step"],
+    "workflows": [
+      "offer-builder",
+      "qualified-buyer-research",
+      "agree-next-step"
+    ],
     "files": [
       "workflows/market-to-pipeline/README.md",
       "workflows/market-to-pipeline/synthetic-market.json",
@@ -34,10 +57,28 @@
     "find permission-aware leads and build seven posts"
   ],
   "io": {
-    "inputs": [{ "name": "one versioned offer, one bounded market, normalized Threadify and optional Treg evidence", "schema_ref": "schemas/market-to-pipeline.v1.json" }],
-    "outputs": [{ "name": "private pipeline, exact actions, seven-post campaign, action lifecycle, and body-free receipts", "schema_ref": "schemas/market-to-pipeline.v1.json" }]
+    "inputs": [
+      {
+        "name": "one versioned offer, one bounded market, normalized Threadify and optional Treg evidence",
+        "schema_ref": "schemas/market-to-pipeline.v1.json"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "private pipeline, exact actions, seven-post campaign, action lifecycle, and body-free receipts",
+        "schema_ref": "schemas/market-to-pipeline.v1.json"
+      }
+    ]
   },
-  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "gemini", "openclaw", "hermes"],
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "cursor",
+    "gemini",
+    "openclaw",
+    "hermes"
+  ],
   "required_mcp_tools": [],
   "optional_mcp_tools": [
     "get_connection_defaults",
@@ -46,7 +87,10 @@
     "greatest_hits",
     "query_brain",
     "generate_content",
-    "audit_log"
+    "audit_log",
+    "list_offers",
+    "list_comments",
+    "read_post_performance"
   ],
   "free_capabilities": [
     "local deterministic qualification and deduplication for at most 50 normalized signals and 10 selected prospects",
@@ -92,7 +136,8 @@
       "exactly seven campaign posts and their package hash",
       "no raw bodies or contact destinations in the public receipt",
       "provider write state as false, null for pending or unknown, or true only after authoritative success readback",
-      "fallback state"
+      "fallback state",
+      "buyer-grounded post count and context hash, or explicit legacy_unlinked status"
     ]
   }
 }

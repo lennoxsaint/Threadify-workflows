@@ -91,3 +91,9 @@ The CLI never sends. It makes the safe state transition around a separately avai
 Use the current official Treg interface supplied by the host. The intended flow is catalog search, catalog record and price inspection, explicit spend confirmation, one capped call, then call/balance readback. Record endpoint, provider, requested/returned counts, quote, charge, opaque call identity, observation time, and limitations. Store credentials only in Treg's supported configuration; never put a token in arguments, packets, receipts, examples, or this repository.
 
 Treg is independently licensed and is not embedded, copied, or redistributed here. See [the attribution and compatibility note](../../docs/market-to-pipeline-treg-attribution.md).
+
+## Buyer-grounded content
+
+New runs include `content_context`: current offer, source-linked buyer language, analytics, targeted Treg findings, seven post briefs and the selected Threadify model. Use `market-to-pipeline briefs --input input.json` before generation. Each brief must bind a buyer question to research commissioned for that question and a concrete offer-relevant reader takeaway. Audience evidence is separate from outreach qualification. The content module checks links; the host reviews meaning and source limitations.
+
+Generate through Threadify using the owner-selected model and retain the original text and draft receipts. Legacy v1 packets remain readable and explicitly report `legacy_unlinked`; they are not evidence of the new content path. Public receipts retain only grounding counts and a context hash. Private buyer bodies stay in private state, never public fixtures. See [design and working map](../../docs/market-content-grounding-design.md).

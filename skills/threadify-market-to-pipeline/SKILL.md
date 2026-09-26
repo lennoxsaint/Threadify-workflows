@@ -58,6 +58,57 @@ candidates to `ready_for_approval`, `research`, or `rejected`.
 Apply current law, platform terms, and user policy. The workflow is not legal
 advice. When uncertain, stop at `research` and name the missing evidence.
 
+## Connect buyer language, offer, analytics and research
+
+For every new content run, supply `content_context`. Read the current account,
+offer, relevant post analytics and comments before choosing research queries.
+Select posts for offer relevance as well as engagement; unrelated viral posts do
+not establish buyer demand. Paginate the selected comment threads, state actual
+coverage and use a declared lookback (expand beyond seven days when the current
+sample has no useful buyer questions). Separate audience language from qualified
+prospects; a question is not consent or a lead.
+
+Store exact source language privately and a deidentified paraphrase for generation.
+Classify questions, problems, objections and desired outcomes; exclude generic
+praise. Map each to the frozen offer's supported help, exclusions and claims.
+Analytics guide a format or angle hypothesis, never a causal conversion claim.
+
+Before Treg calls, record the buyer question, the research query and what answer
+would change the post. Prefer relevant market context, alternatives and factual
+answers over an unrelated company list. Discover the endpoint and current price;
+free calls need no new purchase approval, metered calls do. Source snippets are
+leads for verification, not established facts. Record contradictory findings and
+limits. Do not force every search result into a post.
+
+Every brief joins buyer-language IDs, matching Treg research IDs, analytics IDs,
+the offer version, an offer connection and a concrete reader takeaway. Research
+must address at least one of that brief's buyer questions. Run:
+
+```sh
+node scripts/market-to-pipeline-cli.mjs briefs --input INPUT.json
+```
+
+Use the resulting deidentified prompt through Threadify `generate_content`.
+Verify the owner's requested model in the current Threadify model picker/config
+and use its supported alias. If Claude Opus 5.5 is requested, select that model
+inside Threadify, retain the visible version evidence and returned alias, and do
+not substitute a local model or silently fall back. Record draft IDs and original
+text hashes privately. Preserve generated words when the owner requests verbatim
+output; flag unsupported claims separately, never quietly edit them. A raw draft
+with factual problems is for review, not publication-ready copy.
+
+Review semantic relevance: the post must address the buyer's problem, use the
+research to make its answer more useful and fit the actual offer. It must not
+become a report about search costs, lead counts or how the agent worked unless
+the owner explicitly requests behind-the-scenes content. Structural validation
+cannot establish this semantic judgment.
+
+Legacy inputs without `content_context` remain usable for recovery but their
+receipt says `legacy_unlinked`. Never describe them as the new grounded run.
+If a source is missing, report the gap and prepare what is possible; do not
+manufacture a complete linkage. Draft-generation writes and outreach delivery
+are separate receipts; the pipeline action count does not count saved drafts.
+
 ## Build the private package
 
 Normalize only the bounded read results into the schema, then run:
