@@ -41,6 +41,8 @@
   "required_mcp_tools": [],
   "optional_mcp_tools": [
     "get_connection_defaults",
+    "list_dispatcher_tools",
+    "call_agent_action",
     "greatest_hits",
     "query_brain",
     "generate_content",
@@ -51,7 +53,7 @@
     "separate warm permission and cold B2B compliance readiness lanes",
     "private JSON, CSV, and HTML review artifacts",
     "exactly seven de-identified evidence-linked campaign posts",
-    "exact-action approval, pending-attempt persistence, reconciliation, and body-free receipts"
+    "account/evidence/compliance-bound approval, pending-attempt persistence, authoritative reconciliation, and lifecycle-aware body-free receipts"
   ],
   "paid_capability_stubs": [
     "Treg discovery or enrichment is optional, host-supplied, price-previewed, and separately approved before a metered call",
@@ -62,13 +64,13 @@
     "required": true,
     "type": "explicit-final-approval",
     "must_show": [
-      "verified sending account and destination",
+      "verified Threadify source account, sending account, and destination",
       "warm or cold B2B lane and every passing gate",
       "source coverage, observation times, and limitations",
       "quoted and charged spend against the run cap",
       "exact action text, action hash, and idempotency key",
       "sender identity, unsubscribe path, and suppression result when applicable",
-      "the consequence of an unknown provider result"
+      "the consequence of an unknown provider result and the same-attempt reconciliation path"
     ]
   },
   "fallback": {
@@ -89,7 +91,7 @@
       "action hashes, readiness states, and blocker counts",
       "exactly seven campaign posts and their package hash",
       "no raw bodies or contact destinations in the public receipt",
-      "provider write state",
+      "provider write state as false, null for pending or unknown, or true only after authoritative success readback",
       "fallback state"
     ]
   }
