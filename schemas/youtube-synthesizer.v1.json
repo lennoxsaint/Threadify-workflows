@@ -1,0 +1,861 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/youtube-synthesizer.v1.json",
+  "title": "YouTube Synthesizer contracts",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/input"
+    },
+    {
+      "$ref": "#/$defs/output"
+    },
+    {
+      "$ref": "#/$defs/templateLibrary"
+    },
+    {
+      "$ref": "#/$defs/originalLibrary"
+    },
+    {
+      "$ref": "#/$defs/integrityLock"
+    }
+  ],
+  "$defs": {
+    "nonempty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start_ms",
+        "duration_ms",
+        "text"
+      ],
+      "properties": {
+        "start_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "text": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sample_id",
+        "text",
+        "approved"
+      ],
+      "properties": {
+        "sample_id": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "text": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "approved": {
+          "const": true
+        }
+      }
+    },
+    "evidenceValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "evidence_refs"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "video_id",
+        "url",
+        "title",
+        "channel",
+        "language"
+      ],
+      "properties": {
+        "video_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{11}$"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "channel": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "language": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "duration_ms": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "source",
+        "transcript",
+        "voice"
+      ],
+      "properties": {
+        "record_type": {
+          "const": "YouTubeSynthesizerInputV1"
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "transcript": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route",
+            "segments"
+          ],
+          "properties": {
+            "route": {
+              "enum": [
+                "youtube-transcript",
+                "yt-dlp-captions",
+                "pasted-txt",
+                "pasted-vtt",
+                "pasted-srt"
+              ]
+            },
+            "segments": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 25000,
+              "items": {
+                "$ref": "#/$defs/segment"
+              }
+            }
+          }
+        },
+        "voice": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "samples"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "threadify_brain",
+                "approved_samples"
+              ]
+            },
+            "brain_context": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "samples": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/sample"
+              }
+            }
+          }
+        },
+        "evidence_map": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/evidenceValue"
+          }
+        },
+        "audience": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cta": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "eligible",
+        "score",
+        "reasons",
+        "missing_evidence"
+      ],
+      "properties": {
+        "template_id": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "eligible": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        }
+      }
+    },
+    "hook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "template_id",
+        "text",
+        "evidence_refs"
+      ],
+      "properties": {
+        "template_id": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "text": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflow_id",
+        "workflow_version",
+        "action",
+        "generated_at",
+        "source_video_id",
+        "transcript_route",
+        "transcript_sha256",
+        "transcript_segment_count",
+        "voice_route",
+        "approved_voice_sample_count",
+        "voice_context_sha256",
+        "template_scores_sha256",
+        "selected_template_id",
+        "evidence_refs",
+        "draft_sha256",
+        "provider_writes",
+        "fallback_state",
+        "abstention_reason"
+      ],
+      "properties": {
+        "workflow_id": {
+          "const": "youtube-synthesizer"
+        },
+        "workflow_version": {
+          "const": "0.1.0"
+        },
+        "action": {
+          "const": "local_private_draft"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_video_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{11}$"
+        },
+        "transcript_route": {
+          "enum": [
+            "youtube-transcript",
+            "yt-dlp-captions",
+            "pasted-txt",
+            "pasted-vtt",
+            "pasted-srt"
+          ]
+        },
+        "transcript_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "transcript_segment_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "voice_route": {
+          "enum": [
+            "threadify_brain",
+            "approved_samples"
+          ]
+        },
+        "approved_voice_sample_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "voice_context_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "template_scores_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "selected_template_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "draft_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/hash"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provider_writes": {
+          "const": 0
+        },
+        "fallback_state": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "abstention_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+  "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "status",
+        "scores",
+        "hooks",
+        "selected_template_id",
+        "thread",
+        "warnings",
+        "receipt"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "ready" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "hooks": { "type": "array", "minItems": 3, "maxItems": 3 },
+              "selected_template_id": { "type": "string", "minLength": 1 },
+              "thread": { "type": "array", "minItems": 8 }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "record_type": {
+          "const": "YouTubeSynthesizerOutputV1"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "abstained"
+          ]
+        },
+        "scores": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/score"
+          }
+        },
+        "hooks": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/hook"
+          }
+        },
+        "selected_template_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "thread": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "minItems": 8
+        },
+        "warnings": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "receipt": {
+          "$ref": "#/$defs/receipt"
+        }
+      }
+    },
+    "category": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "authority",
+            "investigation_data",
+            "wisdom",
+            "playbook_case_study"
+          ]
+        },
+        "label": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "description",
+        "minimum"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "description": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "minimum": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "placeholder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "source",
+        "rule"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_]+$"
+        },
+        "source": {
+          "const": "transcript_or_metadata"
+        },
+        "rule": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "category",
+        "name",
+        "use_when",
+        "avoid_when",
+        "evidence_requirements",
+        "score_signals",
+        "hook_template",
+        "body_template",
+        "placeholders",
+        "original_ids"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "category": {
+          "enum": [
+            "authority",
+            "investigation_data",
+            "wisdom",
+            "playbook_case_study"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "use_when": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "avoid_when": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "evidence_requirements": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/requirement"
+          }
+        },
+        "score_signals": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "hook_template": {
+          "type": "string",
+          "pattern": "\\{\\{[A-Z0-9_]+\\}\\}"
+        },
+        "body_template": {
+          "type": "array",
+          "minItems": 7,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "placeholders": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/placeholder"
+          }
+        },
+        "original_ids": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^threads:[0-9]+$"
+          }
+        }
+      }
+    },
+    "templateLibrary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "version",
+        "immutable_contract",
+        "categories",
+        "templates"
+      ],
+      "properties": {
+        "record_type": {
+          "const": "YouTubeSynthesizerTemplateLibraryV1"
+        },
+        "version": {
+          "const": "1.0.0"
+        },
+        "immutable_contract": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        },
+        "templates": {
+          "type": "array",
+          "minItems": 12,
+          "maxItems": 12,
+          "items": {
+            "$ref": "#/$defs/template"
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "views",
+        "likes",
+        "replies",
+        "reposts",
+        "quotes",
+        "shares"
+      ],
+      "properties": {
+        "views": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "likes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "replies": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reposts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "shares": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "original": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original_id",
+        "template_id",
+        "example_role",
+        "creator_handle",
+        "platform",
+        "root_post_id",
+        "permalink",
+        "published_at",
+        "observed_at",
+        "metrics",
+        "part_count",
+        "posts",
+        "attribution",
+        "rights_basis"
+      ],
+      "properties": {
+        "original_id": {
+          "type": "string",
+          "pattern": "^threads:[0-9]+$"
+        },
+        "template_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$"
+        },
+        "example_role": {
+          "enum": [
+            "canonical",
+            "contrast",
+            "edge_case"
+          ]
+        },
+        "creator_handle": {
+          "const": "@lennox_saint"
+        },
+        "platform": {
+          "const": "threads"
+        },
+        "root_post_id": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        },
+        "permalink": {
+          "type": "string",
+          "format": "uri"
+        },
+        "published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "metrics": {
+          "$ref": "#/$defs/metrics"
+        },
+        "part_count": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "posts": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/nonempty"
+          }
+        },
+        "attribution": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "rights_basis": {
+          "$ref": "#/$defs/nonempty"
+        }
+      }
+    },
+    "originalLibrary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "observed_at",
+        "metric_definition",
+        "rights_basis",
+        "integrity_contract",
+        "originals"
+      ],
+      "properties": {
+        "record_type": {
+          "const": "YouTubeSynthesizerOriginalLibraryV1"
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "metric_definition": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "rights_basis": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "integrity_contract": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "originals": {
+          "type": "array",
+          "minItems": 36,
+          "maxItems": 36,
+          "items": {
+            "$ref": "#/$defs/original"
+          }
+        }
+      }
+    },
+    "integrityLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_type",
+        "created_at",
+        "template_library_sha256",
+        "original_library_sha256",
+        "templates",
+        "originals"
+      ],
+      "properties": {
+        "record_type": {
+          "const": "YouTubeSynthesizerIntegrityLockV1"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "template_library_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "original_library_sha256": {
+          "$ref": "#/$defs/hash"
+        },
+        "templates": {
+          "type": "object",
+          "minProperties": 12,
+          "maxProperties": 12,
+          "additionalProperties": {
+            "$ref": "#/$defs/hash"
+          }
+        },
+        "originals": {
+          "type": "object",
+          "minProperties": 36,
+          "maxProperties": 36,
+          "additionalProperties": {
+            "$ref": "#/$defs/hash"
+          }
+        }
+      }
+    }
+  }
+}

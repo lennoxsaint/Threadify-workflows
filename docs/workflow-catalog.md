@@ -33,4 +33,5 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Weekly Winner Replication (`weekly-winner-replication`) | skill | `threadify-weekly-winner-replication` | advanced | replicate this week's winners; prepare transformed drafts from recent winning posts |
 | X Article From Daily Post (`x-article-from-daily-post`) | skill | `threadify-x-article-from-daily-post` | advanced | turn my daily post into an X Article; prepare a draft-only X Article packet |
 | YouTube Edit (Eddy) (`youtube-edit`) | skill | `threadify-youtube-edit` | advanced | edit my YouTube video; prepare an edit plan and Threadify promo posts |
+| YouTube Synthesizer (`youtube-synthesizer`) | skill | `threadify-youtube-synthesizer` | advanced | run YouTube Synthesizer; turn this YouTube video into a Threads thread; synthesize this video in my voice |
 | Your Next Moves (`your-next-moves`) | skill | `threadify-your-next-moves` | conversation | show my next buyer moves; review these conversations against my offer |

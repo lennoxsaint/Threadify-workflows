@@ -1,0 +1,127 @@
+{
+  "workflow_id": "youtube-synthesizer",
+  "version": "0.1.0",
+  "title": "YouTube Synthesizer",
+  "summary": "Turn one YouTube transcript into three evidence-backed hooks and one complete long-form Threads draft using twelve immutable, source-gated templates.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-youtube-synthesizer",
+    "source": "plugins/threadify/skills/threadify-youtube-synthesizer/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      {
+        "source": "schemas/youtube-synthesizer.v1.json",
+        "target": "references/youtube-synthesizer.v1.json"
+      },
+      {
+        "source": "lib/youtube-synthesizer.mjs",
+        "target": "scripts/youtube-synthesizer.mjs"
+      },
+      {
+        "source": "lib/youtube-synthesizer-cli.mjs",
+        "target": "scripts/youtube-synthesizer-cli.mjs"
+      },
+      {
+        "source": "docs/youtube-synthesizer-attribution.md",
+        "target": "references/upstream-attribution.md"
+      }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/youtube-synthesizer/README.md",
+      "schemas/youtube-synthesizer.v1.json",
+      "docs/youtube-synthesizer-attribution.md",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/references/templates.v1.json",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/references/originals.v1.json",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/references/integrity.v1.json",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/references/template-gallery.md",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/vendor/youtube-transcript-1.3.1.mjs",
+      "plugins/threadify/skills/threadify-youtube-synthesizer/vendor/youtube-transcript-LICENSE.txt"
+    ]
+  },
+  "triggers": [
+    "run YouTube Synthesizer",
+    "turn this YouTube video into a Threads thread",
+    "synthesize this video in my voice"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "one YouTube URL or pasted TXT, VTT, or SRT transcript plus Brain context or three approved voice samples",
+        "schema_ref": "schemas/youtube-synthesizer.v1.json"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "all twelve template scores, three evidence-backed hooks, one eligible long-form thread or an abstention, and a body-free receipt",
+        "schema_ref": "schemas/youtube-synthesizer.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "cursor",
+    "gemini",
+    "openclaw",
+    "hermes"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "query_brain",
+    "get_brain_overview"
+  ],
+  "free_capabilities": [
+    "no-key public YouTube caption extraction through the pinned youtube-transcript package",
+    "optional installed yt-dlp caption-only fallback with media download disabled",
+    "local TXT, VTT, and SRT transcript parsing",
+    "deterministic scoring of all twelve immutable templates",
+    "evidence-gated three-hook and long-form thread drafting with abstention"
+  ],
+  "paid_capability_stubs": [
+    "connected Threadify Brain reads depend on current account scopes and entitlement; three approved local writing samples are the complete fallback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "source video identity, transcript route, language, and coverage",
+      "voice route and approved samples or Brain read boundary",
+      "all twelve scores and eligibility reasons",
+      "three exact hook drafts and their evidence references",
+      "complete selected thread, evidence map, warnings, and abstention state",
+      "draft-only boundary and zero provider writes"
+    ]
+  },
+  "fallback": {
+    "mode": "pasted-transcript-and-approved-samples",
+    "artifact_schema": "youtube-synthesizer.v1",
+    "instructions": [
+      "If public captions fail, try an installed yt-dlp only with --skip-download and subtitle flags; never fetch video or audio.",
+      "If caption tools remain unavailable, request pasted TXT, VTT, or SRT and preserve the route in the receipt.",
+      "If Threadify Brain is unavailable, require at least three creator-approved writing samples before drafting.",
+      "If no template satisfies every evidence requirement, return three hooks only when individually supported and abstain from the full thread.",
+      "Return a private local draft without saving, scheduling, publishing, or predicting performance."
+    ]
+  },
+  "receipt": {
+    "schema": "youtube-synthesizer.v1",
+    "must_prove": [
+      "source video ID and transcript route",
+      "transcript hash and bounded coverage",
+      "voice route and sample count",
+      "all twelve eligibility scores",
+      "selected template and evidence references",
+      "draft hash or abstention reason",
+      "zero provider writes",
+      "fallback state"
+    ]
+  }
+}

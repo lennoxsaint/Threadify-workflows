@@ -239,8 +239,12 @@ function validateReadyOutput(file) {
 
 function validateRedaction(file) {
   const text = fs.readFileSync(file, 'utf8');
+  const publicAttributionSafeText = text.replaceAll(
+    /https:\/\/share\.snipd\.com\/episode\/[0-9a-f-]{36}/gi,
+    'https://share.snipd.com/episode/PUBLIC-EPISODE-ID',
+  );
   for (const pattern of forbiddenContent) {
-    assert(!pattern.test(text), `${rel(file)} contains forbidden or secret-like content: ${pattern}`);
+    assert(!pattern.test(publicAttributionSafeText), `${rel(file)} contains forbidden or secret-like content: ${pattern}`);
   }
 }
 

@@ -1,5 +1,14 @@
 # Threadify Workflows stable releases
 
+## 0.19.0
+
+- Adds YouTube Synthesizer: one URL becomes three evidence-backed hook options and one complete long-form Threads draft, or a hard abstention when no structure is supported.
+- Ships exactly twelve immutable word-for-word templates across Authority, Investigation / Data, Wisdom, and Playbook / Case Study, plus exactly thirty-six owned, attributed, permission-cleared original threads.
+- Scores every template, fills only transcript- or verified-metadata-backed placeholders, requires Threadify Brain context or three distinct approved samples, and locks fixed wording and originals with SHA-256 integrity checks.
+- Extracts public captions without an API key, supports optional caption-only `yt-dlp` with media downloading disabled, and accepts local TXT, VTT, or SRT fallbacks.
+- Treats transcripts as untrusted data, never executes their instructions, never downloads video or audio, never fabricates a claim, and never saves, schedules, or publishes generated content.
+- Includes strict schemas, transcript fixtures, abstention and prompt-injection cases, body-free receipts, and full Codex, Claude Code, Cursor, Gemini CLI, OpenClaw and Hermes bundles.
+
 ## 0.18.0
 
 - Adds Market to Pipeline: a local-first workflow for turning one offer and one bounded market into a private qualified pipeline, exact next actions, and exactly seven evidence-linked posts.
