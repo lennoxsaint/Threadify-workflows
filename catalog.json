@@ -1658,6 +1658,81 @@
       ]
     },
     {
+      "workflow_id": "youtube-synthesizer",
+      "version": "0.1.0",
+      "title": "YouTube Synthesizer",
+      "summary": "Turn one YouTube transcript into three evidence-backed hooks and one complete long-form Threads draft using twelve immutable, source-gated templates.",
+      "kind": "skill",
+      "skill_name": "threadify-youtube-synthesizer",
+      "entrypoint": "skills/threadify-youtube-synthesizer/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-youtube-synthesizer/SKILL.md",
+      "source_manifest": "workflows/youtube-synthesizer/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "schemas/youtube-synthesizer.v1.json",
+            "target": "references/youtube-synthesizer.v1.json"
+          },
+          {
+            "source": "lib/youtube-synthesizer.mjs",
+            "target": "scripts/youtube-synthesizer.mjs"
+          },
+          {
+            "source": "lib/youtube-synthesizer-cli.mjs",
+            "target": "scripts/youtube-synthesizer-cli.mjs"
+          },
+          {
+            "source": "docs/youtube-synthesizer-attribution.md",
+            "target": "references/upstream-attribution.md"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/youtube-synthesizer/README.md",
+          "schemas/youtube-synthesizer.v1.json",
+          "docs/youtube-synthesizer-attribution.md",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/references/templates.v1.json",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/references/originals.v1.json",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/references/integrity.v1.json",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/references/template-gallery.md",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/vendor/youtube-transcript-1.3.1.mjs",
+          "plugins/threadify/skills/threadify-youtube-synthesizer/vendor/youtube-transcript-LICENSE.txt"
+        ]
+      },
+      "triggers": [
+        "run YouTube Synthesizer",
+        "turn this YouTube video into a Threads thread",
+        "synthesize this video in my voice"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "one YouTube URL or pasted TXT, VTT, or SRT transcript plus Brain context or three approved voice samples",
+            "schema_ref": "schemas/youtube-synthesizer.v1.json"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "all twelve template scores, three evidence-backed hooks, one eligible long-form thread or an abstention, and a body-free receipt",
+            "schema_ref": "schemas/youtube-synthesizer.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "gemini",
+        "openclaw",
+        "hermes"
+      ]
+    },
+    {
       "workflow_id": "your-next-moves",
       "version": "0.1.0",
       "title": "Your Next Moves",
