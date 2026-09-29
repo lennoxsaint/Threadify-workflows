@@ -68,9 +68,12 @@ test('routine requires a real-run receipt; overlap, pause and unknown outcomes b
   await x.step('begin-run',{preflight});const run=x.status().pending.id;
   await assert.rejects(x.step('begin-run',{preflight}),/another run/);
   await assert.rejects(x.step('finish-run',{run_id:run,evidence:x.e({outcome:'unknown'})}),/Unknown/);
-  await x.step('finish-run',{run_id:run,evidence:x.e({outcome:'confirmed_no_actions'})});
+  await x.step('finish-run',{run_id:run,evidence:x.e({outcome:'confirmed_no_actions',job_id:'fixture-job',runner_run_id:'fixture-run'})});
   await x.step('routine',{evidence:{...routine,real_run_verified:true,local_run_id:run}});
   assert.equal(x.status().ready,true);
+  await x.step('routine-configured',{evidence:{...routine,job_id:'replacement-job'}});
+  assert.equal(x.status().recurring_routine_verified,false);
+  await assert.rejects(x.step('routine',{evidence:{...routine,job_id:'replacement-job',real_run_verified:true,local_run_id:run}}),/matching job/);
   await x.step('pause',{});await assert.rejects(x.step('begin-run',{preflight}),/paused/);
   await x.step('permission',{mode:'automatic',confirmed:true,confirmation:'changed fixture choice'});
   await assert.rejects(x.step('begin-run',{preflight}),/unverified/);

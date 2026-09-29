@@ -39,3 +39,5 @@ For the first week, `draft_count` counts new drafts and `existing_occupied_count
 Before the initial week, `begin-batch` acquires the same persisted pending record as recurring `begin-run`, without requiring a configured routine. Both need current account/entitlement/facts/quota/calendar preflight. Standing scheduling binds that run ID; after finish-run, old approvals cannot execute. Unknown outcomes stay pending. Calendar preflight must include all scheduled posts in the seven-day range; posts at other times count toward daily frequency.
 
 Use the next seven complete local posting days: start today only when the first agreed daily time is still at least five minutes ahead; otherwise start tomorrow. Recurring checks retain existing scheduled posts and do not backfill missed times today. Show these seven actual dates when confirming the plan.
+
+For a recurring `finish-run`, include `job_id` and `runner_run_id` from the actual host invocation. `routine` must reference that exact reconciled job/run, local run ID and current permission. Reconfiguring a job clears previous recurring verification.
