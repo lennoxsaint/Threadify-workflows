@@ -1,5 +1,16 @@
 # Threadify Workflows stable releases
 
+## 0.20.0
+
+- Preserves YouTube Synthesizer's pure `youtube-synthesizer.v1` generation contract and zero-write receipt while adding a separate `youtube-synthesizer-delivery.v1` module.
+- Freezes the exact ordered thread, target Threads account, action, time and timezone, optional owner-image hash and provider reference, visible automation state, and a stable idempotency key into one immutable approval packet.
+- Defaults to fresh best-time scheduling with calendar-conflict checks and also supports explicit publish-now when the current Threadify connector advertises it.
+- Requires separate approval before uploading one local owner-supplied image, then fresh final delivery approval after the provider URL is known.
+- Persists request intent before every provider write, dispatches once, and blocks ambiguous retries until authoritative schedule or publication readback matches the exact approved content.
+- Keeps exact-post validation, best-time evidence, and the account calendar fresh through final approval; an ambiguous image-upload attempt is counted and can never be relabelled as a zero-write manual fallback.
+- Never downloads YouTube media, silently rewrites copy, adds a plug, enables per-post reposting, hides account-wide Auto Repost, or cross-posts to another platform.
+- Includes a private manual fallback and deterministic in-memory adapter tests; this release does not schedule or publish a real Threads post.
+
 ## 0.19.0
 
 - Adds YouTube Synthesizer: one URL becomes three evidence-backed hook options and one complete long-form Threads draft, or a hard abstention when no structure is supported.

@@ -1659,7 +1659,7 @@
     },
     {
       "workflow_id": "youtube-synthesizer",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "YouTube Synthesizer",
       "summary": "Turn one YouTube transcript into three evidence-backed hooks and one complete long-form Threads draft using twelve immutable, source-gated templates.",
       "kind": "skill",
@@ -1676,8 +1676,16 @@
             "target": "references/youtube-synthesizer.v1.json"
           },
           {
+            "source": "schemas/youtube-synthesizer-delivery.v1.json",
+            "target": "references/youtube-synthesizer-delivery.v1.json"
+          },
+          {
             "source": "lib/youtube-synthesizer.mjs",
             "target": "scripts/youtube-synthesizer.mjs"
+          },
+          {
+            "source": "lib/youtube-synthesizer-delivery.mjs",
+            "target": "scripts/youtube-synthesizer-delivery.mjs"
           },
           {
             "source": "lib/youtube-synthesizer-cli.mjs",
@@ -1694,6 +1702,7 @@
         "files": [
           "workflows/youtube-synthesizer/README.md",
           "schemas/youtube-synthesizer.v1.json",
+          "schemas/youtube-synthesizer-delivery.v1.json",
           "docs/youtube-synthesizer-attribution.md",
           "plugins/threadify/skills/threadify-youtube-synthesizer/references/templates.v1.json",
           "plugins/threadify/skills/threadify-youtube-synthesizer/references/originals.v1.json",

@@ -1,6 +1,6 @@
 {
   "workflow_id": "youtube-synthesizer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "YouTube Synthesizer",
   "summary": "Turn one YouTube transcript into three evidence-backed hooks and one complete long-form Threads draft using twelve immutable, source-gated templates.",
   "kind": "skill",
@@ -17,8 +17,16 @@
         "target": "references/youtube-synthesizer.v1.json"
       },
       {
+        "source": "schemas/youtube-synthesizer-delivery.v1.json",
+        "target": "references/youtube-synthesizer-delivery.v1.json"
+      },
+      {
         "source": "lib/youtube-synthesizer.mjs",
         "target": "scripts/youtube-synthesizer.mjs"
+      },
+      {
+        "source": "lib/youtube-synthesizer-delivery.mjs",
+        "target": "scripts/youtube-synthesizer-delivery.mjs"
       },
       {
         "source": "lib/youtube-synthesizer-cli.mjs",
@@ -35,6 +43,7 @@
     "files": [
       "workflows/youtube-synthesizer/README.md",
       "schemas/youtube-synthesizer.v1.json",
+      "schemas/youtube-synthesizer-delivery.v1.json",
       "docs/youtube-synthesizer-attribution.md",
       "plugins/threadify/skills/threadify-youtube-synthesizer/references/templates.v1.json",
       "plugins/threadify/skills/threadify-youtube-synthesizer/references/originals.v1.json",
@@ -76,17 +85,28 @@
   "optional_mcp_tools": [
     "get_connection_defaults",
     "query_brain",
-    "get_brain_overview"
+    "get_brain_overview",
+    "get_capabilities",
+    "get_best_time",
+    "upload_media",
+    "validate_post",
+    "schedule_post",
+    "publish_now",
+    "get_publish_status",
+    "get_schedule_status",
+    "list_scheduled_posts"
   ],
   "free_capabilities": [
     "no-key public YouTube caption extraction through the pinned youtube-transcript package",
     "optional installed yt-dlp caption-only fallback with media download disabled",
     "local TXT, VTT, and SRT transcript parsing",
     "deterministic scoring of all twelve immutable templates",
-    "evidence-gated three-hook and long-form thread drafting with abstention"
+    "evidence-gated three-hook and long-form thread drafting with abstention",
+    "immutable local delivery approval packets and private manual fallback"
   ],
   "paid_capability_stubs": [
-    "connected Threadify Brain reads depend on current account scopes and entitlement; three approved local writing samples are the complete fallback"
+    "connected Threadify Brain reads depend on current account scopes and entitlement; three approved local writing samples are the complete fallback",
+    "connected Threads validation, media upload, scheduling, publish-now, and authoritative readback depend on current Threadify capabilities"
   ],
   "approval_gate": {
     "required": true,
@@ -97,7 +117,8 @@
       "all twelve scores and eligibility reasons",
       "three exact hook drafts and their evidence references",
       "complete selected thread, evidence map, warnings, and abstention state",
-      "draft-only boundary and zero provider writes"
+      "zero-write synthesis receipt",
+      "for optional delivery: exact account, ordered thread, action, time and timezone, image hash and provider reference, visible automation state, and stable idempotency key"
     ]
   },
   "fallback": {
@@ -108,7 +129,8 @@
       "If caption tools remain unavailable, request pasted TXT, VTT, or SRT and preserve the route in the receipt.",
       "If Threadify Brain is unavailable, require at least three creator-approved writing samples before drafting.",
       "If no template satisfies every evidence requirement, return three hooks only when individually supported and abstain from the full thread.",
-      "Return a private local draft without saving, scheduling, publishing, or predicting performance."
+      "Return a private local draft without saving, scheduling, publishing, or predicting performance.",
+      "If delivery tools are unavailable, return the exact private manual handoff; never claim an upload, schedule, or publication."
     ]
   },
   "receipt": {

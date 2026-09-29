@@ -171,7 +171,8 @@ function validateManifest(file) {
 
   for (const tool of [...(manifest.required_mcp_tools ?? []), ...(manifest.optional_mcp_tools ?? [])]) {
     assert(allowedTools.has(tool), `${rel(file)} references unknown MCP tool ${tool}`);
-    assert(!disallowedPublicTools.has(tool), `${rel(file)} uses disallowed public v0 tool ${tool}`);
+    const approvedPublishNow = manifest.workflow_id === 'youtube-synthesizer' && tool === 'publish_now';
+    assert(!disallowedPublicTools.has(tool) || approvedPublishNow, `${rel(file)} uses disallowed public v0 tool ${tool}`);
   }
 
   assert(
