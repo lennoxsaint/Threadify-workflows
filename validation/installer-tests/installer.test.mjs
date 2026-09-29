@@ -100,6 +100,13 @@ function sandbox() {
   };
 }
 
+function cleanupSandbox(directory) {
+  // A just-exited copied Node executable can remain briefly locked on Windows.
+  // Node's recursive remover only retries transient EBUSY/EPERM errors when
+  // maxRetries is set, so keep teardown deterministic across the CI matrix.
+  fs.rmSync(directory, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+}
+
 function nativeCodexFixture(box, failingCommand) {
   const bin = path.join(box.directory, 'bin');
   const calls = path.join(box.directory, 'codex-calls.jsonl');
@@ -143,7 +150,7 @@ process.exit(0);
 
 test('alternate-home native install does not inherit another Codex configuration target', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   const env = nativeCodexFixture(box, 'never-match');
   env.CODEX_HOME = path.join(box.directory, 'other-codex');
@@ -163,7 +170,7 @@ test('alternate-home native install does not inherit another Codex configuration
 
 test('native install refuses a same-name marketplace outside its managed releases', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   const env = nativeCodexFixture(box, 'never-match');
   env.THREADIFY_TEST_MARKETPLACES = JSON.stringify({ marketplaces: [{ name: 'threadify-workflows',
@@ -176,7 +183,7 @@ test('native install refuses a same-name marketplace outside its managed release
 
 test('native update replaces only a verified managed marketplace without removing the plugin', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const oldRelease = fixtureRelease(box.directory, { version: '0.4.1' });
   const newRelease = fixtureRelease(box.directory, { version: '0.5.0' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'codex', autoUpdate: false,
@@ -196,7 +203,7 @@ test('native update replaces only a verified managed marketplace without removin
 
 test('normal-home native install preserves an intentional custom CODEX_HOME', (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   const env = nativeCodexFixture(box, 'never-match');
   env.CODEX_HOME = path.join(box.directory, 'custom-codex');
@@ -217,7 +224,7 @@ await install(${JSON.stringify(options)});`;
 
 test('failed native update keeps the active pointer and requires reconciliation before another update', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const oldRelease = fixtureRelease(box.directory, { version: '0.4.1' });
   const newRelease = fixtureRelease(box.directory, { version: '0.5.0' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
@@ -243,7 +250,7 @@ test('failed native update keeps the active pointer and requires reconciliation 
 
 test('failed native rollback does not switch the pointer or claim a healthy installation', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   for (const version of ['0.4.1', '0.5.0']) {
     const release = fixtureRelease(box.directory, { version });
     await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
@@ -258,7 +265,7 @@ test('failed native rollback does not switch the pointer or claim a healthy inst
 
 test('an unreadable mutation marker blocks automatic update without fetching or changing clients', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.4.1' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'claude',
     autoUpdate: true, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
@@ -272,7 +279,7 @@ test('an unreadable mutation marker blocks automatic update without fetching or 
 
 test('native targets remain unverified in local status and empty targets are not installed', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'codex', autoUpdate: false,
     sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
@@ -290,7 +297,7 @@ test('native targets remain unverified in local status and empty targets are not
 
 test('uninstall cannot mutate targets while another update holds the lock', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: false,
     sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
@@ -301,7 +308,7 @@ test('uninstall cannot mutate targets while another update holds the lock', asyn
 
 test('an aged lock owned by a live process cannot be stolen', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.5.0' });
   const lock = path.join(box.root, 'update.lock');
   fs.mkdirSync(lock, { recursive: true });
@@ -316,7 +323,7 @@ test('an aged lock owned by a live process cannot be stolen', async (t) => {
 for (const lockState of ['dead owner', 'unknown owner', 'recovery already held']) {
   test(`aged update lock recovery handles ${lockState}`, async (t) => {
     const box = sandbox();
-    t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+    t.after(() => cleanupSandbox(box.directory));
     const release = fixtureRelease(box.directory, { version: '0.5.0' });
     const lock = path.join(box.root, 'update.lock');
     fs.mkdirSync(lock, { recursive: true });
@@ -345,7 +352,7 @@ for (const operation of ['uninstall', 'target migration']) {
   for (const command of ['plugin remove', 'plugin marketplace remove']) {
     test(`native ${operation} preserves its record when ${command} fails`, async (t) => {
       const box = sandbox();
-      t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+      t.after(() => cleanupSandbox(box.directory));
       const release = fixtureRelease(box.directory, { version: '0.4.1' });
       await install({ home: box.home, root: box.root, env: box.env, targets: 'codex',
         autoUpdate: false, sourceBundle: release.bundleFile, sourceManifest: release.manifestFile });
@@ -370,7 +377,7 @@ for (const operation of ['uninstall', 'target migration']) {
 
 test('fresh install exposes exactly one native skill in every supported client and a complete Codex plugin', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.4.0' });
   const receipt = await install({
     home: box.home,
@@ -394,7 +401,7 @@ test('fresh install exposes exactly one native skill in every supported client a
 
 test('universal Agent Skills path remains explicitly supported', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.4.1' });
   const receipt = await install({
     home: box.home,
@@ -411,7 +418,7 @@ test('universal Agent Skills path remains explicitly supported', async (t) => {
 
 test('rerunning native all removes a prior managed universal duplicate', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const release = fixtureRelease(box.directory, { version: '0.4.1' });
   await install({
     home: box.home,
@@ -439,7 +446,7 @@ test('rerunning native all removes a prior managed universal duplicate', async (
 
 test('frozen beta migration preserves local Offer Context and creates no duplicate target', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const legacy = path.join(box.home, '.claude', 'skills', 'threadify-qualified-buyer-research');
   fs.mkdirSync(legacy, { recursive: true });
   fs.writeFileSync(path.join(legacy, 'SKILL.md'), '---\nname: threadify-qualified-buyer-research\n---\nfrozen beta\n');
@@ -464,7 +471,7 @@ test('frozen beta migration preserves local Offer Context and creates no duplica
 
 test('installer refuses to overwrite an unrelated skill', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const target = path.join(box.home, '.claude', 'skills', 'threadify-qualified-buyer-research');
   fs.mkdirSync(target, { recursive: true });
   fs.writeFileSync(path.join(target, 'SKILL.md'), '---\nname: unrelated-skill\n---\n');
@@ -486,7 +493,7 @@ test('installer refuses to overwrite an unrelated skill', async (t) => {
 
 test('rules-only update reloads, logic update requires restart, and rollback restores exact prior skill', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const v040 = fixtureRelease(box.directory, { version: '0.4.0', changeClass: 'installer' });
   const v041 = fixtureRelease(box.directory, { version: '0.4.1', changeClass: 'rules_only' });
   const v050 = fixtureRelease(box.directory, { version: '0.5.0', changeClass: 'skill_logic' });
@@ -503,7 +510,7 @@ test('rules-only update reloads, logic update requires restart, and rollback res
 
 test('offline, checksum mismatch, and process lock preserve last-known-good', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const v040 = fixtureRelease(box.directory, { version: '0.4.0' });
   const v041 = fixtureRelease(box.directory, { version: '0.4.1', changeClass: 'rules_only' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: true, sourceBundle: v040.bundleFile, sourceManifest: v040.manifestFile });
@@ -522,7 +529,7 @@ test('offline, checksum mismatch, and process lock preserve last-known-good', as
 
 test('disabled auto-update performs no on-use mutation and uninstall leaves receipts', async (t) => {
   const box = sandbox();
-  t.after(() => fs.rmSync(box.directory, { recursive: true, force: true }));
+  t.after(() => cleanupSandbox(box.directory));
   const v040 = fixtureRelease(box.directory, { version: '0.4.0' });
   const v041 = fixtureRelease(box.directory, { version: '0.4.1', changeClass: 'rules_only' });
   await install({ home: box.home, root: box.root, env: box.env, targets: 'claude', autoUpdate: false, sourceBundle: v040.bundleFile, sourceManifest: v040.manifestFile });
