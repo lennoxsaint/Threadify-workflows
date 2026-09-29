@@ -34,6 +34,7 @@ const allowedTools = new Set([
   'query_brain',
   'get_brain_overview',
   'remember',
+  'ingest_brain_source',
   'correct_memory',
   'tombstone_memory',
   'export_memory_packet',

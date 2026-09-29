@@ -1,3 +1,9 @@
+# 0.21.0 candidate — not released
+
+- Add Get Set Up, private recovery state and six runtime capability adapters.
+- Add explicitly selected scheduling permission with revocation and provider readback requirements.
+- Add a public single-file entry. Live customer and six-runtime proof remain release gates.
+
 # Threadify Workflows stable releases
 
 ## 0.20.0

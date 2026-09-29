@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.20.0",
+  "release_version": "0.21.0",
   "skill_version": "0.10.0",
-  "plugin_version": "0.20.0",
+  "plugin_version": "0.21.0",
   "rules_version": "0.4.0",
-  "change_class": "skill_logic",
-  "release": true,
-  "summary": "v0.20.0 adds a separate, approval-bound YouTube Synthesizer delivery module for exact Threads scheduling or publish-now execution with optional owner-image transfer, stable idempotency, and authoritative readback."
+  "change_class": "installer",
+  "release": false,
+  "summary": "Candidate: resumable customer setup, Brain verification and scoped recurring scheduling. Live adapter and customer acceptance pending."
 }

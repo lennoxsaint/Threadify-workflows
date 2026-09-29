@@ -1,3 +1,4 @@
+import { assertStandingPermission, assertCalendarCapacity } from './standing-permission.mjs';
 import { createHorizon } from './planner.mjs';
 import { resolveAdaptation } from './sources.mjs';
 import { readState, updateState } from './store.mjs';
@@ -12,7 +13,7 @@ const assert = (condition, message) => { if (!condition) throw new Error(message
 const RESOLVED = new Set(['scheduled', 'published', 'observed', 'reviewed_local']);
 const SETUP_WRITES = new Set(['setup', 'approve-setup', 'begin-import', 'reconcile-import']);
 const LEARNING_WRITES = new Set(['record-feedback', 'begin-feedback-share', 'reconcile-feedback']);
-const MUTATIONS = new Set(['plan', 'refresh-day', 'add-review', 'record-validation', 'approve', 'edit', 'begin-attempt', 'reconcile', 'record-outcome', 'complete-local', 'apply-browser-review', ...SETUP_WRITES, ...LEARNING_WRITES]);
+const MUTATIONS = new Set(['plan', 'refresh-day', 'add-review', 'record-validation', 'approve', 'authorize-from-setup', 'edit', 'begin-attempt', 'reconcile', 'record-outcome', 'complete-local', 'apply-browser-review', ...SETUP_WRITES, ...LEARNING_WRITES]);
 const READS = new Set(['status', 'continue', 'display', 'resolve-source', 'display-setup', 'display-feedback', 'prepare-reminder']);
 const initial = () => ({ schema_version: 'creator-workspace.v1', plans: [], reviews: [], feedback: [], setups: [] });
 function workspace(payload) {
@@ -141,7 +142,7 @@ export async function runCreatorCommand(command, { root, revision, input = {} })
     return { revision: state.revision, result };
   }
   let result;
-  const state = await updateState(root, revision, (payload) => {
+  const state = await updateState(root, revision, async (payload) => {
     const data = workspace(payload);
     if (command === 'apply-browser-review') {
       const submission = browserSession.submission;
@@ -221,6 +222,15 @@ export async function runCreatorCommand(command, { root, revision, input = {} })
       const current = getReview(data, input.review_id);
       let next;
       if (command === 'approve') next = approveReview(current, input.displayed, input.confirmation);
+      if (command === 'authorize-from-setup') {
+        next = structuredClone(current);
+        for (const card of next.cards) {
+          assert(['draft', 'validated', 'approved'].includes(card.state), 'Resolve delivery before authorizing.');
+          const grant = assertStandingPermission((await readState(input.setup_root)).payload, input.setup_root, card, input.now);
+          card.approval = { card_hash: reviewHash(card.content), ...grant, kind: 'standing_schedule' };
+          card.state = 'approved';
+        }
+      }
       if (command === 'record-validation') next = recordValidation(current, input.card_id, input.receipt, input.now);
       if (command === 'edit') {
         const preferences = getPlan(data, current.plan_id).preferences;
@@ -240,6 +250,12 @@ export async function runCreatorCommand(command, { root, revision, input = {} })
       if (command === 'begin-attempt') {
         const card = current.cards.find((c) => c.content.id === input.card_id);
         assert(card, 'Unknown review card.');
+        if (card.approval?.kind === 'standing_schedule') {
+          const setup = (await readState(card.approval.setup_root)).payload;
+          const grant = assertStandingPermission(setup, card.approval.setup_root, card, input.now, card.approval.permission_id);
+          assert(grant.run_id === card.approval.run_id, 'The authorized setup run has ended; authorize in the current run.');
+          assertCalendarCapacity(setup, card, input.preflight, data.reviews.flatMap(r => r.cards).filter(c => c !== card));
+        }
         // A saved proof clock cannot keep expired rights, claims or replacement
         // facts valid when an upfront draft is scheduled on a later day.
         validateReuse(card.content, current.reuse_evidence?.[card.content.id], input.now);

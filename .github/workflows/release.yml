@@ -65,6 +65,7 @@ jobs:
             dist/threadify-workflows-plugin.tar.gz \
             dist/stable-release-manifest.json \
             dist/checksums.txt \
+            dist/installation.md \
             dist/CHANGELOG.md \
             --target "$GITHUB_SHA" \
             --title "Threadify Workflows ${{ steps.intent.outputs.version }}" \

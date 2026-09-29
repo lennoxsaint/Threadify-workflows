@@ -1,7 +1,7 @@
 {
   "name": "threadify-workflows",
-  "version": "0.20.0",
-  "description": "Clarify your offer, find relevant Threads conversations, and prepare useful replies for approval. Start locally without an account.",
+  "version": "0.21.0",
+  "description": "Get your Threadify account, Brain, voice and first week set up through one guided workflow.",
   "author": {
     "name": "Threadify"
   },
@@ -20,8 +20,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Threadify Workflows",
-    "shortDescription": "Your next buyer conversation",
-    "longDescription": "Start with Your Next Moves. Clarify an offer, inspect supplied conversations, review a useful reply, track agreed next steps and examine actual outcomes. Draft locally without a Threadify account; connect entitled Threadify services when useful. Content, video and Brain workflows remain available. Exact approval is required for external actions. Local records do not prove a message was delivered or a sale occurred.",
+    "shortDescription": "Your account and first week",
+    "longDescription": "Start with Get Set Up. Connect your account and agent, confirm your existing knowledge, build your Brain and prepare seven days of posts in your voice. Choose review for every batch or explicit scheduling permission within your agreed plan. Verify each result and how to pause. Other creator and business workflows remain available.",
     "developerName": "Threadify",
     "category": "Productivity",
     "capabilities": [
@@ -31,7 +31,7 @@
     ],
     "websiteURL": "https://www.threadify.app",
     "defaultPrompt": [
-      "Your Next Moves"
+      "Get Set Up"
     ],
     "brandColor": "#0F172A"
   }

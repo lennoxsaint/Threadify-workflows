@@ -819,6 +819,70 @@
       ]
     },
     {
+      "workflow_id": "get-set-up",
+      "version": "0.1.0",
+      "title": "Get Set Up",
+      "summary": "Go from signup to a personalized Brain, first week and verified agent routine.",
+      "kind": "skill",
+      "skill_name": "threadify-get-set-up",
+      "entrypoint": "skills/threadify-get-set-up/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-get-set-up/SKILL.md",
+      "source_manifest": "workflows/get-set-up/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "docs/customer-setup.md",
+            "target": "references/setup-guide.md"
+          },
+          {
+            "source": "docs/setup-adapters.md",
+            "target": "references/setup-adapters.md"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [
+          "create-my-week",
+          "vault-setup"
+        ],
+        "files": [
+          "docs/customer-setup.md",
+          "docs/setup-adapters.md",
+          "lib/onboarding/setup.mjs"
+        ]
+      },
+      "triggers": [
+        "set up Threadify",
+        "get me started with Threadify",
+        "resume my Threadify setup"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "setup request",
+            "schema_ref": "inline:setup-request"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "private setup status",
+            "schema_ref": "inline:setup-status"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "hermes",
+        "gemini",
+        "codex",
+        "claude",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "greatest-hits-runway",
       "version": "0.1.0",
       "title": "Greatest Hits Runway",
