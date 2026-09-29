@@ -21,6 +21,15 @@ test('an existing post at another time fills the daily allowance and ended runs 
   assert.doesNotThrow(()=>assertCalendarCapacity(s,card,{occupied_instants:['2026-09-30T02:00:00Z']}));
   s.pending=null;assert.throws(()=>assertStandingPermission(s,'/private',card,now),/lock first/);
 });
+test('late setup prepares the next seven complete posting days rather than backfilling today',()=>{
+  const {s,card}=fixture();
+  const later='2026-09-29T12:00:00Z';
+  card.content.scheduled_at='2026-10-06T01:00:00Z';
+  card.validation.card_hash=reviewHash(card.content);card.validation.valid_until='2026-09-29T12:04:00Z';
+  assert.doesNotThrow(()=>assertStandingPermission(s,'/private',card,later));
+  card.content.scheduled_at='2026-09-29T01:00:00Z';card.validation.card_hash=reviewHash(card.content);
+  assert.throws(()=>assertStandingPermission(s,'/private',card,later),/seven-day/);
+});
 test('reviewed mode, off-topic, stale and out-of-window cards cannot auto-schedule',()=>{
   for(const mutate of [x=>x.s.permission.mode='reviewed',x=>x.card.content.topic='sales',x=>x.card.validation.valid_until=now,x=>x.card.content.scheduled_at='2026-10-07T01:00:00Z',x=>x.card.content.cta='buy']) {
     const x=fixture();mutate(x);assert.throws(()=>assertStandingPermission(x.s,'/private',x.card,now));

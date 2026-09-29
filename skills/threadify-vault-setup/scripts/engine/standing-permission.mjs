@@ -11,8 +11,9 @@ export function assertStandingPermission(s, root, card, now, expectedId) {
   const c = card.content; const p = s.summary.facts;
   if (c.account_id !== s.account || c.timezone !== p.timezone) fail('Card is outside the approved account or timezone.');
   const clock = localClock(c.scheduled_at, c.timezone);
-  const today = localClock(now, c.timezone).date;
-  const days = (Date.parse(clock.date) - Date.parse(today)) / 86400000;
+  const current = localClock(new Date(Date.parse(now) + 300_000).toISOString(), c.timezone);
+  const startOffset = current.time >= [...p.times].sort()[0] ? 1 : 0;
+  const days = (Date.parse(clock.date) - Date.parse(current.date)) / 86400000 - startOffset;
   if (days < 0 || days > 6 || !p.times.includes(clock.time)) fail('Card is outside the agreed seven-day posting slots.');
   const topics = p.topics.split(/[,\n]/).map((t) => t.trim().toLowerCase()).filter(Boolean);
   if (typeof c.topic !== 'string' || !topics.includes(c.topic.toLowerCase())) fail('Card topic is outside the agreed plan.');
