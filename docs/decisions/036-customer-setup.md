@@ -13,7 +13,8 @@ Acceptance: isolated customer identity; approved discovery scope; confirmed fact
 Implementation checklist
 - [x] Public bootstrap and registry skill
 - [x] Private resumable setup, discovery and readiness
-- [ ] Scoped ongoing permissions and adapters
-- [x] Product entry and Brain processing tools (companion local branch)
-- [ ] Functional verification and six-client evidence
+- [x] Scoped ongoing permissions and adapters
+- [x] Public installation entry and current Threadify MCP capability discovery
+- [x] Full local, isolated-install, upgrade, rollback and recovery verification
+- [ ] Per-client native connection and recurring acceptance evidence
 - [ ] TCS rehearsal, fresh signup, lesson and visual

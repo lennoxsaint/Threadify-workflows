@@ -2,7 +2,7 @@
 
 ## New here? Get set up
 
-Start with [one guided setup](installation.md): account, agent connection, your Brain and voice, then your first week and an optional ongoing routine. Login, consent and purchases remain yours.
+Start with [one guided setup](installation.md). The whole customer prompt is: **“Turn this AI into my Threadify social media operator. Install the latest stable Threadify Workflows and run Get Set Up.”** It guides account and agent connection, your Brain and voice, then your first week and an optional ongoing routine. Login, consent, purchases and consequential approvals remain yours.
 
 **YouTube Synthesizer** turns one YouTube URL into three evidence-backed hooks
 and one complete long-form Threads draft in the creator's voice—or abstains when

@@ -11,6 +11,8 @@ Own the complete journey. The customer should never have to choose from the work
 
 Detect the actual agent and its filesystem, browser, shell, MCP and persistent scheduling capabilities. Supported targets: codex, claude, cursor, gemini, openclaw, hermes. An installed folder is not runtime proof. If there is no supported agent, guide the customer through choosing/installing one from its official site; show costs and human login requirements. Do not claim an ordinary browser chat can install local files.
 
+An OpenAI Dot is an orchestration surface, not a native installer target in this release. If a request starts in a Dot, use an explicitly approved Codex delegation or connected computer to perform the verified install, then bring the runtime receipt and final operator proof back to the Dot. Do not equate repository access, a cloud browser or a delegated task request with completed installation. If no supported execution runtime is available, give the exact next step and continue only with useful reviewed work the current surface can actually preserve.
+
 Use the canonical stable installer. Pin the session to its verified version and receipt. If a restart is needed, save the continuation prompt and private directory before asking for it. Resume in a fresh session and prove native skill discovery and callable tools.
 
 Resolve the CLI from the install receipt. The default managed path is `~/.threadify-workflows/releases/<VERSION>/cli/bin/threadify-workflows.mjs`; invoke it with Node and retain that immutable path, never a moving `current` symlink. Do not assume a global `threadify-workflows` command exists. Examples below use that command as shorthand for the verified Node entrypoint. If the pinned release was removed, reinstall that exact verified version before resuming.
@@ -37,3 +39,5 @@ Read setup status and stop if paused. Acquire a persisted `begin-run` with fresh
 ## Completion
 
 Report connected, Brain ready, first week prepared, number scheduled, review still needed, and recurring routine verified separately. Display next run and how to pause. Logged host observations are not an independent provider check. Run fresh readbacks before a live completion claim. Changing the confirmed summary invalidates dependent readiness and standing permission.
+
+Finish with one compact **Threadify operator proof** card that a customer can understand without opening setup files. Show the verified installed version and execution runtime; verified account handle; Brain, retrieval and voice state; actual first-week draft and scheduled counts; exact items still awaiting review; routine state, next run and pause control; and any honest blocker. Never fill an unverified field from intent or simulated evidence. A filmmaker may show this card early only after capturing the matching live readbacks.

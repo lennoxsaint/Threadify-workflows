@@ -5,6 +5,6 @@
   "plugin_version": "0.21.0",
   "rules_version": "0.4.0",
   "change_class": "installer",
-  "release": false,
-  "summary": "Candidate: resumable customer setup, Brain verification and scoped recurring scheduling. Live adapter and customer acceptance pending."
+  "release": true,
+  "summary": "Get Set Up: resumable customer setup, verified Brain and voice, first-week preparation, scoped scheduling and an honest Dot-to-supported-runtime handoff."
 }

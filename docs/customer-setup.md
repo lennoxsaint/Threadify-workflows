@@ -34,6 +34,12 @@ This replaces the separate v0.1 customer ZIP's one-result route. Preserve its cu
 
 Use the canonical account UUID in setup state and creator cards. Display the verified handle alongside it; a handle is not a substitute for the creator account_id.
 
+## Operator proof and orchestration surfaces
+
+Completion must produce one compact operator proof for the customer: verified release/runtime, verified account handle, Brain/retrieval/voice state, first-week draft and scheduled counts, outstanding review, routine state, next run, pause control and honest blockers. The proof is a view of existing receipts, never a new source of truth. It must not expose the canonical account UUID, private source paths, draft bodies or credentials in a public recording.
+
+OpenAI Dots may orchestrate a supported runtime, but `dot` is not a native installation target in this release. A Dot must delegate filesystem work to an approved Codex or other supported target on a connected computer, then read the exact receipt back. Repository browsing, a task request or a claimed delegation is not installation proof.
+
 For the first week, `draft_count` counts new drafts and `existing_occupied_count` counts preserved scheduled slots in the agreed seven-day plan. Their sum must equal the planned slots. Existing slots require `existing_slots_readback_verified`; `scheduled_count` counts only the new drafts actually scheduled. Never create extra drafts to replace occupied slots. Review mode may leave new drafts awaiting approval.
 
 Before the initial week, `begin-batch` acquires the same persisted pending record as recurring `begin-run`, without requiring a configured routine. Both need current account/entitlement/facts/quota/calendar preflight. Standing scheduling binds that run ID; after finish-run, old approvals cannot execute. Unknown outcomes stay pending. Calendar preflight must include all scheduled posts in the seven-day range; posts at other times count toward daily frequency.

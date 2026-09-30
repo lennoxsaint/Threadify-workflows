@@ -31,3 +31,22 @@ test('root plugin starts with customer setup while preserving skill discovery an
   const mcp = JSON.parse(fs.readFileSync(path.join(root, '.mcp.json')));
   assert.equal(mcp.mcpServers.threadify.url, 'https://www.threadify.app/api/mcp/threadify');
 });
+
+test('single-file start stays short and Dot orchestration never impersonates native installation', () => {
+  const installation = fs.readFileSync(path.join(root, 'installation.md'), 'utf8');
+  const prompt = installation.match(/^> (Turn this AI[^\n]+)$/m)?.[1];
+  assert.ok(prompt, 'customer prompt missing');
+  assert.ok(prompt.length <= 180, `customer prompt is too long: ${prompt.length}`);
+  assert.match(prompt, /social media operator/);
+  assert.match(prompt, /run Get Set Up/);
+  assert.match(installation, /OpenAI Dot/);
+  assert.match(installation, /not a native installer target/);
+  assert.match(installation, /browsing this repository alone is not an installation/);
+
+  const setupSkill = fs.readFileSync(
+    path.join(root, 'plugins/threadify/skills/threadify-get-set-up/SKILL.md'),
+    'utf8',
+  );
+  assert.match(setupSkill, /Threadify operator proof/);
+  assert.match(setupSkill, /Never fill an unverified field/);
+});
