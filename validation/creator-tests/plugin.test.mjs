@@ -5,11 +5,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../..', import.meta.url));
 
-test('root plugin focuses on buyer conversations while preserving skill discovery and local references', () => {
+test('root plugin starts with customer setup while preserving skill discovery and local references', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, '.codex-plugin/plugin.json')));
   assert.equal(manifest.skills, './skills/');
   assert.equal(manifest.mcpServers, './.mcp.json');
-  assert.deepEqual(manifest.interface.defaultPrompt, ['Your Next Moves']);
+  assert.deepEqual(manifest.interface.defaultPrompt, ['Get Set Up']);
   assert.ok(manifest.interface.shortDescription.length <= 30);
   const compatibilityManifest = JSON.parse(fs.readFileSync(path.join(root, 'plugins/threadify/.codex-plugin/plugin.json')));
   assert.equal(compatibilityManifest.name, manifest.name);
@@ -30,4 +30,23 @@ test('root plugin focuses on buyer conversations while preserving skill discover
   }
   const mcp = JSON.parse(fs.readFileSync(path.join(root, '.mcp.json')));
   assert.equal(mcp.mcpServers.threadify.url, 'https://www.threadify.app/api/mcp/threadify');
+});
+
+test('single-file start stays short and Dot orchestration never impersonates native installation', () => {
+  const installation = fs.readFileSync(path.join(root, 'installation.md'), 'utf8');
+  const prompt = installation.match(/^> (Turn this AI[^\n]+)$/m)?.[1];
+  assert.ok(prompt, 'customer prompt missing');
+  assert.ok(prompt.length <= 180, `customer prompt is too long: ${prompt.length}`);
+  assert.match(prompt, /social media operator/);
+  assert.match(prompt, /run Get Set Up/);
+  assert.match(installation, /OpenAI Dot/);
+  assert.match(installation, /not a native installer target/);
+  assert.match(installation, /browsing this repository alone is not an installation/);
+
+  const setupSkill = fs.readFileSync(
+    path.join(root, 'plugins/threadify/skills/threadify-get-set-up/SKILL.md'),
+    'utf8',
+  );
+  assert.match(setupSkill, /Threadify operator proof/);
+  assert.match(setupSkill, /Never fill an unverified field/);
 });

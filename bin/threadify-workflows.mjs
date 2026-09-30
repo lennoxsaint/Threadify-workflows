@@ -49,6 +49,7 @@ Usage:
   threadify-workflows list [--json]
   threadify-workflows describe <workflow-id> [--json]
   threadify-workflows doctor [--json]
+  threadify-workflows setup <start|resume|status|verify> --state <private-directory>
   threadify-workflows conversations <command> --state <private-directory>
   threadify-workflows lead-desk < input.json
   threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
@@ -70,6 +71,11 @@ async function resolveConsent(command, options) {
 }
 
 async function main() {
+  if (process.argv[2] === 'setup') {
+    const { setupMain } = await import('../lib/onboarding/cli.mjs');
+    await setupMain(process.argv.slice(3));
+    return;
+  }
   if (process.argv[2] === 'creator') {
     const { creatorMain } = await import('../lib/creator/cli.mjs');
     await creatorMain(process.argv.slice(3));

@@ -1,3 +1,12 @@
+# 0.21.0
+
+- Add Get Set Up, private recovery state and six runtime installation adapters.
+- Add explicitly selected scheduling permission with revocation and provider readback requirements.
+- Add a public single-file entry and a short one-prompt customer start.
+- Add an honest OpenAI Dot-to-supported-runtime handoff without claiming native Dot installation.
+- Add a compact operator-proof completion card for account, Brain, first week, review and routine readback.
+- Keep native runtime, customer connection and provider results explicit: adapter presence is not live acceptance proof.
+
 # Threadify Workflows stable releases
 
 ## 0.20.0

@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.20.0",
+  "release_version": "0.21.0",
   "skill_version": "0.10.0",
-  "plugin_version": "0.20.0",
+  "plugin_version": "0.21.0",
   "rules_version": "0.4.0",
-  "change_class": "skill_logic",
+  "change_class": "installer",
   "release": true,
-  "summary": "v0.20.0 adds a separate, approval-bound YouTube Synthesizer delivery module for exact Threads scheduling or publish-now execution with optional owner-image transfer, stable idempotency, and authoritative readback."
+  "summary": "Get Set Up: resumable customer setup, verified Brain and voice, first-week preparation, scoped scheduling and an honest Dot-to-supported-runtime handoff."
 }

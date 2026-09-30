@@ -40,6 +40,12 @@ Ground claims, resolve every placeholder and check source availability. For evid
 
 ## Review and deliver
 
+### Explicit setup permission
+
+Exact review remains the default. Get Set Up can record a separate, customer-confirmed automatic scheduling permission after an approved voice sample. Only `authorize-from-setup` may use that permission: it binds the current account, confirmed topics, timezone, daily times, seven-day window and verified offers to the exact validated card. It does not authorize replies, immediate publication, plugs, repost settings or unrelated actions. Customer edits outside the plan require review or a newly confirmed setup summary.
+
+Before `begin-attempt`, the engine rechecks that the permission is current and unpaused. Existing provider validation, fresh preflight, occupied-slot, idempotency and readback requirements still apply. In this explicitly selected mode, a valid standing grant replaces per-card display/approval; every other customer follows the exact-review steps below. Record the persistent daily runner and verify an invocation through Get Set Up. The draft-only reminders described later remain draft-only.
+
 For Day, Week and Month on a host with local Node and an in-app browser, use the [browser review protocol](creator-browser-review.md) by default. It presents editable Threads-style cards and one final Submit for the prepared posts. Keep the host active to receive the submitted intent and continue exact-content delivery. Without those capabilities, retain the conversation review below and name the unavailable browser surface; never pretend the editor opened.
 
 After `add-review`, run fresh checks and persist their exact-card evidence with `record-validation`. Use `kind: local` for disconnected checks, never a fabricated provider result. Connected checks use `kind: threadify` with the matching editable draft and actual `validate_post` evidence. A failed check names its issues and returns only that card to draft, revoking its approval. Fix it before proceeding. A passing check is validated, not owner-approved. Retain validation history and refresh it again before delivery.

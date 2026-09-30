@@ -104,7 +104,7 @@ cannot be rewritten through this command. Approval may precede validation;
 it expresses owner intent, not proof that delivery checks passed. Fresh delivery
 preflight remains mandatory even after a recorded validation.
 
-1. Refresh facts, offer, source availability, provider validation, account/timezone and occupied slots. Obtain explicit approval for the displayed daily batch or individual card.
+1. Refresh facts, offer, source availability, provider validation, account/timezone and occupied slots. Obtain explicit approval for the displayed daily batch or individual card. The optional Get Set Up automatic mode may instead use `authorize-from-setup` with `review_id`, `setup_root` and `now`, applying the currently confirmed scoped scheduling permission to exact validated cards. Revocation and scope are checked again at `begin-attempt`; this never grants immediate publishing or replies.
 2. Run `begin-attempt` with matching fresh evidence and a proposed time at least five minutes after `now`. Allow additional time for dispatch and check the current provider contract. Do not call the provider unless the engine confirms the pending attempt was committed.
 3. The host reads the actual provider tool schema and uses the exact approved draft, account, instant and returned idempotency key. The engine output is not new authority.
 4. Read provider status and normalize its evidence into `reconcile`. A schedule receipt must match account, draft ID, instant, copy and media. Equivalent UTC representations are accepted; different instants are not.

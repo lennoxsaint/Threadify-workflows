@@ -18,7 +18,7 @@ const manifestBytes = read(manifestName);
 const manifest = JSON.parse(manifestBytes);
 assert.equal(manifest.record_type, candidate ? 'CandidateReleaseManifestV1' : 'StableReleaseManifestV1');
 const archiveName = `threadify-workflows-plugin${candidate ? '-candidate' : ''}.tar.gz`;
-const expectedAssets = ['threadify-workflows-bundle.json', archiveName];
+const expectedAssets = ['threadify-workflows-bundle.json', archiveName, 'installation.md'];
 assert.deepEqual(manifest.assets.map((asset) => asset.name).sort(), [...expectedAssets].sort());
 const checksums = [];
 for (const asset of manifest.assets) {

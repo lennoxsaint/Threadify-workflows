@@ -41,6 +41,8 @@ test('full source bundles install and upgrade from the recorded v0.4.1 baseline 
     }
     fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
   }
+  const installation = path.join(next, 'installation.md');
+  fs.writeFileSync(installation, fs.readFileSync(installation, 'utf8').replaceAll(JSON.parse(fs.readFileSync(path.join(source, 'package.json'))).version, '0.5.0'));
   for (const script of ['build-qbr-bundle.mjs', 'build-advanced-bundles.mjs']) run(process.execPath, ['scripts/' + script], next);
   run('git', ['init', '-q'], next);
   run('git', ['add', '--all'], next);

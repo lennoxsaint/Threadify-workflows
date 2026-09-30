@@ -101,6 +101,9 @@ fs.writeFileSync(bundleFile, bundleContent, { flag: 'wx' });
 const archiveName = `threadify-workflows-plugin${candidate ? '-candidate' : ''}.tar.gz`;
 const archiveContent = pluginArchive(sortedEntries);
 fs.writeFileSync(path.join(out, archiveName), archiveContent, { flag: 'wx' });
+const installationContent = fs.readFileSync(path.join(root, 'installation.md'));
+if (!installationContent.toString().includes(`--version ${intent.release_version} `)) throw new Error('Installation file must pin its matching release.');
+fs.writeFileSync(path.join(out, 'installation.md'), installationContent, { flag: 'wx' });
 
 const manifest = {
   record_type: candidate ? 'CandidateReleaseManifestV1' : 'StableReleaseManifestV1',
@@ -118,6 +121,7 @@ const manifest = {
       bytes: bundleContent.length,
     },
     { name: archiveName, sha256: sha256(archiveContent), bytes: archiveContent.length },
+    { name: 'installation.md', sha256: sha256(installationContent), bytes: installationContent.length },
   ],
 };
 const manifestContent = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
@@ -125,7 +129,7 @@ const manifestName = candidate ? 'candidate-release-manifest.json' : 'stable-rel
 fs.writeFileSync(path.join(out, manifestName), manifestContent, { flag: 'wx' });
 fs.writeFileSync(
   path.join(out, 'checksums.txt'),
-  `${sha256(bundleContent)}  threadify-workflows-bundle.json\n${sha256(archiveContent)}  ${archiveName}\n${sha256(manifestContent)}  ${manifestName}\n`,
+  `${sha256(bundleContent)}  threadify-workflows-bundle.json\n${sha256(archiveContent)}  ${archiveName}\n${sha256(installationContent)}  installation.md\n${sha256(manifestContent)}  ${manifestName}\n`,
   { flag: 'wx' },
 );
 fs.copyFileSync(path.join(root, 'release', 'CHANGELOG.md'), path.join(out, 'CHANGELOG.md'), fs.constants.COPYFILE_EXCL);
