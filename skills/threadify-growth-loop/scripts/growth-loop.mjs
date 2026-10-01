@@ -25,6 +25,10 @@ function roundRate(value) {
   return Number(value.toFixed(8));
 }
 
+function hypothesisIdentity({ id, statement, changed_dimension, changed_value }) {
+  return { id, statement, changed_dimension, changed_value };
+}
+
 function observedRate(observation) {
   const metric = observation.context.hypothesis.primary_metric;
   const metrics = observation.metrics ?? {};
@@ -66,6 +70,10 @@ function validateObservation(observation, workspace) {
   assert(hypothesis?.id && hypothesis.statement && hypothesis.changed_dimension && hypothesis.changed_value,
     'A complete single-dimension hypothesis is required.');
   assert(METRICS.has(hypothesis.primary_metric), 'Unsupported primary metric.');
+  const registered = workspace.hypothesis_definitions.find((item) => item.id === hypothesis.id);
+  assert(registered, `Hypothesis ${hypothesis.id} is not registered.`);
+  assert(hash(hypothesisIdentity(registered)) === hash(hypothesisIdentity(hypothesis)),
+    `Hypothesis ${hypothesis.id} changed definition.`);
   if (observation.checkpoint === 'engagement_72h') {
     assert(hypothesis.primary_metric === 'engagement_rate', 'The 72-hour checkpoint requires engagement rate.');
   } else {
@@ -105,17 +113,21 @@ function median(values) {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
-function rebuildHypotheses(observations) {
+function rebuildHypotheses(observations, definitions) {
   const grouped = new Map();
+  for (const definition of definitions) {
+    grouped.set(definition.id, { definition, observations: [], priority: definition.priority, origin: 'setup_candidate' });
+  }
   for (const observation of observations) {
     const definition = observation.context.hypothesis;
-    if (!grouped.has(definition.id)) grouped.set(definition.id, { definition, observations: [] });
     const group = grouped.get(definition.id);
-    const identity = ({ id, statement, changed_dimension, changed_value }) => ({ id, statement, changed_dimension, changed_value });
-    assert(hash(identity(group.definition)) === hash(identity(definition)), `Hypothesis ${definition.id} changed definition.`);
+    assert(group, `Hypothesis ${definition.id} is not registered.`);
+    assert(hash(hypothesisIdentity(group.definition)) === hash(hypothesisIdentity(definition)),
+      `Hypothesis ${definition.id} changed definition.`);
     group.observations.push(observation);
   }
-  return [...grouped.entries()].sort(([left], [right]) => left.localeCompare(right)).map(([id, group]) => {
+  return [...grouped.entries()].sort(([, left], [, right]) => left.priority - right.priority
+    || left.definition.id.localeCompare(right.definition.id)).map(([id, group]) => {
     const comparable = group.observations.filter((item) => item.analysis.comparable);
     const reachTests = comparable.filter((item) => item.checkpoint === 'engagement_72h');
     const basis = reachTests;
@@ -135,7 +147,9 @@ function rebuildHypotheses(observations) {
       changed_dimension: group.definition.changed_dimension,
       changed_value: group.definition.changed_value,
       primary_metric: 'engagement_rate',
-      status: promoted ? 'promoted' : 'testing',
+      status: promoted ? 'promoted' : basis.length || commercialTests.length ? 'testing' : 'candidate',
+      priority: group.priority,
+      origin: group.origin,
       comparable_test_count: basis.length,
       positive_test_count: positiveCount,
       distinct_test_days: distinctDays,
@@ -237,16 +251,13 @@ export function applyGrowthLoopScan(workspace, input, now = new Date().toISOStri
       commercial_attribution: analysis.commercial_attribution,
     });
   }
-  workspace.hypotheses = rebuildHypotheses(workspace.observations);
+  workspace.hypotheses = rebuildHypotheses(workspace.observations, workspace.hypothesis_definitions);
   workspace.updated_at = now;
   return {
     accepted,
     replayed_observation_ids: replayed,
     hypotheses: structuredClone(workspace.hypotheses),
-    next_challenger_hypothesis_ids: workspace.hypotheses
-      .filter((item) => item.status === 'promoted' && !item.safety_or_rights_issue)
-      .sort((left, right) => right.median_observed_rate - left.median_observed_rate || left.id.localeCompare(right.id))
-      .slice(0, 2).map((item) => item.id),
+    next_challenger_hypothesis_ids: nextHypothesisIds(workspace),
   };
 }
 
@@ -256,8 +267,17 @@ function countBy(values) {
 
 function nextHypothesisIds(workspace) {
   return workspace.hypotheses
-    .filter((item) => item.status === 'promoted' && !item.safety_or_rights_issue)
-    .sort((left, right) => right.median_observed_rate - left.median_observed_rate || left.id.localeCompare(right.id))
+    .filter((item) => !item.safety_or_rights_issue && item.commercial_regression !== 'present')
+    .sort((left, right) => {
+      const rank = (item) => item.status === 'promoted' ? 0
+        : item.status === 'testing' && item.positive_test_count > 0 ? 1
+          : item.status === 'candidate' ? 2 : 3;
+      return rank(left) - rank(right)
+        || right.positive_test_count - left.positive_test_count
+        || (right.median_observed_rate ?? -1) - (left.median_observed_rate ?? -1)
+        || left.priority - right.priority
+        || left.id.localeCompare(right.id);
+    })
     .slice(0, 2).map((item) => item.id);
 }
 
@@ -298,7 +318,7 @@ export function prepareGrowthLoopDay(workspace, input, now = new Date().toISOStr
     if (card.role === 'proven') assert(card.hypothesis_id === null, `Proven card ${card.card_id} cannot change a hypothesis.`);
   }
   const expectedHypotheses = nextHypothesisIds(workspace);
-  assert(expectedHypotheses.length === 2, 'Two promoted hypotheses are required for the challenger slots.');
+  assert(expectedHypotheses.length === 2, 'Two eligible reviewed hypotheses are required for the challenger slots.');
   const challengerHypotheses = input.cards.filter((card) => card.role === 'challenger').map((card) => card.hypothesis_id).sort();
   assert(challengerHypotheses.every(Boolean)
     && challengerHypotheses.join('|') === [...expectedHypotheses].sort().join('|'),
@@ -428,6 +448,23 @@ function validateSetup(input) {
   assert(input.draft_save?.mode === 'automatic' && input.draft_save.approved === true
     && input.draft_save.scope === 'six_daily_drafts' && Number.isFinite(Date.parse(input.draft_save.approved_at)),
   'Explicit automatic draft-save approval for six daily drafts is required.');
+  assert(Array.isArray(input.initial_hypotheses) && input.initial_hypotheses.length >= 2,
+    'At least two explicit initial hypotheses are required.');
+  const hypothesisIds = new Set();
+  const hypothesisPriorities = new Set();
+  for (const hypothesis of input.initial_hypotheses) {
+    assert(hypothesis?.id && hypothesis.statement && hypothesis.changed_dimension && hypothesis.changed_value,
+      'Every initial hypothesis needs an ID, statement, changed dimension, and changed value.');
+    assert(hypothesis.primary_metric === 'engagement_rate', 'Initial hypotheses must use engagement rate.');
+    assert(Number.isSafeInteger(hypothesis.priority) && hypothesis.priority > 0,
+      'Every initial hypothesis needs a positive integer priority.');
+    assert(hypothesis.safety_reviewed === true && hypothesis.rights_reviewed === true,
+      'Initial hypotheses require safety and rights review.');
+    assert(!hypothesisIds.has(hypothesis.id) && !hypothesisPriorities.has(hypothesis.priority),
+      'Initial hypothesis IDs and priorities must be unique.');
+    hypothesisIds.add(hypothesis.id);
+    hypothesisPriorities.add(hypothesis.priority);
+  }
   assert(Array.isArray(input.daily_slots) && input.daily_slots.length === 6
     && new Set(input.daily_slots).size === 6 && input.daily_slots.every((value) => TIME.test(value)),
   'Exactly six unique local daily slots are required.');
@@ -438,17 +475,20 @@ function validateSetup(input) {
 
 export function createGrowthLoopWorkspace(input, now = new Date().toISOString()) {
   validateSetup(input);
-  return {
+  const workspace = {
     schema_version: 'growth-loop-workspace.v1',
     created_at: now,
     updated_at: now,
     paused: false,
     config: structuredClone(input),
+    hypothesis_definitions: structuredClone(input.initial_hypotheses),
     observations: [],
     hypotheses: [],
     days: [],
     save_intents: [],
   };
+  workspace.hypotheses = rebuildHypotheses([], workspace.hypothesis_definitions);
+  return workspace;
 }
 
 export function growthLoopStatus(workspace) {

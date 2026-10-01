@@ -19,14 +19,15 @@ Never expose credentials, private customer data, exact draft bodies in status re
 
 1. Verify the selected Threadify account by immutable ID and label. For balanced mode, verify the active offer. Confirm the timezone and six unique daily times.
 2. Explain the fixed portfolio: two Greatest Hits, two Viral Vault, two My Vault; four proven and two challenger; two broad, two expertise, two personal; at least three structures including a listicle; at most one earned CTA.
-3. Show the owner that the loop may save all six drafts automatically, but will never schedule them. Obtain one explicit approval for that standing draft-save scope and the persistent six-hour runner.
-4. Choose a dedicated absolute private state directory with owner-only permissions. Do not use a home directory root, shared folder, symlink, or cloud checkout.
-5. Write `growth-loop-setup.v1` JSON and run:
+3. Define at least two explicit cold-start hypotheses. Each needs one changed dimension, one value, engagement rate as its 72-hour metric, a unique priority, and completed safety and rights review. Label them candidates, not proven findings. This is what lets a new user prepare the first day immediately.
+4. Show the owner that the loop may save all six drafts automatically, but will never schedule them. Obtain one explicit approval for that standing draft-save scope and the persistent six-hour runner.
+5. Choose a dedicated absolute private state directory with owner-only permissions. Do not use a home directory root, shared folder, symlink, or cloud checkout.
+6. Write `growth-loop-setup.v1` JSON, including `initial_hypotheses`, and run:
 
    `node scripts/growth-loop-cli.mjs setup --state /absolute/private-directory --input /absolute/setup.json --revision 0`
 
-6. Configure a supported persistent route from `references/setup-adapters.md`. Native controls come first. An operating-system scheduler is allowed only after showing the exact executable, working directory, prompt, six-hour interval, timezone, device-on requirement, and pause command. Never add blanket permission-bypass flags.
-7. A configured job is not verified. Run one real read-only invocation, read the job configuration and next run back, then run `configure-runner` with `growth-loop-runner.v1` proof containing the job ID, next run, invocation ID, device requirement, and pause command. Label every untested adapter `unverified`.
+7. Configure a supported persistent route from `references/setup-adapters.md`. Native controls come first. An operating-system scheduler is allowed only after showing the exact executable, working directory, prompt, six-hour interval, timezone, device-on requirement, and pause command. Never add blanket permission-bypass flags.
+8. A configured job is not verified. Run one real read-only invocation, read the job configuration and next run back, then run `configure-runner` with `growth-loop-runner.v1` proof containing the job ID, next run, invocation ID, device requirement, and pause command. Label every untested adapter `unverified`.
 
 ## Six-hour maturity run
 
@@ -40,7 +41,7 @@ Never expose credentials, private customer data, exact draft bodies in status re
 ## Prepare and save tomorrow
 
 1. Use the 30-Day Viral Vault source and template rules. Rights-check every source and preserve the exact literal template pattern.
-2. Keep four proven cards stable. Bind exactly one of the two highest-ranked promoted hypotheses to each challenger, changing only its named dimension.
+2. Keep four proven cards stable. Bind exactly one of the two highest-ranked eligible hypotheses to each challenger, changing only its named dimension. On the first day these can be reviewed candidates; after evidence matures, promoted or positive-testing hypotheses outrank untouched candidates, while a known commercial regression is ineligible.
 3. Run `prepare-day` with the current revision. The public output is body-free and includes hashes.
 4. For each of the six cards, run `begin-save` before calling `save_draft`. The returned operation carries the exact body, verified account, content hash, and idempotency key.
 5. Call `save_draft` once. Then read the provider result and run `reconcile-save` with an authoritative matching account, provider draft ID, idempotency key, and content hash. If the result is ambiguous, inspect provider state before any retry.

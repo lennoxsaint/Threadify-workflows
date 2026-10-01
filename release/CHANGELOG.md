@@ -1,6 +1,7 @@
 # 0.22.0
 
 - Add Threadify Growth Loop as an installable workflow on top of 30-Day Viral Vault.
+- Let a new user prepare the first six-draft day immediately from two explicit safety- and rights-reviewed candidate hypotheses; promotion remains an evidence label, not a cold-start blocker.
 - Evaluate authoritative 72-hour reach evidence and attributed 7-day commercial evidence without inventing missing attribution.
 - Promote a hypothesis only after three comparable tests across two days, two positive results, a median win over baseline, and no safety, rights, or known commercial regression.
 - Keep tomorrow's portfolio fixed at two Greatest Hits, two Viral Vault, two My Vault; four proven and two challenger; two broad, two expertise, and two personal cards.

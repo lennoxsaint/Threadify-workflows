@@ -19,6 +19,28 @@ function setupFixture() {
       approved_at: '2026-10-01T01:00:00Z',
       scope: 'six_daily_drafts',
     },
+    initial_hypotheses: [
+      {
+        id: 'specific-number-hook',
+        statement: 'A specific number in the opening improves engagement rate.',
+        changed_dimension: 'opening',
+        changed_value: 'specific-number',
+        primary_metric: 'engagement_rate',
+        priority: 1,
+        safety_reviewed: true,
+        rights_reviewed: true,
+      },
+      {
+        id: 'proof-before-advice',
+        statement: 'Leading with proof improves engagement rate.',
+        changed_dimension: 'proof_placement',
+        changed_value: 'before-advice',
+        primary_metric: 'engagement_rate',
+        priority: 2,
+        safety_reviewed: true,
+        rights_reviewed: true,
+      },
+    ],
     daily_slots: ['07:30', '10:00', '12:30', '15:00', '17:30', '20:00'],
     scheduler: {
       adapter: 'codex',
@@ -151,11 +173,23 @@ test('the public CLI creates private versioned state and returns a body-free sta
   assert.equal(readback.revision, 1);
   assert.equal(readback.status.paused, false);
   assert.equal(readback.status.observation_count, 0);
+  assert.equal(readback.status.hypothesis_count, 2);
   assert.equal(readback.status.day_count, 0);
   assert.equal(readback.status.draft_save_scope, 'six_daily_drafts');
   assert.doesNotMatch(status.stdout, /draft_body|post_text|exact_copy/);
   assert.doesNotMatch(status.stdout, /account-lennox/);
   assert.match(readback.status.account.id_sha256, /^[a-f0-9]{64}$/);
+});
+
+test('a new user can prepare the first six-card day from explicit reviewed candidate hypotheses', () => {
+  const { root } = createWorkspace();
+  const dayFile = writeInput(root, 'cold-start-day.json', sixCardDay());
+  const prepared = invoke(['prepare-day', '--state', root, '--input', dayFile, '--revision', '1']);
+  assert.equal(prepared.status, 0, prepared.stderr);
+  const result = JSON.parse(prepared.stdout);
+  assert.equal(result.day.card_count, 6);
+  assert.equal(result.day.proven_count, 4);
+  assert.equal(result.day.challenger_count, 2);
 });
 
 test('setup requires explicit automatic draft-save approval and runner proof is read back', () => {
@@ -248,7 +282,7 @@ test('scan enforces maturity, is replay-safe, and promotes only after three comp
   assert.equal(promotedResult.hypotheses[0].status, 'promoted');
   assert.equal(promotedResult.hypotheses[0].comparable_test_count, 3);
   assert.equal(promotedResult.hypotheses[0].positive_test_count, 2);
-  assert.deepEqual(promotedResult.next_challenger_hypothesis_ids, ['specific-number-hook']);
+  assert.deepEqual(promotedResult.next_challenger_hypothesis_ids, ['specific-number-hook', 'proof-before-advice']);
 });
 
 test('prepare-day enforces the six-card mix and draft saves reconcile against authoritative receipts', () => {
@@ -390,7 +424,7 @@ test('seven-day commercial evidence is unknown without attribution and blocks pr
   assert.equal(regressed.status, 0, regressed.stderr);
   assert.equal(JSON.parse(regressed.stdout).hypotheses[0].commercial_regression, 'present');
   assert.equal(JSON.parse(regressed.stdout).hypotheses[0].status, 'testing');
-  assert.deepEqual(JSON.parse(regressed.stdout).next_challenger_hypothesis_ids, []);
+  assert.equal(JSON.parse(regressed.stdout).next_challenger_hypothesis_ids.includes('specific-number-hook'), false);
 
   const commercialOnlyWorkspace = createWorkspace();
   const commercialOnly = [0, 1, 2].map((offset) => {
@@ -441,7 +475,7 @@ test('pause, resume, hypothesis display, and run display are explicit and body-f
 
   const hypotheses = invoke(['display-hypotheses', '--state', root]);
   assert.equal(hypotheses.status, 0, hypotheses.stderr);
-  assert.deepEqual(JSON.parse(hypotheses.stdout).hypotheses, []);
+  assert.equal(JSON.parse(hypotheses.stdout).hypotheses.length, 2);
   assert.doesNotMatch(hypotheses.stdout, /draft_body|exact private/i);
 
   const run = invoke(['display-run', '--state', root, '--date', '2026-10-02']);

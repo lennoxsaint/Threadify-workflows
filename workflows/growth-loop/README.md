@@ -9,9 +9,9 @@ Threadify Growth Loop is the evidence layer on top of the 30-Day Viral Vault. It
 - Topics: two broad, two expertise, two personal.
 - Structures: at least three, including one listicle.
 - CTA: zero or one earned CTA tied to the verified offer.
-- Learning: a challenger changes one named dimension and binds one promoted hypothesis.
+- Learning: a challenger changes one named dimension and binds one explicit reviewed hypothesis. A new user starts with two owner-reviewed candidates; mature evidence re-ranks them and marks only repeat-tested winners promoted.
 
-A hypothesis is promoted after at least three comparable mature tests across at least two publication days, at least two positive results, a median result above its matched baseline, no safety or rights issue, and no known attributed commercial regression. Missing post-level attribution remains unknown; it is not manufactured into evidence.
+A hypothesis is promoted after at least three comparable mature tests across at least two publication days, at least two positive results, a median result above its matched baseline, no safety or rights issue, and no known attributed commercial regression. Promotion is a proof label, not a cold-start prerequisite. Missing post-level attribution remains unknown; it is not manufactured into evidence.
 
 ## Runtime contract
 
@@ -24,4 +24,3 @@ Persistent registration belongs to the host. Follow the bundled setup-adapter gu
 ## Safety boundary
 
 The workflow may automatically save drafts only after the owner approves that standing scope during setup. There is intentionally no schedule or publish command. Scheduling one challenger for a demo remains a separate owner-approved 30-Day Viral Vault action with exact account, copy, and time shown before the call and read back afterward.
-
