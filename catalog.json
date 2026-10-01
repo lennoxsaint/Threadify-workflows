@@ -1362,7 +1362,7 @@
             "target": "references/growth-loop.v1.json"
           },
           {
-            "source": "docs/setup-adapters.md",
+            "source": "docs/growth-loop-adapters.md",
             "target": "references/setup-adapters.md"
           },
           {
@@ -1386,7 +1386,7 @@
         "files": [
           "workflows/growth-loop/README.md",
           "schemas/growth-loop.v1.json",
-          "docs/setup-adapters.md"
+          "docs/growth-loop-adapters.md"
         ]
       },
       "triggers": [

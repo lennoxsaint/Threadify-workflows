@@ -1,3 +1,11 @@
+# 0.23.1
+
+- Reject a new retry key for the same Growth Loop account/day/card, preserving the original persisted save intent and its reconciled status.
+- Block ambiguous legacy state containing multiple save intents for one card until provider state is inspected and reconciled; do not delete intents or imply provider cleanup occurred.
+- Give Growth Loop its own six-hour recurring instructions for maturity scans, tomorrow's six-card plan and authoritative draft-save reconciliation, replacing the unrelated creator setup/seven-day-fill prompt.
+- Preserve the draft-only boundary: skip reconciled saves, inspect ambiguous outcomes before retrying, and never schedule or publish automatically.
+- Verify three regressions that fail on the prior release, generated bundle parity and the full synthetic test suite. Native runner and live provider behavior remain separate verification steps.
+
 # 0.23.0
 
 - Add Monetize My Week, which selects exactly seven offer-relevant existing drafts while preserving every post body, thread part and media item unchanged.

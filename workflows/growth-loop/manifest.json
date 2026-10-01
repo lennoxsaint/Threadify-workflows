@@ -13,7 +13,7 @@
     "standalone": false,
     "references": [
       { "source": "schemas/growth-loop.v1.json", "target": "references/growth-loop.v1.json" },
-      { "source": "docs/setup-adapters.md", "target": "references/setup-adapters.md" },
+      { "source": "docs/growth-loop-adapters.md", "target": "references/setup-adapters.md" },
       { "source": "lib/growth-loop.mjs", "target": "scripts/growth-loop.mjs" },
       { "source": "lib/growth-loop-store.mjs", "target": "scripts/growth-loop-store.mjs" },
       { "source": "lib/growth-loop-cli.mjs", "target": "scripts/growth-loop-cli.mjs" }
@@ -24,7 +24,7 @@
     "files": [
       "workflows/growth-loop/README.md",
       "schemas/growth-loop.v1.json",
-      "docs/setup-adapters.md"
+      "docs/growth-loop-adapters.md"
     ]
   },
   "triggers": [
