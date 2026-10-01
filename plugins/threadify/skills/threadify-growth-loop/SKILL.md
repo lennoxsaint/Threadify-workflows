@@ -43,8 +43,8 @@ Never expose credentials, private customer data, exact draft bodies in status re
 1. Use the 30-Day Viral Vault source and template rules. Rights-check every source and preserve the exact literal template pattern.
 2. Keep four proven cards stable. Bind exactly one of the two highest-ranked eligible hypotheses to each challenger, changing only its named dimension. On the first day these can be reviewed candidates; after evidence matures, promoted or positive-testing hypotheses outrank untouched candidates, while a known commercial regression is ineligible.
 3. Run `prepare-day` with the current revision. The public output is body-free and includes hashes.
-4. For each of the six cards, run `begin-save` before calling `save_draft`. The returned operation carries the exact body, verified account, content hash, and idempotency key.
-5. Call `save_draft` once. Then read the provider result and run `reconcile-save` with an authoritative matching account, provider draft ID, idempotency key, and content hash. If the result is ambiguous, inspect provider state before any retry.
+4. For each of the six cards, run `begin-save` before calling `save_draft`. The returned operation carries the exact body, verified account, content hash, and idempotency key. Keep that original key for every retry of the same account/day/card; a different key is rejected.
+5. If the operation is already `saved`, skip the provider call. For a replayed pending intent, inspect provider state before retrying; pending does not prove the earlier call failed. Call `save_draft` once. Then read the provider result and run `reconcile-save` with an authoritative matching account, provider draft ID, idempotency key, and content hash. If the result is ambiguous, inspect provider state before any retry.
 6. Run `display-run --date YYYY-MM-DD`. Report six reconciled draft saves, any unknown result, the next six-hour run, and the pause command. Do not schedule.
 
 ## Operator commands

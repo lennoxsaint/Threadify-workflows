@@ -510,3 +510,64 @@ test('the public schema, manifest, catalog, and generated installed CLI expose G
   const validate = new Ajv({ strict: true }).compile(schema);
   assert.equal(validate(output), true, JSON.stringify(validate.errors));
 });
+
+test('a card has one durable save intent across changed-key retries before and after reconciliation', () => {
+  const { root } = createWorkspace();
+  const dayFile = writeInput(root, 'day.json', sixCardDay());
+  assert.equal(invoke(['prepare-day', '--state', root, '--input', dayFile, '--revision', '1']).status, 0);
+  const input = {
+    schema_version: 'growth-loop-save-intent.v1', date: '2026-10-02', card_id: 'card-1',
+    account_id: 'account-owner-demo', idempotency_key: 'original-key',
+  };
+  const intentFile = writeInput(root, 'intent.json', input);
+  const first = invoke(['begin-save', '--state', root, '--input', intentFile, '--revision', '2']);
+  assert.equal(first.status, 0, first.stderr);
+  const operation = JSON.parse(first.stdout).operation;
+  const retryFile = writeInput(root, 'retry.json', { ...input, idempotency_key: 'new-key' });
+  const beforeRetry = fs.readFileSync(path.join(root, 'state.json'), 'utf8');
+  const blocked = invoke(['begin-save', '--state', root, '--input', retryFile, '--revision', '3']);
+  assert.notEqual(blocked.status, 0, 'changed-key retry must not return another provider operation');
+  assert.match(blocked.stderr, /already has a save intent/i);
+  assert.equal(fs.readFileSync(path.join(root, 'state.json'), 'utf8'), beforeRetry);
+  const replay = invoke(['begin-save', '--state', root, '--input', intentFile, '--revision', '3']);
+  assert.equal(replay.status, 0, replay.stderr);
+  assert.deepEqual(JSON.parse(replay.stdout).operation, operation);
+  const receiptFile = writeInput(root, 'receipt.json', {
+    schema_version: 'growth-loop-save-receipt.v1', intent_id: operation.intent_id,
+    account_id: input.account_id, idempotency_key: input.idempotency_key,
+    provider_draft_id: 'provider-draft', content_sha256: operation.content_sha256,
+    status: 'saved', authoritative: true, checked_at: '2026-10-02T01:00:00Z',
+  });
+  assert.equal(invoke(['reconcile-save', '--state', root, '--input', receiptFile, '--revision', '4']).status, 0);
+  const savedRetry = invoke(['begin-save', '--state', root, '--input', retryFile, '--revision', '5']);
+  assert.notEqual(savedRetry.status, 0);
+  const savedReplay = invoke(['begin-save', '--state', root, '--input', intentFile, '--revision', '5']);
+  assert.equal(savedReplay.status, 0, savedReplay.stderr);
+  assert.equal(JSON.parse(savedReplay.stdout).operation.status, 'saved');
+  const otherCardFile = writeInput(root, 'other-card.json', { ...input, card_id: 'card-2', idempotency_key: 'other-key' });
+  assert.equal(invoke(['begin-save', '--state', root, '--input', otherCardFile, '--revision', '6']).status, 0);
+  const conflictFile = writeInput(root, 'conflict.json', { ...input, card_id: 'card-3' });
+  const conflict = invoke(['begin-save', '--state', root, '--input', conflictFile, '--revision', '7']);
+  assert.notEqual(conflict.status, 0);
+  assert.match(conflict.stderr, /different operation/i);
+  const state = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8')).payload;
+  assert.equal(state.save_intents.length, 2);
+});
+
+test('Growth Loop bundles its own six-hour draft-only runner instructions', () => {
+  const manifest = JSON.parse(fs.readFileSync('workflows/growth-loop/manifest.json', 'utf8'));
+  const reference = manifest.bundle.references.find((item) => item.target === 'references/setup-adapters.md');
+  assert.equal(reference.source, 'docs/growth-loop-adapters.md');
+  const canonical = fs.readFileSync(reference.source, 'utf8');
+  const bundled = fs.readFileSync('skills/threadify-growth-loop/references/setup-adapters.md', 'utf8');
+  assert.equal(bundled, canonical);
+  const prompt = bundled.split('The recurring prompt:')[1].split('\n\n')[0];
+  for (const command of ['status', 'scan', 'prepare-day', 'begin-save', 'reconcile-save', 'display-run']) {
+    assert.match(prompt, new RegExp(`\\b${command}\\b`));
+  }
+  assert.match(prompt, /six hours/i);
+  assert.match(prompt, /tomorrow.*timezone/i);
+  assert.match(prompt, /Never schedule or publish/);
+  assert.doesNotMatch(bundled, /creator state|begin-run|finish-run|next seven local days|first week/i);
+  assert.match(fs.readFileSync('docs/setup-adapters.md', 'utf8'), /next seven local days/);
+});
