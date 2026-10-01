@@ -1,7 +1,7 @@
 {
   "name": "threadify-workflows",
-  "version": "0.21.0",
-  "description": "Get your Threadify account, Brain, voice and first week set up through one guided workflow.",
+  "version": "0.22.0",
+  "description": "Set up Threadify, then learn from mature posts and prepare the next six drafts through one private growth loop.",
   "author": {
     "name": "Threadify"
   },
@@ -18,8 +18,8 @@
   "mcpServers": "./mcp/threadify.example.json",
   "interface": {
     "displayName": "Threadify Workflows",
-    "shortDescription": "Your account and first week",
-    "longDescription": "Start with Get Set Up. Connect your account and agent, confirm your existing knowledge, build your Brain and prepare seven days of posts in your voice. Choose review for every batch or explicit scheduling permission within your agreed plan. Verify each result and how to pause. Other creator and business workflows remain available.",
+    "shortDescription": "Setup and improving drafts",
+    "longDescription": "Start with Get Set Up. Connect your account and agent, confirm your existing knowledge, build your Brain and prepare seven days of posts in your voice. Then use Growth Loop to learn from mature evidence and save a four-proven/two-challenger daily queue without automatic scheduling or publishing. Verify every external result and how to pause.",
     "developerName": "Threadify",
     "category": "Productivity",
     "capabilities": [

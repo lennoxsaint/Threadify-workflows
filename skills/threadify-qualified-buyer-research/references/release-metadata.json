@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.21.0",
-  "skill_version": "0.10.0",
-  "plugin_version": "0.21.0",
+  "release_version": "0.22.0",
+  "skill_version": "0.11.0",
+  "plugin_version": "0.22.0",
   "rules_version": "0.4.0",
-  "change_class": "installer",
-  "release": true,
-  "summary": "Get Set Up: resumable customer setup, verified Brain and voice, first-week preparation, scoped scheduling and an honest Dot-to-supported-runtime handoff."
+  "change_class": "skill_logic",
+  "release": false,
+  "summary": "Growth Loop: review mature evidence every six hours, promote repeatable hypotheses, and save a four-proven/two-challenger six-draft day without automatic scheduling or publishing."
 }

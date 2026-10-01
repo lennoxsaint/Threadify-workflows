@@ -8,11 +8,11 @@ The guided setup handles the detail: account and agent connection, permissioned 
 
 ## Instructions for the agent
 
-This file is paired with Threadify Workflows **0.21.0**. It needs no sibling files. Fetch the official repository's release metadata for **v0.21.0**, confirm it is a published stable release, then use the canonical installer:
+This file is paired with Threadify Workflows **0.22.0**. It needs no sibling files. Fetch the official repository's release metadata for **v0.22.0**, confirm it is a published stable release, then use the canonical installer:
 
-`npx --yes github:lennoxsaint/Threadify-workflows#v0.21.0 install --version 0.21.0 --workflows all --targets <DETECTED_CLIENT> --disable-auto-update`
+`npx --yes github:lennoxsaint/Threadify-workflows#v0.22.0 install --version 0.22.0 --workflows all --targets <DETECTED_CLIENT> --disable-auto-update`
 
-The matching version must be a verified published stable release containing Get Set Up, never a guessed version or main-branch snapshot. The canonical installer validates release manifests and checksums. If it is unavailable or does not contain `get-set-up`, explain that this installer is not released yet; do not substitute an older release. The copyable prompt above may select a newer verified release instead. Offer auto-updates separately.
+The matching version must be a verified published stable release containing Get Set Up and Growth Loop, never a guessed version or main-branch snapshot. The canonical installer validates release manifests and checksums. If it is unavailable or does not contain `get-set-up` and `growth-loop`, explain that this installer is not released yet; do not substitute an older release. The copyable prompt above may select a newer verified release instead. Offer auto-updates separately.
 
 Save the receipt, then invoke Get Set Up. If restarting the client is necessary, retain the private setup location and give the exact continuation prompt. Do not claim native discovery until checked in the new session. For unsupported browser-only chats, guide the customer to a supported agent first. Human login, consent and purchases remain human actions.
 
