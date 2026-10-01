@@ -1,0 +1,4 @@
+interface:
+  display_name: "Monetize My Week"
+  short_description: "Turn seven drafts into a tracked offer campaign"
+  default_prompt: "Use $threadify-monetize-my-week to turn seven existing drafts into a reviewed tracked offer campaign."
