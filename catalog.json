@@ -1009,6 +1009,54 @@
       ]
     },
     {
+      "workflow_id": "monetize-my-week",
+      "version": "0.1.0",
+      "title": "Monetize My Week",
+      "summary": "Select seven offer-relevant existing drafts, preserve their body copy, attach tailored tracked Auto Plugs, and schedule only after exact campaign approval.",
+      "kind": "skill",
+      "skill_name": "threadify-monetize-my-week",
+      "entrypoint": "skills/threadify-monetize-my-week/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-monetize-my-week/SKILL.md",
+      "source_manifest": "workflows/monetize-my-week/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/monetize-my-week/README.md"
+        ]
+      },
+      "triggers": [
+        "monetize my week from my existing drafts",
+        "turn my draft backlog into a tracked seven-post offer campaign"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "draft backlog and saved offer",
+            "schema_ref": "inline:monetize-my-week-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "campaign review and schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "personal-brain-sync-current-self",
       "version": "0.1.0",
       "title": "Personal Brain Sync / Current Self Packet",

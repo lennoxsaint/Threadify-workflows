@@ -1,3 +1,11 @@
+# 0.23.0
+
+- Add Monetize My Week, which selects exactly seven offer-relevant existing drafts while preserving every post body, thread part and media item unchanged.
+- Use the first seven conflict-free local dates at current measured best times, with one tailored tracked Auto Plug exactly 50 minutes after each post.
+- Require one exact seven-row approval packet, fresh validation, stable idempotency, schedule reconciliation and provider readback before reporting a confirmed schedule.
+- Keep Threads-only scope, existing global automation, incomplete entitlements and ambiguous outcomes explicit; no workflow result is described as published, clicked or converted without readback.
+- Measure publication, performance and link attribution over a common observation window, saying “attributed” rather than “caused” and keeping Auto Plug-only results separate from broader account totals.
+
 # 0.22.0
 
 - Add Threadify Growth Loop as an installable workflow on top of 30-Day Viral Vault.

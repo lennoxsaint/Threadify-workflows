@@ -19,6 +19,11 @@ const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 
 const allowedTools = new Set([
   'get_connection_defaults',
+  'list_drafts',
+  'get_draft',
+  'best_time_to_post',
+  'read_link_attribution',
+  'read_post_performance',
   'plan_greatest_hits_runway',
   'list_offers',
   'create_offer',
