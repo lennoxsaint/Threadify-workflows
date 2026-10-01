@@ -1296,6 +1296,81 @@
       ]
     },
     {
+      "workflow_id": "growth-loop",
+      "version": "0.1.0",
+      "title": "Threadify Growth Loop",
+      "summary": "Review mature post evidence every six hours, promote repeatable hypotheses, prepare a four-proven/two-challenger daily queue, and save six drafts without scheduling them.",
+      "kind": "skill",
+      "skill_name": "threadify-growth-loop",
+      "entrypoint": "skills/threadify-growth-loop/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-growth-loop/SKILL.md",
+      "source_manifest": "workflows/growth-loop/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "schemas/growth-loop.v1.json",
+            "target": "references/growth-loop.v1.json"
+          },
+          {
+            "source": "docs/setup-adapters.md",
+            "target": "references/setup-adapters.md"
+          },
+          {
+            "source": "lib/growth-loop.mjs",
+            "target": "scripts/growth-loop.mjs"
+          },
+          {
+            "source": "lib/growth-loop-store.mjs",
+            "target": "scripts/growth-loop-store.mjs"
+          },
+          {
+            "source": "lib/growth-loop-cli.mjs",
+            "target": "scripts/growth-loop-cli.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [
+          "30-day-viral-vault"
+        ],
+        "files": [
+          "workflows/growth-loop/README.md",
+          "schemas/growth-loop.v1.json",
+          "docs/setup-adapters.md"
+        ]
+      },
+      "triggers": [
+        "build my self-improving content machine",
+        "run my Threadify growth loop",
+        "learn from mature posts and prepare tomorrow's drafts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "verified account, mature post evidence, sources, templates, and private draft bodies",
+            "schema_ref": "inline:growth-loop-input-v1"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "versioned private hypothesis ledger, six-card day, and body-free readbacks",
+            "schema_ref": "schemas/growth-loop.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "cursor",
+        "gemini",
+        "openclaw",
+        "hermes"
+      ]
+    },
+    {
       "workflow_id": "inbound-replies",
       "version": "0.2.0",
       "title": "Threadify Inbound Replies",
