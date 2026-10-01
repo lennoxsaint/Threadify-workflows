@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import Ajv from 'ajv/dist/2020.js';
+import { beginGrowthLoopSave } from '../../lib/growth-loop.mjs';
 
 function setupFixture() {
   return {
@@ -570,4 +571,28 @@ test('Growth Loop bundles its own six-hour draft-only runner instructions', () =
   assert.match(prompt, /Never schedule or publish/);
   assert.doesNotMatch(bundled, /creator state|begin-run|finish-run|next seven local days|first week/i);
   assert.match(fs.readFileSync('docs/setup-adapters.md', 'utf8'), /next seven local days/);
+});
+
+
+test('legacy duplicate-card intents block every key even when one intent is saved', () => {
+  const { root } = createWorkspace();
+  const dayFile = writeInput(root, 'day.json', sixCardDay());
+  assert.equal(invoke(['prepare-day', '--state', root, '--input', dayFile, '--revision', '1']).status, 0);
+  const input = {
+    schema_version: 'growth-loop-save-intent.v1', date: '2026-10-02', card_id: 'card-1',
+    account_id: 'account-owner-demo', idempotency_key: 'original-key',
+  };
+  const intentFile = writeInput(root, 'intent.json', input);
+  assert.equal(invoke(['begin-save', '--state', root, '--input', intentFile, '--revision', '2']).status, 0);
+  const workspace = JSON.parse(fs.readFileSync(path.join(root, 'state.json'), 'utf8')).payload;
+  const original = workspace.save_intents[0];
+  workspace.save_intents.push({ ...structuredClone(original), intent_id: 'legacy-duplicate', idempotency_key: 'legacy-key' });
+  for (const status of ['pending', 'saved']) {
+    original.status = status;
+    const before = structuredClone(workspace);
+    for (const key of ['original-key', 'legacy-key', 'third-key']) {
+      assert.throws(() => beginGrowthLoopSave(workspace, { ...input, idempotency_key: key }), /Multiple save intents.*reconcile provider state/i);
+      assert.deepEqual(workspace, before);
+    }
+  }
 });
