@@ -5,6 +5,6 @@
   "plugin_version": "0.22.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
-  "release": false,
+  "release": true,
   "summary": "Growth Loop: review mature evidence every six hours, promote repeatable hypotheses, and save a four-proven/two-challenger six-draft day without automatic scheduling or publishing."
 }
