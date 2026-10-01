@@ -9,7 +9,7 @@ import Ajv from 'ajv/dist/2020.js';
 function setupFixture() {
   return {
     schema_version: 'growth-loop-setup.v1',
-    account: { id: 'account-lennox', label: '@lennox_saint', verified: true },
+    account: { id: 'account-owner-demo', label: '@owner_demo', verified: true },
     timezone: 'Australia/Perth',
     goal: 'balanced',
     offer: { id: 'offer-threadify', label: 'Threadify', verified: true },
@@ -87,7 +87,7 @@ function observation({
     observation_id: id,
     post_id: postId,
     checkpoint: 'engagement_72h',
-    account_id: 'account-lennox',
+    account_id: 'account-owner-demo',
     published_at: publishedAt,
     checked_at: checkedAt,
     evidence_ref: `threadify://analytics/${postId}/72h`,
@@ -163,7 +163,7 @@ test('the public CLI creates private versioned state and returns a body-free sta
   assert.equal(setup.status, 0, setup.stderr);
   const created = JSON.parse(setup.stdout);
   assert.equal(created.revision, 1);
-  assert.equal(created.status.account.label, '@lennox_saint');
+  assert.equal(created.status.account.label, '@owner_demo');
   assert.equal(created.status.scheduler.interval_hours, 6);
   assert.equal(fs.statSync(path.join(root, 'state.json')).mode & 0o777, 0o600);
 
@@ -177,7 +177,7 @@ test('the public CLI creates private versioned state and returns a body-free sta
   assert.equal(readback.status.day_count, 0);
   assert.equal(readback.status.draft_save_scope, 'six_daily_drafts');
   assert.doesNotMatch(status.stdout, /draft_body|post_text|exact_copy/);
-  assert.doesNotMatch(status.stdout, /account-lennox/);
+  assert.doesNotMatch(status.stdout, /account-owner-demo/);
   assert.match(readback.status.account.id_sha256, /^[a-f0-9]{64}$/);
 });
 
@@ -336,7 +336,7 @@ test('prepare-day enforces the six-card mix and draft saves reconcile against au
     schema_version: 'growth-loop-save-intent.v1',
     date: '2026-10-02',
     card_id: 'card-1',
-    account_id: 'account-lennox',
+    account_id: 'account-owner-demo',
     idempotency_key: 'growth-loop:2026-10-02:card-1',
   });
   const intent = invoke(['begin-save', '--state', root, '--input', intentFile, '--revision', '3']);
@@ -348,7 +348,7 @@ test('prepare-day enforces the six-card mix and draft saves reconcile against au
   const receiptFile = writeInput(root, 'receipt.json', {
     schema_version: 'growth-loop-save-receipt.v1',
     intent_id: intentResult.operation.intent_id,
-    account_id: 'account-lennox',
+    account_id: 'account-owner-demo',
     idempotency_key: 'growth-loop:2026-10-02:card-1',
     provider_draft_id: 'draft-provider-1',
     content_sha256: intentResult.operation.content_sha256,
@@ -365,8 +365,8 @@ test('prepare-day enforces the six-card mix and draft saves reconcile against au
   assert.equal(JSON.parse(status.stdout).status.pending_save_count, 0);
   const run = invoke(['display-run', '--state', root, '--date', '2026-10-02']);
   assert.equal(run.status, 0, run.stderr);
-  assert.doesNotMatch(run.stdout, /account-lennox|Exact private draft body/);
-  assert.equal(JSON.parse(run.stdout).save_receipts[0].account_label, '@lennox_saint');
+  assert.doesNotMatch(run.stdout, /account-owner-demo|Exact private draft body/);
+  assert.equal(JSON.parse(run.stdout).save_receipts[0].account_label, '@owner_demo');
 });
 
 test('seven-day commercial evidence is unknown without attribution and blocks promotion only when a regression is attributable', () => {
