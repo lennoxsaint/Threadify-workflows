@@ -34,7 +34,7 @@ Borrowing a voice. Copying the rhythm of a bigger account until your posts could
 
 ## On the learner's posts
 
-Connected: read their best posts with `greatest_hits`. Ask the learner to pick the one that sounds most like them talking and say what it does that the others do not. Write those habits into `NOTES.md`.
+Connected: read their best posts with `greatest_hits` (`metric: "views"`), using the age and view floors in the skill. Ask the learner to pick the one that sounds most like them talking and say what it does that the others do not. Write those habits into `NOTES.md`.
 
 Not connected: same with the pasted sample. If they have no posts, ask them to explain their work in a voice note or a few typed lines, as if to a friend, and work from that.
 

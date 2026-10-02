@@ -20,7 +20,7 @@ test('Threads Teach registers as a connection-optional teaching workflow', () =>
   const workflow = describeWorkflow(loadWorkflowRegistry({ root }), 'threads-teach');
   assert.equal(workflow.skill_name, 'threadify-threads-teach');
   assert.deepEqual(workflow.required_mcp_tools, []);
-  for (const tool of ['greatest_hits', 'read_post_performance', 'get_growth_signal', 'save_draft', 'schedule_post']) {
+  for (const tool of ['greatest_hits', 'read_post_performance', 'get_growth_signal', 'save_draft', 'get_draft', 'schedule_post']) {
     assert.ok(workflow.optional_mcp_tools.includes(tool), `missing optional tool ${tool}`);
   }
   assert.ok(!workflow.optional_mcp_tools.includes('publish_now'));
@@ -40,6 +40,37 @@ test('Threads Teach coaches, keeps state and gates every write on exact approval
   assert.match(skill, /Never publish immediately/);
   assert.match(skill, /utm_source=threads_teach&utm_medium=skill&utm_campaign=proof_loops&utm_content=threadify_038/);
   assert.doesNotMatch(skill, /guaranteed|guarantee/i);
+});
+
+test('Threads Teach picks example posts by stated rules and keeps connection details private', () => {
+  const skill = fs.readFileSync(path.join(sourceDir, 'SKILL.md'), 'utf8');
+  assert.match(skill, /`greatest_hits` with `metric: "views"`/);
+  assert.match(skill, /Never call it without a metric/);
+  assert.match(skill, /at least 7 days old/);
+  assert.match(skill, /at least 100 views/);
+  assert.match(skill, /recorded views are higher than its likes/);
+  assert.match(skill, /`include_full_text: true`/);
+  assert.match(skill, /at least 3 days old/);
+  assert.match(skill, /Do not call it their worst post/);
+  assert.match(skill, /Never read the connection's timezone out as fact/);
+  assert.match(skill, /Say only the account/);
+  assert.match(skill, /not their reply instructions, other connected accounts/);
+  assert.match(skill, /`get_draft`/);
+  assert.match(skill, /Read whichever of these exist/);
+});
+
+test('Threads Teach mission setup is one-time, resumable and does not start other workflows', () => {
+  const skill = fs.readFileSync(path.join(sourceDir, 'SKILL.md'), 'utf8');
+  assert.match(skill, /one-time setup/);
+  assert.match(skill, /`Status: draft`/);
+  assert.match(skill, /Do not ask a question that is already answered/);
+  assert.match(skill, /do not run Offer Builder/);
+  assert.match(skill, /Before the learner has taken lesson 7, you run the five questions yourself/);
+  const formats = fs.readFileSync(path.join(sourceDir, 'references/workspace-formats.md'), 'utf8');
+  assert.match(formats, /Status: draft \| confirmed/);
+  const notes = fs.readdirSync(frameworksDir).map((name) => fs.readFileSync(path.join(frameworksDir, name), 'utf8')).join('\n');
+  assert.doesNotMatch(notes, /`greatest_hits`(?! \(`metric: "views"`\))/);
+  assert.doesNotMatch(notes, /`read_post_performance`(?! \(`include_full_text: true`\))/);
 });
 
 test('Threads Teach ships ten framework notes with the four required parts', () => {

@@ -31,7 +31,7 @@ Decorating with numbers. A big round number in the first line that is there to i
 
 ## On the learner's posts
 
-Connected: use `greatest_hits` and ask the learner to underline every specific detail in their best posts. Then do the same on a weak one from `read_post_performance`. Compare the count.
+Connected: use `greatest_hits` (`metric: "views"`) and ask the learner to underline every specific detail in their best posts. Then do the same on a contrast post from `read_post_performance` (`include_full_text: true`). Follow the post-picking rules in the skill: best posts by views with the age and view floors, full text for recent posts, and the contrast-post rule. Compare the count.
 
 Not connected: same exercise on the pasted sample.
 

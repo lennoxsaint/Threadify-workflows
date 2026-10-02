@@ -46,7 +46,7 @@ Clearing your throat. The real opener is often the second or third sentence, sit
 
 ## On the learner's posts
 
-Connected: pull their best posts with `greatest_hits` and their recent ones with `read_post_performance`. Put the first lines side by side and ask which kind each one is, and which kind their strongest posts lean on.
+Connected: pull their best posts with `greatest_hits` (`metric: "views"`) and their recent ones with `read_post_performance` (`include_full_text: true`). Follow the post-picking rules in the skill: best posts by views with the age and view floors, full text for recent posts, and the contrast-post rule. Put the first lines side by side and ask which kind each one is, and which kind their strongest posts lean on.
 
 Not connected: same exercise on pasted posts, called a sample.
 

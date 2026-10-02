@@ -1547,7 +1547,7 @@
     },
     {
       "workflow_id": "threads-teach",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "title": "Threads Teach",
       "summary": "Learn to write for Threads in short lessons on your own posts, with a private learning workspace and one self-written post per lesson, saved or scheduled only after exact approval.",
       "kind": "skill",

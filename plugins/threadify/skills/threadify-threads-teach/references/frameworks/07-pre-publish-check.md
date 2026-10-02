@@ -38,7 +38,7 @@ Treating the check as a word swap. Replacing a few flagged words and leaving a p
 
 ## On the learner's posts
 
-Connected: run the five questions on two of their recent posts from `read_post_performance`. Let the learner answer first.
+Connected: run the five questions on two of their recent posts from `read_post_performance` (`include_full_text: true`), each at least 3 days old. Let the learner answer first.
 
 Not connected: same on the pasted sample.
 

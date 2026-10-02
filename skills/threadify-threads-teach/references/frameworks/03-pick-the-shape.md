@@ -29,7 +29,7 @@ Writing a long teaching thread by default. Length gets used to make a thin idea 
 
 ## On the learner's posts
 
-Connected: use `read_post_performance` to look at their recent posts. Sort them by shape with the learner and ask which shape they use most, and whether it matches what their mission needs. Report only numbers the tool returned.
+Connected: use `read_post_performance` (`include_full_text: true`) to look at their recent posts, leaving out any from the last 3 days. Sort them by shape with the learner and ask which shape they use most, and whether it matches what their mission needs. Report only numbers the tool returned.
 
 Not connected: sort the pasted sample by shape. You cannot say which shape performs best for them, so say that.
 
