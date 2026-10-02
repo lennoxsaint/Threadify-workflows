@@ -1,3 +1,11 @@
+# 0.24.0
+
+- Add Threads Teach, a stateful teaching workflow with ten short lessons on Lennox Saint's core Threads frameworks, each illustrated with one of his real public posts.
+- Keep a private learning workspace (mission, lessons, learning records, glossary) so each session continues from the last and opens with retrieval practice.
+- Teach on the learner's own posts through read-only Threadify tools when connected, and on pasted posts otherwise, stating what cannot be seen.
+- End every lesson with one post the learner writes themselves; saving a draft and scheduling are separate actions that each need exact approval and readback.
+- Credit the teaching method to Matt Pocock's MIT-licensed `teach` skill and ship its licence notice with the skill.
+
 # 0.23.1
 
 - Reject a new retry key for the same Growth Loop account/day/card, preserving the original persisted save intent and its reconciled status.
