@@ -1,3 +1,12 @@
+# 0.24.2
+
+- Threads Teach: rank the learner's best posts by views, with a minimum age, a minimum view count and a check that discards posts whose view counts are incomplete.
+- Choose the contrast post by a stated rule (a settled recent text post with real but lower views) and never describe it as the learner's worst post.
+- Say only which account is in use; never show the connection's reply instructions, other accounts, settings or quota.
+- Use the learner's stated timezone and stop reading an unset connection timezone out as fact; show UTC beside local time when scheduling.
+- Make the mission a one-time, resumable setup that can be done before the first lesson, with a short path when the learner has already said what is needed.
+- Scope the shared connection guide to its connection sections, name `get_draft` for draft readback, read full post text, tolerate missing workspace files, and have the coach run the pre-publish check until the learner has taken that lesson.
+
 # 0.24.1
 
 - Fix `npx github:lennoxsaint/Threadify-workflows` installs failing with exit 128: the `engines/eddy` submodule now points at `lennoxsaint/eddy-legacy`, which serves the pinned commit. The pinned commit is unchanged.
