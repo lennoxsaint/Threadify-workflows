@@ -30,6 +30,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Threadify Growth Loop | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Inbound Replies | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Offer Builder | yes | yes | yes | yes | yes | yes | yes |
+| Threads Teach | yes | yes | yes | yes | yes | yes | yes |
 | Viral Carousel Maker | yes | yes | yes | yes | yes | yes | yes |
 | Viral Vault Setup | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Buyer Outcomes | yes | yes | yes | yes | yes | yes | yes |
