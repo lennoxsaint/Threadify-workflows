@@ -1,3 +1,8 @@
+# 0.24.1
+
+- Fix `npx github:lennoxsaint/Threadify-workflows` installs failing with exit 128: the `engines/eddy` submodule now points at `lennoxsaint/eddy-legacy`, which serves the pinned commit. The pinned commit is unchanged.
+- Add a regression test that keeps the submodule URL and pinned commit consistent.
+
 # 0.24.0
 
 - Add Threads Teach, a stateful teaching workflow with ten short lessons on Lennox Saint's core Threads frameworks, each illustrated with one of his real public posts.
