@@ -19,15 +19,17 @@ Four kinds of opener to start with:
 
 ## Worked example
 
-An example written for this lesson, not a real post.
+A real post by @lennox_saint, quoted exactly. Published 26 January 2026. 716,983 views when this lesson was written. This is the first post of a longer thread.
 
-Weak: `how to write better hooks on Threads`
+> i handed in my resignation.
+>
+> my managers called me into a meeting.
+>
+> i didn't know it then, but that meeting would ruin 5 months of my life.
 
-Stronger (a mirror):
+It is a receipt: something that happened to him. It names a moment you can picture, adds one specific detail (5 months), and leaves the question open - what happened in that meeting? It does not explain or teach anything yet.
 
-> you rewrite the first line eleven times and then post nothing.
-
-The second one names a behaviour, has a detail you can picture, and does not explain itself yet.
+Compare it with an opener like `how to deal with a difficult employer`. Same subject, no reason to keep reading.
 
 ## Common mistake
 

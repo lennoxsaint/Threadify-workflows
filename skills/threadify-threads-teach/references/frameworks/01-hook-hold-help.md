@@ -12,18 +12,17 @@ A short post can do all three in three lines. A post that is missing one usually
 
 ## Worked example
 
-An example written for this lesson, not a real post.
+A real post by @lennox_saint, quoted exactly. Published 26 May 2026. 102,781 views when this lesson was written.
 
-> you can post every day for a year and still have nobody know what you sell.
+> Eminem dropped 300 songs. you replay 8.
+> MrBeast uploaded 976 videos. you saw 12.
+> Seinfeld wrote 1,000s of jokes. you quote 3.
+> Kobe took 1m practice shots. you saw 1 ring.
+> Stephen King published 65 novels. you read 2.
 >
-> i did the routine posts. the coffee posts. the opinion-on-everything posts.
-> people liked them and had no idea what i did for work.
->
-> pick the one thing you want to be known for.
-> say it every week until you're bored of it.
-> that's usually when other people first notice.
+> volume is the strategy. create more.
 
-Hook: the first line. Hold: the three kinds of post and what happened. Help: the last three lines.
+Hook: the first line - a name everyone knows and a number that surprises. Hold: four more lines in the same pattern, each one adding weight. Help: the last line, which tells the reader what to do with it.
 
 ## Common mistake
 

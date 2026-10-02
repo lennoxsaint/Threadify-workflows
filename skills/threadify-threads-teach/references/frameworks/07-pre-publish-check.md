@@ -18,18 +18,19 @@ A checker can catch patterns. It cannot tell you the post is good. The last call
 
 ## Worked example
 
-An example written for this lesson, not a real post.
+Two real posts by @lennox_saint, quoted exactly, three years apart.
 
-Fails the check:
+Published 29 July 2023, in his first weeks of posting. 1 like; views were not reliably recorded for posts that old.
 
-> Consistency isn't just about posting - it's about showing up. Here are 3 key takeaways.
+> A fulfilling life demands that our actions reflect our goals and priorities.
 
-Passes:
+Published 7 September 2026. 93,741 views and 12,060 likes when this lesson was written. It contains strong language, kept as he wrote it.
 
-> i wrote this post four times and deleted three.
-> the one you're reading is the one where i stopped trying to sound smart.
+> a pattern i've noticed in successful people:
+>
+> they're really fucking weird.
 
-The first could sit under any account. The second has one real thing in it and sounds like a person.
+The first one fails question 1: anyone could have written it, and there is no real thing in it. The second has one real observation and sounds like a person talking. Same writer. The difference is the check.
 
 ## Common mistake
 

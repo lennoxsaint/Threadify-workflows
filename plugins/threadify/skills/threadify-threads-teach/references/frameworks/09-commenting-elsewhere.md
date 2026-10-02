@@ -20,7 +20,15 @@ Only comment when you have something to add. A comment made just to be seen read
 
 ## Worked example
 
-An example written for this lesson, not a real exchange.
+A real post by @lennox_saint, quoted exactly. Published 5 June 2026. 7,311 views and 84 replies when this lesson was written. It states the idea behind this lesson.
+
+> don't build an audience on Threads.
+>
+> build community.
+
+Commenting is where that happens.
+
+Other people's posts are not quoted in these lessons, so the exchange below is made up to show the difference.
 
 Post, from a small account: "three months of posting and i still feel like i'm talking to myself."
 

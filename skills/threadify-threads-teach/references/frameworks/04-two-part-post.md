@@ -11,16 +11,25 @@ An ask in the first post costs you readers. Use one only when the reader really 
 
 ## Worked example
 
-An example written for this lesson, not a real post.
+A real post by @lennox_saint, quoted exactly. Published 11 September 2026. 5,906 views and 112 replies when this lesson was written.
 
 Post 1:
 
-> i stopped putting links in my posts and more people started asking for the link.
+> i do not care if you have 17 followers.
+>
+> if you're building something honest on Threads, i'll support you.
+>
+> small accounts are not small people.
+>
+> they're just early.
 
 Post 2:
 
-> a link in the first post asks for a click before i've earned it.
-> now the first post only has to be worth reading - the offer goes in the reply, for the people who made it that far.
+> just checked out everyone's profiles; you're all legends. 
+>
+> followed 🫡
+
+Post 1 has one job and no ask. Post 2 is the second beat: he did what post 1 promised and said so. There is no offer in either part, which is the usual case. When there is one, it goes in post 2.
 
 ## Common mistake
 

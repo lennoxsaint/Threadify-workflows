@@ -17,11 +17,11 @@ Observation usually travels further than instruction. A how-to can live in the b
 
 ## Worked example
 
-An example written for this lesson, not a real post. One idea, written as a short post because the goal is to be seen by new people:
+A real post by @lennox_saint, quoted exactly. Published 28 May 2026. 103,750 views when this lesson was written.
 
-> the post you were scared to publish is usually the one people reply to.
+> entrepreneurship is the most brutal self-improvement program on earth.
 
-The same idea as a story would start with the night you nearly deleted it. As a list it would be three signs a post is worth the nerves. Same idea, different job.
+One clean thought, so it is a short post. It is an observation, not an instruction. The same idea as a story would start with the week it nearly broke him. As a list it would be three things running a business forces you to fix. Same idea, different job.
 
 ## Common mistake
 

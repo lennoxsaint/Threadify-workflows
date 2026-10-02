@@ -14,7 +14,19 @@ A reply is a conversation with one person that other people can read. Treat it t
 
 ## Worked example
 
-An example written for this lesson, not a real exchange. Swap in your own true details.
+A real post by @lennox_saint, quoted exactly. Published 3 June 2026. 108,258 views and 2,858 replies when this lesson was written. It shows a post built to start conversations.
+
+> who's still under 1,000 followers on Threads?
+>
+> drop what you do below.
+>
+> the algorithm might not see you yet.
+>
+> but we will.
+
+A post like this only pays off if the replies get answered like a person would answer them.
+
+Other people's comments are not quoted in these lessons, so the exchange below is made up to show the difference. Swap in your own true details.
 
 Comment: "how long before you saw any traction?"
 

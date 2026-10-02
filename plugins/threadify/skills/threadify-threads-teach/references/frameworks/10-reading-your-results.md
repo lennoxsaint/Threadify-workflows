@@ -14,11 +14,13 @@ Nobody can promise a post will take off. You are improving your odds, one change
 
 ## Worked example
 
-An example written for this lesson, not real results. A note a creator might write to themselves:
+A real post by @lennox_saint, quoted exactly. Published 28 January 2026. 134,738 views when this lesson was written.
 
-> my three best posts this month all opened with something i got wrong.
-> my three worst all opened with advice.
-> next week - five posts that start with a mistake. i'll look at replies, not likes.
+> idk who needs to hear this but if you're building on Threads, PLEASE PLEASE PLEASE don't forget to repost your best content.
+>
+> nobody remembers it!
+
+He does what the post says. The second post in lesson 7 was published three times in 2026: on 17 March (149,900 views), 8 August (87,244 views) and 7 September (93,741 views). He read his results, saw what worked and ran it again.
 
 ## Common mistake
 

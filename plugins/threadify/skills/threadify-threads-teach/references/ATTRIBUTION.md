@@ -44,4 +44,4 @@ SOFTWARE.
 
 ## Threads frameworks
 
-The framework notes in `frameworks/` are Lennox Saint's own teaching, written for this skill. The worked examples were written for these lessons. They are not real posts and they report no real results.
+The framework notes in `frameworks/` are Lennox Saint's own teaching, written for this skill. The worked examples are his real public posts from @lennox_saint, quoted exactly, with the publish date and the view count at the time the lesson was written. The two short reply and comment exchanges in lessons 8 and 9 are made up and marked as such, because other people's comments are not quoted here.

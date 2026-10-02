@@ -59,7 +59,7 @@ Do not invent a metric, a ranking or a result. Unknown stays unknown.
 
 Keep it short enough to finish in one sitting. One framework per lesson. See [the curriculum](references/curriculum.md) for the order and the [framework notes](references/frameworks/) for the content.
 
-1. **Teach the principle** in plain language, tied to the learner's mission. Show the worked example from the framework note and say it is an example written for the lesson.
+1. **Teach the principle** in plain language, tied to the learner's mission. Show the worked example from the framework note. It is a real post by @lennox_saint, quoted exactly with its date and views; say so, and do not alter it or present its numbers as current. Where a note marks a reply or comment exchange as made up, say that too.
 2. **Find it in their posts.** Show where one of their own posts already does this and where one does not. Ask the learner to spot it before you tell them.
 3. **Name the common mistake** and check their posts for it.
 4. **Practice.** Set the practice task from the note. Give feedback straight away, on the specific words they wrote.
@@ -99,7 +99,7 @@ Without a connection, or when a tool is missing: give the learner the final text
 
 These lessons teach the core frameworks. Where a lesson reaches the edge, the framework note says so. Tell the learner in one line, once, and move on:
 
-> This is as deep as the free lessons go on this. The fuller system lives in Threadify - https://www.threadify.app
+> This is as deep as the free lessons go on this. The fuller system lives in Threadify - https://www.threadify.app/?utm_source=threads_teach&utm_medium=skill&utm_campaign=proof_loops&utm_content=threadify_038
 
 Do not push it, do not repeat it in the same lesson, and do not hold back anything that is in the framework notes. Do not invent deeper material to fill the gap, and do not describe what is behind the gate beyond the note's own line.
 

@@ -13,18 +13,17 @@ Check these before they go out: follower counts, money, client results, hours sp
 
 ## Worked example
 
-An example written for this lesson, not a real post or a real result.
+A real post by @lennox_saint, quoted exactly. Published 18 June 2026. 7,502 views when this lesson was written. This is the first post of a longer thread.
 
-Vague:
+> i started Threads with 17 followers.
+>
+> 35 months later: 30,643 thriends.
+>
+> here's the 5-step framework i wish i had on Day 1:
 
-> i've helped many creators grow recently.
+Three receipts in two lines: 17, 35 months, 30,643. They are exact, and they are his. Compare it with `i've grown a lot on Threads and learned many things`, which says the same thing and proves nothing.
 
-With a receipt:
-
-> last week a client sent me her first post in two years.
-> 41 words. it took her three days to press publish.
-
-The second version only works if it is true. In the learner's post, every detail has to be theirs.
+This only works because it is true. In the learner's post, every detail has to be theirs.
 
 ## Common mistake
 

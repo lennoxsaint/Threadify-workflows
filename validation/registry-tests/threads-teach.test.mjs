@@ -38,6 +38,7 @@ test('Threads Teach coaches, keeps state and gates every write on exact approval
   assert.match(skill, /A scheduled post is not a published post/);
   assert.match(skill, /Say plainly what you cannot see/);
   assert.match(skill, /Never publish immediately/);
+  assert.match(skill, /utm_source=threads_teach&utm_medium=skill&utm_campaign=proof_loops&utm_content=threadify_038/);
   assert.doesNotMatch(skill, /guaranteed|guarantee/i);
 });
 
@@ -49,7 +50,8 @@ test('Threads Teach ships ten framework notes with the four required parts', () 
     for (const heading of ['## Principle', '## Worked example', '## Common mistake', '## Practice task', '## Lesson post']) {
       assert.ok(note.includes(heading), `${name} missing ${heading}`);
     }
-    assert.match(note, /written for this lesson/, `${name} must mark its example as illustrative`);
+    assert.match(note, /real posts? by @lennox_saint, quoted exactly/i, `${name} must source its example`);
+    assert.match(note, /Published \d{1,2} [A-Z][a-z]+ 20\d\d/, `${name} must date its example`);
   }
 });
 

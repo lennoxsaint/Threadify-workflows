@@ -18,16 +18,15 @@ Go easy on words that show up in every generic post: unlock, leverage, game-chan
 
 ## Worked example
 
-An example written for this lesson, not a real post.
+A real post by @lennox_saint, quoted exactly. Published 10 September 2026. 73,529 views when this lesson was written. It contains strong language, kept as he wrote it.
 
-Stiff:
+> Threads is for unfiltered thoughts.
+>
+> fuck professionalism.
 
-> In today's fast-paced digital landscape, consistency is the key to unlocking growth.
+Two short lines, plain words, and a last line that just stops. It sounds like something he would say out loud. Compare it with a stiff version of the same thought: `In today's digital landscape, authenticity is the key to unlocking engagement.`
 
-Said out loud:
-
-> i missed four days last month and nothing bad happened.
-> i just felt weird about it.
+The swearing is his habit, not a rule. Yours might be different.
 
 ## Common mistake
 
