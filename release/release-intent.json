@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.23.1",
+  "release_version": "0.24.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.23.1",
+  "plugin_version": "0.24.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Fix Growth Loop changed-key draft-save retries and ambiguous legacy intents; use the correct six-hour Growth Loop recurring instructions."
+  "summary": "Threads Teach: learn to write for Threads in ten short lessons on your own posts, with a private learning workspace and one self-written post per lesson, saved or scheduled only after exact approval."
 }

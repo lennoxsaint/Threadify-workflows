@@ -1,0 +1,4 @@
+interface:
+  display_name: "Threads Teach"
+  short_description: "Learn Threads one short lesson at a time, on your own posts"
+  default_prompt: "Use $threadify-threads-teach to teach me how to write for Threads, starting from where my last lesson ended."

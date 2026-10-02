@@ -1546,6 +1546,55 @@
       ]
     },
     {
+      "workflow_id": "threads-teach",
+      "version": "0.1.0",
+      "title": "Threads Teach",
+      "summary": "Learn to write for Threads in short lessons on your own posts, with a private learning workspace and one self-written post per lesson, saved or scheduled only after exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-threads-teach",
+      "entrypoint": "skills/threadify-threads-teach/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-threads-teach/SKILL.md",
+      "source_manifest": "workflows/threads-teach/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/threads-teach/README.md"
+        ]
+      },
+      "triggers": [
+        "teach me Threads",
+        "teach me how to write Threads posts",
+        "continue my Threads lessons"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "learner mission and own posts",
+            "schema_ref": "inline:threads-teach-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "lesson, learning record and one learner-written post",
+            "schema_ref": "inline:threads-teach-workspace"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "viral-carousel-maker",
       "version": "0.6.0",
       "title": "Viral Carousel Maker",

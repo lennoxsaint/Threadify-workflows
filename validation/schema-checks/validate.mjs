@@ -24,6 +24,7 @@ const allowedTools = new Set([
   'best_time_to_post',
   'read_link_attribution',
   'read_post_performance',
+  'get_growth_signal',
   'plan_greatest_hits_runway',
   'list_offers',
   'create_offer',
