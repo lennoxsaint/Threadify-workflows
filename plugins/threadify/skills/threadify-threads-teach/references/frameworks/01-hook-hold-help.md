@@ -30,7 +30,7 @@ Starting with the help. The post opens with advice ("post about one thing"), so 
 
 ## On the learner's posts
 
-Connected: read their best posts with `greatest_hits` and their recent ones with `read_post_performance`. Ask the learner to label hook, hold and help in one strong post and one weak post, then compare what is missing.
+Connected: read their best posts with `greatest_hits` (`metric: "views"`) and their recent ones with `read_post_performance` (`include_full_text: true`). Follow the post-picking rules in the skill: best posts by views with the age and view floors, full text for recent posts, and the contrast-post rule. For the weak post, prefer one that opens with the help. Ask the learner to label hook, hold and help in one strong post and one weak post, then compare what is missing.
 
 Not connected: do the same with posts they paste, and call them a sample.
 

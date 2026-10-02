@@ -1,6 +1,6 @@
 # Threads Teach
 
-Use the complete [installable skill](../../skills/threadify-threads-teach/SKILL.md).
+Use the installable skill `threadify-threads-teach`; its `SKILL.md` holds the full instructions.
 
 This workflow teaches a creator to write for Threads in ten short lessons built on Lennox Saint's core frameworks. It keeps a private workspace with the learner's mission, lessons and learning records, so each session continues from the last. With a Threadify connection it teaches on the learner's own posts and results; without one it works on pasted posts and says what it cannot see.
 

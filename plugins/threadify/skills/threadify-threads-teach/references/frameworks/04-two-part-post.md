@@ -37,7 +37,7 @@ Putting everything in post 1 and using post 2 for leftovers. Or the opposite: a 
 
 ## On the learner's posts
 
-Connected: use `read_post_performance` to find a recent post of theirs that tried to do too much in one go. Ask the learner where the natural break is.
+Connected: use `read_post_performance` (`include_full_text: true`) to find a recent post of theirs, at least 3 days old, that tried to do too much in one go. Ask the learner where the natural break is.
 
 Not connected: ask them to paste one post that felt crowded and find the break together.
 

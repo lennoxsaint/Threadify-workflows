@@ -28,7 +28,7 @@ Changing everything after one bad post. Or the reverse: never looking at all.
 
 ## On the learner's posts
 
-Connected: use `greatest_hits` for their best posts, `read_post_performance` for recent posts including the weak ones, and `get_growth_signal` for the overall picture. Show the learner the posts and let them find the pattern first. Report only what the tools returned, and say which numbers were missing.
+Connected: use `greatest_hits` (`metric: "views"`) for their best posts, `read_post_performance` (`include_full_text: true`) for recent posts including the weaker ones, and `get_growth_signal` for a rough overall picture. Follow the post-picking rules in the skill: best posts by views with the age and view floors, full text for recent posts, and the contrast-post rule. Report the growth signal's confidence as given, and do not credit followers to one post because of it. Show the learner the posts and let them find the pattern first. Report only what the tools returned, and say which numbers were missing.
 
 Not connected: ask for three posts that did well and three that did not, with whatever numbers they have. Say that you cannot check the numbers or see the rest of their posts, so any pattern is a guess from a sample.
 

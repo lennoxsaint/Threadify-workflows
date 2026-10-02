@@ -11,6 +11,8 @@ One mission per workspace. Keep it under a screen.
 ```md
 # Mission: Threads
 
+Status: draft | confirmed
+
 ## Why
 {1-3 sentences. What changes for the learner if Threads works. A real outcome, not "get better at Threads".}
 
@@ -34,7 +36,9 @@ One mission per workspace. Keep it under a screen.
 Rules:
 
 - Concrete beats abstract. "Two client calls a month from Threads" beats "grow my audience".
-- If the learner cannot say why, keep asking before writing anything.
+- Write the file after the first answer with `Status: draft` and fill it in as the setup goes, so an interrupted setup can resume. Leave unanswered parts as `not asked yet`.
+- Set `Status: confirmed` only after the learner has read the whole mission back and said yes. Lessons need a confirmed mission.
+- If the learner cannot say why, keep asking. A vague mission is not ready to confirm.
 - When the goal moves, confirm it with the learner, update the file and add a learning record.
 
 ## learning-records/0001-slug.md
@@ -127,4 +131,4 @@ Rules:
 
 ## NOTES.md
 
-Free-form. How the learner likes to be taught, what they do not want, and anything to remember next time. No private details about other people.
+Free-form. The learner's timezone, how the learner likes to be taught, what they do not want, and anything to remember next time. No private details about other people.
