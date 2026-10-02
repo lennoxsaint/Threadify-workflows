@@ -1,0 +1,88 @@
+{
+  "workflow_id": "grill-to-post",
+  "version": "0.1.0",
+  "title": "Grill To Post",
+  "summary": "Question one rough idea until it is clear, have Threadify write it as a thread, a list post and a one-liner, check every number against the creator's own account, and schedule all three only after exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-grill-to-post",
+    "source": "plugins/threadify/skills/threadify-grill-to-post/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/grill-to-post/README.md"] },
+  "triggers": [
+    "grill me then write the post",
+    "turn this idea into Threads posts",
+    "plan, write and schedule one idea"
+  ],
+  "io": {
+    "inputs": [{ "name": "creator mission and one rough idea", "schema_ref": "inline:grill-to-post-input" }],
+    "outputs": [{ "name": "confirmed brief, three generated drafts, claim check and schedule readback", "schema_ref": "inline:grill-to-post-output" }]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "query_brain",
+    "generate_content",
+    "edit_draft",
+    "get_draft",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "validate_post",
+    "schedule_post",
+    "reschedule_post",
+    "get_schedule_status"
+  ],
+  "free_capabilities": [
+    "one-time mission setup in a private folder",
+    "numbered question rounds that end in a confirmed brief"
+  ],
+  "paid_capability_stubs": [
+    "connected reads of the creator's own posts and results depend on current Threadify scopes and plan entitlement",
+    "posts generated in the creator's voice",
+    "connected scheduling and calendar readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "exact text of all three posts",
+      "action",
+      "local date and time for each post",
+      "auto-repost behaviour",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "local-brief-without-generation",
+    "instructions": [
+      "Run the mission and the question rounds and hand over the confirmed brief.",
+      "Say plainly that no posts were read, generated, checked or scheduled.",
+      "Do not write the posts as a substitute for Threadify's output; record the outcome as handed over."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "confirmed brief",
+      "generated draft text shown unedited",
+      "claim check result",
+      "approval for the schedule packet",
+      "schedule readback",
+      "fallback state"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grill To Post"
+  short_description: "One rough idea, questioned, written three ways and scheduled after approval"
+  default_prompt: "Use $threadify-grill-to-post to grill me on one rough idea, then have Threadify write it three ways and schedule them after I approve."

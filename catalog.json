@@ -931,6 +931,55 @@
       ]
     },
     {
+      "workflow_id": "grill-to-post",
+      "version": "0.1.0",
+      "title": "Grill To Post",
+      "summary": "Question one rough idea until it is clear, have Threadify write it as a thread, a list post and a one-liner, check every number against the creator's own account, and schedule all three only after exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-grill-to-post",
+      "entrypoint": "skills/threadify-grill-to-post/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-grill-to-post/SKILL.md",
+      "source_manifest": "workflows/grill-to-post/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/grill-to-post/README.md"
+        ]
+      },
+      "triggers": [
+        "grill me then write the post",
+        "turn this idea into Threads posts",
+        "plan, write and schedule one idea"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "creator mission and one rough idea",
+            "schema_ref": "inline:grill-to-post-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "confirmed brief, three generated drafts, claim check and schedule readback",
+            "schema_ref": "inline:grill-to-post-output"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "market-to-pipeline",
       "version": "0.1.0",
       "title": "Market to Pipeline",

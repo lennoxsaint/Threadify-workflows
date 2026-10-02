@@ -21,6 +21,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Follow Through | yes | yes | yes | yes | yes | yes | yes |
 | Get Set Up | yes | yes | yes | yes | yes | yes | yes |
 | Greatest Hits Runway | yes | yes | yes | yes | yes | yes | yes |
+| Grill To Post | yes | yes | yes | yes | yes | yes | yes |
 | Market to Pipeline | yes | yes | yes | yes | yes | yes | yes |
 | Monetize My Week | yes | yes | yes | yes | yes | yes | yes |
 | Personal Brain Sync / Current Self Packet | yes | yes | yes | yes | yes | yes | yes |
