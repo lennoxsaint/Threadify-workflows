@@ -932,7 +932,7 @@
     },
     {
       "workflow_id": "market-to-pipeline",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Market to Pipeline",
       "summary": "Turn one offer and one bounded market into a private qualified pipeline, exact permission-aware actions, seven de-identified posts, and body-free receipts using normalized Threadify and optional Treg evidence.",
       "kind": "skill",
@@ -963,6 +963,10 @@
           {
             "source": "workflows/market-to-pipeline/synthetic-market.json",
             "target": "references/synthetic-market.json"
+          },
+          {
+            "source": "lib/market-content.mjs",
+            "target": "scripts/market-content.mjs"
           }
         ]
       },

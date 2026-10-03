@@ -27,6 +27,7 @@ const allowedTools = new Set([
   'get_growth_signal',
   'plan_greatest_hits_runway',
   'list_offers',
+  'list_comments',
   'create_offer',
   'update_offer',
   'get_capabilities',
