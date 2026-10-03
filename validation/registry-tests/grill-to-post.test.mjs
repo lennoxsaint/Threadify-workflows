@@ -45,6 +45,7 @@ test('Grill To Post checks claims and gates scheduling on one exact packet', () 
   const skill = fs.readFileSync(path.join(sourceDir, 'SKILL.md'), 'utf8');
   assert.match(skill, /Flag anything you cannot match/);
   assert.match(skill, /Unknown stays unknown/);
+  assert.match(skill, /After every `edit_draft`, read the changed text and check it again/);
   assert.match(skill, /Connection is not permission/);
   assert.match(skill, /Ask for approval of that exact packet/);
   assert.match(skill, /what auto-repost will do/);

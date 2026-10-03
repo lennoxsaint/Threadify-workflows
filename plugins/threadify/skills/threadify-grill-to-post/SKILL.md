@@ -70,6 +70,8 @@ Before anything is scheduled, check every number and factual claim in the three 
 - Flag general claims the data cannot prove, such as why a post did well.
 - For each flag the creator chooses: cut it, soften it, or keep it knowing it is unchecked. Apply cuts and softening with `edit_draft`.
 
+An edit can introduce a new mistake. After every `edit_draft`, read the changed text and check it again before moving on.
+
 Report the result as checked, flagged or not verified. Unknown stays unknown. Do not invent a source.
 
 ## 6. First-line options
