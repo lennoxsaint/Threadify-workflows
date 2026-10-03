@@ -942,7 +942,25 @@
       "source_manifest": "workflows/grill-to-post/manifest.json",
       "bundle": {
         "kind": "advanced",
-        "standalone": false
+        "standalone": false,
+        "references": [
+          {
+            "source": "lib/grill-to-post.mjs",
+            "target": "references/lib/grill-to-post.mjs"
+          },
+          {
+            "source": "lib/creator/store.mjs",
+            "target": "references/lib/creator/store.mjs"
+          },
+          {
+            "source": "lib/creator/review.mjs",
+            "target": "references/lib/creator/review.mjs"
+          },
+          {
+            "source": "lib/creator/automation.mjs",
+            "target": "references/lib/creator/automation.mjs"
+          }
+        ]
       },
       "dependencies": {
         "workflows": [],

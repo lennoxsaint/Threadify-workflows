@@ -8,7 +8,16 @@
     "skill_id": "threadify-grill-to-post",
     "source": "plugins/threadify/skills/threadify-grill-to-post/SKILL.md"
   },
-  "bundle": { "kind": "advanced", "standalone": false },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "lib/grill-to-post.mjs", "target": "references/lib/grill-to-post.mjs" },
+      { "source": "lib/creator/store.mjs", "target": "references/lib/creator/store.mjs" },
+      { "source": "lib/creator/review.mjs", "target": "references/lib/creator/review.mjs" },
+      { "source": "lib/creator/automation.mjs", "target": "references/lib/creator/automation.mjs" }
+    ]
+  },
   "dependencies": { "workflows": [], "files": ["workflows/grill-to-post/README.md"] },
   "triggers": [
     "grill me then write the post",
@@ -81,6 +90,8 @@
       "generated draft text shown unedited",
       "claim check result",
       "approval for the schedule packet",
+      "durable pending attempt and stable idempotency key before dispatch",
+      "exact selected first line or local capability gap",
       "schedule readback",
       "fallback state"
     ]

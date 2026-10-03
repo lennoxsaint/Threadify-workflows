@@ -57,7 +57,7 @@ Threadify writes the posts. You do not. Call `generate_content` three times, pas
 
 Show all three outputs exactly as returned. Do not tidy them. Keep each `draft_id`; every later step uses it.
 
-If the creator wants a change, call `edit_draft` with their instruction and show the new output unedited. For a thread, edit one post at a time with `post_index`. Never retype post text by hand.
+If the creator wants an AI rewrite, call `edit_draft` with their instruction and show the new output unedited. For a thread, edit one post at a time with `post_index`. Never retype post text by hand. An exact wording request uses the deterministic edit path in step 6, even when made here or during claim checking.
 
 Tell the creator plainly that these are now drafts in their Threadify account and that nothing is scheduled.
 
@@ -81,7 +81,10 @@ Offer ranked options for the first post of the thread.
 - Build every option only from facts that passed step 5.
 - If `query_brain` returns the creator's own rules for first lines, follow those and say you did. If it returns none, use one plain rule: the first lines leave a question open that the rest of the thread answers.
 - Give up to ten options, best first, with one line on why each ranks where it does. These options are yours, and you say so.
-- Apply the creator's pick with `edit_draft` on `post_index: 1`, asking for that exact text. Read the result back and confirm it matches word for word.
+- Read the current draft with `get_draft` and save the creator's exact selection and complete original draft in their private folder. Use `first-line` in the [delivery helper](references/delivery-safety.md) to replace only the first line of the first part, preserving the rest of that part, all later parts, media, spacing, punctuation and emoji.
+- Do not use `edit_draft` for exact wording: it is an AI-instruction endpoint and may paraphrase or change other text. Use the authenticated Threadify post-card text editor, or a currently verified provider tool whose schema explicitly supports verbatim replacement on the same `draft_id`.
+- Read the same draft back and run `verify-draft` against the saved expected draft. Require exact equality of account, draft ID, every part and media. Re-check claims and validate the changed draft before schedule approval.
+- If no deterministic editing surface is available, or readback differs, keep the selection and expected draft local and report the capability gap. Block scheduling of the affected draft until exact readback succeeds or the creator explicitly withdraws the selection and approves the actual draft. Do not regenerate or substitute a new draft ID to bypass the gap.
 
 The creator can skip this step.
 
@@ -91,12 +94,14 @@ Connection is not permission. Reviewed or autonomous connection settings do not 
 
 1. Read `list_scheduled_posts` for the days in question and `best_time_to_post` for measured times. Pick one slot per post, one post per day across three days, avoiding slots already taken. If no measured time is available, ask the creator for times instead of guessing.
 2. Say what is already on the calendar on those days, and name any scheduled post that makes the same point as these three.
-3. Call `validate_post` on each exact text.
+3. Read each current draft, require any selected exact wording to match, and call `validate_post` on each exact text.
 4. Show one packet: the account, all three exact texts, each local date and time with the timezone name, the reason for each slot, and what auto-repost will do. Ask for approval of that exact packet.
-5. On approval, call `schedule_post` once per draft with its `draft_id` and a stable idempotency key.
-6. Read the calendar back with `list_scheduled_posts` and match account, text and time for each post. Report each as `scheduled_confirmed`, `failed` or `schedule_unverified`.
+5. Before any dispatch, follow the [delivery helper](references/delivery-safety.md). Save the full approved packet and approval evidence in the private folder. For each row, call `begin` to durably persist the exact approved account, draft ID, all text/media, instant, timezone, auto-repost setting, approval and stable idempotency key as `attempt_pending`. Only a successful `next_action: dispatch` permits one `schedule_post` call with that same draft and key. A persistence error blocks the call.
+6. Read the calendar back with `list_scheduled_posts` and, when exposed, `get_schedule_status`. Reconcile the saved attempt against account, draft ID, all text/media, time and auto-repost. Persist each receipt and report each as `scheduled_confirmed`, `failed` or `schedule_unverified`. Preserve every confirmed success if another row fails.
 
-Any change to a text, the account, a date or a time cancels the approval for that post; show the new version and ask again. To move a scheduled post use `reschedule_post` if the connection exposes it; never schedule a second copy. If an outcome is unclear, read the calendar before trying again. Never schedule twice to be safe.
+Any change to text, media, account, draft ID, date, time or auto-repost cancels the approval for that post; show the new version and ask again. To move a scheduled post use `reschedule_post` if the connection exposes it; never schedule a second copy.
+
+On restart or timeout, load the same saved packet and delivery directory before doing any work. An accepted call with a lost response remains pending or `schedule_unverified`: reconcile that same attempt before retrying. Never create a new key or directory to escape an uncertain result. An empty or incomplete calendar is not proof of non-acceptance. Retry only after authoritative definitive non-acceptance, with the same key for the unchanged row and fresh preflight checks. If proof is unavailable, keep the row unverified and stop its delivery. Never schedule twice to be safe.
 
 A scheduled post is not a published post. Never publish immediately, reply, or change any account setting in this workflow.
 
