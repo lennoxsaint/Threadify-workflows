@@ -1,3 +1,14 @@
+# 0.25.0
+
+- Add Grill To Post, one command that takes a rough idea to three scheduled Threads posts.
+- Question the idea in numbered rounds, each with a recommended answer, until the reader, the point, the takeaway and the claim are settled; facts are read from the creator's own posts and decisions stay with the creator.
+- Have Threadify write the idea as a thread, a list post and a one-liner in the creator's voice; show the outputs unedited and make every change through Threadify rather than by hand.
+- Check every number in the drafts against the creator's own account and flag anything that cannot be matched before scheduling.
+- Offer ranked first-line options for the thread, built only from checked facts.
+- Schedule all three, one per day, only after one exact approval of account, texts, local times and auto-repost behaviour; schedule each once and read the calendar back.
+- Share the Threads Teach mission file, point to Threads Teach at the end, and stop at the confirmed brief without a connection.
+- Credit the question method to Matt Pocock's MIT-licensed `grilling` skill and ship its licence notice with the skill.
+
 # 0.24.2
 
 - Threads Teach: rank the learner's best posts by views, with a minimum age, a minimum view count and a check that discards posts whose view counts are incomplete.

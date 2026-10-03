@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.24.2",
+  "release_version": "0.25.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.24.2",
+  "plugin_version": "0.25.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Threads Teach rehearsal fixes: pick example posts by views with age and view floors, keep connection details private, handle timezone honestly, and make the one-time mission setup resumable."
+  "summary": "Grill To Post: question one rough idea until it is clear, have Threadify write it as a thread, a list post and a one-liner, check every number against your own account, and schedule all three after one exact approval."
 }
