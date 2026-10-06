@@ -27,6 +27,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Post This Next | yes | yes | yes | yes | yes | yes | yes |
 | Qualified Buyer Research | yes | yes | yes | yes | yes | yes | yes |
 | Refresh Your Threads Profile | yes | yes | yes | yes | yes | yes | yes |
+| Run My Threads | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Growth Loop | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Inbound Replies | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Offer Builder | yes | yes | yes | yes | yes | yes | yes |

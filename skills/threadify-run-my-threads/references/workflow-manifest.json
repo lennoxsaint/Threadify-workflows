@@ -1,0 +1,85 @@
+{
+  "workflow_id": "run-my-threads",
+  "version": "0.1.0",
+  "title": "Run My Threads",
+  "summary": "One setup, then once a day your agent prepares up to five Threadify-written posts in open slots, shows them for one reply, and schedules them only after you say yes.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-run-my-threads",
+    "source": "plugins/threadify/skills/threadify-run-my-threads/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/run-my-threads/README.md"] },
+  "triggers": [
+    "run my Threads for me",
+    "prepare my Threads posts every morning for approval",
+    "set up Run My Threads"
+  ],
+  "io": {
+    "inputs": [{ "name": "one-time setup choices and connected account", "schema_ref": "inline:run-my-threads-setup" }],
+    "outputs": [{ "name": "daily approval card and schedule receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "generate_content",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": ["best_time_to_post"],
+  "free_capabilities": [
+    "local casing guard that proves Threadify copy was only lowercased",
+    "one daily host schedule set up with the host's own controls"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post generation counts toward the plan's AI generations",
+    "model choice depends on the plan: Claude Opus 5.5 when the plan allows it, Gemini as fallback",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account handle",
+      "timezone",
+      "local and UTC time for each slot",
+      "exact final text",
+      "model requested and reported",
+      "casing guard result",
+      "Auto Plug and Auto Repost state",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "blocker-report-without-substitute-copy",
+    "instructions": [
+      "Never write posts yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
+      "When the casing guard fails, present Threadify's original text unchanged.",
+      "When the host has no durable scheduler, say so and run only when the owner asks."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "approval reply",
+      "scheduled posts and slots",
+      "models requested and reported",
+      "casing guard results",
+      "schedule readback",
+      "run start and end",
+      "usage readout or not exposed",
+      "fallback state"
+    ]
+  }
+}
