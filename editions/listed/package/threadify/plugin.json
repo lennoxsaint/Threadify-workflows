@@ -18,14 +18,14 @@
         "category": "Productivity",
         "composerIcon": "./assets/icon.png",
         "defaultPrompt": [
-          "Show me what is scheduled on my Threads this week",
+          "Get me set up and schedule my first Threads post",
           "Write a Threads post in my voice about what I learned today",
           "Teach me to write better Threads posts, one short lesson at a time"
         ],
         "developerName": "Saints Coaching",
         "displayName": "Threadify",
         "logo": "./assets/logo.png",
-        "longDescription": "Threadify helps creators run their Threads account from ChatGPT or Codex, in their own voice. This version includes nine skills. Schedule posts you have already approved. Re-share your greatest hits. Build new posts from last week's winners. Add a tracked offer to a week of drafts. Keep your Threadify Brain current, and repair it when drafts get your facts or voice wrong. Learn to write for Threads one short lesson at a time. Cross-post a Threads post to X. Turn a daily post into a draft X Article.\n\nNothing is scheduled until you have seen the exact review: the words, the account, the time and each platform's version. Then you say yes, and Threadify reads back what it scheduled. These skills do not publish immediately. You need a Threadify account, connected through the official sign-in screen. Posting to X also needs an X account connected in Threadify.",
+        "longDescription": "Threadify helps creators run their Threads account from ChatGPT or Codex, in their own voice. This version includes twelve skills. Get set up and schedule your first post in one sitting. Plan and write a week of posts. Answer the comments and mentions people leave you. Schedule posts you have already approved. Re-share your greatest hits. Build new posts from last week's winners. Add a tracked offer to a week of drafts. Keep your Threadify Brain current, and repair it when drafts get your facts or voice wrong. Learn to write for Threads one short lesson at a time. Cross-post a Threads post to X. Turn a daily post into a draft X Article.\n\nNothing is scheduled until you have seen the exact review: the words, the account, the time and each platform's version. Then you say yes, and Threadify reads back what it scheduled. A reply goes out only after you approve its exact words. These skills do not publish immediately. You need a Threadify account, connected through the official sign-in screen. Posting to X also needs an X account connected in Threadify.",
         "privacyPolicyURL": "https://www.threadify.app/privacy",
         "shortDescription": "Write and schedule Threads",
         "supportURL": "https://www.threadify.app/help",
@@ -34,7 +34,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "First release in the plugin directory. Nine Threads skills on the Threadify server, with a review of the exact post, account, time and platforms before anything is scheduled."
+        "release_notes": "First release in the plugin directory. Twelve Threads skills on the Threadify server, with a review of the exact post, account, time and platforms before anything is scheduled, and of each exact reply before it is sent."
       },
       "review": {
         "commerce": false,

@@ -3,10 +3,12 @@
   "terms": [
     "auto_repost",
     "channel_voice",
+    "comment_id",
     "draft_saved",
     "evergreen_identity",
     "handed_over",
     "live_metric",
+    "mention_id",
     "posts_per_day",
     "relationship_context_note",
     "runway_days",
