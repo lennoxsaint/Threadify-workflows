@@ -121,6 +121,8 @@ test('Run My Threads encodes the week, hooks and CTA levels', () => {
   assert.match(skill, /references\/threads-playbook\.md/);
   assert.match(skill, /auto_plug: \{content: <exact plug text>, trigger: "time", delay_minutes: 15\}/);
   assert.match(skill, /read the receipt's `auto_plug` echo/);
+  assert.match(skill, /Decide Auto Plug before the first plan/);
+  assert.match(skill, /otherwise, or when unsure, `auto_plug: false`/);
   assert.match(skill, /The offer link may appear only in the CTA post/);
   assert.match(skill, /within 90 minutes/);
   assert.match(skill, /~\/\.threadify-workflows\/state\/run-my-threads\//);

@@ -121,7 +121,8 @@ export function checkHook({ id = null, text }) {
   const body = plain(parts.join('\n\n')).slice(hook.length);
   const slopInBody = SLOP.filter((term) => !slopInHook.includes(term) && containsTerm(body, term));
   warnIf(slopInBody.length > 0, `slop_in_body:${slopInBody.join(',')}`);
-  warnIf(sentence.endsWith('?') && YES_NO_START.test(plain(sentence)), 'yes_no_question_hook');
+  // The playbook bans a yes/no question the reader can answer "no" to.
+  failIf(sentence.endsWith('?') && YES_NO_START.test(plain(sentence)), 'yes_no_question_hook');
   for (const [index, part] of parts.entries()) {
     warnIf((part.match(/—/g) ?? []).length > 1, `em_dash_overload${parts.length > 1 ? `:part_${index + 1}` : ''}`);
   }

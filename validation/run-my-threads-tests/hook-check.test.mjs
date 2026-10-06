@@ -49,9 +49,13 @@ test('a buried hook fails; a long or very short first sentence warns', () => {
   assert.deepEqual(codes(checkHook({ text: 'Stop. Read this before you post again.' })), ['WARN:short_first_sentence:1_words']);
 });
 
-test('long hooks, yes/no questions, slop later in the post and em-dash overload warn', () => {
+test('a yes/no question hook fails', () => {
+  assert.deepEqual(codes(checkHook({ text: 'Are you posting at the right time?' })), ['FAIL:yes_no_question_hook']);
+  assert.equal(checkHook({ text: 'Why do most creators quit in month two?' }).status, 'PASS');
+});
+
+test('long hooks, slop later in the post and em-dash overload warn', () => {
   assert.ok(codes(checkHook({ text: 'One line.\nTwo lines here.\nThree lines here.\nFour lines here.' })).includes('WARN:hook_over_3_lines'));
-  assert.ok(codes(checkHook({ text: 'Are you posting at the right time?' })).includes('WARN:yes_no_question_hook'));
   assert.ok(codes(checkHook({ text: 'I write one post a day.\n\nIt is a real game-changer.' })).includes('WARN:slop_in_body:game-changer'));
   assert.ok(codes(checkHook({ text: 'I write one post a day.\n\nShort — sharp — done.' })).includes('WARN:em_dash_overload'));
 });
@@ -68,7 +72,7 @@ test('the banned-opener list matches the playbook exactly', () => {
 });
 
 test('overall status is the worst post; CLI exits 1 only on FAIL', () => {
-  const input = { posts: [{ id: 1, text: 'I lost my first client in week two.' }, { id: 2, text: 'Are you posting at the right time?' }] };
+  const input = { posts: [{ id: 1, text: 'I lost my first client in week two.' }, { id: 2, text: 'Stop. Read this before you post again.' }] };
   assert.equal(checkHooks(input).status, 'WARN');
   const warn = spawnSync(process.execPath, [script], { input: JSON.stringify(input), encoding: 'utf8' });
   assert.equal(warn.status, 0, warn.stderr);
