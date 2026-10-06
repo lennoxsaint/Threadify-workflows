@@ -4,7 +4,7 @@
     "name": "Saints Coaching",
     "url": "https://www.threadify.app"
   },
-  "description": "Schedule Threads posts you have already approved through your Threadify account, with a conflict check and readback.",
+  "description": "Plan, write and schedule Threads posts in your own voice through your Threadify account, with a review of every post before it is scheduled.",
   "extensions": {
     "com.openai": {
       "interface": {
@@ -21,7 +21,7 @@
         "developerName": "Saints Coaching",
         "displayName": "Threadify",
         "logo": "./assets/logo.png",
-        "longDescription": "Threadify helps creators run their Threads account. This version includes one skill, Daily Posts Heartbeat. It checks posts you have already approved, looks for calendar conflicts, and schedules each post only after you approve the exact text, account and time. Then it reads the result back. It does not write new posts, publish right away or set up a recurring routine. You need a Threadify account, connected through the official sign-in screen.",
+        "longDescription": "Threadify helps creators run their Threads account from ChatGPT or Codex, in their own voice. This version includes nine skills. Schedule posts you have already approved. Re-share your greatest hits. Build new posts from last week's winners. Add a tracked offer to a week of drafts. Keep your Threadify Brain current, and repair it when drafts get your facts or voice wrong. Learn to write for Threads one short lesson at a time. Cross-post a Threads post to X. Turn a daily post into a draft X Article.\n\nNothing is scheduled until you have seen the exact review: the words, the account, the time and each platform's version. Then you say yes, and Threadify reads back what it scheduled. These skills do not publish immediately. You need a Threadify account, connected through the official sign-in screen. Posting to X also needs an X account connected in Threadify.",
         "privacyPolicyURL": "https://www.threadify.app/privacy",
         "shortDescription": "Write and schedule Threads",
         "supportURL": "https://www.threadify.app/support",

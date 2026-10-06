@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "plugin": {
     "name": "threadify",
-    "description": "Schedule Threads posts you have already approved through your Threadify account, with a conflict check and readback.",
+    "description": "Plan, write and schedule Threads posts in your own voice through your Threadify account, with a review of every post before it is scheduled.",
     "author": {
       "name": "Saints Coaching",
       "url": "https://www.threadify.app"
@@ -12,7 +12,7 @@
   "listing": {
     "displayName": "Threadify",
     "shortDescription": "Write and schedule Threads",
-    "longDescription": "Threadify helps creators run their Threads account. This version includes one skill, Daily Posts Heartbeat. It checks posts you have already approved, looks for calendar conflicts, and schedules each post only after you approve the exact text, account and time. Then it reads the result back. It does not write new posts, publish right away or set up a recurring routine. You need a Threadify account, connected through the official sign-in screen.",
+    "longDescription": "Threadify helps creators run their Threads account from ChatGPT or Codex, in their own voice. This version includes nine skills. Schedule posts you have already approved. Re-share your greatest hits. Build new posts from last week's winners. Add a tracked offer to a week of drafts. Keep your Threadify Brain current, and repair it when drafts get your facts or voice wrong. Learn to write for Threads one short lesson at a time. Cross-post a Threads post to X. Turn a daily post into a draft X Article.\n\nNothing is scheduled until you have seen the exact review: the words, the account, the time and each platform's version. Then you say yes, and Threadify reads back what it scheduled. These skills do not publish immediately. You need a Threadify account, connected through the official sign-in screen. Posting to X also needs an X account connected in Threadify.",
     "developerName": "Saints Coaching",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],
@@ -380,6 +380,11 @@
         },
         {
           "file": "SKILL.md",
+          "find": "Missing proof and unknown metrics remain unknown; do not import historical owner facts from the episode.",
+          "replace": "Missing proof and unknown metrics remain unknown; do not import old owner facts from examples."
+        },
+        {
+          "file": "SKILL.md",
           "find": "6. Read back each changed item with query_brain or the current appropriate retrieval tool.",
           "replace": "6. Read back each changed item with `query_brain` or the current appropriate retrieval tool."
         },
@@ -558,6 +563,86 @@
           "file": "references/frameworks/10-reading-your-results.md",
           "find": "## Edge of the free material\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. Use the one-line pointer if the learner asks.",
           "replace": "## Where this lesson stops\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. If the learner asks, say this is as far as these lessons go."
+        }
+      ]
+    },
+    {
+      "name": "threadify-crosspost-x-after-threads",
+      "source": "skills/threadify-crosspost-x-after-threads",
+      "description": "Turns a Threads post the person already scheduled or published through Threadify into an X version, and schedules it to their connected X account only after they approve its review. Use when the person asks to cross-post, share or follow up on X after a Threads post.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Posting to X through Threadify needs a connected Threadify account with an X account connected to the same brand. Without one, prepare the X version for the person to post themselves. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Use when a user has already scheduled or published through Threadify and wants\nan X-ready follow-up artifact.",
+          "replace": "Use when the person has already scheduled or published a Threads post through\nThreadify and wants it on X too."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.\n2. Confirm Threads schedule/publish status using only listed MCP tools.\n3. Prepare an X-ready artifact and ask whether the user wants to publish or\n   schedule to X if live X tools are available in the future.\n4. If X tools are unavailable, mark fallback clearly.\n5. Do not claim X posting happened unless Threadify exposes and confirms a live\n   X provider action.",
+          "replace": "1. Call `get_connection_defaults` first. Confirm the Threads account, the timezone\n   and whether an X account is connected to the same brand and ready to post.\n2. Find the Threads post. For a scheduled post, use `list_scheduled_posts` and then\n   `get_schedule_status` with its `scheduled_post_id`. For a published post, use\n   `read_post_performance` with its `post_id`. Use the exact stored text.\n3. Prepare the X version from that text. Keep the person's words; Threadify splits\n   long text into an X thread, so show where it splits.\n4. Call `validate_post` on the text, then `review_post` with the text,\n   `platforms: [\"x\"]` and the `scheduled_at` the person chose, at least 5 minutes\n   ahead. Show the review it returns, including the X version and time. Each X post\n   counts toward the account's monthly X post limit; say so before they approve.\n5. After a clear yes to that review, call `schedule_post` with the same arguments plus\n   the review's `approval`. A change to the words, time or platforms needs a new\n   review, and an approval expires after 15 minutes.\n6. Report the X schedule only as `scheduled_confirmed` when the `schedule_post`\n   result confirms it; otherwise report `schedule_unverified` and check before any retry.\n7. If no X account is connected, or X posting is not available on this account, say so\n   plainly, give the person the X version to post themselves, and record that no X\n   action happened."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. This skill does not publish immediately or post to X without an approved review."
+        }
+      ]
+    },
+    {
+      "name": "threadify-x-article-from-daily-post",
+      "source": "skills/threadify-x-article-from-daily-post",
+      "description": "Expands an approved daily Threads post into a draft X Article packet (brief, article draft, thumbnail brief and scorecard) for the person to review and publish on X themselves. Use when the person asks to turn a Threads post into an X Article or a long-form X piece.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "This skill works from text the person approves; it needs no connection to draft. Honor an existing connection choice. Offer the connection only when it would help, such as making a thumbnail or scheduling a short X post; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.\n2. Use only approved source text or a public-safe Threadify-ready output artifact.",
+          "replace": "1. Confirm the approved source post and that the person wants an X Article draft.\n2. Use only approved source text or a public-safe post the person has approved."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "5. Mark live X publishing, scheduling, media upload, and browser submission as\n   unavailable in public v0 unless Threadify exposes and confirms a supported\n   product surface later.\n6. Stop for human review before any downstream publication action.\n7. Return a receipt proving that no live X action was performed.",
+          "replace": "5. The person publishes the X Article in X. Threadify's tools post regular X posts,\n   not Articles. If the person wants Threadify to make the thumbnail, call\n   `generate_image` with the thumbnail prompt as its `prompt`, and show the image\n   before calling it made.\n6. Once the article is live, the person may want a short X post that points to it.\n   Write it, call `review_post` with that text, `platforms: [\"x\"]` and the chosen\n   `scheduled_at`, show the review, and only after a clear yes call `schedule_post`\n   with the same arguments plus the review's `approval`.\n7. Return a receipt that says what was drafted, any image made, and any X post\n   scheduled with its approved review; say plainly when no X action happened."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. This skill never publishes the article itself."
         }
       ]
     }

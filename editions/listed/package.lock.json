@@ -3,13 +3,17 @@
   "inputs": {
     "editions/listed/assets/icon.png": "sha256-fbc30aff8edce12e5addf915807e6a54e789e7de5d6e86eaa39f31c9db2aabee",
     "editions/listed/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
-    "editions/listed/edition.json": "sha256-3dfc2adfdae72f7672fc3fc4059acf001b44263641aefd2716598c1a951a1be4",
+    "editions/listed/edition.json": "sha256-485f1169e85fc3efe5f53da337b6e83388d15727f7c9de79a5590e92e9551e55",
     "editions/listed/shared/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
     "skills/threadify-content-brain-repair/SKILL.md": "sha256-1c7650a129c90237d4645ec72d2775534ff5a161a0147a0240dcb566fdc36ca0",
     "skills/threadify-content-brain-repair/references/brain-sync-contract.md": "sha256-ece2bb2bb737a11072d6402fa233697a8f387f2256be0af2ff7a63d4ccb1e14c",
     "skills/threadify-content-brain-repair/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
     "skills/threadify-content-brain-repair/references/workflow-manifest.json": "sha256-f72782b7095b7c8c7f651aba37745458932ef0baacecd58c8e2e557a53b338ff",
     "skills/threadify-content-brain-repair/references/workflow-readme.md": "sha256-b65c72b52cdf5f3faf3766998131961223fd10c826db1e44a198e0b8239bff33",
+    "skills/threadify-crosspost-x-after-threads/SKILL.md": "sha256-55a5646e426f242fb953d213af1b8dd680ab5978582333d3f03c38fb20cfcc3d",
+    "skills/threadify-crosspost-x-after-threads/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
+    "skills/threadify-crosspost-x-after-threads/references/workflow-manifest.json": "sha256-a2286fa0503b51490a3575107efb4c464de16d8559417bcb7e2674f454ffbcb5",
+    "skills/threadify-crosspost-x-after-threads/references/workflow-readme.md": "sha256-ebbbabc48a672c515b9ca24ff43cf7245d1e542f24ff13cd19ae6fc79d303589",
     "skills/threadify-daily-posts-heartbeat/SKILL.md": "sha256-98bd4d0c6a35f5a6c25c6409dd023dc7063cee55a28d9568be27a08e527ebc2d",
     "skills/threadify-daily-posts-heartbeat/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
     "skills/threadify-daily-posts-heartbeat/references/workflow-manifest.json": "sha256-6f4bd0b89ee58a3e9e22040163ba128180bda917ea58f8ec975f057d1e775948",
@@ -49,17 +53,23 @@
     "skills/threadify-weekly-winner-replication/SKILL.md": "sha256-7c37742c7020b1591c333fb44a5417739b0e239aff0057653b53840e03c73d08",
     "skills/threadify-weekly-winner-replication/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
     "skills/threadify-weekly-winner-replication/references/workflow-manifest.json": "sha256-51577296bc64c8eb2d5379a11fcd45b6f20950bc46a1cffc53c310a50c6c11dc",
-    "skills/threadify-weekly-winner-replication/references/workflow-readme.md": "sha256-1bcf0081a7b14327f872634ba8713a25c89ba1c02e77cca47f04a9d3de4b59bf"
+    "skills/threadify-weekly-winner-replication/references/workflow-readme.md": "sha256-1bcf0081a7b14327f872634ba8713a25c89ba1c02e77cca47f04a9d3de4b59bf",
+    "skills/threadify-x-article-from-daily-post/SKILL.md": "sha256-06de92167facd3f7f28a2fc65497eee0fc7d970b5023fa60551c1b56336068a8",
+    "skills/threadify-x-article-from-daily-post/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
+    "skills/threadify-x-article-from-daily-post/references/workflow-manifest.json": "sha256-462be4624cd5dc7b028eca9c1dc9f66bcd717de29498456f95c5636074062020",
+    "skills/threadify-x-article-from-daily-post/references/workflow-readme.md": "sha256-f9efbbc035d07cb0de6964f6a93607206d0f8e1bd3961446c2aff84600275005"
   },
   "outputs": {
     ".agents/plugins/marketplace.json": "sha256-577d49c3840a1a85edbe3a74d649580c4c9fc989e736d277ec2d983cb86c365d",
     "threadify/assets/icon.png": "sha256-fbc30aff8edce12e5addf915807e6a54e789e7de5d6e86eaa39f31c9db2aabee",
     "threadify/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
     "threadify/mcp.json": "sha256-ab6270cddd14f5b3166e0509ef998a224f2e7fe97a0e2d56173dbabf67721d4f",
-    "threadify/plugin.json": "sha256-1c0f17065a6b244a0e3d9da04f7f90f11043229484fab60a598cfee024c5989a",
-    "threadify/skills/threadify-content-brain-repair/SKILL.md": "sha256-463bdd11aa03ec5606c6550dad1993f97325d7c4c4fd9e2f69e1ff26cdedc71a",
+    "threadify/plugin.json": "sha256-d12a1760779562f1abbe838d259297d6814c321996a8f07a1b06443bfe5cff2c",
+    "threadify/skills/threadify-content-brain-repair/SKILL.md": "sha256-74e9fb78e4a1f9ad34d86f85994c4dc519f1aed503b482d7804d6950e3133937",
     "threadify/skills/threadify-content-brain-repair/references/brain-sync-contract.md": "sha256-4c24fecfc6a8b553db004d84063b1c5ce4c36fc8a12558b856f4301689c953a6",
     "threadify/skills/threadify-content-brain-repair/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
+    "threadify/skills/threadify-crosspost-x-after-threads/SKILL.md": "sha256-aedd8e6bd8b3a93d45436bbd3e77bc2d4b71377a30e11b1267137d37d79143ea",
+    "threadify/skills/threadify-crosspost-x-after-threads/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
     "threadify/skills/threadify-daily-posts-heartbeat/SKILL.md": "sha256-7c6e6bdad4f9e6254c1544957aa28b98939bd9838dd0aa8fb11d00b9e5d7696e",
     "threadify/skills/threadify-daily-posts-heartbeat/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
     "threadify/skills/threadify-greatest-hits-runway/SKILL.md": "sha256-b922c81707a435a4126c71aea7d62386ba610c9103939e7e778ccdddda530511",
@@ -85,7 +95,9 @@
     "threadify/skills/threadify-threads-teach/references/frameworks/10-reading-your-results.md": "sha256-89f204e33e72a56bb71a25a68f0ad52a81b4ba6a5e79c09e8da51890ca78211b",
     "threadify/skills/threadify-threads-teach/references/workspace-formats.md": "sha256-9b88d976f5222e28b326b02d16ebfac5bde2ef1dfbbdd1c4d5086e3c9ce20de0",
     "threadify/skills/threadify-weekly-winner-replication/SKILL.md": "sha256-b7778957f8b7e4460e97b7dab14c868c1fbbf99f6971b869ecee9f4c0e2223a4",
-    "threadify/skills/threadify-weekly-winner-replication/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf"
+    "threadify/skills/threadify-weekly-winner-replication/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
+    "threadify/skills/threadify-x-article-from-daily-post/SKILL.md": "sha256-debf805a906e6df14c088c6eeb1617d2c5538bb293a19ccc3d53d3c5cebb917f",
+    "threadify/skills/threadify-x-article-from-daily-post/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf"
   },
   "version": "1.0.0"
 }

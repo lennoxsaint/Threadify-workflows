@@ -2,7 +2,7 @@
 
 This folder builds the package we submit to OpenAI's plugin directory (shared by ChatGPT and Codex). It is separate from the self-installed Threadify Workflows bundle: `lib/release-files.mjs` only ships an allow-list of top-level folders, and `editions/` is not on it.
 
-The listed edition is small on purpose. It ships one skill, Daily Posts Heartbeat, plus the Threadify MCP server, in the portable Agent Plugins format. Listed copy carries no plans links, prices, trials or local helper scripts.
+The listed edition is small on purpose. It ships nine skills that run with only the Threadify MCP server, in the portable Agent Plugins format: Daily Posts Heartbeat, Greatest Hits Runway, Weekly Winner Replication, Monetize My Week, Personal Brain Sync, Content Brain Repair, Threads Teach, Crosspost X After Threads and X Article From Daily Post. Listed copy carries no plans links, prices, trials or local helper scripts, and every skill that schedules calls `review_post` first and passes its approval to `schedule_post`.
 
 ## What is here
 
