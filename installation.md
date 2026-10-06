@@ -8,9 +8,9 @@ The guided setup handles the detail: account and agent connection, permissioned 
 
 ## Instructions for the agent
 
-This file is paired with Threadify Workflows **0.25.0**. It needs no sibling files. Fetch the official repository's release metadata for **v0.25.0**, confirm it is a published stable release, then use the canonical installer:
+This file is paired with Threadify Workflows **0.26.0**. It needs no sibling files. Fetch the official repository's release metadata for **v0.26.0**, confirm it is a published stable release, then use the canonical installer:
 
-`npx --yes github:lennoxsaint/Threadify-workflows#v0.25.0 install --version 0.25.0 --workflows all --targets <DETECTED_CLIENT> --disable-auto-update`
+`npx --yes github:lennoxsaint/Threadify-workflows#v0.26.0 install --version 0.26.0 --workflows all --targets <DETECTED_CLIENT> --disable-auto-update`
 
 The matching version must be a verified published stable release containing Get Set Up and Growth Loop, never a guessed version or main-branch snapshot. The canonical installer validates release manifests and checksums. If it is unavailable or does not contain `get-set-up` and `growth-loop`, explain that this installer is not released yet; do not substitute an older release. The copyable prompt above may select a newer verified release instead. Offer auto-updates separately.
 
