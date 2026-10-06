@@ -27,6 +27,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Post This Next (`post-this-next`) | skill | `threadify-post-this-next` | advanced | post this next; choose my next Threadify draft; review every draft and tell me what to finish next |
 | Qualified Buyer Research (`qualified-buyer-research`) | skill | `threadify-qualified-buyer-research` | advanced + standalone | find qualified buyers on Threads; research buyer language and stage one reply |
 | Refresh Your Threads Profile (`refresh-your-threads-profile`) | skill | `threadify-refresh-your-threads-profile` | advanced | refresh my Threads bio and profile picture; redesign my Threads profile from my niche; help me safely apply a new Threads profile |
+| Run My Threads (`run-my-threads`) | skill | `threadify-run-my-threads` | advanced | run my Threads for me; prepare my Threads posts every morning for approval; set up Run My Threads |
 | Threadify Growth Loop (`growth-loop`) | skill | `threadify-growth-loop` | advanced | build my self-improving content machine; run my Threadify growth loop; learn from mature posts and prepare tomorrow's drafts |
 | Threadify Inbound Replies (`inbound-replies`) | skill | `threadify-inbound-replies` | advanced | review my Threads reply backlog; use Threadify inbound replies |
 | Threadify Offer Builder (`offer-builder`) | skill | `threadify-offer-builder` | advanced | build my offer; interview me and make an offer page |
