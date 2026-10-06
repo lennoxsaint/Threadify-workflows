@@ -3,7 +3,7 @@
   "inputs": {
     "editions/listed/assets/icon.png": "sha256-fbc30aff8edce12e5addf915807e6a54e789e7de5d6e86eaa39f31c9db2aabee",
     "editions/listed/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
-    "editions/listed/edition.json": "sha256-485f1169e85fc3efe5f53da337b6e83388d15727f7c9de79a5590e92e9551e55",
+    "editions/listed/edition.json": "sha256-24c3505ce7901fed9660d4647ff517a0ff7c7b4c612f5276217d232ab35108bd",
     "editions/listed/shared/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
     "skills/threadify-content-brain-repair/SKILL.md": "sha256-1c7650a129c90237d4645ec72d2775534ff5a161a0147a0240dcb566fdc36ca0",
     "skills/threadify-content-brain-repair/references/brain-sync-contract.md": "sha256-ece2bb2bb737a11072d6402fa233697a8f387f2256be0af2ff7a63d4ccb1e14c",
@@ -64,7 +64,7 @@
     "threadify/assets/icon.png": "sha256-fbc30aff8edce12e5addf915807e6a54e789e7de5d6e86eaa39f31c9db2aabee",
     "threadify/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
     "threadify/mcp.json": "sha256-ab6270cddd14f5b3166e0509ef998a224f2e7fe97a0e2d56173dbabf67721d4f",
-    "threadify/plugin.json": "sha256-d12a1760779562f1abbe838d259297d6814c321996a8f07a1b06443bfe5cff2c",
+    "threadify/plugin.json": "sha256-423932c168a1d094c233f5a00d5d0f027ce4bd8cf1a4e6cce74b675e19b615e3",
     "threadify/skills/threadify-content-brain-repair/SKILL.md": "sha256-74e9fb78e4a1f9ad34d86f85994c4dc519f1aed503b482d7804d6950e3133937",
     "threadify/skills/threadify-content-brain-repair/references/brain-sync-contract.md": "sha256-4c24fecfc6a8b553db004d84063b1c5ce4c36fc8a12558b856f4301689c953a6",
     "threadify/skills/threadify-content-brain-repair/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",

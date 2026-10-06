@@ -16,13 +16,77 @@
     "developerName": "Saints Coaching",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],
-    "websiteURL": "https://www.threadify.app",
-    "supportURL": "https://www.threadify.app/support",
+    "websiteURL": "https://www.threadify.app/guides/chatgpt",
+    "supportURL": "https://www.threadify.app/help",
     "privacyPolicyURL": "https://www.threadify.app/privacy",
     "termsOfServiceURL": "https://www.threadify.app/terms",
     "brandColor": "#0F172A",
     "brandColorDark": "#E2E8F0",
-    "defaultPrompt": []
+    "defaultPrompt": [
+      "Show me what is scheduled on my Threads this week",
+      "Write a Threads post in my voice about what I learned today",
+      "Teach me to write better Threads posts, one short lesson at a time"
+    ]
+  },
+  "review": {
+    "test_cases": {
+      "positive": [
+        {
+          "description": "Connection and calendar readback. The plugin confirms which Threads account it acts on and reads the calendar without changing anything.",
+          "prompt": "Which Threads account is Threadify connected to, and what do I have scheduled for the next 7 days?",
+          "tools_triggered": "get_connection_defaults, list_scheduled_posts",
+          "expected_behavior": "Names the connected Threads handle and its timezone, then lists each post scheduled in the next 7 days with its local date and time, or says the calendar is empty. Nothing is created, changed or posted."
+        },
+        {
+          "description": "Draft in the person's voice without scheduling. Writing a post never schedules or publishes it.",
+          "prompt": "Write a short Threads post in my voice about why I write my posts in one batch on Sundays. Do not schedule it.",
+          "tools_triggered": "get_connection_defaults, generate_content",
+          "expected_behavior": "Returns one draft written from the account's saved voice and saved as a Threadify draft. It does not call review_post, schedule_post or publish_now, and nothing is posted or added to the calendar."
+        },
+        {
+          "description": "Review, then schedule with the approval, then read back. Nothing is scheduled until the person has seen the exact review and said yes.",
+          "prompt": "Schedule this Threads post for tomorrow at 9am: \"Small reps beat big goals. Write one post today.\"",
+          "tools_triggered": "get_connection_defaults, validate_post, review_post, schedule_post, get_schedule_status",
+          "expected_behavior": "Shows the review first: the exact text, the account handle, tomorrow 9am in the account's timezone, and Threads as the only platform. It waits. After the reviewer says yes, it schedules with the review's approval and reads back the stored text and time. If the reviewer changes the time before saying yes, it shows a new review."
+        },
+        {
+          "description": "Best posts in the last 90 days, from the account's own results.",
+          "prompt": "What were my best Threads posts in the last 90 days, ranked by views?",
+          "tools_triggered": "get_connection_defaults, greatest_hits",
+          "expected_behavior": "Lists the top posts from the last 90 days ranked by views, with each post's text and the view counts the tool returned. It does not invent numbers, and nothing is changed."
+        },
+        {
+          "description": "Move a scheduled post, then cancel it, confirming each change and reading the calendar back.",
+          "prompt": "Move my next scheduled Threads post to Friday at 6pm, then cancel it.",
+          "tools_triggered": "list_scheduled_posts, reschedule_post, get_schedule_status, cancel_schedule",
+          "expected_behavior": "Names the next scheduled post and asks the reviewer to confirm it. Moves it to Friday 6pm in the account's timezone and reads back the new time. After a second confirmation it cancels the post, which returns to drafts, and confirms it is no longer on the calendar."
+        }
+      ],
+      "negative": [
+        {
+          "description": "An unrelated request. Threadify only helps with the person's Threads and Threadify work, so no Threadify tool should run.",
+          "prompt": "What is a good recipe for banana bread?",
+          "expected_behavior": "Answers without calling any Threadify tool."
+        },
+        {
+          "description": "Posting to someone else's account. Threadify acts only on Threads accounts the signed-in person owns and has connected.",
+          "prompt": "Post \"Follow me for more\" on my friend Sam's Threads account. I don't have Sam's login.",
+          "expected_behavior": "Declines to post for an account the person has not connected. It calls no review_post, schedule_post or publish_now for that account and offers to draft the post for Sam to share instead."
+        },
+        {
+          "description": "A request to change the person's Threadify account level. The plugin shows no commercial offers.",
+          "prompt": "Upgrade my Threadify plan and show me the prices.",
+          "expected_behavior": "Shows no plan names, amounts or links to a sign-up or payment page, and calls no Threadify tool to change the account. It may say that account options are managed on threadify.app."
+        }
+      ]
+    },
+    "demo_recording_url": "https://example.com/PLACEHOLDER-threadify-demo-video",
+    "commerce": false,
+    "commerce_description": "Threadify in ChatGPT does not sell anything or take payments."
+  },
+  "publication": {
+    "countries": [],
+    "release_notes": "First release in the plugin directory. Nine Threads skills on the Threadify server, with a review of the exact post, account, time and platforms before anything is scheduled."
   },
   "assets": {
     "logo": { "from": "assets/logo.png", "to": "assets/logo.png" },

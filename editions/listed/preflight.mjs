@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Mirrors OpenAI's automated plugin checks, as far as they apply to a folder, plus our stricter policy lint.
-// Usage: node editions/listed/preflight.mjs <plugin dir> [--json]
+// Usage: node editions/listed/preflight.mjs <plugin dir> [--json] [--final] [--online]
 // Tool names are checked against contract/tools.json (see contract/extract.mjs) and contract/terms.json.
+// --final is for the copy the owner uploads: it refuses placeholders and requires the full review packet.
+// --online fetches the listing URLs and the domain challenge from production, signed out. CI does not run it.
 // Codes match https://developers.openai.com/plugins/deploy/submission-errors where one exists;
 // codes starting with `listed_` are ours. Exits 1 on any error.
 import fs from 'node:fs';
@@ -119,7 +121,82 @@ function listEntries(directory, relative = '', out = []) {
   return out;
 }
 
-export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
+const REVIEW_KEYS = new Set(['test_cases', 'demo_recording_url', 'commerce', 'commerce_description']);
+const CASE_KEYS = new Set(['description', 'prompt', 'tools_triggered', 'expected_behavior', 'file_attachment_urls', 'expected_output_url']);
+const PUBLICATION_KEYS = new Set(['countries', 'release_notes', 'translations']);
+// Values that mark an unfinished packet: a PLACEHOLDER marker or a reserved example host.
+const PLACEHOLDER = /PLACEHOLDER|\bTODO\b|\bTBD\b|^https:\/\/(?:[^/]*\.)?(?:example\.(?:com|org|net)|[^/]+\.(?:example|invalid|test))(?:[/:?#]|$)/i;
+
+// Review cases (5 positive, 3 negative) and publication settings under extensions["com.openai"].
+function checkReview(openai, contract, error) {
+  const review = openai.review;
+  if (review !== undefined) {
+    if (!review || typeof review !== 'object' || Array.isArray(review)) { error('listed_review_wrong_type', 'plugin.json', 'extensions["com.openai"].review must be an object.'); return; }
+    for (const key of Object.keys(review)) {
+      if (key === 'test_credentials' || key === 'reviewer_instructions') error('listed_review_field_rejected', 'plugin.json', `review.${key} is rejected in ZIP metadata; enter reviewer access in the dashboard's Review details form.`);
+      else if (!REVIEW_KEYS.has(key)) error('listed_review_unknown_field', 'plugin.json', `Unknown field review.${key}.`);
+    }
+    const cases = review.test_cases;
+    if (cases !== undefined) {
+      for (const [kind, count] of [['positive', 5], ['negative', 3]]) {
+        const list = cases?.[kind];
+        if (!Array.isArray(list) || list.length !== count) { error('listed_review_case_count', 'plugin.json', `review.test_cases.${kind} must hold exactly ${count} cases.`); continue; }
+        list.forEach((item, index) => {
+          const where = `review.test_cases.${kind}[${index}]`;
+          if (!item || typeof item !== 'object' || Array.isArray(item)) { error('listed_review_case_incomplete', 'plugin.json', `${where} must be an object.`); return; }
+          for (const key of Object.keys(item)) if (!CASE_KEYS.has(key)) error('listed_review_unknown_field', 'plugin.json', `Unknown field ${where}.${key}.`);
+          const required = kind === 'positive' ? ['description', 'prompt', 'tools_triggered', 'expected_behavior'] : ['description', 'prompt'];
+          for (const key of required) {
+            if (typeof item[key] !== 'string' || !item[key].trim()) error('listed_review_case_incomplete', 'plugin.json', `${where}.${key} is required.`);
+          }
+          if (typeof item.description === 'string' && item.description.length > 4000) error('listed_review_case_too_long', 'plugin.json', `${where}.description must be 4,000 characters or fewer.`);
+          if (typeof item.tools_triggered === 'string' && contract) {
+            for (const name of item.tools_triggered.split(',').map((part) => part.trim()).filter(Boolean)) {
+              if (!contract.tools.has(name)) error('listed_review_tool_unknown', 'plugin.json', `${where}.tools_triggered names "${name}", which is not in contract/tools.json.`);
+            }
+          }
+        });
+      }
+    }
+    if (review.demo_recording_url !== undefined && !isHttps(review.demo_recording_url)) error('listed_review_demo_url_invalid', 'plugin.json', 'review.demo_recording_url must be an HTTPS URL.');
+    if (review.commerce !== undefined && typeof review.commerce !== 'boolean') error('listed_review_commerce_wrong_type', 'plugin.json', 'review.commerce must be true or false.');
+  }
+  const publication = openai.publication;
+  if (publication !== undefined) {
+    if (!publication || typeof publication !== 'object' || Array.isArray(publication)) { error('listed_publication_wrong_type', 'plugin.json', 'extensions["com.openai"].publication must be an object.'); return; }
+    for (const key of Object.keys(publication)) if (!PUBLICATION_KEYS.has(key)) error('listed_publication_unknown_field', 'plugin.json', `Unknown field publication.${key}.`);
+    if (publication.countries !== undefined && (!Array.isArray(publication.countries) || publication.countries.some((code) => typeof code !== 'string' || !/^[A-Z]{2}$/.test(code)))) {
+      error('listed_publication_country_invalid', 'plugin.json', 'publication.countries must be a list of uppercase two-letter country codes.');
+    }
+    if (publication.release_notes !== undefined && typeof publication.release_notes !== 'string') error('listed_publication_release_notes_wrong_type', 'plugin.json', 'publication.release_notes must be a string.');
+  }
+}
+
+// The upload copy: no placeholders anywhere in plugin.json and the full review packet present.
+function checkFinal(manifest, error, warn) {
+  const walk = (value, where) => {
+    if (typeof value === 'string') { if (PLACEHOLDER.test(value)) error('listed_final_placeholder', 'plugin.json', `${where} is still a placeholder: ${value}`); }
+    else if (Array.isArray(value)) value.forEach((item, index) => walk(item, `${where}[${index}]`));
+    else if (value && typeof value === 'object') for (const [key, item] of Object.entries(value)) walk(item, where ? `${where}.${key}` : key);
+  };
+  walk(manifest, '');
+  const openai = manifest.extensions?.['com.openai'] ?? {};
+  if (!openai.review?.test_cases) error('listed_final_review_missing', 'plugin.json', 'review.test_cases (5 positive, 3 negative) is required for the first MCP review.');
+  if (!openai.review?.demo_recording_url) error('listed_final_review_missing', 'plugin.json', 'review.demo_recording_url is required for MCP review.');
+  if (!openai.publication?.release_notes?.trim?.()) error('listed_final_review_missing', 'plugin.json', 'publication.release_notes is required for submission.');
+  if (Array.isArray(openai.publication?.countries) && openai.publication.countries.length === 0) {
+    warn('listed_final_countries_unrestricted', 'plugin.json', 'publication.countries is [], which removes every country restriction. Set the owner\'s country list unless that is intended.');
+  }
+}
+
+// Negative review prompts quote what a person might ask, so the policy lint skips exactly those lines.
+function quotedPromptLines(manifest) {
+  const prompts = manifest?.extensions?.['com.openai']?.review?.test_cases?.negative;
+  if (!Array.isArray(prompts)) return new Set();
+  return new Set(prompts.filter((item) => typeof item?.prompt === 'string').map((item) => `"prompt": ${JSON.stringify(item.prompt)}`));
+}
+
+export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT, final = false } = {}) {
   const findings = [];
   const error = (code, where, message) => findings.push({ level: 'error', code, path: where, message });
   const warn = (code, where, message) => findings.push({ level: 'warning', code, path: where, message });
@@ -129,6 +206,9 @@ export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
     return findings;
   }
   const entries = listEntries(root);
+  let contract = null;
+  try { contract = loadContract(contractDir); }
+  catch (cause) { error('listed_tool_contract_missing', 'contract', `Cannot read the tool snapshot: ${cause.message}`); }
 
   // Package shape.
   for (const { path: relative, entry } of entries) {
@@ -258,6 +338,8 @@ export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
         error('screenshot_configuration_excluded', 'plugin.json', `interface.screenshots[${index}] (${shot}) needs a UI output template; not used by this edition.`);
       }
     }
+    if (openai && typeof openai === 'object') checkReview(openai, contract, error);
+    if (final) checkFinal(manifest, error, warn);
   }
 
   // mcp.json: exactly one streamable-http server, declared with the portable schema.
@@ -340,19 +422,18 @@ export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
   if (validSkills === 0) error('plugin_runtime_surface_missing', 'skills', 'The package must contain at least one valid skill.');
 
   // Policy lint across every text file in the package.
+  const quoted = quotedPromptLines(manifest);
   for (const { path: relative, entry } of entries) {
     if (!entry.isFile() || !TEXT_FILE.test(relative)) continue;
     const lines = fs.readFileSync(path.join(root, relative), 'utf8').split(/\r?\n/);
     lines.forEach((line, index) => {
+      if (relative === 'plugin.json' && quoted.has(line.trim().replace(/,$/, ''))) return;
       for (const [code, pattern, message] of POLICY) if (pattern.test(line)) error(code, `${relative}:${index + 1}`, `Line ${message}.`);
     });
   }
 
   // Tool names: every backticked snake_case word is a real tool, a required parameter or a listed term,
   // and a skill that names a tool also names each of that tool's required parameters.
-  let contract = null;
-  try { contract = loadContract(contractDir); }
-  catch (cause) { error('listed_tool_contract_missing', 'contract', `Cannot read the tool snapshot: ${cause.message}`); }
   if (contract) {
     for (const { path: relative, entry } of entries) {
       if (!entry.isFile() || !TEXT_FILE.test(relative)) continue;
@@ -376,6 +457,59 @@ export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
           if (!new RegExp(`\\b${parameter}\\b`).test(text)) error('listed_tool_required_param_missing', `skills/${skill}`, `The skill uses \`${tool}\` but never names its required parameter \`${parameter}\`.`);
         }
       }
+    }
+  }
+  return findings;
+}
+
+const ONLINE_PAGES = [
+  ['websiteURL', null],
+  ['supportURL', { code: 'listed_online_missing_email', pattern: /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i, what: 'an email address' }],
+  ['privacyPolicyURL', { code: 'listed_online_missing_title', pattern: /privacy policy/i, what: 'the title "Privacy Policy"' }],
+  ['termsOfServiceURL', { code: 'listed_online_missing_title', pattern: /terms (?:of service|of use|and conditions)/i, what: 'the title "Terms of Service"' }],
+];
+export const CHALLENGE_PATH = '/.well-known/openai-apps-challenge';
+
+// Fetches the four listing URLs and the domain challenge signed out (no cookies). Each must answer 200 itself,
+// with no redirect. Reads production, so it is opt-in and never part of CI.
+export async function onlineCheck(pluginDir, { fetchImpl = globalThis.fetch, timeoutMs = 20000 } = {}) {
+  const findings = [];
+  const error = (code, where, message) => findings.push({ level: 'error', code, path: where, message });
+  const root = path.resolve(pluginDir);
+  let ui = {};
+  let server = null;
+  try {
+    ui = JSON.parse(fs.readFileSync(path.join(root, 'plugin.json'), 'utf8')).extensions?.['com.openai']?.interface ?? {};
+    server = Object.values(JSON.parse(fs.readFileSync(path.join(root, 'mcp.json'), 'utf8')).mcpServers ?? {})[0]?.url ?? null;
+  } catch (cause) {
+    error('listed_online_manifest_unreadable', '.', `Cannot read plugin.json or mcp.json: ${cause.message}`);
+    return findings;
+  }
+  const targets = ONLINE_PAGES.map(([field, expect]) => ({ where: `interface.${field}`, url: ui[field], expect }));
+  if (isHttps(server)) targets.push({ where: 'domain challenge', url: new URL(CHALLENGE_PATH, server).href, challenge: true });
+  else error('listed_online_manifest_unreadable', 'mcp.json', 'No HTTPS MCP server URL to derive the domain challenge from.');
+  for (const { where, url, expect, challenge } of targets) {
+    if (!isHttps(url)) { error('listed_online_url_missing', where, `${where} is not an HTTPS URL.`); continue; }
+    let response;
+    try {
+      response = await fetchImpl(url, { redirect: 'manual', headers: { accept: 'text/html,text/plain;q=0.9,*/*;q=0.1' }, signal: AbortSignal.timeout(timeoutMs) });
+    } catch (cause) {
+      error('listed_online_fetch_failed', where, `${url} could not be fetched: ${cause.message}`);
+      continue;
+    }
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('location') ?? '';
+      if (/\/(?:login|signin|sign-in|auth)\b/i.test(location)) error('listed_online_login_redirect', where, `${url} sends a signed-out visitor to ${location}; it must be public.`);
+      else error('listed_online_redirect', where, `${url} redirects (${response.status}) to ${location || 'an unknown location'}; list the final address instead.`);
+      continue;
+    }
+    if (response.status !== 200) { error('listed_online_status', where, `${url} answered ${response.status}, not 200.`); continue; }
+    const body = await response.text();
+    if (challenge) {
+      const token = body.trim();
+      if (!token || /\s/.test(token) || /^[[{"]/.test(token)) error('listed_online_challenge_invalid', where, `${url} must return only the exact token as plain text.`);
+    } else if (expect && !expect.pattern.test(body)) {
+      error(expect.code, where, `${url} does not contain ${expect.what}.`);
     }
   }
   return findings;
@@ -405,24 +539,28 @@ function checkImage(root, field, value, error) {
   if (Math.max(size.width, size.height) > 4096) error('raster_image_dimensions_too_large', value, `Image must be at most 4096x4096 (is ${size.width}x${size.height}).`);
 }
 
-function main(argv) {
+async function main(argv) {
   const json = argv.includes('--json');
+  const final = argv.includes('--final');
+  const online = argv.includes('--online');
   const target = argv.find((arg) => !arg.startsWith('--'));
   if (!target) {
-    console.error('Usage: node editions/listed/preflight.mjs <plugin dir> [--json]');
+    console.error('Usage: node editions/listed/preflight.mjs <plugin dir> [--json] [--final] [--online]');
     return 2;
   }
-  const findings = preflight(target);
+  const findings = preflight(target, { final });
+  if (online) findings.push(...await onlineCheck(target));
   const errors = findings.filter((finding) => finding.level === 'error');
-  if (json) console.log(JSON.stringify({ ok: errors.length === 0, plugin: path.resolve(target), findings }, null, 2));
+  if (json) console.log(JSON.stringify({ ok: errors.length === 0, plugin: path.resolve(target), final, online, findings }, null, 2));
   else {
     for (const finding of findings) console.log(`${finding.level.toUpperCase()} ${finding.code} ${finding.path}: ${finding.message}`);
+    const mode = [final && 'final', online && 'online'].filter(Boolean).join(', ');
     console.log(errors.length ? `Preflight failed: ${errors.length} error(s), ${findings.length - errors.length} warning(s).`
-      : `Preflight passed: ${path.resolve(target)} (${findings.length} warning(s)).`);
+      : `Preflight passed${mode ? ` (${mode})` : ''}: ${path.resolve(target)} (${findings.length} warning(s)).`);
   }
   return errors.length ? 1 : 0;
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  process.exitCode = main(process.argv.slice(2));
+  main(process.argv.slice(2)).then((code) => { process.exitCode = code; }, (cause) => { console.error(`Preflight crashed: ${cause.message}`); process.exitCode = 1; });
 }
