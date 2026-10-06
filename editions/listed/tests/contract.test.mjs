@@ -41,11 +41,17 @@ test('the snapshot output is deterministic and carries its source label', () => 
   assert.equal(JSON.parse(text).source, 'fixture@0');
 });
 
-test('the committed snapshot holds review_post and the schedule tools with their required parameters', () => {
+test('the committed snapshot holds the review tools and the schedule and reply tools with their required parameters', () => {
   const byName = new Map(committed.tools.map((tool) => [tool.name, tool]));
   assert.match(committed.note, /#232/);
-  assert.deepEqual(byName.get('review_post').required, ['scheduled_at']);
+  // review_post gained action "publish" (threadify-app#244), so its schema no longer requires scheduled_at.
+  assert.deepEqual(byName.get('review_post').required, []);
   assert.equal(byName.get('review_post').hints.readOnlyHint, true);
+  // review_reply (threadify-app#248) reviews one send tool's exact arguments and returns its approval.
+  assert.deepEqual(byName.get('review_reply').required, ['tool']);
+  assert.equal(byName.get('review_reply').hints.readOnlyHint, true);
+  assert.deepEqual(byName.get('send_reply').required, ['draft_text']);
+  assert.deepEqual(byName.get('send_replies').required, ['drafts']);
   assert.deepEqual(byName.get('schedule_post').required, ['scheduled_at']);
   assert.deepEqual(byName.get('get_schedule_status').required, ['scheduled_post_id']);
   for (const tool of committed.tools) {
