@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Mirrors OpenAI's automated plugin checks, as far as they apply to a folder, plus our stricter policy lint.
 // Usage: node editions/listed/preflight.mjs <plugin dir> [--json] [--final] [--online]
-// Tool names are checked against contract/tools.json (see contract/extract.mjs) and contract/terms.json.
+// Tool names are checked against contract/tools.json (threadify-app's exported tool contract) and contract/terms.json.
 // --final is for the copy the owner uploads: it refuses placeholders and requires the full review packet.
 // --online fetches the listing URLs and the domain challenge from production, signed out. CI does not run it.
 // Codes match https://developers.openai.com/plugins/deploy/submission-errors where one exists;
