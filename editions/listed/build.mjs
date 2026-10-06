@@ -152,7 +152,12 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     version: edition.version,
     description: edition.plugin.description,
     author: edition.plugin.author,
-    extensions: { 'com.openai': { interface: { ...edition.listing, ...assetPaths } } },
+    // review and publication sit beside interface, never inside it (OpenAI's submission field reference).
+    extensions: { 'com.openai': {
+      interface: { ...edition.listing, ...assetPaths },
+      ...(edition.review === undefined ? {} : { review: edition.review }),
+      ...(edition.publication === undefined ? {} : { publication: edition.publication }),
+    } },
   };
   files.set(`${pluginRoot}/plugin.json`, Buffer.from(stableStringify(plugin)));
   files.set(`${pluginRoot}/mcp.json`, Buffer.from(stableStringify({ $schema: MCP_SCHEMA, mcpServers: edition.mcpServers })));

@@ -12,12 +12,13 @@ const repoRoot = fileURLToPath(new URL('../../..', import.meta.url));
 const buildScript = fileURLToPath(new URL('../build.mjs', import.meta.url));
 const editionDir = path.join(repoRoot, 'editions/listed');
 const skillSource = 'skills/threadify-daily-posts-heartbeat';
+const selected = JSON.parse(fs.readFileSync(path.join(editionDir, 'edition.json'), 'utf8')).skills;
 
 // A throwaway repo root holding only what the build reads, plus the committed package and lock.
 function scratchRoot(t) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'listed-edition-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
-  fs.cpSync(path.join(repoRoot, skillSource), path.join(root, skillSource), { recursive: true });
+  for (const { source } of selected) fs.cpSync(path.join(repoRoot, source), path.join(root, source), { recursive: true });
   for (const entry of ['edition.json', 'shared', 'assets', 'package', 'package.lock.json']) {
     fs.cpSync(path.join(editionDir, entry), path.join(root, 'editions/listed', entry), { recursive: true });
   }
@@ -54,24 +55,52 @@ test('the build is reproducible: two builds and a written package are byte-ident
   assert.equal(runCli('--check', '--root', root).status, 0);
 });
 
-test('the package carries only the selected skill, rewritten links and portable manifests', () => {
+test('the package carries only the selected skills, rewritten links and portable manifests', () => {
   const { files } = buildEdition({ root: repoRoot });
-  assert.deepEqual([...files.keys()], [
+  const keys = [...files.keys()];
+  assert.deepEqual(keys.filter((key) => !key.startsWith('threadify/skills/')), [
     '.agents/plugins/marketplace.json',
     'threadify/assets/icon.png',
     'threadify/assets/logo.png',
     'threadify/mcp.json',
     'threadify/plugin.json',
-    'threadify/skills/threadify-daily-posts-heartbeat/SKILL.md',
-    'threadify/skills/threadify-daily-posts-heartbeat/references/connect.md',
   ]);
-  const skill = files.get('threadify/skills/threadify-daily-posts-heartbeat/SKILL.md').toString('utf8');
-  assert.match(skill, /\(references\/connect\.md\)/);
-  assert.doesNotMatch(skill, /threadify-001|workflow-manifest|Advanced workflow/);
+  const shipped = [...new Set(keys.filter((key) => key.startsWith('threadify/skills/')).map((key) => key.split('/')[2]))];
+  assert.deepEqual(shipped, selected.map(({ name }) => name).sort());
+  for (const { name } of selected) {
+    const prefix = `threadify/skills/${name}/`;
+    assert.ok(files.has(`${prefix}references/connect.md`), `${name} ships the connection guide`);
+    for (const key of keys.filter((item) => item.startsWith(prefix))) {
+      assert.doesNotMatch(key, /workflow-manifest|workflow-readme|threadify-001|agents\/openai\.yaml/, key);
+    }
+    const skill = files.get(`${prefix}SKILL.md`).toString('utf8');
+    assert.match(skill, /\(references\/connect\.md\)/, name);
+    assert.doesNotMatch(skill, /threadify-001|workflow-manifest|Advanced workflow/, name);
+  }
   const mcp = JSON.parse(files.get('threadify/mcp.json'));
   assert.deepEqual(mcp.mcpServers, { threadify: { type: 'streamable-http', url: 'https://www.threadify.app/api/mcp/threadify' } });
   const plugin = JSON.parse(files.get('threadify/plugin.json'));
   assert.equal(plugin.extensions['com.openai'].interface.logo, './assets/logo.png');
+});
+
+test('every skill that schedules reviews first and passes the approval', () => {
+  const { files } = buildEdition({ root: repoRoot });
+  for (const { name } of selected) {
+    const text = [...files].filter(([key]) => key.startsWith(`threadify/skills/${name}/`) && key.endsWith('.md'))
+      .map(([, content]) => content.toString('utf8')).join('\n');
+    if (!text.includes('`schedule_post`')) continue;
+    assert.match(text, /`review_post`/, `${name} schedules without review_post`);
+    assert.match(text, /`approval`/, `${name} schedules without passing the approval`);
+  }
+});
+
+test('descriptions are distinct and name a Threads or Threadify intent', () => {
+  const descriptions = selected.map(({ description }) => description);
+  assert.equal(new Set(descriptions).size, descriptions.length);
+  for (const { name, description } of selected) {
+    assert.match(description, /Use when the person asks to /, name);
+    assert.match(description.slice(description.indexOf('Use when')), /Threads|Threadify|X Article/, name);
+  }
 });
 
 test('--check fails on a hand edit inside the committed package', (t) => {

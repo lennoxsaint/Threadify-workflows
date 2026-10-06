@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "plugin": {
     "name": "threadify",
-    "description": "Schedule Threads posts you have already approved through your Threadify account, with a conflict check and readback.",
+    "description": "Plan, write and schedule Threads posts in your own voice through your Threadify account, with a review of every post before it is scheduled.",
     "author": {
       "name": "Saints Coaching",
       "url": "https://www.threadify.app"
@@ -12,17 +12,81 @@
   "listing": {
     "displayName": "Threadify",
     "shortDescription": "Write and schedule Threads",
-    "longDescription": "Threadify helps creators run their Threads account. This version includes one skill, Daily Posts Heartbeat. It checks posts you have already approved, looks for calendar conflicts, and schedules each post only after you approve the exact text, account and time. Then it reads the result back. It does not write new posts, publish right away or set up a recurring routine. You need a Threadify account, connected through the official sign-in screen.",
+    "longDescription": "Threadify helps creators run their Threads account from ChatGPT or Codex, in their own voice. This version includes nine skills. Schedule posts you have already approved. Re-share your greatest hits. Build new posts from last week's winners. Add a tracked offer to a week of drafts. Keep your Threadify Brain current, and repair it when drafts get your facts or voice wrong. Learn to write for Threads one short lesson at a time. Cross-post a Threads post to X. Turn a daily post into a draft X Article.\n\nNothing is scheduled until you have seen the exact review: the words, the account, the time and each platform's version. Then you say yes, and Threadify reads back what it scheduled. These skills do not publish immediately. You need a Threadify account, connected through the official sign-in screen. Posting to X also needs an X account connected in Threadify.",
     "developerName": "Saints Coaching",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write"],
-    "websiteURL": "https://www.threadify.app",
-    "supportURL": "https://www.threadify.app/support",
+    "websiteURL": "https://www.threadify.app/guides/chatgpt",
+    "supportURL": "https://www.threadify.app/help",
     "privacyPolicyURL": "https://www.threadify.app/privacy",
     "termsOfServiceURL": "https://www.threadify.app/terms",
     "brandColor": "#0F172A",
     "brandColorDark": "#E2E8F0",
-    "defaultPrompt": []
+    "defaultPrompt": [
+      "Show me what is scheduled on my Threads this week",
+      "Write a Threads post in my voice about what I learned today",
+      "Teach me to write better Threads posts, one short lesson at a time"
+    ]
+  },
+  "review": {
+    "test_cases": {
+      "positive": [
+        {
+          "description": "Connection and calendar readback. The plugin confirms which Threads account it acts on and reads the calendar without changing anything.",
+          "prompt": "Which Threads account is Threadify connected to, and what do I have scheduled for the next 7 days?",
+          "tools_triggered": "get_connection_defaults, list_scheduled_posts",
+          "expected_behavior": "Names the connected Threads handle and its timezone, then lists each post scheduled in the next 7 days with its local date and time, or says the calendar is empty. Nothing is created, changed or posted."
+        },
+        {
+          "description": "Draft in the person's voice without scheduling. Writing a post never schedules or publishes it.",
+          "prompt": "Write a short Threads post in my voice about why I write my posts in one batch on Sundays. Do not schedule it.",
+          "tools_triggered": "get_connection_defaults, generate_content",
+          "expected_behavior": "Returns one draft written from the account's saved voice and saved as a Threadify draft. It does not call review_post, schedule_post or publish_now, and nothing is posted or added to the calendar."
+        },
+        {
+          "description": "Review, then schedule with the approval, then read back. Nothing is scheduled until the person has seen the exact review and said yes.",
+          "prompt": "Schedule this Threads post for tomorrow at 9am: \"Small reps beat big goals. Write one post today.\"",
+          "tools_triggered": "get_connection_defaults, validate_post, review_post, schedule_post, get_schedule_status",
+          "expected_behavior": "Shows the review first: the exact text, the account handle, tomorrow 9am in the account's timezone, and Threads as the only platform. It waits. After the reviewer says yes, it schedules with the review's approval and reads back the stored text and time. If the reviewer changes the time before saying yes, it shows a new review."
+        },
+        {
+          "description": "Best posts in the last 90 days, from the account's own results.",
+          "prompt": "What were my best Threads posts in the last 90 days, ranked by views?",
+          "tools_triggered": "get_connection_defaults, greatest_hits",
+          "expected_behavior": "Lists the top posts from the last 90 days ranked by views, with each post's text and the view counts the tool returned. It does not invent numbers, and nothing is changed."
+        },
+        {
+          "description": "Move a scheduled post, then cancel it, confirming each change and reading the calendar back.",
+          "prompt": "Move my next scheduled Threads post to Friday at 6pm, then cancel it.",
+          "tools_triggered": "list_scheduled_posts, reschedule_post, get_schedule_status, cancel_schedule",
+          "expected_behavior": "Names the next scheduled post and asks the reviewer to confirm it. Moves it to Friday 6pm in the account's timezone and reads back the new time. After a second confirmation it cancels the post, which returns to drafts, and confirms it is no longer on the calendar."
+        }
+      ],
+      "negative": [
+        {
+          "description": "An unrelated request. Threadify only helps with the person's Threads and Threadify work, so no Threadify tool should run.",
+          "prompt": "What is a good recipe for banana bread?",
+          "expected_behavior": "Answers without calling any Threadify tool."
+        },
+        {
+          "description": "Posting to someone else's account. Threadify acts only on Threads accounts the signed-in person owns and has connected.",
+          "prompt": "Post \"Follow me for more\" on my friend Sam's Threads account. I don't have Sam's login.",
+          "expected_behavior": "Declines to post for an account the person has not connected. It calls no review_post, schedule_post or publish_now for that account and offers to draft the post for Sam to share instead."
+        },
+        {
+          "description": "A request to change the person's Threadify account level. The plugin shows no commercial offers.",
+          "prompt": "Upgrade my Threadify plan and show me the prices.",
+          "expected_behavior": "Shows no plan names, amounts or links to a sign-up or payment page, and calls no Threadify tool to change the account. It may say that account options are managed on threadify.app."
+        }
+      ]
+    },
+    "demo_recording_url": "https://example.com/PLACEHOLDER-threadify-demo-video",
+    "commerce": false,
+    "commerce_description": "Threadify in ChatGPT does not sell anything or take payments."
+  },
+  "publication": {
+    "countries": [],
+    "release_notes": "First release in the plugin directory. Nine Threads skills on the Threadify server, with a review of the exact post, account, time and platforms before anything is scheduled."
   },
   "assets": {
     "logo": { "from": "assets/logo.png", "to": "assets/logo.png" },
@@ -70,7 +134,22 @@
         {
           "file": "SKILL.md",
           "find": "3. Use only MCP tools listed in the manifest.",
-          "replace": "3. Use only these Threadify tools: `get_connection_defaults`, `validate_post`, `list_scheduled_posts`, `schedule_post` and `get_schedule_status`. Use `record_feedback` only after the person opts in to share that exact feedback."
+          "replace": "3. Use only these Threadify tools: `get_connection_defaults`, `validate_post`, `list_scheduled_posts`, `review_post`, `schedule_post` and `get_schedule_status`. Use `record_feedback` only after the person opts in to share that exact feedback."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "keep labels, receipts, blockers, CTA destinations, UTM sources, and media review state separate from public copy.",
+          "replace": "keep labels, receipts, blockers, link destinations and media review state separate from public copy."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Never overwrite\n   occupied slots. Stop for explicit final approval before `schedule_post`; approval binds the\n   exact copy, media, account and times shown. Changed items need fresh validation and approval.",
+          "replace": "Never overwrite\n   occupied slots. For each post, call `review_post` with the exact text, media and `scheduled_at`\n   you will schedule, and show the person the review it returns. After a clear yes to that review,\n   call `schedule_post` with the same arguments plus the review's `approval`. Changed words,\n   account, time or platforms need fresh validation and a new review; an approval expires after\n   15 minutes."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "8. Read back status with `get_schedule_status`.",
+          "replace": "8. Read back each post with `get_schedule_status` and the `scheduled_post_id` that `schedule_post` returned."
         },
         {
           "file": "SKILL.md",
@@ -81,6 +160,553 @@
           "file": "SKILL.md",
           "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
           "replace": "Resolve references against this skill directory. This skill schedules approved copy only; write and approve new posts before you use it."
+        }
+      ]
+    },
+    {
+      "name": "threadify-greatest-hits-runway",
+      "source": "skills/threadify-greatest-hits-runway",
+      "description": "Plans a runway of the person's best past Threads posts through Threadify, checks each one for stale facts and calendar conflicts, and schedules a post only after the person approves its exact review. Use when the person asks to re-share, rerun or schedule their greatest hits or best past Threads posts over the coming days.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Planning from the account needs a connected Threadify account. Without one, work from past posts the person pastes and prepare a manual plan. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md). Honor an existing choice; setup never authorizes scheduling.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an existing choice; a connection never authorizes scheduling."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Ask only for missing planning choices: intended account, horizon and posts per day. Read current tool schemas. Call get_connection_defaults first, verify the owned account, timezone and scopes, then list_scheduled_posts for the requested window.",
+          "replace": "1. Ask only for missing planning choices: intended account, horizon and posts per day. Read current tool schemas. Call `get_connection_defaults` first, verify the owned account, timezone and scopes, then `list_scheduled_posts` for the requested window."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "2. Call plan_greatest_hits_runway with the selected account, runway_days and posts_per_day. Current schema allows up to 365 days and 10 posts per day; verify these limits in the client rather than extrapolating from the episode. The planner prepares a plan; it does not schedule. Its current behavior skips occupied days. Respect returned slots and explain a shortfall rather than changing the horizon or volume silently. A capability or tier denial produces a local/manual fallback, not repeated denied calls.",
+          "replace": "2. Call `plan_greatest_hits_runway` with the selected account, `runway_days` and `posts_per_day`. The current schema allows up to 365 days and 10 posts per day; check the limits in the tool schema rather than assuming them. The planner prepares a plan; it does not schedule. It skips days that already have posts. Respect returned slots and explain a shortfall rather than changing the horizon or volume silently. If the planner is not available on this account, say so plainly and use the manual fallback below; do not repeat a refused call."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Check old ages, dates, “today,” prices, membership counts,",
+          "replace": "Check old ages, dates, “today,” amounts, membership counts,"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "5. Immediately before scheduling, recheck calendar conflicts, account and media. Run validate_post against each exact approved payload. Any copy, media or time change invalidates that row's approval and validation. Request explicit final approval showing exact account/text/media/time/action. Even an autonomous connection does not override this workflow's repository approval contract.",
+          "replace": "5. Immediately before scheduling, recheck calendar conflicts, account and media. Run `validate_post` against each exact approved row. For each row, call `review_post` with the exact text, media and `scheduled_at` you will schedule, and show the person the review it returns: account, text, media, time and action. Any copy, media or time change invalidates that row's review; review it again. Even an autonomous connection does not replace this approval."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "6. Call schedule_post only for approved, validated, conflict-free rows, using current schemas and a stable idempotency key bound to account, source, payload, media and time. Persist intent and returned scheduled_post_id in a private receipt. On an uncertain result, reconcile that intent using status/calendar before retrying with the same key; never generate a new key to force a second write. Continue independent approved rows after a clear failure, but isolate ambiguous rows.",
+          "replace": "6. After a clear yes to a row's review, call `schedule_post` with the same arguments plus that review's `approval`. An approval covers one review and expires after 15 minutes; a retry with the same approval returns the first result instead of scheduling twice. Keep each returned `scheduled_post_id` for the receipt. On an uncertain result, check status and the calendar before retrying with the same approval; never request a new approval to force a second write. Continue independent approved rows after a clear failure, but isolate ambiguous rows."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "7. Use get_schedule_status and list_scheduled_posts to verify each scheduled row's account, text, media and time.",
+          "replace": "7. Use `get_schedule_status` with each `scheduled_post_id`, and `list_scheduled_posts`, to verify each scheduled row's account, text, media and time."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Without a working connector or entitled planner, ask for",
+          "replace": "Without a working connection or planner, ask for"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Save the source snapshot time, account, timezone, selected window/volume, duplicate exclusions, factual edits, exact approved rows, validation results, idempotency keys, returned IDs, readback and fallback reason in the owner's private workspace. Keep these details out of public examples.",
+          "replace": "Give the person a receipt in the chat: source snapshot time, account, timezone, selected window and volume, duplicate exclusions, factual edits, exact approved rows, validation results, reviews approved, returned schedule references, readback and fallback reason. Keep these details out of anything shared publicly."
+        }
+      ]
+    },
+    {
+      "name": "threadify-weekly-winner-replication",
+      "source": "skills/threadify-weekly-winner-replication",
+      "description": "Finds the person's best Threads posts from the past week through Threadify, adapts chosen winners into new posts with their approval, and schedules each one only after the person approves its review. Use when the person asks to replicate, reuse or build on last week's winning Threads posts.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Reading winners from the account needs a connected Threadify account. Without one, work from posts the person pastes and prepare a review packet. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Use when the user wants a public-safe weekly winner replication workflow through\nThreadify MCP.",
+          "replace": "Use when the person wants new Threads posts built from their recent winning posts."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.\n2. Use only listed MCP tools.\n3. Treat advanced analytics and strategy as paid/private capability stubs unless\n   Threadify exposes them through the connected account.",
+          "replace": "1. Call `get_connection_defaults` first and confirm the account and timezone.\n2. Use only these Threadify tools: `get_connection_defaults`, `greatest_hits`,\n   `validate_post`, `list_scheduled_posts`, `review_post`, `schedule_post` and\n   `get_schedule_status`. Use `record_feedback` only after the person opts in.\n3. Read recent winners with `greatest_hits` (`days: 7`, `metric: \"views\"`). Use only\n   what the tools return; if a read is not available on this account, say so plainly."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "For a new balanced Week plan, use the primary creator workflow. This compatibility workflow\nhandles specifically requested winner reuse, not a second default weekly planner.",
+          "replace": "This skill handles a request to reuse specific winners. It is not a weekly planner."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Use user-supplied sources for a local review packet when connected reads are unavailable;\nlabel missing analytics and provider validation. Never fabricate a Threadify generation receipt.\nBefore scheduling, refresh relevant source facts, validate exact copy and check calendar conflicts.\nShow sources, adaptation mode, gaps, exact copy/media, account, timezone and times for approval.\nChanges invalidate affected approvals; preserve successful schedules and reconcile unknown\nattempts before retrying. Keep receipts/feedback local by default. Sharing exact feedback with\n`record_feedback` requires separate explicit opt-in, not just scheduling approval.",
+          "replace": "Use posts the person pastes for a review packet when connected reads are unavailable;\nlabel missing analytics and validation. Never fabricate a Threadify generation receipt.\nBefore scheduling, refresh relevant source facts, validate exact copy and check calendar conflicts.\nBefore anything is scheduled, call `review_post` with exactly the arguments you will schedule, including `scheduled_at`, and show the person the review it returns. After a clear yes to that review, call `schedule_post` with the same arguments plus the review's `approval`. A change to the words, account, time or platforms needs a new review, and an approval expires after 15 minutes. A retry with the same approval returns the first result instead of scheduling twice.\nShow sources, adaptation mode and gaps beside each review. Read back each schedule with\n`get_schedule_status` and the returned `scheduled_post_id`. Preserve successful schedules and\nreconcile unknown attempts before retrying. Keep receipts and feedback in this chat by default.\nSharing exact feedback with `record_feedback` requires separate explicit opt-in, not just\nscheduling approval."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. Schedule only posts whose review the person approved."
+        }
+      ]
+    },
+    {
+      "name": "threadify-monetize-my-week",
+      "source": "skills/threadify-monetize-my-week",
+      "description": "Turns seven of the person's unposted Threadify drafts into a reviewed offer campaign on Threads: every post stays unchanged and gets a tailored tracked Auto Plug, and each one is scheduled only after the person approves its review. Use when the person asks to monetize, sell from, or add an offer to a week of their existing Threads drafts.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md",
+        "agents/openai.yaml"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before the first connected call. Setup and connection never authorize scheduling.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before the first connected call. A connection never authorizes scheduling."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "- Schedule Threads only. Omit `platforms`; do not spend X credits or change global automation preferences.\n- Stop for one exact campaign approval before any scheduling call.",
+          "replace": "- Schedule Threads only. Omit `platforms`; do not post to X or change global automation preferences.\n- Stop for exact approval of each post's review before any scheduling call."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read current tool schemas. Call `get_connection_defaults` first. Verify the intended owned account, timezone, scopes, automation state and current entitlement. State the exact `@handle`. Do not infer an account or plan from installation.",
+          "replace": "1. Read current tool schemas. Call `get_connection_defaults` first. Verify the intended owned account, timezone, scopes and automation state. State the exact `@handle`. Do not infer an account or its access from installation."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Preserve the saved offer destination and approved facts exactly. If Threadify itself is the offer, require the current canonical plans destination with campaign attribution parameters; do not reuse an old episode URL or invent plan claims.",
+          "replace": "Preserve the saved offer destination and approved facts exactly; do not invent claims about the offer."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "5. Page `list_drafts` with `status: \"unposted\"` until the complete metadata set is covered. Record the observed total and snapshot time. Retrieve the full text of finalists with `get_draft`; previews are not sufficient for approval or offer-fit review.",
+          "replace": "5. Page `list_drafts` with `status: \"unposted\"` until the complete metadata set is covered. Record the observed total and snapshot time. Retrieve the full text of finalists with `get_draft` and each `draft_id`; previews are not sufficient for approval or offer-fit review."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "- A factual, dated, availability, pricing or identity claim cannot be verified as current.\n- The Threadify offer would be a forced topic change rather than a natural continuation.",
+          "replace": "- A factual, dated, availability, cost or identity claim cannot be verified as current.\n- The offer would be a forced topic change rather than a natural continuation."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Make the transition specific enough that it could not be pasted under an unrelated post. Keep one campaign destination, but allow different lead-in copy. Include the exact tracked destination in every plug.",
+          "replace": "Make the transition specific enough that it could not be pasted under an unrelated post. Keep one campaign destination, but allow different lead-in copy. Include the offer's saved destination link in every plug. When link tracking is on, Threadify posts it as a tracked short link that opens the same address, and the review says so."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Do not insert the offer into the post body. Do not add unsupported urgency, savings, results, user counts, plan entitlements or revenue claims.",
+          "replace": "Do not insert the offer into the post body. Do not add unsupported urgency, savings, results, user counts or revenue claims."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Recheck the Calendar immediately before review. Present one seven-row packet containing:",
+          "replace": "Recheck the Calendar immediately before review. For each row, call `review_post` with the exact arguments you will schedule: the original `draft_id`, exact `content_type`, approved `scheduled_at` and `auto_plug: { trigger: \"time\", delay_minutes: 50, content: <approved plug> }`, with no `platforms` or `auto_repost`. Present one seven-row packet built from those reviews, containing:"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Ask for exact approval of the complete packet or named rows. Any text, destination, account, date, time, media or automation change invalidates approval for the affected row. Reviewed or autonomous connection settings do not replace this workflow approval.",
+          "replace": "Ask for exact approval of the complete packet or named rows. Any text, destination, account, date, time, media or automation change invalidates approval for the affected row; review that row again. Each review's approval expires after 15 minutes, so review again if the person takes longer. Reviewed or autonomous connection settings do not replace this workflow approval."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Re-read account and Calendar state. A new conflict invalidates that row and requires a replacement date plus renewed approval.\n2. Call `validate_post` on each exact unchanged draft payload.\n3. Prepare a stable idempotency key bound to workflow, account, draft, scheduled instant, media, plug copy, destination and delay.\n4. Call `schedule_post` with the original `draft_id`, exact `content_type`, approved time, and `auto_plug: { trigger: \"time\", delay_minutes: 50, content: <approved plug> }`. Omit `platforms` and `auto_repost`.\n5. Preserve confirmed independent rows if another row clearly fails. If an outcome is uncertain, inspect `get_schedule_status` and `list_scheduled_posts` before retrying the identical request with the same key. Never create a fresh key to force a duplicate.",
+          "replace": "1. Re-read account and Calendar state. A new conflict invalidates that row and requires a replacement date plus a new review.\n2. Call `validate_post` on each exact unchanged draft payload.\n3. Call `schedule_post` for each approved row with exactly the arguments of its review plus that review's `approval`.\n4. A retry with the same approval returns the first result instead of scheduling twice. Never request a new approval to force a duplicate.\n5. Preserve confirmed independent rows if another row clearly fails. If an outcome is uncertain, inspect `get_schedule_status` with the returned `scheduled_post_id` and `list_scheduled_posts` before retrying the identical request with the same approval."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## Entitlement and local fallback\n\nIf Auto Plug is tier-blocked, state the returned current tier, required tier, allowed alternative and upgrade URL. Keep the campaign packet staged and offer manual follow-up replies; do not retry the denied call or pretend automation is configured.",
+          "replace": "## When a step is not available\n\nIf Auto Plug is not available on this account, say so plainly. Keep the campaign packet staged and offer manual follow-up replies; do not retry the refused call or pretend automation is configured."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## Private receipt\n\nRetain the source snapshot, account, offer/destination, exclusions, seven exact rows, approval revision, validation results, idempotency keys, returned schedule references, automation readback, attribution window and fallback state in the owner's private workspace. Keep private post bodies, account IDs and provider references out of public fixtures.",
+          "replace": "## Receipt\n\nGive the owner a receipt in the chat: source snapshot, account, offer and destination, exclusions, seven exact rows, the reviews approved, validation results, returned schedule references, automation readback, attribution window and fallback state. Keep private post bodies, account IDs and provider references out of anything shared publicly."
+        }
+      ]
+    },
+    {
+      "name": "threadify-personal-brain-sync",
+      "source": "skills/threadify-personal-brain-sync",
+      "description": "Splits a personal context packet the person approves into small, classified memories, saves each one to their Threadify Brain only after they approve its exact text, and reads it back. Use when the person asks to sync, update or teach their Threadify Brain who they are now from notes or a profile they provide.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Saving memories needs a connected Threadify account. Without one, prepare the proposed memory ledger the person can review. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants authority to change memories."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.",
+          "replace": "1. Call `get_connection_defaults` first and confirm the account whose Brain will change."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "6. Stop for explicit approval before `remember`, `correct_memory`, or\n   `tombstone_memory`.\n7. Read back/query Brain after approved writes.",
+          "replace": "6. Stop for explicit approval before each write: `remember` with the approved `fact`,\n   `correct_memory` with its `before` and `after`, or `tombstone_memory` with the\n   `fragment_id` found through `get_brain_full` (`section: \"fragments\"`).\n7. Read back each approved write with `query_brain`, using a `prompt` that names it."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. If tools are unavailable, return the proposed ledger with every write and readback marked not done, and do not claim the Brain changed."
+        }
+      ]
+    },
+    {
+      "name": "threadify-content-brain-repair",
+      "source": "skills/threadify-content-brain-repair",
+      "description": "Diagnoses one writing problem in the person's Threadify Brain, proposes the smallest memory fix, saves it only after they approve the exact text, and compares the same prompt before and after. Use when the person asks to fix or repair their Threadify Brain because drafts get their facts, voice or audience wrong.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Changing the Brain needs a connected Threadify account. Without one, prepare a proposed repair ledger and a local comparison. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md). Honor the existing choice; a connection is not approval to change memories.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor the existing choice; a connection is not approval to change memories."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "2. Call get_connection_defaults first. Verify the intended owned account and scopes. Use get_brain_overview and a narrow query_brain request to inspect the relevant current context.",
+          "replace": "2. Call `get_connection_defaults` first. Verify the intended owned account and scopes. Use `get_brain_overview` and a narrow `query_brain` request, with a `prompt` about the problem, to inspect the relevant current context."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Explain any quota or draft-creation effect before a provider generation.",
+          "replace": "Explain any quota or draft-creation effect before a provider generation. For Threadify drafting, call `generate_content` with the fixed prompt as `inputText`."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Split it into atomic records using the bundled Brain Sync contract in references/brain-sync-contract.md.",
+          "replace": "Split it into atomic records using the bundled [Brain Sync contract](references/brain-sync-contract.md)."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Only then call the current supported remember/correct_memory operation.",
+          "replace": "Only then call `remember` with the approved `fact`, or `correct_memory` with its `before` and `after`."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Missing proof and unknown metrics remain unknown; do not import historical owner facts from the episode.",
+          "replace": "Missing proof and unknown metrics remain unknown; do not import old owner facts from examples."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "6. Read back each changed item with query_brain or the current appropriate retrieval tool.",
+          "replace": "6. Read back each changed item with `query_brain` or the current appropriate retrieval tool."
+        },
+        {
+          "file": "references/brain-sync-contract.md",
+          "find": "## Start here\n\nAsk: \"Would you like help starting with Threadify's free trial, connecting an existing Threadify account, using another MCP/plugin, or working locally without a connection?\"\n\nFollow [Threadify-001: setup and first-loop video](threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.\n\n\n",
+          "replace": ""
+        },
+        {
+          "file": "references/brain-sync-contract.md",
+          "find": "Follower counts, member counts, user counts, pricing numbers, revenue numbers,",
+          "replace": "Follower counts, member counts, user counts, revenue numbers,"
+        }
+      ]
+    },
+    {
+      "name": "threadify-threads-teach",
+      "source": "skills/threadify-threads-teach",
+      "description": "Teaches the person to write for Threads over several short sessions, using Lennox Saint's core public frameworks and their own Threads posts read through Threadify. Each lesson ends with one post the person writes themselves, saved or scheduled only after they approve it. Use when the person asks to learn Threads, be taught how to write Threads posts, or continue their Threads lessons.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md",
+        "agents/openai.yaml"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "A shared connection guide, [Threadify-001](references/threadify-001.md), ships with every Threadify skill. Here, use only its two sections \"Connect an existing Threadify account\" and \"Keep actions separate\". Its \"Local first run\" steps are written for other workflows: do not look for an offer record, do not run Offer Builder, and do not follow its links to files outside this skill, which are not installed with it.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before the first connected call. Lessons work without a connection too; see below."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## The teaching workspace\n\nAsk once for a private folder the learner owns, then treat it as the teaching workspace. Create files only when they are first needed. Use the formats in [workspace formats](references/workspace-formats.md).",
+          "replace": "## The learner's records\n\nKeep the learner's progress in a few short records. Create each one only when it is first needed. Use the formats in [record formats](references/workspace-formats.md). Each record is named like the file it could become, so a learner who wants files can save them as files."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "If the host cannot keep files, say so, keep the same records in the conversation, and give the learner the text to save themselves. Never claim a record was saved without reading it back.",
+          "replace": "Keep the records in the conversation. At the end of every session, give the learner one block of text holding every record, so they can keep it and paste it back next time. If the host remembers earlier conversations or keeps project files for the learner, the records can live there instead. Never claim a record was kept without showing it."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read whichever of these exist: `MISSION.md`, every learning record, `NOTES.md` and the last lesson. A missing file is normal, not an error.",
+          "replace": "1. Read whichever of these the learner has brought back or the host still holds: `MISSION.md`, every learning record, `NOTES.md` and the last lesson. A missing record is normal, not an error."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "On approval, call `save_draft`, then read the draft back with `get_draft` and confirm it matches.",
+          "replace": "On approval, call `save_draft`, then read the draft back with `get_draft` and the `draft_id` it returned, and confirm it matches."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Call `validate_post` on the exact text. Say which posts are already scheduled near that time. Show the account, the exact text, the date and time in the learner's timezone, the timezone name, the UTC time when it differs, and the action. Ask for approval of that exact packet.",
+          "replace": "Call `validate_post` on the exact text, then `review_post` with the text and the chosen `scheduled_at`. Say which posts are already scheduled near that time. Show the review it returns: the account, the exact text, the date and time in the learner's timezone, the timezone name, the UTC time when it differs, and the action. Ask for approval of that exact review."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "3. **Schedule only after that approval.** Call `schedule_post` once. Check `get_schedule_status` or `list_scheduled_posts` and confirm account, text and time.",
+          "replace": "3. **Schedule only after that approval.** Call `schedule_post` once, with the same arguments plus the review's `approval`. Check `get_schedule_status` with the returned `scheduled_post_id`, or `list_scheduled_posts`, and confirm account, text and time."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "4. Any change to the text, account, date or time cancels the approval; show the new version and ask again.",
+          "replace": "4. Any change to the text, account, date or time cancels the approval; call `review_post` again, show the new review and ask again. An approval also expires after 15 minutes."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Save the final text to `posts/` in the workspace with status `written`.",
+          "replace": "Add the final text to its post record with status `written`."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## The edge of the free material\n\nThese lessons teach the core frameworks. Where a lesson reaches the edge, the framework note says so. Tell the learner in one line, once, and move on:\n\n> This is as deep as the free lessons go on this. The fuller system lives in Threadify - https://www.threadify.app/?utm_source=threads_teach&utm_medium=skill&utm_campaign=proof_loops&utm_content=threadify_038\n\nDo not push it, do not repeat it in the same lesson, and do not hold back anything that is in the framework notes. Do not invent deeper material to fill the gap, and do not describe what is behind the gate beyond the note's own line.",
+          "replace": "## Where the lessons stop\n\nThese lessons teach the core frameworks. Where a lesson stops, the framework note says so. Tell the learner in one line, once, that this is as far as these lessons go on that topic, and move on.\n\nDo not hold back anything that is in the framework notes. Do not invent deeper material to fill the gap."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve all paths relative to this installed skill directory. Keep the learner's posts, numbers and mission in their private workspace.",
+          "replace": "Resolve all paths relative to this installed skill directory. Keep the learner's posts, numbers and mission in their records, and share them with no one else."
+        },
+        {
+          "file": "references/curriculum.md",
+          "find": "The curriculum does not add new frameworks past this point. Say so with the one-line pointer in the skill.",
+          "replace": "The curriculum does not add new frameworks past this point. Say so in one line."
+        },
+        {
+          "file": "references/curriculum.md",
+          "find": "and paid course or community material are not in this skill. Do not make them up. If a learner asks for one, say it is outside the free lessons and use the one-line pointer.",
+          "replace": "and course or community material are not in this skill. Do not make them up. If a learner asks for one, say plainly that it is outside these lessons."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "# Workspace formats\n\nThe files that hold a learner's progress.",
+          "replace": "# Record formats\n\nThe records that hold a learner's progress."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "Create each file only when it is first needed. Keep all of them in the learner's private folder.",
+          "replace": "Create each record only when it is first needed. Keep them in the conversation and hand them to the learner at the end of each session, as the skill describes. Each record is named like the file it could become."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "Numbered in order. Find the highest number in the folder and add one.",
+          "replace": "Numbered in order. Take the highest number so far and add one."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "{Link to the post file}",
+          "replace": "{The name of the post record}"
+        },
+        {
+          "file": "references/ATTRIBUTION.md",
+          "find": "lessons are plain text files,",
+          "replace": "lessons are plain text records,"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "- `GLOSSARY.md` - the words this workspace uses,",
+          "replace": "- `GLOSSARY.md` - the words these lessons use,"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "If the mission changes later, confirm the change with the learner, update the file and add a learning record.",
+          "replace": "If the mission changes later, confirm the change with the learner, update the record and add a learning record."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "One mission per workspace.",
+          "replace": "One mission per learner."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "- Write the file after the first answer",
+          "replace": "- Write the record after the first answer"
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "- When the goal moves, confirm it with the learner, update the file and add a learning record.",
+          "replace": "- When the goal moves, confirm it with the learner, update the record and add a learning record."
+        },
+        {
+          "file": "references/frameworks/02-openers.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches four kinds of opener and how to fix a weak one. It does not include ready-made hook lists. Use the one-line pointer if the learner asks for more.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches four kinds of opener and how to fix a weak one. It does not include ready-made hook lists. If the learner asks for more, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/03-pick-the-shape.md",
+          "find": "## Edge of the free material\n\nThis lesson gives the four shapes and how to choose. It does not include performance breakdowns by format. Use the one-line pointer if the learner asks for them.",
+          "replace": "## Where this lesson stops\n\nThis lesson gives the four shapes and how to choose. It does not include performance breakdowns by format. If the learner asks for them, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/06-your-voice.md",
+          "find": "## Edge of the free material\n\nThis lesson covers the basics of finding and keeping a voice. Having a tool learn your voice from your whole history is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson covers the basics of finding and keeping a voice. Having a tool learn your voice from your whole history is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/07-pre-publish-check.md",
+          "find": "## Edge of the free material\n\nThis lesson gives the five questions and the common patterns. A full automated checker with complete word lists is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson gives the five questions and the common patterns. A full automated checker with complete word lists is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/08-replying-on-your-posts.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches how to write a good reply. Handling replies at volume is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches how to write a good reply. Handling replies at volume is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/09-commenting-elsewhere.md",
+          "find": "## Edge of the free material\n\nThis lesson covers the two rooms and four kinds of comment. Choosing who to comment on and measuring what it brings back are outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson covers the two rooms and four kinds of comment. Choosing who to comment on and measuring what it brings back are outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/10-reading-your-results.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. If the learner asks, say this is as far as these lessons go."
+        }
+      ]
+    },
+    {
+      "name": "threadify-crosspost-x-after-threads",
+      "source": "skills/threadify-crosspost-x-after-threads",
+      "description": "Turns a Threads post the person already scheduled or published through Threadify into an X version, and schedules it to their connected X account only after they approve its review. Use when the person asks to cross-post, share or follow up on X after a Threads post.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Posting to X through Threadify needs a connected Threadify account with an X account connected to the same brand. Without one, prepare the X version for the person to post themselves. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Use when a user has already scheduled or published through Threadify and wants\nan X-ready follow-up artifact.",
+          "replace": "Use when the person has already scheduled or published a Threads post through\nThreadify and wants it on X too."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.\n2. Confirm Threads schedule/publish status using only listed MCP tools.\n3. Prepare an X-ready artifact and ask whether the user wants to publish or\n   schedule to X if live X tools are available in the future.\n4. If X tools are unavailable, mark fallback clearly.\n5. Do not claim X posting happened unless Threadify exposes and confirms a live\n   X provider action.",
+          "replace": "1. Call `get_connection_defaults` first. Confirm the Threads account, the timezone\n   and whether an X account is connected to the same brand and ready to post.\n2. Find the Threads post. For a scheduled post, use `list_scheduled_posts` and then\n   `get_schedule_status` with its `scheduled_post_id`. For a published post, use\n   `read_post_performance` with its `post_id`. Use the exact stored text.\n3. Prepare the X version from that text. Keep the person's words; Threadify splits\n   long text into an X thread, so show where it splits.\n4. Call `validate_post` on the text, then `review_post` with the text,\n   `platforms: [\"x\"]` and the `scheduled_at` the person chose, at least 5 minutes\n   ahead. Show the review it returns, including the X version and time. Each X post\n   counts toward the account's monthly X post limit; say so before they approve.\n5. After a clear yes to that review, call `schedule_post` with the same arguments plus\n   the review's `approval`. A change to the words, time or platforms needs a new\n   review, and an approval expires after 15 minutes.\n6. Report the X schedule only as `scheduled_confirmed` when the `schedule_post`\n   result confirms it; otherwise report `schedule_unverified` and check before any retry.\n7. If no X account is connected, or X posting is not available on this account, say so\n   plainly, give the person the X version to post themselves, and record that no X\n   action happened."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. This skill does not publish immediately or post to X without an approved review."
+        }
+      ]
+    },
+    {
+      "name": "threadify-x-article-from-daily-post",
+      "source": "skills/threadify-x-article-from-daily-post",
+      "description": "Expands an approved daily Threads post into a draft X Article packet (brief, article draft, thumbnail brief and scorecard) for the person to review and publish on X themselves. Use when the person asks to turn a Threads post into an X Article or a long-form X piece.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "This skill works from text the person approves; it needs no connection to draft. Honor an existing connection choice. Offer the connection only when it would help, such as making a thumbnail or scheduling a short X post; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json`.\n2. Use only approved source text or a public-safe Threadify-ready output artifact.",
+          "replace": "1. Confirm the approved source post and that the person wants an X Article draft.\n2. Use only approved source text or a public-safe post the person has approved."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "5. Mark live X publishing, scheduling, media upload, and browser submission as\n   unavailable in public v0 unless Threadify exposes and confirms a supported\n   product surface later.\n6. Stop for human review before any downstream publication action.\n7. Return a receipt proving that no live X action was performed.",
+          "replace": "5. The person publishes the X Article in X. Threadify's tools post regular X posts,\n   not Articles. If the person wants Threadify to make the thumbnail, call\n   `generate_image` with the thumbnail prompt as its `prompt`, and show the image\n   before calling it made.\n6. Once the article is live, the person may want a short X post that points to it.\n   Write it, call `review_post` with that text, `platforms: [\"x\"]` and the chosen\n   `scheduled_at`, show the review, and only after a clear yes call `schedule_post`\n   with the same arguments plus the review's `approval`.\n7. Return a receipt that says what was drafted, any image made, and any X post\n   scheduled with its approved review; say plainly when no X action happened."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. This skill never publishes the article itself."
         }
       ]
     }
