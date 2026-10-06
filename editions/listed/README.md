@@ -2,13 +2,14 @@
 
 This folder builds the package we submit to OpenAI's plugin directory (shared by ChatGPT and Codex). It is separate from the self-installed Threadify Workflows bundle: `lib/release-files.mjs` only ships an allow-list of top-level folders, and `editions/` is not on it.
 
-The listed edition is small on purpose. It ships nine skills that run with only the Threadify MCP server, in the portable Agent Plugins format: Daily Posts Heartbeat, Greatest Hits Runway, Weekly Winner Replication, Monetize My Week, Personal Brain Sync, Content Brain Repair, Threads Teach, Crosspost X After Threads and X Article From Daily Post. Listed copy carries no plans links, prices, trials or local helper scripts, and every skill that schedules calls `review_post` first and passes its approval to `schedule_post`.
+The listed edition is small on purpose. It ships twelve skills that run with only the Threadify MCP server, in the portable Agent Plugins format: Get Set Up, Create My Week, Inbound Replies, Daily Posts Heartbeat, Greatest Hits Runway, Weekly Winner Replication, Monetize My Week, Personal Brain Sync, Content Brain Repair, Threads Teach, Crosspost X After Threads and X Article From Daily Post. Listed copy carries no plans links, prices, trials or local helper scripts, and every skill that schedules calls `review_post` first and passes its approval to `schedule_post`. Inbound Replies calls `review_reply` before each send and passes its approval to the send tool.
 
 ## What is here
 
 | Path | Role |
 | --- | --- |
-| `edition.json` | Source of truth: version, listing metadata (including the four listing URLs and starter prompts), the `review` and `publication` sections OpenAI imports from the ZIP, MCP server, assets and the selected skills. Each skill has a `description` override, `drop` globs, `add` files and anchored `replace` rules. |
+| `edition.json` | Source of truth: version, listing metadata (including the four listing URLs and starter prompts), the `review` and `publication` sections OpenAI imports from the ZIP, MCP server, assets and the selected skills. Each skill has a `description` override, `drop` globs, `add` files and anchored `replace` rules, or an `override` folder. |
+| `overrides/<name>/` | Hand-written listed skills that replace an upstream skill outright: Get Set Up, Create My Week and Inbound Replies. Their upstream versions depend on local helpers, files and pages that a listed plugin cannot use. |
 | `shared/connect.md` | Link-free connection guide that replaces the setup reference, which carries plans links. |
 | `assets/` | Source logo (1024 px) and composer icon (512 px). |
 | `build.mjs` | Generates `package/`. `--check` rebuilds in memory and fails on any difference. |
@@ -29,6 +30,8 @@ For each selected skill, the build copies the generated `skills/<name>/` tree an
 2. Rewrites the `description` line in the `SKILL.md` front matter.
 3. Applies each `replace` rule. The `find` text must appear exactly once, or the build fails. This catches upstream wording changes instead of shipping a stale edit.
 4. Adds files from `add`. It never overwrites a file that already exists.
+
+A skill with `"override": "overrides/<name>"` ships the files in that folder instead of the upstream ones, then gets the same description rewrite and `add` files. The override folder must carry the skill's own name, and `drop` or `replace` rules on an override fail the build. The upstream files stay in the lock as inputs, so `--check` still names an upstream change and the rewrite gets reviewed against it.
 
 JSON output uses sorted keys and fixed formatting, so the same inputs always produce the same bytes.
 
@@ -59,6 +62,8 @@ Preflight findings use OpenAI's code names from [Plugin submission errors](https
 
 `listed_tool_unknown` fires on a backticked snake_case word that is not a tool, a required parameter of one, or a word in `contract/terms.json`. `listed_tool_required_param_missing` fires when a skill names a tool but never names one of its required parameters, such as `get_schedule_status` without `scheduled_post_id`. Every `tools_triggered` name in the review cases must be a real tool too.
 
+`tests/skills.test.mjs` pins the three hand-written skills to their tools. Each may name only its listed tools, in order: Get Set Up and Create My Week call `review_post` before `schedule_post`, and Inbound Replies calls `review_reply` before every send tool. None of them names `publish_now` or `set_automation_preference`, and Get Set Up names no reply tool.
+
 To refresh the snapshot after the server's tools change:
 
 ```sh
@@ -79,7 +84,7 @@ codex plugin marketplace add "$PWD/editions/listed/package"
 codex plugin add threadify@threadify-listed-local
 codex plugin list --json          # threadify@threadify-listed-local is installed and enabled
 codex mcp list                    # the threadify server appears
-codex debug prompt-input "hi"     # the nine threadify:threadify-* skills are listed
+codex debug prompt-input "hi"     # the twelve threadify:threadify-* skills are listed
 codex plugin remove threadify@threadify-listed-local
 codex plugin marketplace remove threadify-listed-local
 ```
