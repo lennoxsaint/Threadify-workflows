@@ -1,0 +1,35 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "author": {
+    "name": "Saints Coaching",
+    "url": "https://www.threadify.app"
+  },
+  "description": "Schedule Threads posts you have already approved through your Threadify account, with a conflict check and readback.",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "brandColor": "#0F172A",
+        "brandColorDark": "#E2E8F0",
+        "capabilities": [
+          "Interactive",
+          "Read",
+          "Write"
+        ],
+        "category": "Productivity",
+        "composerIcon": "./assets/icon.png",
+        "defaultPrompt": [],
+        "developerName": "Saints Coaching",
+        "displayName": "Threadify",
+        "logo": "./assets/logo.png",
+        "longDescription": "Threadify helps creators run their Threads account. This version includes one skill, Daily Posts Heartbeat. It checks posts you have already approved, looks for calendar conflicts, and schedules each post only after you approve the exact text, account and time. Then it reads the result back. It does not write new posts, publish right away or set up a recurring routine. You need a Threadify account, connected through the official sign-in screen.",
+        "privacyPolicyURL": "https://www.threadify.app/privacy",
+        "shortDescription": "Write and schedule Threads",
+        "supportURL": "https://www.threadify.app/support",
+        "termsOfServiceURL": "https://www.threadify.app/terms",
+        "websiteURL": "https://www.threadify.app"
+      }
+    }
+  },
+  "name": "threadify",
+  "version": "1.0.0"
+}
