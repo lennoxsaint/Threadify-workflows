@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.25.0",
+  "release_version": "0.26.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.25.0",
+  "plugin_version": "0.26.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Run My Threads: one setup and one daily schedule; every morning your agent prepares up to five Threadify-written posts in open slots, proves the copy was only lowercased, and schedules them only after you reply yes."
+  "summary": "Run My Threads v2: a deterministic week plan (five posts a day, six long-form threads, one word-for-word greatest-hit repost daily, proven structures and hooks, Growth/Balanced/Conversion CTA levels), a hook check on every post, and a public Threads playbook and hook bank; still one daily schedule and one yes."
 }

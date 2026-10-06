@@ -1,3 +1,12 @@
+# 0.26.0
+
+- Run My Threads now plans the week: five posts a day, 35 a week. Six days carry one long-form thread (teacher, storyteller, synthesizer in turn) and four short-form posts; the short day (Sunday by default) carries five short-form posts. Short-form types rotate one-liner, listicle and random, with listicle-plug reserved for CTA slots.
+- A bundled no-dependency planner (`scripts/week-plan.mjs`) builds the same plan from the same four setup values and checks every invariant: 35 posts, 6 threads, one greatest hit a day, the CTA count, type rotation, and no structure or hook archetype repeated in a day. Setup shows the plan as a table and runs Day 1.
+- One greatest-hit repost a day: the owner's own top single post, reposted word for word after a 60-day reuse check and a stale-fact check. It is saved with `save_draft` and verified byte-identical; that is the only use of `save_draft`. Everything else is still written by Threadify's `generate_content`.
+- Hook-first generation: each post gets a proven hook pattern from the owner's own hits and Vault suggestions, Vault outliers, connected templates or the bundled hook bank, plus a planned structure and hook archetype. A new deterministic hook check (`scripts/hook-check.mjs`) reads line 1 of every post; on FAIL Threadify is asked once for a replacement, never hand-edited. Generation passes `strict_facts: true`, and a number belongs in a hook only if it really happened.
+- CTA levels chosen at setup: Growth (none), Balanced (two a day, 14 a week, the default) and Conversion (25 a week). A CTA is a thread with a Threadify-written Auto Plug reply or a listicle-plug post with the chosen offer, never in post 1. The Auto Plug echo is read back; when it is missing, future plugs move to listicle-plug posts.
+- New public references: a Threads playbook (hook, hold, help, CTA, structures, short-form and long-form types) and a fill-in hook bank. Slots are now at least 90 minutes apart, and the approval card shows type, structure, hook check, CTA and plug text for every post.
+
 # 0.25.0
 
 - Add Run My Threads ("I don't write posts anymore. I approve them."): one setup creates exactly one daily schedule (05:30 local by default) and reuses an existing one instead of adding a second.
