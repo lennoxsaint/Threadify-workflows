@@ -394,6 +394,172 @@
           "replace": "Follower counts, member counts, user counts, revenue numbers,"
         }
       ]
+    },
+    {
+      "name": "threadify-threads-teach",
+      "source": "skills/threadify-threads-teach",
+      "description": "Teaches the person to write for Threads over several short sessions, using Lennox Saint's core public frameworks and their own Threads posts read through Threadify. Each lesson ends with one post the person writes themselves, saved or scheduled only after they approve it. Use when the person asks to learn Threads, be taught how to write Threads posts, or continue their Threads lessons.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md",
+        "agents/openai.yaml"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "A shared connection guide, [Threadify-001](references/threadify-001.md), ships with every Threadify skill. Here, use only its two sections \"Connect an existing Threadify account\" and \"Keep actions separate\". Its \"Local first run\" steps are written for other workflows: do not look for an offer record, do not run Offer Builder, and do not follow its links to files outside this skill, which are not installed with it.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before the first connected call. Lessons work without a connection too; see below."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## The teaching workspace\n\nAsk once for a private folder the learner owns, then treat it as the teaching workspace. Create files only when they are first needed. Use the formats in [workspace formats](references/workspace-formats.md).",
+          "replace": "## The learner's records\n\nKeep the learner's progress in a few short records. Create each one only when it is first needed. Use the formats in [record formats](references/workspace-formats.md). Each record is named like the file it could become, so a learner who wants files can save them as files."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "If the host cannot keep files, say so, keep the same records in the conversation, and give the learner the text to save themselves. Never claim a record was saved without reading it back.",
+          "replace": "Keep the records in the conversation. At the end of every session, give the learner one block of text holding every record, so they can keep it and paste it back next time. If the host remembers earlier conversations or keeps project files for the learner, the records can live there instead. Never claim a record was kept without showing it."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read whichever of these exist: `MISSION.md`, every learning record, `NOTES.md` and the last lesson. A missing file is normal, not an error.",
+          "replace": "1. Read whichever of these the learner has brought back or the host still holds: `MISSION.md`, every learning record, `NOTES.md` and the last lesson. A missing record is normal, not an error."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "On approval, call `save_draft`, then read the draft back with `get_draft` and confirm it matches.",
+          "replace": "On approval, call `save_draft`, then read the draft back with `get_draft` and the `draft_id` it returned, and confirm it matches."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Call `validate_post` on the exact text. Say which posts are already scheduled near that time. Show the account, the exact text, the date and time in the learner's timezone, the timezone name, the UTC time when it differs, and the action. Ask for approval of that exact packet.",
+          "replace": "Call `validate_post` on the exact text, then `review_post` with the text and the chosen `scheduled_at`. Say which posts are already scheduled near that time. Show the review it returns: the account, the exact text, the date and time in the learner's timezone, the timezone name, the UTC time when it differs, and the action. Ask for approval of that exact review."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "3. **Schedule only after that approval.** Call `schedule_post` once. Check `get_schedule_status` or `list_scheduled_posts` and confirm account, text and time.",
+          "replace": "3. **Schedule only after that approval.** Call `schedule_post` once, with the same arguments plus the review's `approval`. Check `get_schedule_status` with the returned `scheduled_post_id`, or `list_scheduled_posts`, and confirm account, text and time."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "4. Any change to the text, account, date or time cancels the approval; show the new version and ask again.",
+          "replace": "4. Any change to the text, account, date or time cancels the approval; call `review_post` again, show the new review and ask again. An approval also expires after 15 minutes."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Save the final text to `posts/` in the workspace with status `written`.",
+          "replace": "Add the final text to its post record with status `written`."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "## The edge of the free material\n\nThese lessons teach the core frameworks. Where a lesson reaches the edge, the framework note says so. Tell the learner in one line, once, and move on:\n\n> This is as deep as the free lessons go on this. The fuller system lives in Threadify - https://www.threadify.app/?utm_source=threads_teach&utm_medium=skill&utm_campaign=proof_loops&utm_content=threadify_038\n\nDo not push it, do not repeat it in the same lesson, and do not hold back anything that is in the framework notes. Do not invent deeper material to fill the gap, and do not describe what is behind the gate beyond the note's own line.",
+          "replace": "## Where the lessons stop\n\nThese lessons teach the core frameworks. Where a lesson stops, the framework note says so. Tell the learner in one line, once, that this is as far as these lessons go on that topic, and move on.\n\nDo not hold back anything that is in the framework notes. Do not invent deeper material to fill the gap."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve all paths relative to this installed skill directory. Keep the learner's posts, numbers and mission in their private workspace.",
+          "replace": "Resolve all paths relative to this installed skill directory. Keep the learner's posts, numbers and mission in their records, and share them with no one else."
+        },
+        {
+          "file": "references/curriculum.md",
+          "find": "The curriculum does not add new frameworks past this point. Say so with the one-line pointer in the skill.",
+          "replace": "The curriculum does not add new frameworks past this point. Say so in one line."
+        },
+        {
+          "file": "references/curriculum.md",
+          "find": "and paid course or community material are not in this skill. Do not make them up. If a learner asks for one, say it is outside the free lessons and use the one-line pointer.",
+          "replace": "and course or community material are not in this skill. Do not make them up. If a learner asks for one, say plainly that it is outside these lessons."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "# Workspace formats\n\nThe files that hold a learner's progress.",
+          "replace": "# Record formats\n\nThe records that hold a learner's progress."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "Create each file only when it is first needed. Keep all of them in the learner's private folder.",
+          "replace": "Create each record only when it is first needed. Keep them in the conversation and hand them to the learner at the end of each session, as the skill describes. Each record is named like the file it could become."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "Numbered in order. Find the highest number in the folder and add one.",
+          "replace": "Numbered in order. Take the highest number so far and add one."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "{Link to the post file}",
+          "replace": "{The name of the post record}"
+        },
+        {
+          "file": "references/ATTRIBUTION.md",
+          "find": "lessons are plain text files,",
+          "replace": "lessons are plain text records,"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "- `GLOSSARY.md` - the words this workspace uses,",
+          "replace": "- `GLOSSARY.md` - the words these lessons use,"
+        },
+        {
+          "file": "SKILL.md",
+          "find": "If the mission changes later, confirm the change with the learner, update the file and add a learning record.",
+          "replace": "If the mission changes later, confirm the change with the learner, update the record and add a learning record."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "One mission per workspace.",
+          "replace": "One mission per learner."
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "- Write the file after the first answer",
+          "replace": "- Write the record after the first answer"
+        },
+        {
+          "file": "references/workspace-formats.md",
+          "find": "- When the goal moves, confirm it with the learner, update the file and add a learning record.",
+          "replace": "- When the goal moves, confirm it with the learner, update the record and add a learning record."
+        },
+        {
+          "file": "references/frameworks/02-openers.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches four kinds of opener and how to fix a weak one. It does not include ready-made hook lists. Use the one-line pointer if the learner asks for more.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches four kinds of opener and how to fix a weak one. It does not include ready-made hook lists. If the learner asks for more, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/03-pick-the-shape.md",
+          "find": "## Edge of the free material\n\nThis lesson gives the four shapes and how to choose. It does not include performance breakdowns by format. Use the one-line pointer if the learner asks for them.",
+          "replace": "## Where this lesson stops\n\nThis lesson gives the four shapes and how to choose. It does not include performance breakdowns by format. If the learner asks for them, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/06-your-voice.md",
+          "find": "## Edge of the free material\n\nThis lesson covers the basics of finding and keeping a voice. Having a tool learn your voice from your whole history is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson covers the basics of finding and keeping a voice. Having a tool learn your voice from your whole history is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/07-pre-publish-check.md",
+          "find": "## Edge of the free material\n\nThis lesson gives the five questions and the common patterns. A full automated checker with complete word lists is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson gives the five questions and the common patterns. A full automated checker with complete word lists is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/08-replying-on-your-posts.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches how to write a good reply. Handling replies at volume is outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches how to write a good reply. Handling replies at volume is outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/09-commenting-elsewhere.md",
+          "find": "## Edge of the free material\n\nThis lesson covers the two rooms and four kinds of comment. Choosing who to comment on and measuring what it brings back are outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson covers the two rooms and four kinds of comment. Choosing who to comment on and measuring what it brings back are outside it. If the learner asks, say this is as far as these lessons go."
+        },
+        {
+          "file": "references/frameworks/10-reading-your-results.md",
+          "find": "## Edge of the free material\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. Use the one-line pointer if the learner asks.",
+          "replace": "## Where this lesson stops\n\nThis lesson teaches a simple monthly read and one test at a time. Tracking which posts bring followers, and running many tests at once, are outside it. If the learner asks, say this is as far as these lessons go."
+        }
+      ]
     }
   ]
 }
