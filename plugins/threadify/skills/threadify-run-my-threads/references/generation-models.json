@@ -1,0 +1,26 @@
+{
+  "record_type": "RunMyThreadsGenerationModelsV1",
+  "tool": "generate_content",
+  "parameter": "selectedModel",
+  "summary": "Claude Opus 5.5 when your plan allows it, Gemini as fallback.",
+  "fallback_chain": [
+    "claude-opus",
+    "claude-sonnet",
+    "gemini-3.1-pro-preview",
+    "gemini"
+  ],
+  "fall_through_only_on": [
+    "the plan does not allow the model: Model \"<id>\" is not available on your plan.",
+    "a model or provider failure for that model"
+  ],
+  "stop_without_fall_through_on": [
+    "content, format or input errors",
+    "usage limit reached",
+    "hourly rate limit",
+    "connection, account or scope errors"
+  ],
+  "record_per_post": [
+    "requested selectedModel id",
+    "the model value the response reports, or \"not reported\""
+  ]
+}
