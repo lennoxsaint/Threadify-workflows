@@ -2,9 +2,16 @@
   "note": "Backticked snake_case words in the listed package that are not Threadify tools: parameter names, values and statuses. A word here must never be a tool name. Required parameters of known tools are accepted without being listed.",
   "terms": [
     "auto_repost",
+    "channel_voice",
+    "evergreen_identity",
+    "live_metric",
     "posts_per_day",
+    "relationship_context_note",
     "runway_days",
     "schedule_unverified",
-    "scheduled_confirmed"
+    "scheduled_confirmed",
+    "temporary_current_state_note",
+    "voice_litmus",
+    "workflow_lesson"
   ]
 }
