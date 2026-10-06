@@ -16,7 +16,9 @@ Never create a second schedule to change a time or a setting. Never add an hourl
 
 Save the owner's choices in the schedule's prompt so each run is self-contained:
 
-> Run the installed threadify-run-my-threads skill for today. Account: @HANDLE. Timezone: AREA/CITY. Posts: N. Format: short-form. Casing: as Threadify writes it | lowercase except proper nouns, keep: NAMES. Topic lanes: LANES or let Threadify choose from my Brain. Prepare the approval card in this conversation and wait for my reply. Never schedule without my "yes" here. If today's card or receipt already exists, do not generate again.
+> Run the installed threadify-run-my-threads skill for today. Account: @HANDLE. Timezone: AREA/CITY. Week plan: start_date YYYY-MM-DD, mode growth | balanced | conversion, short_day WEEKDAY, seed N, auto_plug true | false. Offer: OFFER_ID or none. Casing: as Threadify writes it | lowercase except proper nouns, keep: NAMES. Topic lanes: LANES or let Threadify choose from my Brain. State folder: ~/.threadify-workflows/state/run-my-threads/. Prepare today's five posts and the approval card in this conversation and wait for my reply. Never schedule without my "yes" here. If today's card or receipt already exists, do not generate again.
+
+The week plan values let any run rebuild the same plan with `scripts/week-plan.mjs`, even a cloud run without the local state folder. When the seven days end, the run moves `start_date` on seven days and adds one to `seed`; update the schedule prompt in place (never a second schedule). The state folder keeps the setup choices, the current week plan and the greatest-hit repost log; without it, the 60-day repost check relies on Threadify's `search_posts` and `list_scheduled_posts`.
 
 A schedule's own prompt is never approval to schedule posts. Only the owner's reply to the card is.
 

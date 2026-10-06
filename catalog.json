@@ -1345,9 +1345,9 @@
     },
     {
       "workflow_id": "run-my-threads",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Run My Threads",
-      "summary": "One setup, then once a day your agent prepares up to five Threadify-written posts in open slots, shows them for one reply, and schedules them only after you say yes.",
+      "summary": "One setup builds a week plan, then once a day your agent prepares five Threadify-written posts (a thread on six days, one greatest-hit repost, hook-first structures and your CTA level), shows them for one reply, and schedules them only after you say yes.",
       "kind": "skill",
       "skill_name": "threadify-run-my-threads",
       "entrypoint": "skills/threadify-run-my-threads/SKILL.md",
@@ -1366,7 +1366,8 @@
       "triggers": [
         "run my Threads for me",
         "prepare my Threads posts every morning for approval",
-        "set up Run My Threads"
+        "set up Run My Threads",
+        "plan my Threads week and prepare each day for approval"
       ],
       "io": {
         "inputs": [
