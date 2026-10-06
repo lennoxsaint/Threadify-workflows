@@ -1,3 +1,12 @@
+# 0.25.0
+
+- Add Run My Threads ("I don't write posts anymore. I approve them."): one setup creates exactly one daily schedule (05:30 local by default) and reuses an existing one instead of adding a second.
+- Each morning the agent finds up to five open slots for today and tomorrow, never touching posts already on the calendar, and asks Threadify to write each post with `generate_content`. Count defaults to five and can be set from one to five.
+- Generation tries Claude Opus 5.5 when the plan allows it, with Gemini as fallback, moving down one ordered list kept in a single reference file only when a model is unavailable on the plan or fails. Each post records the model requested and the model Threadify reports; an unreported model is never claimed.
+- The agent never rewrites Threadify copy. Its only permitted change is lowercasing while keeping proper nouns, links, handles and hashtags, and a bundled no-dependency guard script must show PASS for every post; on FAIL the original text is used unchanged.
+- One approval card shows account, timezone, local and UTC times, exact text, model and guard result. A single "yes" schedules exactly what was shown, "skip N" drops a post and "no" schedules nothing. Changed slots need re-validation and a new "yes"; ambiguous attempts are read back before retrying and a batch is never replayed.
+- Runs once a day and reports Threadify quota and the host's token or usage readout when the host exposes it, saying so when it does not. Setup guidance covers Codex thread automations and Claude Code routines, with Desktop local tasks as the local fallback.
+
 # 0.24.2
 
 - Threads Teach: rank the learner's best posts by views, with a minimum age, a minimum view count and a check that discards posts whose view counts are incomplete.
