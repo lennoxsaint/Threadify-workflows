@@ -1,0 +1,4 @@
+{
+  "note": "Backticked snake_case words in the listed package that are not Threadify tools: parameter names, values and statuses. A word here must never be a tool name. Required parameters of known tools are accepted without being listed.",
+  "terms": []
+}

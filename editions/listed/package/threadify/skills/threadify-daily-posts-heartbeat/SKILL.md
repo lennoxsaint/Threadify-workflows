@@ -19,14 +19,17 @@ through Threadify MCP.
 
 1. Confirm the approved posts, the target account and the requested times.
 2. Call `get_connection_defaults` before interpreting time.
-3. Use only these Threadify tools: `get_connection_defaults`, `validate_post`, `list_scheduled_posts`, `schedule_post` and `get_schedule_status`. Use `record_feedback` only after the person opts in to share that exact feedback.
+3. Use only these Threadify tools: `get_connection_defaults`, `validate_post`, `list_scheduled_posts`, `review_post`, `schedule_post` and `get_schedule_status`. Use `record_feedback` only after the person opts in to share that exact feedback.
 4. Validate exact approved text with `validate_post`.
-5. If the approved pack includes review-only lane metadata, keep labels, receipts, blockers, CTA destinations, UTM sources, and media review state separate from public copy.
+5. If the approved pack includes review-only lane metadata, keep labels, receipts, blockers, link destinations and media review state separate from public copy.
 6. Show account handle, exact text, media, scheduled time, timezone, and action.
 7. Check `list_scheduled_posts` for conflicts before proposing the final slots. Never overwrite
-   occupied slots. Stop for explicit final approval before `schedule_post`; approval binds the
-   exact copy, media, account and times shown. Changed items need fresh validation and approval.
-8. Read back status with `get_schedule_status`.
+   occupied slots. For each post, call `review_post` with the exact text, media and `scheduled_at`
+   you will schedule, and show the person the review it returns. After a clear yes to that review,
+   call `schedule_post` with the same arguments plus the review's `approval`. Changed words,
+   account, time or platforms need fresh validation and a new review; an approval expires after
+   15 minutes.
+8. Read back each post with `get_schedule_status` and the `scheduled_post_id` that `schedule_post` returned.
 9. Use `list_scheduled_posts` for the relevant schedule window when the user asks
    what is queued, or when a day-level receipt needs complete readback.
 10. Return a short receipt: account handle, exact approved text, approval state, schedule status, timestamp, the tools used and any fallback.

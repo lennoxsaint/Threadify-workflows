@@ -3,7 +3,7 @@
   "inputs": {
     "editions/listed/assets/icon.png": "sha256-fbc30aff8edce12e5addf915807e6a54e789e7de5d6e86eaa39f31c9db2aabee",
     "editions/listed/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
-    "editions/listed/edition.json": "sha256-2cfbde10668d6f823fa59c969e9e673f24efca8c33d96d571858b2c6ff25be79",
+    "editions/listed/edition.json": "sha256-dab9f4edd183aa58ad0df804c4d9733a7d3f4b65c0e700d689bdaec3ba444b28",
     "editions/listed/shared/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf",
     "skills/threadify-daily-posts-heartbeat/SKILL.md": "sha256-98bd4d0c6a35f5a6c25c6409dd023dc7063cee55a28d9568be27a08e527ebc2d",
     "skills/threadify-daily-posts-heartbeat/references/threadify-001.md": "sha256-7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b",
@@ -16,7 +16,7 @@
     "threadify/assets/logo.png": "sha256-c514b906bbecdedce0013bd53761fa80507079ff8a4916e062caf883f1e8b646",
     "threadify/mcp.json": "sha256-ab6270cddd14f5b3166e0509ef998a224f2e7fe97a0e2d56173dbabf67721d4f",
     "threadify/plugin.json": "sha256-1c0f17065a6b244a0e3d9da04f7f90f11043229484fab60a598cfee024c5989a",
-    "threadify/skills/threadify-daily-posts-heartbeat/SKILL.md": "sha256-5b04af71a603fc2af2ab0e4fcad9b0e1540d193064f8a29292ff8ae76f30297a",
+    "threadify/skills/threadify-daily-posts-heartbeat/SKILL.md": "sha256-7c6e6bdad4f9e6254c1544957aa28b98939bd9838dd0aa8fb11d00b9e5d7696e",
     "threadify/skills/threadify-daily-posts-heartbeat/references/connect.md": "sha256-90dd1bfdd59db50de438083a23af4abe0213c65c8e4b8aceea45d2aa108ac0bf"
   },
   "version": "1.0.0"

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Mirrors OpenAI's automated plugin checks, as far as they apply to a folder, plus our stricter policy lint.
 // Usage: node editions/listed/preflight.mjs <plugin dir> [--json]
+// Tool names are checked against contract/tools.json (see contract/extract.mjs) and contract/terms.json.
 // Codes match https://developers.openai.com/plugins/deploy/submission-errors where one exists;
 // codes starting with `listed_` are ours. Exits 1 on any error.
 import fs from 'node:fs';
@@ -22,7 +23,7 @@ const TEXT_FILE = /\.(?:md|markdown|txt|json|ya?ml|html?)$/i;
 // Our policy, stricter than OpenAI's: listed copy carries no commercial funnel and no local helpers.
 const POLICY = [
   ['listed_policy_plans_link', /threadify\.app\/(?:plans|home|pricing)/i, 'links to a Threadify plans, home or pricing page'],
-  ['listed_policy_utm', /utm_/i, 'contains a UTM parameter'],
+  ['listed_policy_utm', /\butm(?:_|\b)/i, 'contains a UTM parameter or UTM wording'],
   ['listed_policy_trial', /\btrials?\b/i, 'mentions a trial'],
   ['listed_policy_upgrade', /\bupgrad/i, 'mentions an upgrade'],
   ['listed_policy_pricing', /\bpric(?:e|es|ed|ing)\b/i, 'mentions price or pricing'],
@@ -36,6 +37,18 @@ const POLICY = [
 const UNSUPPORTED_TEXT = new RegExp(`[${[[0x00, 0x09], [0x0b, 0x0c], [0x0e, 0x1f], [0x7f, 0x7f], [0x200b, 0x200f], [0x2028, 0x202e], [0x2060, 0x2064], [0xfeff, 0xfeff]]
   .map(([from, to]) => `\\u{${from.toString(16)}}-\\u{${to.toString(16)}}`).join('')}]`, 'u');
 const LINE_BREAK = /[\r\n]/;
+const DEFAULT_CONTRACT = fileURLToPath(new URL('./contract/', import.meta.url));
+// A backticked lowercase word. With an underscore it is snake_case and must be a known tool, parameter or term.
+const BACKTICKED = /`([a-z][a-z0-9]*(?:_[a-z0-9]+)*)`/g;
+
+// The tool snapshot plus the hand-kept list of backticked snake_case words that are not tools.
+export function loadContract(directory = DEFAULT_CONTRACT) {
+  const tools = new Map();
+  for (const tool of JSON.parse(fs.readFileSync(path.join(directory, 'tools.json'), 'utf8')).tools) tools.set(tool.name, tool);
+  const terms = new Set(JSON.parse(fs.readFileSync(path.join(directory, 'terms.json'), 'utf8')).terms);
+  const parameters = new Set([...tools.values()].flatMap((tool) => tool.required));
+  return { tools, terms, parameters };
+}
 
 export function pngSize(buffer) {
   const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
@@ -106,7 +119,7 @@ function listEntries(directory, relative = '', out = []) {
   return out;
 }
 
-export function preflight(pluginDir) {
+export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT } = {}) {
   const findings = [];
   const error = (code, where, message) => findings.push({ level: 'error', code, path: where, message });
   const warn = (code, where, message) => findings.push({ level: 'warning', code, path: where, message });
@@ -333,6 +346,37 @@ export function preflight(pluginDir) {
     lines.forEach((line, index) => {
       for (const [code, pattern, message] of POLICY) if (pattern.test(line)) error(code, `${relative}:${index + 1}`, `Line ${message}.`);
     });
+  }
+
+  // Tool names: every backticked snake_case word is a real tool, a required parameter or a listed term,
+  // and a skill that names a tool also names each of that tool's required parameters.
+  let contract = null;
+  try { contract = loadContract(contractDir); }
+  catch (cause) { error('listed_tool_contract_missing', 'contract', `Cannot read the tool snapshot: ${cause.message}`); }
+  if (contract) {
+    for (const { path: relative, entry } of entries) {
+      if (!entry.isFile() || !TEXT_FILE.test(relative)) continue;
+      fs.readFileSync(path.join(root, relative), 'utf8').split(/\r?\n/).forEach((line, index) => {
+        for (const [, word] of line.matchAll(BACKTICKED)) {
+          if (!word.includes('_') || contract.tools.has(word) || contract.parameters.has(word) || contract.terms.has(word)) continue;
+          error('listed_tool_unknown', `${relative}:${index + 1}`, `\`${word}\` is not a Threadify tool in contract/tools.json (add it to contract/terms.json only if it is not a tool).`);
+        }
+      });
+    }
+    const skillFolders = fs.existsSync(skillsDir) && fs.statSync(skillsDir).isDirectory()
+      ? fs.readdirSync(skillsDir, { withFileTypes: true }).filter((item) => item.isDirectory() && !item.name.startsWith('.')).map((item) => item.name).sort()
+      : [];
+    for (const skill of skillFolders) {
+      const skillDir = path.join(skillsDir, skill);
+      const text = listEntries(skillDir).filter(({ path: relative, entry }) => entry.isFile() && /\.md$/i.test(relative))
+        .map(({ path: relative }) => fs.readFileSync(path.join(skillDir, relative), 'utf8')).join('\n');
+      const named = new Set([...text.matchAll(BACKTICKED)].map(([, word]) => word).filter((word) => contract.tools.has(word)));
+      for (const tool of [...named].sort()) {
+        for (const parameter of contract.tools.get(tool).required) {
+          if (!new RegExp(`\\b${parameter}\\b`).test(text)) error('listed_tool_required_param_missing', `skills/${skill}`, `The skill uses \`${tool}\` but never names its required parameter \`${parameter}\`.`);
+        }
+      }
+    }
   }
   return findings;
 }

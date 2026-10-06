@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { preflight, parseFrontMatter } from '../preflight.mjs';
+import { preflight, parseFrontMatter, loadContract } from '../preflight.mjs';
 
 const preflightScript = fileURLToPath(new URL('../preflight.mjs', import.meta.url));
 const fixture = (name) => fileURLToPath(new URL(`./fixtures/${name}`, import.meta.url));
@@ -28,6 +28,8 @@ const BAD = [
   ['bad-plans-link', 'listed_policy_plans_link'],
   ['bad-local-helper', 'listed_policy_local_helper'],
   ['bad-logo-not-square', 'raster_image_not_square'],
+  ['bad-unknown-tool', 'listed_tool_unknown'],
+  ['bad-schedule-status-no-id', 'listed_tool_required_param_missing'],
 ];
 
 for (const [name, code] of BAD) {
@@ -44,6 +46,17 @@ for (const [name, code] of BAD) {
 test('a missing plugin folder and a missing argument are reported', () => {
   assert.deepEqual(errorCodes(path.join(fixture('good-minimal'), 'nope')), ['plugin_root_missing']);
   assert.equal(spawnSync(process.execPath, [preflightScript], { encoding: 'utf8' }).status, 2);
+});
+
+test('the tool check accepts known tools, their required parameters and listed terms', () => {
+  const contract = loadContract();
+  assert.ok(contract.tools.has('review_post'));
+  assert.ok(contract.parameters.has('scheduled_post_id'));
+  for (const term of contract.terms) assert.ok(!contract.tools.has(term), `${term} is a tool name, not a term`);
+});
+
+test('a missing tool snapshot is an error, not a silent pass', () => {
+  assert.deepEqual(preflight(fixture('good-minimal'), { contractDir: fixture('nope') }).map((finding) => finding.code), ['listed_tool_contract_missing']);
 });
 
 test('front matter parsing handles quoted values and reports malformed blocks', () => {
