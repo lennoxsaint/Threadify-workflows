@@ -36,7 +36,7 @@
     "schedule_post",
     "get_schedule_status"
   ],
-  "optional_mcp_tools": ["best_time_to_post"],
+  "optional_mcp_tools": ["best_time_to_post", "cancel_schedule"],
   "free_capabilities": [
     "local casing guard that proves Threadify copy was only lowercased",
     "one daily host schedule set up with the host's own controls"

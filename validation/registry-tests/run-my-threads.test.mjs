@@ -20,8 +20,9 @@ test('Run My Threads registers exactly the daily generate, validate and schedule
     'schedule_post',
     'get_schedule_status',
   ]);
-  assert.deepEqual(workflow.optional_mcp_tools, ['best_time_to_post']);
-  for (const tool of ['publish_now', 'edit_draft', 'save_draft', 'reschedule_post', 'cancel_schedule']) {
+  // cancel_schedule is recovery only: a stored text that does not match the card, after the owner's reply.
+  assert.deepEqual(workflow.optional_mcp_tools, ['best_time_to_post', 'cancel_schedule']);
+  for (const tool of ['publish_now', 'edit_draft', 'save_draft', 'reschedule_post']) {
     assert.ok(![...workflow.required_mcp_tools, ...workflow.optional_mcp_tools].includes(tool), `must not use ${tool}`);
   }
 });
@@ -47,6 +48,8 @@ test('Run My Threads gates scheduling on one exact yes and never rewrites Thread
   assert.match(skill, /On FAIL, use Threadify's original unchanged/);
   assert.match(skill, /Never publish now/);
   assert.match(skill, /Never schedule without the owner's "yes" to the exact card/);
+  assert.match(skill, /link tracking can replace URLs when a post is scheduled/);
+  assert.match(skill, /offer `cancel_schedule` for that post; cancel only after the owner's reply/);
   assert.match(skill, /Never move, replace or overwrite an occupied slot/);
   assert.match(skill, /Never create a second daily schedule/);
   assert.match(skill, /default 5, owner may choose 1 to 5/);

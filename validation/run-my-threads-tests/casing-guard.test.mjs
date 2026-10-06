@@ -20,7 +20,7 @@ test('pure lowercasing passes, and unchanged text passes', () => {
 });
 
 test('any word change, addition or removal fails', () => {
-  assert.deepEqual(checkText('Ship it today.', 'ship it tomorrow.').reasons, ['length_changed', 'wording_changed']);
+  assert.deepEqual(checkText('Ship it today.', 'ship it tomorrow.').reasons, ['wording_changed:today']);
   assert.equal(checkText('Ship it today.', 'ship it now.').status, 'FAIL');
   assert.equal(checkText('Ship it today.', 'ship it today. really.').status, 'FAIL');
   assert.equal(checkText('Ship it today.', 'ship today.').status, 'FAIL');
@@ -37,7 +37,7 @@ test('punctuation, spacing, line-break and emoji changes fail', () => {
 });
 
 test('uppercasing is not a permitted change', () => {
-  assert.deepEqual(checkText('ship it today', 'Ship it today').reasons, ['casing_raised']);
+  assert.deepEqual(checkText('ship it today', 'Ship it today').reasons, ['casing_not_lowercase:ship']);
 });
 
 test('lowercasing keeps listed proper nouns, links, handles and hashtags', () => {
@@ -46,6 +46,23 @@ test('lowercasing keeps listed proper nouns, links, handles and hashtags', () =>
   const lowered = lowercaseExceptProperNouns(text, keep);
   assert.equal(lowered, "I'm in New York with Threadify. see https://Example.com/AbC and @Lennox_Saint #BuildInPublic");
   assert.equal(checkText(text, lowered, keep).status, 'PASS');
+});
+
+test('changing the case of a link, handle or hashtag fails even in check mode', () => {
+  assert.deepEqual(checkText('See https://EXAMPLE.com/A now', 'see https://example.com/a now').reasons, ['protected_span_changed']);
+  assert.deepEqual(checkText('Hi @Lennox_Saint', 'hi @lennox_saint').reasons, ['protected_span_changed']);
+  assert.deepEqual(checkText('Go #BuildInPublic', 'go #buildinpublic').reasons, ['protected_span_changed']);
+});
+
+test('context-sensitive Unicode lowercasing passes', () => {
+  for (const text of ['ΟΣ ΚΑΙ ΟΣΟΙ', 'İSTANBUL Güzel']) {
+    const lowered = lowercaseExceptProperNouns(text);
+    assert.equal(checkText(text, lowered).status, 'PASS', text);
+  }
+});
+
+test('a word may only be unchanged or fully lowercased', () => {
+  assert.deepEqual(checkText('HeLLo world', 'heLLo world').reasons, ['casing_not_lowercase:HeLLo']);
 });
 
 test('lowercasing a listed proper noun fails when a keep list is given', () => {
@@ -57,7 +74,7 @@ test('lowercasing a listed proper noun fails when a keep list is given', () => {
 test('threads are checked part by part and a changed part count fails', () => {
   const parts = ['First Part.', 'Second Part.'];
   assert.equal(checkPost({ original: parts, final: ['first part.', 'second part.'] }).status, 'PASS');
-  assert.deepEqual(checkPost({ original: parts, final: ['first part.', 'second pert.'] }).reasons, ['part_2:wording_changed']);
+  assert.deepEqual(checkPost({ original: parts, final: ['first part.', 'second pert.'] }).reasons, ['part_2:wording_changed:Part']);
   assert.deepEqual(checkPost({ original: parts, final: ['first part. second part.'] }).reasons, ['thread_parts_changed']);
 });
 

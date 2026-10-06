@@ -43,32 +43,58 @@ function lowerSegment(segment, kept) {
   return segment.replace(WORD, (word) => (kept.has(word) ? word : word.toLowerCase()));
 }
 
+/** Split a text into its words and the exact text between them. */
+function pieces(text) {
+  const words = [];
+  const gaps = [];
+  let last = 0;
+  for (const match of text.matchAll(WORD)) {
+    gaps.push(text.slice(last, match.index));
+    words.push(match[0]);
+    last = match.index + match[0].length;
+  }
+  gaps.push(text.slice(last));
+  return { words, gaps };
+}
+
+const protectedSpans = (text) => Array.from(text.matchAll(PROTECTED), (match) => match[0]);
+
 /**
- * PASS only when `final` is `original` with zero or more characters lowercased:
- * same character count, same text ignoring case, and no character uppercased.
- * Any added, removed or reworded word, and any punctuation, spacing, emoji or
- * line-break change, fails. When `keep` is given, a lowercased proper noun fails.
+ * PASS only when `final` is `original` with zero or more whole words lowercased.
+ * Word by word, each final word equals the original word or its lowercase (so
+ * context-sensitive mappings such as Greek final sigma or Turkish İ pass), and
+ * everything between words (punctuation, spacing, emoji, line breaks) is
+ * identical. Links, @handles and #hashtags must match exactly, case included.
+ * When `keep` is given, a lowercased proper noun fails.
  */
 export function checkText(original, final, keep) {
   if (typeof original !== 'string' || typeof final !== 'string') {
     throw new Error('original and final must be strings');
   }
   const reasons = [];
-  const before = Array.from(original);
-  const after = Array.from(final);
-  if (before.length !== after.length) reasons.push('length_changed');
-  if (original.toLowerCase() !== final.toLowerCase()) reasons.push('wording_changed');
-  if (!reasons.length) {
-    const raised = after.some((char, index) => char !== before[index] && char !== before[index].toLowerCase());
-    if (raised) reasons.push('casing_raised');
+  const before = pieces(original);
+  const after = pieces(final);
+  const sameShape =
+    before.words.length === after.words.length && before.gaps.every((gap, index) => gap === after.gaps[index]);
+  if (!sameShape) {
+    reasons.push('wording_changed');
+  } else {
+    before.words.forEach((word, index) => {
+      const next = after.words[index];
+      if (next === word || next === word.toLowerCase()) return;
+      reasons.push(next.toLowerCase() === word.toLowerCase() ? `casing_not_lowercase:${word}` : `wording_changed:${word}`);
+    });
+  }
+  const spansBefore = protectedSpans(original);
+  const spansAfter = protectedSpans(final);
+  if (spansBefore.length !== spansAfter.length || spansBefore.some((span, index) => span !== spansAfter[index])) {
+    reasons.push('protected_span_changed');
   }
   if (!reasons.length && keep !== undefined) {
     const kept = keepSet(keep);
-    for (const match of original.matchAll(WORD)) {
-      if (kept.has(match[0]) && final.slice(match.index, match.index + match[0].length) !== match[0]) {
-        reasons.push(`proper_noun_lowercased:${match[0]}`);
-      }
-    }
+    before.words.forEach((word, index) => {
+      if (kept.has(word) && after.words[index] !== word) reasons.push(`proper_noun_lowercased:${word}`);
+    });
   }
   return { status: reasons.length ? 'FAIL' : 'PASS', unchanged: original === final, reasons };
 }

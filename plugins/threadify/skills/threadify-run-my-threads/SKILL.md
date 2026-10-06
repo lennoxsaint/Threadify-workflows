@@ -29,7 +29,7 @@ Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) 
 
 If today's card or receipt is already in this thread, resume it. Do not generate again. Note the run start time.
 
-1. **Account.** Call `get_connection_defaults`. Stop and report if the account differs from setup or the connection fails. Note the remaining generation quota.
+1. **Account.** Call `get_connection_defaults`. Stop and report if the account differs from setup or the connection fails. Note the remaining generation quota and `link_tracking` (`enabled`, `known`).
 2. **Open slots.** Call `list_scheduled_posts` with `days: 2`. A truncated response is not an empty calendar. Take candidate times from `best_time_to_post` (owner's timezone); otherwise use the owner's saved times or 08:00, 11:00, 14:00, 17:00, 20:00. A slot is open when no scheduled post is within 60 minutes of it and it is at least 60 minutes from now. Pick up to the chosen count, earliest first, at least 60 minutes apart, today then tomorrow. Never touch occupied slots. If fewer are open, prepare fewer and say why.
 3. **Generate.** One `generate_content` call per post with the saved `contentType` and an `inputText` naming that post's topic lane and asking for a fresh angle, not a repeat of recent posts. Try the `selectedModel` ids in [references/generation-models.json](references/generation-models.json) in order. Move to the next id only on `Model "<id>" is not available on your plan.` or a model or provider failure. Stop on content, input, usage-limit or rate-limit errors and report them. For each post record the requested id and the `model` the response reports; if none is reported, write "requested <id>, model not reported". Never claim a model the response does not confirm. Keep each `draft_id` and Threadify's exact text.
 4. **Copy rule.** As written: final equals the original. Lowercase: run `node scripts/casing-guard.mjs lowercase` with a keep list of the proper nouns in that post (names, brands, places, "I"). Then run `check` on every post with original, final and keep, and show PASS. On FAIL, set final to the original and check again. The guard leaves links, @handles and #hashtags untouched.
@@ -42,13 +42,15 @@ Run My Threads · @handle · Area/City · 5 posts for approval
 <exact final text>
 ...
 Account-wide Auto Plug / Auto Repost: <as returned, unchanged> · per post: none
+Link tracking: <on / off / unknown> · posts with links held: <none or numbers>
 Reply "yes" to schedule all exactly as shown, "skip 2" to drop post 2, or "no" to schedule nothing.
 ```
 
 7. **Schedule on "yes".** Approval binds the exact text, slot and account shown. Re-check with `get_connection_defaults` and `list_scheduled_posts`; a slot now taken or less than 15 minutes away is not scheduled, so re-plan that row, validate it and show it for a new "yes". Then call `schedule_post` for each approved row with a stable `idempotency_key` (run date, account, slot, guard `final_sha256`):
    - unchanged text: pass `draft_id` and `content_type`;
    - lowercased text: pass the exact final `text` (or `posts` for a thread) without `draft_id`, because Threadify schedules a draft's stored text when given a `draft_id`.
-   Omit `platforms`, `auto_plug` and `auto_repost`. Call `get_schedule_status` for each returned `scheduled_post_id` and confirm the stored text and time match the card, then read back with `list_scheduled_posts`. If an outcome is unclear, read back before retrying, retry only that row with the same key, and never replay the batch.
+   Link check first: Threadify link tracking can replace URLs when a post is scheduled. If a post's final text contains a link and `link_tracking.enabled` is true or `known` is false, do not schedule that post; mark it held on the card, say that account-wide link tracking would rewrite the link, and leave the setting alone (the owner can turn it off or skip the post). Never claim a transformed link matches.
+   Omit `platforms`, `auto_plug` and `auto_repost`. Call `get_schedule_status` for each returned `scheduled_post_id` and confirm the stored text and time match the card, then read back with `list_scheduled_posts`. If a stored text or time does not match the card, stop, show the difference and offer `cancel_schedule` for that post; cancel only after the owner's reply. If an outcome is unclear, read back before retrying, retry only that row with the same key, and never replay the batch.
    On "no", schedule nothing; the posts stay as Threadify drafts. With no reply, nothing is scheduled and the next run starts fresh.
 8. **Receipt.** Report posts scheduled with `scheduled_post_id`, local and UTC times, models, guard results, skipped or blocked rows, run start and end, Threadify quota before and after, and the host's token or usage readout when the host exposes it. Otherwise say "usage not exposed by this host". Never estimate. A scheduled post is not a published post.
 
