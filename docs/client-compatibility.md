@@ -23,6 +23,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Greatest Hits Runway | yes | yes | yes | yes | yes | yes | yes |
 | Market to Pipeline | yes | yes | yes | yes | yes | yes | yes |
 | Monetize My Week | yes | yes | yes | yes | yes | yes | yes |
+| Money Posts | yes | yes | yes | yes | yes | yes | yes |
 | Personal Brain Sync / Current Self Packet | yes | yes | yes | yes | yes | yes | yes |
 | Post This Next | yes | yes | yes | yes | yes | yes | yes |
 | Qualified Buyer Research | yes | yes | yes | yes | yes | yes | yes |

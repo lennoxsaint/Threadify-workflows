@@ -1,0 +1,114 @@
+{
+  "workflow_id": "money-posts",
+  "version": "0.1.0",
+  "title": "Money Posts",
+  "summary": "Rank your Threads posts by clicks per 1,000 views instead of views, explain why the winners get clicks, then have Threadify write three posts in the winning pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-money-posts",
+    "source": "plugins/threadify/skills/threadify-money-posts/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/money-posts/README.md"
+    ]
+  },
+  "triggers": [
+    "money posts",
+    "which of my posts actually get clicks",
+    "stop chasing views"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "connected account, 90 days of link attribution and post performance, saved offer",
+        "schema_ref": "inline:money-posts-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "clicks-per-1,000-views ranking, approval packet and schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_link_attribution",
+    "read_post_performance",
+    "generate_content",
+    "list_offers",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "get_post_thread",
+    "search_posts",
+    "save_draft"
+  ],
+  "free_capabilities": [
+    "deterministic ranking script that joins tracked links to posts and computes clicks per 1,000 views",
+    "cold-start proxy ranking labelled proxy, not clicks",
+    "local casing guard that proves lower(original) == lower(final) for every post and plug"
+  ],
+  "paid_capability_stubs": [
+    "link attribution and post performance history depend on the plan's analytics window",
+    "Threadify post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "three exact posts",
+      "three exact Auto Plugs and destination",
+      "three local dates and times",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "ranking-only-without-substitute-copy",
+    "instructions": [
+      "Never write posts or plugs yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
+      "When the casing guard fails, present Threadify's original text unchanged.",
+      "With fewer than 5 linked posts or fewer than 30 clicks in 90 days, rank on proxy signals labelled proxy, not clicks.",
+      "When a number is not returned, show it as unknown, never 0.",
+      "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",
+      "When the host has no reminder or scheduler, give a dated note for the 7-day re-run."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "attribution and performance window",
+      "ranking inputs and cold-start state",
+      "models requested and reported",
+      "casing guard results",
+      "approval reply",
+      "scheduled posts, slots and Auto Plug echo",
+      "schedule readback",
+      "7-day re-run reminder or dated note",
+      "fallback state"
+    ]
+  }
+}
