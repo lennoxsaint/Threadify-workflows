@@ -25,7 +25,7 @@ test('Money Posts registers the ranking, generation and schedule tools and never
     'schedule_post',
     'get_schedule_status',
   ]);
-  assert.deepEqual(workflow.optional_mcp_tools, ['get_post_thread', 'search_posts', 'save_draft']);
+  assert.deepEqual(workflow.optional_mcp_tools, ['get_post_thread', 'search_posts', 'save_draft', 'greatest_hits', 'list_vault_items', 'get_vault_item', 'list_viral_items', 'get_viral_item']);
   for (const tool of ['publish_now', 'edit_draft', 'reschedule_post', 'cancel_schedule']) {
     assert.ok(![...workflow.required_mcp_tools, ...workflow.optional_mcp_tools].includes(tool), `must not use ${tool}`);
   }
@@ -75,9 +75,11 @@ test('Money Posts cold start uses labelled proxy signals below 5 linked posts or
   assert.match(skill, /Otherwise give a dated note/);
 });
 
-test('Money Posts lets only Threadify write copy and guards the only allowed change', () => {
+test('Money Posts preserves originals and allows explicitly requested edits', () => {
   const skill = fs.readFileSync(source, 'utf8');
-  assert.match(skill, /The agent never writes or edits post copy/);
+  assert.match(skill, /agent edits only when the owner explicitly asks/);
+  assert.match(skill, /owner-requested edit/);
+  assert.match(skill, /review-packet\.mjs/);
   assert.match(skill, /`generate_content`/);
   assert.match(skill, /scripts\/casing-guard\.mjs/);
   assert.match(skill, /`lower\(original\) == lower\(final\)` must be true/);
@@ -87,5 +89,5 @@ test('Money Posts lets only Threadify write copy and guards the only allowed cha
   assert.match(skill, /saying only the @handle and timezone/);
   assert.match(skill, /Never print credentials/);
   assert.doesNotMatch(skill, /guaranteed|guarantee/i);
-  assert.ok(skill.split('\n').length <= 80, 'SKILL.md stays short');
+  assert.ok(skill.split('\n').length <= 90, 'SKILL.md stays short');
 });
