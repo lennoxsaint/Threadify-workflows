@@ -1,0 +1,3 @@
+# Money Posts review changes
+
+The canonical plugin skill is rendered by build-advanced-bundles into skills/; the registry builds discovery metadata, and release-assets packages the generated bundle. Keep ranking and casing behavior unchanged. A separate pure review module owns edit authorization, packet identity and exact readback checks; instructions own semantic facts, offer suitability and voice review. Extending the casing guard would incorrectly label owner edits as casing-only proof, so use a separate checker. No provider calls belong in either module. Tests exercise the same JSON interface used by the agent.
