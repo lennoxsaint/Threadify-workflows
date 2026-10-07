@@ -1,3 +1,11 @@
+# 0.27.3
+
+- Money Posts preserves Threadify wording by default and supports explicitly requested edits with original/final receipts, hashes and renewed approval.
+- Add hook evidence research with optional vault access and an honest unproven fallback; keep click-pattern ranking unchanged.
+- Require Auto Plugs to match the selected offer and destination. Improve generation guidance for concise copy and coherent endings.
+- Add a local review checker for bounded revisions, fresh account-specific validations and exact schedule readback. Source truth and offer suitability still require evidence review.
+- Version 0.27.2 was a local installation candidate only; this is the public stable release.
+
 # 0.27.1
 
 - Fix: the bundled scripts in Money Posts (`rank-money-posts.mjs`, `casing-guard.mjs`) and Run My Threads (`week-plan.mjs`, `hook-check.mjs`, `casing-guard.mjs`) printed nothing and exited 0 when run through a symlinked skills folder such as `~/.claude/skills`. Their entry check now resolves the real path.

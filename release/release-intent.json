@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.27.1",
+  "release_version": "0.27.3",
   "skill_version": "0.12.1",
-  "plugin_version": "0.27.1",
+  "plugin_version": "0.27.3",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Money Posts and Run My Threads patch: bundled scripts now run when installed through a symlinked skills folder (they printed nothing before), and Money Posts credits Auto Plug clicks that Threadify files under the plug reply to the post the thread opens with, so big posts with a plug are no longer listed as having no link."
+  "summary": "Money Posts preserves generated copy by default, supports scoped owner-requested revisions with renewed approval, retains hook evidence, and verifies offer destinations and exact schedule readback."
 }
