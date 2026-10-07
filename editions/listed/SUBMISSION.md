@@ -6,7 +6,8 @@ OpenAI's own pages are the source of truth: [Upload and submit your plugin](http
 
 ## What is already in the package
 
-- Nine skills that run with only the Threadify MCP server. No plans links, costs, trials, upgrade prompts or local helpers.
+- Twelve skills that run with only the Threadify MCP server, including Get Set Up, Create My Week and Inbound Replies. No plans links, costs, trials, upgrade prompts or local helpers.
+- Every skill that schedules calls `review_post` first, and Inbound Replies calls `review_reply` before each send. Both need the server changes in threadify-app#242, #244 and #248 deployed before the private ChatGPT test.
 - `plugin.json` with the listing text, four listing URLs, three starter prompts, 5 positive and 3 negative review cases, release notes, `commerce: false`, and `publication.countries: []`.
 - A demo video link that is still a placeholder. `--final` refuses to pass until you replace it.
 

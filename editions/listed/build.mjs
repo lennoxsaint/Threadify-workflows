@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 // Builds the listed edition: the package OpenAI's plugin directory receives.
+// A skill is either generated from its upstream skills/<name>/ (drop, replace, add) or, with `override`,
+// hand-written under editions/listed/overrides/<name>/ (add only).
 // Usage: node editions/listed/build.mjs [--check] [--root <repo root>]
 // The output under editions/listed/package/ is committed so a PR diff shows exactly what ships.
 import crypto from 'node:crypto';
@@ -114,8 +116,17 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     if (typeof skill.description !== 'string' || !skill.description.trim()) throw new Error(`${skill.name} needs a description override.`);
     const sourceDir = inside(root, skill.source, `${skill.name} source`);
     const output = new Map();
-    for (const relative of listFiles(sourceDir)) {
-      output.set(relative, track(`${skill.source}/${relative}`, fs.readFileSync(path.join(sourceDir, relative))));
+    const upstream = listFiles(sourceDir).map((relative) => [relative, track(`${skill.source}/${relative}`, fs.readFileSync(path.join(sourceDir, relative)))]);
+    if (skill.override === undefined) {
+      for (const [relative, content] of upstream) output.set(relative, content);
+    } else {
+      // A hand-written listed skill replaces the upstream one. The upstream files stay tracked inputs, so --check
+      // still names an upstream change for review, but none of them ship. Drop and replace rules make no sense here.
+      if (skill.override !== `overrides/${skill.name}`) throw new Error(`${skill.name} override must be overrides/${skill.name}.`);
+      if (skill.drop !== undefined || skill.replace !== undefined) throw new Error(`${skill.name} is an override; edit overrides/${skill.name} instead of using drop or replace rules.`);
+      const overrideDir = inside(editionDir, skill.override, `${skill.name} override`);
+      if (!fs.existsSync(overrideDir)) throw new Error(`${skill.name} override folder is missing: ${EDITION_RELATIVE}/${skill.override}`);
+      for (const relative of listFiles(overrideDir)) output.set(relative, editionInput(`${skill.override}/${relative}`, `${skill.name} override file`));
     }
     for (const glob of skill.drop ?? []) {
       const pattern = globToRegExp(glob);
@@ -146,6 +157,13 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     assetPaths[field] = `./${asset.to}`;
   }
 
+  const screenshots = [];
+  for (const [index, shot] of (edition.screenshots ?? []).entries()) {
+    inside(path.join(editionDir, 'package', pluginRoot), shot.to, `screenshot #${index + 1} target`);
+    files.set(`${pluginRoot}/${shot.to}`, editionInput(shot.from, `screenshot #${index + 1} source`));
+    screenshots.push(`./${shot.to}`);
+  }
+
   const plugin = {
     $schema: PLUGIN_SCHEMA,
     name: edition.plugin.name,
@@ -154,7 +172,7 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     author: edition.plugin.author,
     // review and publication sit beside interface, never inside it (OpenAI's submission field reference).
     extensions: { 'com.openai': {
-      interface: { ...edition.listing, ...assetPaths },
+      interface: { ...edition.listing, ...assetPaths, ...(screenshots.length ? { screenshots } : {}) },
       ...(edition.review === undefined ? {} : { review: edition.review }),
       ...(edition.publication === undefined ? {} : { publication: edition.publication }),
     } },

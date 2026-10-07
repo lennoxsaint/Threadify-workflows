@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Mirrors OpenAI's automated plugin checks, as far as they apply to a folder, plus our stricter policy lint.
 // Usage: node editions/listed/preflight.mjs <plugin dir> [--json] [--final] [--online]
-// Tool names are checked against contract/tools.json (see contract/extract.mjs) and contract/terms.json.
+// Tool names are checked against contract/tools.json (threadify-app's exported tool contract) and contract/terms.json.
 // --final is for the copy the owner uploads: it refuses placeholders and requires the full review packet.
 // --online fetches the listing URLs and the domain challenge from production, signed out. CI does not run it.
 // Codes match https://developers.openai.com/plugins/deploy/submission-errors where one exists;
@@ -334,8 +334,16 @@ export function preflight(pluginDir, { contractDir = DEFAULT_CONTRACT, final = f
         if (value === undefined) { if (missingCode) error(missingCode, 'plugin.json', `interface.${field} is required and must reference a square image.`); continue; }
         checkImage(root, `interface.${field}`, value, error);
       }
-      for (const [index, shot] of (Array.isArray(ui.screenshots) ? ui.screenshots : []).entries()) {
-        error('screenshot_configuration_excluded', 'plugin.json', `interface.screenshots[${index}] (${shot}) needs a UI output template; not used by this edition.`);
+      // Screenshots only for a plugin with UI, at OpenAI's size: "exactly 706 pixels wide and 400–860 pixels tall".
+      // Whether the server draws a screen is read from the contract (a tool with renders_in_screen).
+      const screenshots = ui.screenshots === undefined ? [] : ui.screenshots;
+      if (!Array.isArray(screenshots)) error('listed_screenshots_wrong_type', 'plugin.json', 'interface.screenshots must be a list of image paths.');
+      else if (screenshots.length && ![...contract.tools.values()].some((tool) => tool.renders_in_screen)) {
+        for (const [index, shot] of screenshots.entries()) {
+          error('screenshot_configuration_excluded', 'plugin.json', `interface.screenshots[${index}] (${shot}) needs a UI output template; no tool in contract/tools.json renders in the screen.`);
+        }
+      } else {
+        for (const [index, shot] of screenshots.entries()) checkImage(root, `interface.screenshots[${index}]`, shot, error, SCREENSHOT_SHAPE);
       }
     }
     if (openai && typeof openai === 'object') checkReview(openai, contract, error);
@@ -515,7 +523,11 @@ export async function onlineCheck(pluginDir, { fetchImpl = globalThis.fetch, tim
   return findings;
 }
 
-function checkImage(root, field, value, error) {
+// A logo or icon is square, 48..4096 px; a screenshot is 706 wide and 400..860 tall.
+const ICON_SHAPE = { kind: 'icon' };
+const SCREENSHOT_SHAPE = { kind: 'screenshot', width: 706, minHeight: 400, maxHeight: 860 };
+
+function checkImage(root, field, value, error, shape = ICON_SHAPE) {
   if (typeof value !== 'string') { error('declared_asset_path_wrong_type', 'plugin.json', `${field} must be a file path string.`); return; }
   if (!value) { error('declared_asset_path_empty', 'plugin.json', `${field} must not be empty.`); return; }
   if (value !== value.trim()) { error('declared_asset_path_has_outer_whitespace', 'plugin.json', `${field} must not begin or end with whitespace.`); return; }
@@ -529,11 +541,17 @@ function checkImage(root, field, value, error) {
   if (!/\.(?:png|jpe?g|webp|svg)$/i.test(value)) { error('image_file_format_unsupported', value, 'Images must be .png, .jpg, .jpeg, .webp or .svg.'); return; }
   const buffer = fs.readFileSync(full);
   if (buffer.length > MAX_IMAGE_BYTES) error('image_file_too_large', value, 'Images must not exceed 5 MiB.');
-  if (!/\.png$/i.test(value)) { error('listed_image_png_required', value, 'This preflight measures PNG only; ship PNG icons.'); return; }
+  if (!/\.png$/i.test(value)) { error('listed_image_png_required', value, 'This preflight measures PNG only; ship PNG images.'); return; }
   const kind = sniffImage(buffer);
   if (kind && kind !== 'png') { error('raster_image_extension_content_mismatch', value, `File ends in .png but contains ${kind}.`); return; }
   const size = pngSize(buffer);
   if (!size) { error('raster_image_decode_failed', value, 'Not a decodable PNG (bad signature or IHDR).'); return; }
+  if (shape.kind === 'screenshot') {
+    if (size.width !== shape.width || size.height < shape.minHeight || size.height > shape.maxHeight) {
+      error('listed_screenshot_size', value, `Screenshots must be exactly ${shape.width} pixels wide and ${shape.minHeight}-${shape.maxHeight} tall (is ${size.width}x${size.height}).`);
+    }
+    return;
+  }
   if (size.width !== size.height) error('raster_image_not_square', value, `Image must be square (is ${size.width}x${size.height}).`);
   if (Math.min(size.width, size.height) < 48) error('raster_image_dimensions_too_small', value, `Image must be at least 48x48 (is ${size.width}x${size.height}).`);
   if (Math.max(size.width, size.height) > 4096) error('raster_image_dimensions_too_large', value, `Image must be at most 4096x4096 (is ${size.width}x${size.height}).`);

@@ -28,6 +28,7 @@ const BAD = [
   ['bad-plans-link', 'listed_policy_plans_link'],
   ['bad-local-helper', 'listed_policy_local_helper'],
   ['bad-logo-not-square', 'raster_image_not_square'],
+  ['bad-screenshot-size', 'listed_screenshot_size'],
   ['bad-unknown-tool', 'listed_tool_unknown'],
   ['bad-schedule-status-no-id', 'listed_tool_required_param_missing'],
 ];
