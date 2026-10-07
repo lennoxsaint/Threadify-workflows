@@ -1,3 +1,11 @@
+# 0.28.0
+
+- Run My Threads sources hooks from actual posts, assigns distinct batch evidence, and holds slots without suitable evidence.
+- Owner-requested edits preserve unrelated copy and create new approval revisions; automatic editorial rewrite loops are removed.
+- Saved-draft recovery precedes eligible Opus-to-Gemini fallback; per-slot state preserves partial success.
+- Casing protects proper nouns and links across posts and CTA replies.
+- Local candidate bundles can be installed into isolated preview directories without replacing stable installations.
+
 # 0.27.3
 
 - Money Posts preserves Threadify wording by default and supports explicitly requested edits with original/final receipts, hashes and renewed approval.

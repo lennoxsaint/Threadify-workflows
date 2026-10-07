@@ -81,7 +81,10 @@ export function transition(previous, event) {
     const after = slot.verbatim || event.choice === 'original' ? before : before.map(x => lowercaseExceptProperNouns(x, event.keep ?? []));
     const checks = before.map((x,i) => checkText(x, after[i], event.keep ?? []));
     requireThat(checks.every(x => x.status === 'PASS'), 'casing_failed');
-    slot.parts = after; s.history.push({ type: 'casing', slot: slot.id, before, after, checks });
+    const plugBefore = slot.plug;
+    const plugAfter = typeof plugBefore === 'string' && !slot.verbatim && event.choice === 'lowercase' ? lowercaseExceptProperNouns(plugBefore, event.keep ?? []) : plugBefore;
+    if (typeof plugBefore === 'string') requireThat(checkText(plugBefore, plugAfter, event.keep ?? []).status === 'PASS', 'plug_casing_failed');
+    slot.parts = after; slot.plug = plugAfter; s.history.push({ type: 'casing', slot: slot.id, before, after, checks, plugBefore, plugAfter });
   } else if (event.type === 'repost') {
     requireThat(slot?.status === 'planned' && event.parts?.length && event.source_id && event.eligible === true, 'invalid_repost');
     slot.parts = [...event.parts]; slot.original = [...event.parts]; slot.verbatim = true; slot.source_id = event.source_id; slot.status = 'ready';
@@ -114,7 +117,7 @@ export function persist(file, event) {
     fs.writeFileSync(temp, JSON.stringify(state, null, 2)+'\n', { mode: 0o600 }); fs.renameSync(temp, file); return state;
   } finally { fs.closeSync(fd); fs.unlinkSync(lock); }
 }
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && fs.realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { const state = persist(process.argv[2], JSON.parse(fs.readFileSync(0, 'utf8'))); console.log(JSON.stringify({ hash: revision(state), state })); }
   catch (error) { console.error(error.message); process.exitCode = 1; }
 }

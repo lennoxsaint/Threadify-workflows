@@ -86,3 +86,21 @@ test('a failed second slot cannot hide first-slot success and ambiguous matches 
  assert.equal(s.slots[0].draft_id,'draft-1');assert.equal(s.slots[1].status,'held');
  assert.equal(s.slots[1].attempts[0].error,'timeout');
 });
+
+test('casing includes CTA replies and invalidates approval without changing protected links',()=>{
+ let s=ready(['Keep Threadify'], 'Try Threadify at example.org/Go');
+ s=step(s,{type:'approve',hash:revision(s),at});
+ s=step(s,{type:'casing',slot:'a',choice:'lowercase',keep:['Threadify']});
+ assert.equal(s.slots[0].plug,'try Threadify at example.org/Go');assert.equal(s.approval,null);
+ assert.equal(s.history.at(-1).plugBefore,'Try Threadify at example.org/Go');
+});
+
+test('private state CLI executes through an installed symlink',async()=>{
+ const {spawnSync}=await import('node:child_process');
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'rmt-link-'));
+ try {
+  const link=path.join(dir,'run-state.mjs');fs.symlinkSync(path.resolve('plugins/threadify/skills/threadify-run-my-threads/scripts/run-state.mjs'),link);
+  const run=spawnSync(process.execPath,[link,path.join(dir,'state.json')],{input:JSON.stringify({type:'init',account:'@example',expires:'2030-01-02',slots:[{id:'a',time:at}]}),encoding:'utf8'});
+  assert.equal(run.status,0,run.stderr);assert.equal(JSON.parse(run.stdout).state.account,'@example');
+ } finally {fs.rmSync(dir,{recursive:true,force:true});}
+});
