@@ -157,6 +157,13 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     assetPaths[field] = `./${asset.to}`;
   }
 
+  const screenshots = [];
+  for (const [index, shot] of (edition.screenshots ?? []).entries()) {
+    inside(path.join(editionDir, 'package', pluginRoot), shot.to, `screenshot #${index + 1} target`);
+    files.set(`${pluginRoot}/${shot.to}`, editionInput(shot.from, `screenshot #${index + 1} source`));
+    screenshots.push(`./${shot.to}`);
+  }
+
   const plugin = {
     $schema: PLUGIN_SCHEMA,
     name: edition.plugin.name,
@@ -165,7 +172,7 @@ export function buildEdition({ root = DEFAULT_ROOT } = {}) {
     author: edition.plugin.author,
     // review and publication sit beside interface, never inside it (OpenAI's submission field reference).
     extensions: { 'com.openai': {
-      interface: { ...edition.listing, ...assetPaths },
+      interface: { ...edition.listing, ...assetPaths, ...(screenshots.length ? { screenshots } : {}) },
       ...(edition.review === undefined ? {} : { review: edition.review }),
       ...(edition.publication === undefined ? {} : { publication: edition.publication }),
     } },

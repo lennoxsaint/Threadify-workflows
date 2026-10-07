@@ -1,0 +1,29 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "fixture",
+  "version": "1.0.0",
+  "description": "Synthetic fixture plugin for preflight tests.",
+  "author": {
+    "name": "Fixture Team"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Fixture",
+        "shortDescription": "Synthetic test package",
+        "longDescription": "A synthetic package used only by the listed edition preflight tests.",
+        "developerName": "Fixture Team",
+        "category": "Productivity",
+        "websiteURL": "https://example.com",
+        "supportURL": "https://example.com/support",
+        "privacyPolicyURL": "https://example.com/privacy",
+        "termsOfServiceURL": "https://example.com/terms",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/icon.png",
+        "screenshots": [
+          "./assets/shot.png"
+        ]
+      }
+    }
+  }
+}

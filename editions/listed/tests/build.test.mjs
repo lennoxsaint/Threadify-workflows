@@ -62,6 +62,9 @@ test('the package carries only the selected skills, rewritten links and portable
     '.agents/plugins/marketplace.json',
     'threadify/assets/icon.png',
     'threadify/assets/logo.png',
+    'threadify/assets/screenshots/1-review.png',
+    'threadify/assets/screenshots/2-review-crosspost.png',
+    'threadify/assets/screenshots/3-calendar.png',
     'threadify/mcp.json',
     'threadify/plugin.json',
   ]);

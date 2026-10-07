@@ -12,6 +12,7 @@ The listed edition is small on purpose. It ships twelve skills that run with onl
 | `overrides/<name>/` | Hand-written listed skills that replace an upstream skill outright: Get Set Up, Create My Week and Inbound Replies. Their upstream versions depend on local helpers, files and pages that a listed plugin cannot use. |
 | `shared/connect.md` | Link-free connection guide that replaces the setup reference, which carries plans links. |
 | `assets/` | Source logo (1024 px) and composer icon (512 px). |
+| `assets/screenshots/` | Three 706-pixel-wide PNGs of the screen (the review panel in light and dark, and the calendar), shown in the listing. The preflight allows screenshots only while a tool in `contract/tools.json` draws in the screen, and checks each is exactly 706 wide and 400–860 tall, OpenAI's rule. |
 | `build.mjs` | Generates `package/`. `--check` rebuilds in memory and fails on any difference. |
 | `package/threadify/` | The generated plugin: `plugin.json`, `mcp.json`, `assets/` and `skills/`. Committed so a PR diff shows exactly what ships. |
 | `package/.agents/plugins/marketplace.json` | Local marketplace for testing the plugin in Codex. It sits outside the plugin folder and is not submitted. |
