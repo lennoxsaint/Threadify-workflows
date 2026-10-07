@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-// Run My Threads copy rule: the agent may not change the wording Threadify
-// generated. The only permitted change is lowercasing, keeping proper nouns.
-// This guard proves that rule for every post before it is shown for approval.
+// Casing-only guard against the latest owner-authorized wording revision.
+// Requested wording edits are recorded separately in run-state.mjs.
 //
 //   node casing-guard.mjs check      < {"posts":[{"id","original","final","keep"?}]}
 //   node casing-guard.mjs lowercase  < {"posts":[{"id","original","keep"}]}
@@ -16,7 +15,7 @@ import { pathToFileURL } from 'node:url';
 const WORD = /[\p{L}\p{M}\p{N}]+/gu;
 // Links, handles and hashtags stay exactly as Threadify wrote them: a
 // lowercased URL path can break the link.
-const PROTECTED = /https?:\/\/\S+|www\.\S+|[@#][\p{L}\p{N}_.]+/giu;
+const PROTECTED = /https?:\/\/\S+|www\.\S+|\b[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+\/\S*|[@#][\p{L}\p{N}_.]+/giu;
 
 const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
 const parts = (value) => (Array.isArray(value) ? value : [value]);

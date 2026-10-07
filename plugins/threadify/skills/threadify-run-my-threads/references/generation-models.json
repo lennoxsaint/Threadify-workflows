@@ -5,8 +5,6 @@
   "summary": "Claude Opus 5.5 when your plan allows it, Gemini as fallback.",
   "fallback_chain": [
     "claude-opus",
-    "claude-sonnet",
-    "gemini-3.1-pro-preview",
     "gemini"
   ],
   "fall_through_only_on": [
@@ -22,5 +20,6 @@
   "record_per_post": [
     "requested selectedModel id",
     "the model value the response reports, or \"not reported\""
-  ]
+  ],
+  "ambiguous_timeout": "Reconcile saved drafts using account and a unique persisted attempt marker before fallback. Recover exactly one confident match; incomplete lookup or multiple matches holds the slot."
 }

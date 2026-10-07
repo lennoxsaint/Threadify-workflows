@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.27.3",
+  "release_version": "0.28.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.27.3",
+  "plugin_version": "0.28.0",
   "rules_version": "0.4.0",
-  "change_class": "skill_logic",
+  "change_class": "installer",
   "release": true,
-  "summary": "Money Posts preserves generated copy by default, supports scoped owner-requested revisions with renewed approval, retains hook evidence, and verifies offer destinations and exact schedule readback."
+  "summary": "Run My Threads uses actual viral sources, narrow owner-requested edits and exact revision approvals, with saved-draft recovery before Gemini fallback. Adds isolated local candidate installation."
 }

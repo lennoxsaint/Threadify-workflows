@@ -137,3 +137,5 @@ npm run release:build
 ```
 
 The MIT-licensed repository contains public workflow methods, local state controls, manifests and adapters. It excludes private generation logic, private sources, credentials, member data and production account identifiers. The [publication checklist](PUBLICATION_CHECKLIST.md) remains the release gate.
+
+Run My Threads now uses actual source posts, scoped owner edits and revision-bound approval. See [the workflow](workflows/run-my-threads/README.md) and [private state and local previews](docs/run-my-threads-state.md).

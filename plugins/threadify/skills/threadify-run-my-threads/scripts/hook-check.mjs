@@ -1,7 +1,7 @@
 #!/usr/bin/env node
+// Legacy opt-in diagnostic only. Not a daily workflow gate or regeneration trigger.
 // Run My Threads hook check: a deterministic read of line 1 of every post
-// Threadify generated. It reports; it never edits. On FAIL the agent asks
-// Threadify once for a rewrite with the reasons in `inputText`.
+// Threadify generated. It reports only; it never edits or requests regeneration.
 //
 //   node hook-check.mjs < {"posts":[{"id":1,"text":"..."},{"id":2,"text":["part 1","part 2"]}]}
 //
