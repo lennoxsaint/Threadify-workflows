@@ -189,3 +189,53 @@ test('absent conversion metadata is unknown, not a tracked zero', () => {
   assert.ok(result.ranking.every((row) => row.conversions_label === 'conversions (unknown)'));
   assert.ok(result.ranking.every((row) => row.may_say_sales === false));
 });
+
+test('plug clicks filed under the reply move to the post the thread opens with', () => {
+  const plugPerformance = {
+    posts: [
+      post('3001', 200000, 50, 'Big video post\nmore', '2026-07-23T09:00:00Z'),
+      post('3002', 900, 5, 'Same opener\nolder', '2026-07-01T09:00:00Z'),
+      post('3003', 1200, 5, 'Same opener\nnewer', '2026-07-20T09:00:00Z'),
+      post('3004', 1000, 5, 'Plain post'),
+    ],
+  };
+  const links = [
+    link('9001', 300, { source_kind: 'auto_plug', root_post_text: 'join the club:' }),
+    link('9002', 12, { source_kind: 'auto_plug', root_post_text: 'try this:' }),
+    link('9003', 4, { source_kind: 'auto_plug', root_post_text: 'unknown plug' }),
+  ];
+  const threads = {
+    9001: { post_id: '9001', timestamp: '2026-07-23T09:16:00Z', full_text: 'Big video post\n\njoin the club:' },
+    9002: { post_id: '9002', timestamp: '2026-07-25T00:00:00Z', full_text: 'Same opener\n\ntry this:' },
+  };
+  const result = rankMoneyPosts({ attribution: { conversion_tracking: { measurable: true }, links }, performance: plugPerformance, threads });
+  const byId = Object.fromEntries(result.ranking.map((row) => [row.post_id, row]));
+  assert.equal(byId['3001'].unique_clicks, 300);
+  assert.equal(byId['3001'].views, 200000);
+  assert.equal(byId['3003'].unique_clicks, 12, 'duplicate first lines pick the latest post before the reply');
+  assert.equal(byId['9001'], undefined);
+  assert.equal(byId['9003'].views, null, 'no thread result: stays unmatched');
+  assert.deepEqual(result.totals.plug_rows_moved_to_post, [{ from: '9001', to: '3001' }, { from: '9002', to: '3003' }]);
+  assert.ok(!result.big_posts_no_link.some((row) => row.post_id === '3001'), 'a post with a moved plug is not "no link"');
+  assert.match(result.big_posts_no_link_caveat, /could not be matched/);
+});
+
+test('scripts run through a symlinked skills folder (as installed in ~/.claude/skills)', async () => {
+  const { mkdtempSync, symlinkSync, rmSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join, resolve } = await import('node:path');
+  const dir = mkdtempSync(join(tmpdir(), 'mp-link-'));
+  try {
+    const linked = join(dir, 'threadify-money-posts');
+    symlinkSync(resolve('plugins/threadify/skills/threadify-money-posts'), linked);
+    const run = spawnSync(process.execPath, [join(linked, 'scripts/rank-money-posts.mjs')], {
+      input: JSON.stringify({ attribution: warmAttribution, performance }),
+      encoding: 'utf8',
+    });
+    assert.equal(run.status, 0, run.stderr);
+    assert.ok(run.stdout.length > 0, 'prints the ranking through the symlink');
+    assert.equal(JSON.parse(run.stdout).ranking[0].post_id, '1002');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

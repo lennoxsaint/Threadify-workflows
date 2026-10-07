@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.27.0",
+  "release_version": "0.27.1",
   "skill_version": "0.12.1",
-  "plugin_version": "0.27.0",
+  "plugin_version": "0.27.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Money Posts: rank your Threads posts by clicks per 1,000 views instead of views, explain why the click winners win, then Threadify writes three posts in the winning pattern with tracked Auto Plugs, scheduled only after one exact yes; a proxy ranking labelled \"proxy, not clicks\" covers creators with little click data, and a 7-day re-run ranks the new posts by real clicks."
+  "summary": "Money Posts and Run My Threads patch: bundled scripts now run when installed through a symlinked skills folder (they printed nothing before), and Money Posts credits Auto Plug clicks that Threadify files under the plug reply to the post the thread opens with, so big posts with a plug are no longer listed as having no link."
 }

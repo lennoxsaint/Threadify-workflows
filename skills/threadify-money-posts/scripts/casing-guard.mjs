@@ -12,6 +12,7 @@
 // JSON on stdout. Exit 0 when every post passes, 1 on any FAIL or bad input.
 // No dependencies and no network: Node 18+ only.
 import crypto from 'node:crypto';
+import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 const WORD = /[\p{L}\p{M}\p{N}]+/gu;
@@ -155,7 +156,7 @@ async function main(argv) {
   if (result.status !== 'PASS') process.exitCode = 1;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   main(process.argv.slice(2)).catch((error) => {
     process.stderr.write(`${JSON.stringify({ status: 'failed', error: error.message })}\n`);
     process.exitCode = 1;

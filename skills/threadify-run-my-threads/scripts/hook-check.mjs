@@ -9,6 +9,7 @@
 // first blank line. Output is JSON on stdout with PASS, WARN or FAIL per post and
 // the reasons. Exit 0 when no post FAILs, 1 on any FAIL or bad input.
 // No dependencies and no network: Node 18+ only.
+import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 // Same list, same order, as "Banned openers" in references/threads-playbook.md.
@@ -159,7 +160,7 @@ async function main() {
   if (result.status === 'FAIL') process.exitCode = 1;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   main().catch((error) => {
     process.stderr.write(`${JSON.stringify({ status: 'failed', error: error.message })}\n`);
     process.exitCode = 1;
