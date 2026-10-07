@@ -21,6 +21,8 @@ const BIG_POSTS_SHOWN = 5;
 const FIRST_LINE_MAX = 90;
 
 const asNumber = (value) => (typeof value === 'number' && Number.isFinite(value) ? value : null);
+// Add a number that may be unknown: any unknown part makes the total unknown.
+const addKnown = (total, value) => (total === null || value === null ? null : total + value);
 const per1000 = (count, views) => (count === null || !views ? null : Math.round((count / views) * 10000) / 10);
 
 function firstLine(text) {
@@ -76,10 +78,10 @@ export function joinLinks(links) {
       source_kinds: [],
     };
     entry.link_rows += 1;
-    entry.clicks += asNumber(link.clicks) ?? 0;
-    entry.unique_clicks += asNumber(link.unique_clicks) ?? 0;
-    entry.conversions += asNumber(link.conversions) ?? 0;
-    entry.revenue += asNumber(link.revenue) ?? 0;
+    entry.clicks = addKnown(entry.clicks, asNumber(link.clicks));
+    entry.unique_clicks = addKnown(entry.unique_clicks, asNumber(link.unique_clicks));
+    entry.conversions = addKnown(entry.conversions, asNumber(link.conversions));
+    entry.revenue = addKnown(entry.revenue, asNumber(link.revenue));
     entry.permalink ??= link.root_permalink ?? link.post_permalink ?? null;
     entry.link_first_line ??= firstLine(link.root_post_text);
     if (link.source_kind && !entry.source_kinds.includes(link.source_kind)) entry.source_kinds.push(link.source_kind);
@@ -90,7 +92,7 @@ export function joinLinks(links) {
 
 const byRateThenClicks = (a, b) =>
   (b.clicks_per_1000_views ?? -1) - (a.clicks_per_1000_views ?? -1) ||
-  b.unique_clicks - a.unique_clicks ||
+  (b.unique_clicks ?? -1) - (a.unique_clicks ?? -1) ||
   (b.views ?? -1) - (a.views ?? -1) ||
   a.post_id.localeCompare(b.post_id);
 
@@ -99,8 +101,12 @@ export function rankMoneyPosts(input) {
   if (!attribution || typeof attribution !== 'object') throw new Error('attribution is required');
   const posts = collectPosts(input.performance);
   const { byPost, unmatched } = joinLinks(attribution.links);
-  // A zero is only a measured zero when Threadify could have recorded a conversion.
-  const conversionsTracked = attribution.conversion_tracking?.measurable !== false;
+  // A zero is only a measured zero when Threadify says it could have recorded a conversion.
+  // No tracking metadata at all means unknown, not tracked.
+  const measurable = attribution.conversion_tracking?.measurable;
+  const conversionsTracked = measurable === true ? true : measurable === false ? false : null;
+  const conversionsLabel =
+    conversionsTracked === true ? 'conversions' : conversionsTracked === false ? 'conversions (not tracked)' : 'conversions (unknown)';
 
   const ranking = [...byPost.values()].map((link) => {
     const post = posts.get(link.post_id);
@@ -114,11 +120,11 @@ export function rankMoneyPosts(input) {
       clicks: link.clicks,
       unique_clicks: link.unique_clicks,
       clicks_per_1000_views: per1000(link.unique_clicks, views),
-      conversions: conversionsTracked ? link.conversions : null,
-      conversions_label: conversionsTracked ? 'conversions' : 'conversions (not tracked)',
-      revenue: conversionsTracked ? link.revenue : null,
-      may_say_sales: conversionsTracked && link.revenue > 0,
-      few_clicks: link.unique_clicks < FEW_CLICKS,
+      conversions: conversionsTracked === true ? link.conversions : null,
+      conversions_label: conversionsLabel,
+      revenue: conversionsTracked === true ? link.revenue : null,
+      may_say_sales: conversionsTracked === true && link.revenue !== null && link.revenue > 0,
+      few_clicks: link.unique_clicks === null ? null : link.unique_clicks < FEW_CLICKS,
       source_kinds: link.source_kinds,
       views_known: views !== null,
     };
@@ -131,10 +137,12 @@ export function rankMoneyPosts(input) {
     .map(({ post_id, first_line, published_at, views }) => ({ post_id, first_line, published_at, views }));
 
   const linkedPosts = ranking.length;
-  const uniqueClicks = ranking.reduce((sum, row) => sum + row.unique_clicks, 0);
+  const clicksUnknownPosts = ranking.filter((row) => row.unique_clicks === null).map((row) => row.post_id);
+  const uniqueClicks = ranking.reduce((sum, row) => sum + (row.unique_clicks ?? 0), 0);
   const reasons = [];
   if (linkedPosts < MIN_LINKED_POSTS) reasons.push(`fewer than ${MIN_LINKED_POSTS} linked posts (${linkedPosts})`);
-  if (uniqueClicks < MIN_CLICKS) reasons.push(`fewer than ${MIN_CLICKS} clicks (${uniqueClicks})`);
+  // Unknown clicks are not zero clicks: only measured totals can trigger the click threshold.
+  if (uniqueClicks < MIN_CLICKS && clicksUnknownPosts.length === 0) reasons.push(`fewer than ${MIN_CLICKS} clicks (${uniqueClicks})`);
   const coldStart = reasons.length > 0;
 
   const asks = input.asks ?? {};
@@ -169,8 +177,10 @@ export function rankMoneyPosts(input) {
     totals: {
       posts_read: posts.size,
       linked_posts: linkedPosts,
-      unique_clicks: uniqueClicks,
-      clicks: ranking.reduce((sum, row) => sum + row.clicks, 0),
+      unique_clicks: clicksUnknownPosts.length ? null : uniqueClicks,
+      unique_clicks_known: uniqueClicks,
+      clicks_unknown_posts: clicksUnknownPosts,
+      clicks: ranking.some((row) => row.clicks === null) ? null : ranking.reduce((sum, row) => sum + row.clicks, 0),
       unmatched_link_rows: unmatched,
       linked_posts_missing_views: ranking.filter((row) => !row.views_known).map((row) => row.post_id),
       conversions_tracked: conversionsTracked,

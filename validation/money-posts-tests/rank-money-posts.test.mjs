@@ -165,3 +165,27 @@ test('CLI prints the ranking and exits 1 on bad input', () => {
   assert.equal(bad.status, 1);
   assert.match(bad.stderr, /attribution is required/);
 });
+
+test('missing click counts stay unknown and never trigger the click threshold', () => {
+  const links = ['1001', '1002', '1003', '1004', '1005'].map((id) => link(id, 2));
+  links.push({ ...link('1006', 0), clicks: undefined, unique_clicks: undefined });
+  const result = rankMoneyPosts({ attribution: { conversion_tracking: { measurable: true }, links }, performance });
+  const row = result.ranking.find((entry) => entry.post_id === '1006');
+  assert.equal(row.unique_clicks, null);
+  assert.equal(row.clicks, null);
+  assert.equal(row.clicks_per_1000_views, null, 'not a measured zero rate');
+  assert.equal(row.few_clicks, null);
+  assert.equal(result.ranking.at(-1).post_id, '1006', 'unknown rates sort last');
+  assert.equal(result.totals.unique_clicks, null);
+  assert.equal(result.totals.unique_clicks_known, 10);
+  assert.deepEqual(result.totals.clicks_unknown_posts, ['1006']);
+  assert.equal(result.mode, 'clicks', 'unknown clicks are not zero clicks');
+});
+
+test('absent conversion metadata is unknown, not a tracked zero', () => {
+  const result = rankMoneyPosts({ attribution: { links: warmAttribution.links }, performance });
+  assert.equal(result.totals.conversions_tracked, null);
+  assert.ok(result.ranking.every((row) => row.conversions === null && row.revenue === null));
+  assert.ok(result.ranking.every((row) => row.conversions_label === 'conversions (unknown)'));
+  assert.ok(result.ranking.every((row) => row.may_say_sales === false));
+});

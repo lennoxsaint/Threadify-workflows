@@ -1,4 +1,4 @@
 interface:
   display_name: "Money Posts"
-  short_description: "Rank posts by clicks per 1,000 views and schedule 3 more like the winners"
+  short_description: "Rank posts by clicks per 1,000 views, then schedule 3 more"
   default_prompt: "Use $threadify-money-posts to rank my Threads posts by clicks per 1,000 views and prepare three tracked posts in the winning pattern for my approval."
