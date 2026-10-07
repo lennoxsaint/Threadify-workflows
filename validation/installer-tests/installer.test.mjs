@@ -541,3 +541,21 @@ test('disabled auto-update performs no on-use mutation and uninstall leaves rece
   assert.equal(fs.existsSync(path.join(box.root, 'receipts')), true);
   assert.equal(fs.existsSync(path.join(box.home, '.claude', 'skills', 'threadify-qualified-buyer-research')), false);
 });
+
+test('candidate preview uses source bundle checks and leaves stable state untouched', async () => {
+  const { installCandidate, sha256 } = await import('../../lib/installer.mjs');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'candidate-preview-'));
+  try {
+    const content=Buffer.from('candidate skill');
+    const release={release_version:'0.0.0',skill_version:'0.0.0',plugin_version:'0.0.0',rules_version:'0.0.0',commit:'a'.repeat(40),change_class:'skill_logic'};
+    const raw=Buffer.from(JSON.stringify({record_type:'ThreadifyWorkflowsCandidateBundleV1',release,files:{'skills/example/SKILL.md':{content_base64:content.toString('base64'),sha256:sha256(content)}}}));
+    const sourceBundle=path.join(root,'bundle.json'),sourceManifest=path.join(root,'manifest.json');
+    fs.writeFileSync(sourceBundle,raw);fs.writeFileSync(sourceManifest,JSON.stringify({record_type:'CandidateReleaseManifestV1',...release,assets:[{name:'threadify-workflows-bundle.json',sha256:sha256(raw),bytes:raw.length}]}));
+    fs.writeFileSync(path.join(root,'config.json'),'unchanged');
+    const result=installCandidate({root,sourceBundle,sourceManifest});
+    assert.equal(result.status,'candidate_installed');assert.equal(fs.readFileSync(path.join(result.path,'skills/example/SKILL.md'),'utf8'),'candidate skill');
+    assert.equal(fs.readFileSync(path.join(root,'config.json'),'utf8'),'unchanged');assert.equal(fs.existsSync(path.join(root,'current')),false);
+    assert.equal(installCandidate({root,sourceBundle,sourceManifest}).path,result.path);
+    fs.appendFileSync(sourceBundle,' ');assert.throws(()=>installCandidate({root,sourceBundle,sourceManifest}),/checksum/);
+  } finally {fs.rmSync(root,{recursive:true,force:true});}
+});

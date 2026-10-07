@@ -1394,7 +1394,7 @@
     },
     {
       "workflow_id": "run-my-threads",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "title": "Run My Threads",
       "summary": "One setup builds a week plan, then once a day your agent prepares five Threadify-written posts (a thread on six days, one greatest-hit repost, hook-first structures and your CTA level), shows them for one reply, and schedules them only after you say yes.",
       "kind": "skill",

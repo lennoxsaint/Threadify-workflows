@@ -3,6 +3,7 @@ import readline from 'node:readline/promises';
 import process from 'node:process';
 import {
   install,
+  installCandidate,
   rollback,
   status,
   uninstall,
@@ -42,6 +43,7 @@ function help() {
 
 Usage:
   threadify-workflows install [--enable-auto-update|--disable-auto-update] [--targets all] [--workflows all]
+  threadify-workflows preview-install --source-bundle <local candidate> --source-manifest <candidate manifest>
   threadify-workflows update [--on-use|--scheduled]
   threadify-workflows status
   threadify-workflows rollback [--version 0.4.0]
@@ -122,6 +124,7 @@ async function main() {
   if (parsed.command === 'install') result = await install(options);
   else if (parsed.command === 'update') result = await update(options);
   else if (parsed.command === 'status') result = status(options);
+  else if (parsed.command === 'preview-install') result = installCandidate(options);
   else if (parsed.command === 'rollback') result = rollback(options);
   else if (parsed.command === 'uninstall') result = uninstall(options);
   else throw new Error(`unknown_command:${parsed.command}`);

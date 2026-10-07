@@ -64,11 +64,10 @@ test('a number in the hook is flagged for the owner to confirm it is true', () =
   assert.equal(checkHook({ text: 'I wrote 300 posts before one worked.' }).has_number, true);
 });
 
-test('the banned-opener list matches the playbook exactly', () => {
-  const playbook = fs.readFileSync('plugins/threadify/skills/threadify-run-my-threads/references/threads-playbook.md', 'utf8');
-  const section = playbook.split('### Banned openers')[1].split('\n\n')[2];
-  const listed = section.split('\n').filter((line) => line.startsWith('- ')).map((line) => line.slice(2));
-  assert.deepEqual(listed, BANNED_OPENERS);
+test('legacy diagnostic is optional and absent from daily policy', () => {
+  const skill = fs.readFileSync('plugins/threadify/skills/threadify-run-my-threads/SKILL.md', 'utf8');
+  assert.ok(BANNED_OPENERS.length);
+  assert.doesNotMatch(skill, /scripts\/hook-check/);
 });
 
 test('overall status is the worst post; CLI exits 1 only on FAIL', () => {

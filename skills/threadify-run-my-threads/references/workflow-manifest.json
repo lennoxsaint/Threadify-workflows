@@ -1,6 +1,6 @@
 {
   "workflow_id": "run-my-threads",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "title": "Run My Threads",
   "summary": "One setup builds a week plan, then once a day your agent prepares five Threadify-written posts (a thread on six days, one greatest-hit repost, hook-first structures and your CTA level), shows them for one reply, and schedules them only after you say yes.",
   "kind": "skill",
@@ -57,18 +57,21 @@
     "generate_content",
     "validate_post",
     "schedule_post",
-    "get_schedule_status"
+    "get_schedule_status",
+    "list_drafts",
+    "get_draft"
   ],
   "optional_mcp_tools": [
     "best_time_to_post",
     "list_offers",
     "list_vault_items",
     "list_vault_suggestions",
-    "cancel_schedule"
+    "cancel_schedule",
+    "get_vault_item"
   ],
   "free_capabilities": [
     "deterministic weekly planner that checks 35 posts, 6 threads, one greatest hit a day and the CTA count",
-    "deterministic hook check on line 1 of every generated post",
+    "private source assignments, exact requested edits, revision approval and generation recovery",
     "local casing guard that proves Threadify copy was only lowercased",
     "public Threads playbook and hook template bank",
     "one daily host schedule set up with the host's own controls"
@@ -76,7 +79,7 @@
   "paid_capability_stubs": [
     "Threadify post generation counts toward the plan's AI generations",
     "model choice depends on the plan: Claude Opus 5.5 when the plan allows it, Gemini as fallback",
-    "greatest hits ranking is a paid Threadify feature; without it the slot is generated instead",
+    "greatest hits ranking is a paid Threadify feature; without it the slot is held",
     "Auto Plug replies need a plan that includes Auto Plug; otherwise CTAs move to listicle-plug posts",
     "connected scheduling and readback"
   ],
@@ -89,7 +92,7 @@
       "local and UTC time for each slot",
       "exact final text, threads in full",
       "post type and structure",
-      "hook check result",
+      "source provenance and revision hash",
       "model requested and reported",
       "casing guard result",
       "greatest hit source and stale-fact check",
@@ -104,10 +107,11 @@
     "instructions": [
       "Never write posts yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
       "When the casing guard fails, present Threadify's original text unchanged.",
-      "When a hook check fails, ask Threadify once for a replacement; never hand-edit.",
-      "When no greatest hit passes the 60-day and stale-fact checks, generate that slot instead; never rewrite a past post.",
       "When Auto Plug is not echoed back, report it and move future CTAs to listicle-plug posts.",
-      "When the host has no durable scheduler, say so and run only when the owner asks."
+      "When the host has no durable scheduler, say so and run only when the owner asks.",
+      "Missing actual source evidence holds only that slot.",
+      "Apply only explicit owner-requested edits; each wording change invalidates prior approval.",
+      "Recover saved drafts after ambiguous timeouts before eligible Gemini fallback."
     ]
   },
   "receipt": {
@@ -118,7 +122,7 @@
       "scheduled posts and slots",
       "week plan day and CTA count",
       "greatest hit used and byte-identical check",
-      "hook check results",
+      "source provenance and revision hash",
       "models requested and reported",
       "casing guard results",
       "Auto Plug echo",

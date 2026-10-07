@@ -16,7 +16,7 @@ Never create a second schedule to change a time or a setting. Never add an hourl
 
 Save the owner's choices in the schedule's prompt so each run is self-contained:
 
-> Run the installed threadify-run-my-threads skill for today. Account: @HANDLE. Timezone: AREA/CITY. Week plan: start_date YYYY-MM-DD, mode growth | balanced | conversion, short_day WEEKDAY, seed N, auto_plug true | false. Offer: OFFER_ID or none. Casing: as Threadify writes it | lowercase except proper nouns, keep: NAMES. Topic lanes: LANES or let Threadify choose from my Brain. State folder: ~/.threadify-workflows/state/run-my-threads/. Prepare today's five posts and the approval card in this conversation and wait for my reply. Never schedule without my "yes" here. If today's card or receipt already exists, do not generate again.
+> Run the installed threadify-run-my-threads skill for today. Account: @HANDLE. Timezone: AREA/CITY. Week plan: start_date YYYY-MM-DD, mode growth | balanced | conversion, short_day WEEKDAY, seed N, auto_plug true | false. Offer: OFFER_ID or none. Casing: as Threadify writes it | lowercase except proper nouns, keep: NAMES. Topic lanes: LANES or let Threadify choose from my Brain. Approved destination: DESTINATION. Sources: own greatest hits, My Vault, optional connected Viral Vault. Policy: read the installed SKILL.md, threads-playbook.md and state-and-recovery.md on each run; these own generation, revision and recovery behavior. State folder: ~/.threadify-workflows/state/run-my-threads/. Prepare today's five posts and the approval card in this conversation and wait for my reply. Never schedule without my "yes" here. If today's card or receipt already exists, do not generate again.
 
 The week plan values let any run rebuild the same plan with `scripts/week-plan.mjs`, even a cloud run without the local state folder. When the seven days end, the run moves `start_date` on seven days and adds one to `seed`; update the schedule prompt in place (never a second schedule). The state folder keeps the setup choices, the current week plan and the greatest-hit repost log; without it, the 60-day repost check relies on Threadify's `search_posts` and `list_scheduled_posts`.
 
@@ -61,3 +61,5 @@ Use the host's one native daily scheduler (Cursor Automations, Gemini CLI, OpenC
 ## Usage readout
 
 Each run reports what it used only when the host exposes it (for example a token or cost figure in the run details). Threadify's remaining generation quota comes from `get_connection_defaults` before and after the run. When the host shows no usage figure, say "usage not exposed by this host". Never estimate.
+
+Notify only when a card is ready or an actionable blocker changes. Stay quiet for unchanged state. Expire unapproved prior cards only when preparing a new daily card; never migrate historical card text during a policy upgrade.
