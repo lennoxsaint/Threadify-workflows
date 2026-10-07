@@ -3,14 +3,19 @@
 //
 //   node rank-money-posts.mjs < {"attribution": <read_link_attribution result>,
 //                                "performance": <read_post_performance result or an array of results>,
-//                                "asks"?: {"<post_id>": <replies asking how/link/where>}}
+//                                "asks"?: {"<post_id>": <replies asking how/link/where>},
+//                                "threads"?: {"<linked id with no views>": <get_post_thread result>}}
 //
 // Joins every tracked link row to its post by root_threads_post_id (fallback
 // final_threads_post_id), sums clicks per post, and ranks linked posts by
-// unique clicks per 1,000 views. Below the cold-start thresholds it also ranks
+// unique clicks per 1,000 views. Threadify can file an Auto Plug's clicks under
+// the plug reply instead of its post; pass get_post_thread results for those
+// ids as "threads" and the clicks move to the post whose first line opens the
+// thread (latest post published at or before the thread's timestamp). Below the cold-start thresholds it also ranks
 // every post on proxy signals, labelled "proxy, not clicks". Missing numbers
 // stay null (unknown); nothing is estimated. JSON on stdout. Exit 0 on success,
 // 1 on bad input. No dependencies and no network: Node 18+ only.
+import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 export const MIN_LINKED_POSTS = 5;
@@ -46,6 +51,7 @@ export function collectPosts(performance) {
         post_id: String(id),
         published_at: row.published_at ?? null,
         first_line: firstLine(row.text ?? row.text_preview),
+        full_first_line: (row.text ?? row.text_preview ?? '').split(/\r?\n/).map((part) => part.trim()).find(Boolean) ?? null,
         views: asNumber(metrics.views),
         replies: asNumber(metrics.replies),
       });
@@ -90,6 +96,50 @@ export function joinLinks(links) {
   return { byPost, unmatched };
 }
 
+const normaliseLine = (text) => firstLine(text)?.replace(/…$/, '').replace(/\s+/g, ' ').toLowerCase() ?? null;
+const timeOf = (value) => {
+  const ms = Date.parse(value ?? '');
+  return Number.isFinite(ms) ? ms : null;
+};
+
+/** Find the post a plug reply belongs to from its get_post_thread result. */
+export function parentPostFor(thread, posts) {
+  const line = normaliseLine(thread?.full_text ?? thread?.parts?.[0]?.text);
+  if (!line) return null;
+  const replyTime = timeOf(thread?.timestamp);
+  const candidates = [...posts.values()].filter((post) => normaliseLine(post.full_first_line ?? post.first_line) === line);
+  const eligible = replyTime === null ? candidates : candidates.filter((post) => (timeOf(post.published_at) ?? Infinity) <= replyTime);
+  if (eligible.length === 0) return null;
+  if (eligible.length === 1 || replyTime !== null) {
+    return eligible.sort((a, b) => (timeOf(b.published_at) ?? 0) - (timeOf(a.published_at) ?? 0))[0].post_id;
+  }
+  return null; // several same-line posts and no timestamp: stay unmatched rather than guess
+}
+
+/** Move link rows filed under a plug reply onto the parent post. */
+export function attachPlugsToParents(byPost, posts, threads = {}) {
+  const moved = [];
+  for (const [id, entry] of [...byPost.entries()]) {
+    if (posts.has(id) || !threads[id]) continue;
+    const parentId = parentPostFor(threads[id], posts);
+    if (!parentId) continue;
+    const target = byPost.get(parentId);
+    if (target) {
+      target.link_rows += entry.link_rows;
+      target.clicks = addKnown(target.clicks, entry.clicks);
+      target.unique_clicks = addKnown(target.unique_clicks, entry.unique_clicks);
+      target.conversions = addKnown(target.conversions, entry.conversions);
+      target.revenue = addKnown(target.revenue, entry.revenue);
+      for (const kind of entry.source_kinds) if (!target.source_kinds.includes(kind)) target.source_kinds.push(kind);
+    } else {
+      byPost.set(parentId, { ...entry, post_id: parentId, link_first_line: null });
+    }
+    byPost.delete(id);
+    moved.push({ from: id, to: parentId });
+  }
+  return moved;
+}
+
 const byRateThenClicks = (a, b) =>
   (b.clicks_per_1000_views ?? -1) - (a.clicks_per_1000_views ?? -1) ||
   (b.unique_clicks ?? -1) - (a.unique_clicks ?? -1) ||
@@ -101,6 +151,7 @@ export function rankMoneyPosts(input) {
   if (!attribution || typeof attribution !== 'object') throw new Error('attribution is required');
   const posts = collectPosts(input.performance);
   const { byPost, unmatched } = joinLinks(attribution.links);
+  const plugsMoved = attachPlugsToParents(byPost, posts, input.threads ?? {});
   // A zero is only a measured zero when Threadify says it could have recorded a conversion.
   // No tracking metadata at all means unknown, not tracked.
   const measurable = attribution.conversion_tracking?.measurable;
@@ -183,10 +234,15 @@ export function rankMoneyPosts(input) {
       clicks: ranking.some((row) => row.clicks === null) ? null : ranking.reduce((sum, row) => sum + row.clicks, 0),
       unmatched_link_rows: unmatched,
       linked_posts_missing_views: ranking.filter((row) => !row.views_known).map((row) => row.post_id),
+      plug_rows_moved_to_post: plugsMoved,
       conversions_tracked: conversionsTracked,
     },
     ranking,
     big_posts_no_link: bigPostsNoLink,
+    // While any linked post still has no views, a "no link" post may own one of those links.
+    big_posts_no_link_caveat: ranking.some((row) => !row.views_known)
+      ? 'some links could not be matched to a post, so a post listed here may still have a link'
+      : null,
     proxy_ranking: proxyRanking,
   };
 }
@@ -197,7 +253,7 @@ async function readStdin() {
   return JSON.parse(data);
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
   readStdin()
     .then((input) => process.stdout.write(`${JSON.stringify(rankMoneyPosts(input), null, 2)}\n`))
     .catch((error) => {

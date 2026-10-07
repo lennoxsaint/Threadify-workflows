@@ -1,3 +1,8 @@
+# 0.27.1
+
+- Fix: the bundled scripts in Money Posts (`rank-money-posts.mjs`, `casing-guard.mjs`) and Run My Threads (`week-plan.mjs`, `hook-check.mjs`, `casing-guard.mjs`) printed nothing and exited 0 when run through a symlinked skills folder such as `~/.claude/skills`. Their entry check now resolves the real path.
+- Money Posts: Threadify can file an Auto Plug's clicks under the plug reply instead of its post. The agent now calls `get_post_thread` for linked ids with no views and passes the results as `threads`; the ranking moves those clicks onto the post the thread opens with (the latest same-first-line post published at or before the reply) and reports `plug_rows_moved_to_post`. While any link stays unmatched, "big posts with no link" carries a caveat.
+
 # 0.27.0
 
 - Add Money Posts ("Stop chasing views."): ranks the last 90 days of Threads posts by unique clicks per 1,000 views instead of views. Tracked link rows from `read_link_attribution` are joined to posts by `root_threads_post_id` (fallback `final_threads_post_id`) and summed per post; views come from `read_post_performance`. The table shows first line, date, views, clicks, clicks per 1,000 views and conversions exactly as Threadify labels them (never "sales" unless revenue is above 0), plus "big posts with no link".
