@@ -1,3 +1,13 @@
+# 0.27.0
+
+- Add Money Posts ("Stop chasing views."): ranks the last 90 days of Threads posts by unique clicks per 1,000 views instead of views. Tracked link rows from `read_link_attribution` are joined to posts by `root_threads_post_id` (fallback `final_threads_post_id`) and summed per post; views come from `read_post_performance`. The table shows first line, date, views, clicks, clicks per 1,000 views and conversions exactly as Threadify labels them (never "sales" unless revenue is above 0), plus "big posts with no link".
+- A bundled no-dependency ranking script (`scripts/rank-money-posts.mjs`) does the join and the math, keeps missing views and unmeasured conversions unknown instead of 0, and flags small samples.
+- The agent names 2-4 patterns the top click posts share, each tied to named posts and evidence, with no performance predictions.
+- Cold start: with fewer than 5 linked posts or fewer than 30 clicks in 90 days, Money Posts says so and ranks on proxy signals (replies per 1,000 views and replies asking how or for the link), labelled "proxy, not clicks".
+- Threadify writes three posts in the winning pattern and one Auto Plug per post for the chosen saved offer; the agent never writes or edits copy. Its bundled casing guard proves `lower(original) == lower(final)` for every post and plug, and a failed guard shows the original unchanged. Threadify links on Threads are auto-tracked, so no UTM tags are added.
+- Three conflict-free slots over the next three days from `best_time_to_post` and `list_scheduled_posts`, `validate_post` on each, then one approval packet (account and timezone, three exact posts, three exact Auto Plugs and destination, three local dates and times, action). `schedule_post` runs only after an explicit yes, and every post is read back with `get_schedule_status`. Never publishes now.
+- A 7-day check offers to re-run Money Posts to rank the three new posts by real clicks, through a host reminder when supported or a dated note.
+
 # 0.26.0
 
 - Run My Threads now plans the week: five posts a day, 35 a week. Six days carry one long-form thread (teacher, storyteller, synthesizer in turn) and four short-form posts; the short day (Sunday by default) carries five short-form posts. Short-form types rotate one-liner, listicle and random, with listicle-plug reserved for CTA slots.
