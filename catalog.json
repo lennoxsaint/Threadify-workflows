@@ -1057,6 +1057,55 @@
       ]
     },
     {
+      "workflow_id": "money-posts",
+      "version": "0.1.0",
+      "title": "Money Posts",
+      "summary": "Rank your Threads posts by clicks per 1,000 views instead of views, explain why the winners get clicks, then have Threadify write three posts in the winning pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-money-posts",
+      "entrypoint": "skills/threadify-money-posts/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-money-posts/SKILL.md",
+      "source_manifest": "workflows/money-posts/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/money-posts/README.md"
+        ]
+      },
+      "triggers": [
+        "money posts",
+        "which of my posts actually get clicks",
+        "stop chasing views"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "connected account, 90 days of link attribution and post performance, saved offer",
+            "schema_ref": "inline:money-posts-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "clicks-per-1,000-views ranking, approval packet and schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "personal-brain-sync-current-self",
       "version": "0.1.0",
       "title": "Personal Brain Sync / Current Self Packet",

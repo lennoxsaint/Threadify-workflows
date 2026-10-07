@@ -23,6 +23,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Greatest Hits Runway (`greatest-hits-runway`) | skill | `threadify-greatest-hits-runway` | advanced | prepare my greatest hits runway; review a seven-day runway of proven posts |
 | Market to Pipeline (`market-to-pipeline`) | skill | `threadify-market-to-pipeline` | advanced | turn this market into a qualified pipeline; run Market to Pipeline with Threadify and Treg; find permission-aware leads and build seven posts |
 | Monetize My Week (`monetize-my-week`) | skill | `threadify-monetize-my-week` | advanced | monetize my week from my existing drafts; turn my draft backlog into a tracked seven-post offer campaign |
+| Money Posts (`money-posts`) | skill | `threadify-money-posts` | advanced | money posts; which of my posts actually get clicks; stop chasing views |
 | Personal Brain Sync / Current Self Packet (`personal-brain-sync-current-self`) | skill | `threadify-personal-brain-sync` | advanced | sync my current self to Threadify Brain; review personal context before saving memories |
 | Post This Next (`post-this-next`) | skill | `threadify-post-this-next` | advanced | post this next; choose my next Threadify draft; review every draft and tell me what to finish next |
 | Qualified Buyer Research (`qualified-buyer-research`) | skill | `threadify-qualified-buyer-research` | advanced + standalone | find qualified buyers on Threads; research buyer language and stage one reply |
