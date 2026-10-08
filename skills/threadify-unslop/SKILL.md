@@ -26,7 +26,25 @@ Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) 
 4. **Verdict.** Show the script's `verdict_table`, with its line of how many polished posts had a hedge (`polished_with_hedges`), then the top 5 offenders from `offenders_table` with their flagged phrases. Offenders rank by hedge count, then slop score, then views, so hedged posts come first. Reposts collapse into one row with the most-viewed copy and a repeat count, for example "(x4)"; the medians still count every post. Show both exactly as returned, so they read cleanly on camera. Then say the headline in one line. If polished won or the classes tied, say that plainly. With `small_sample: true`, say the sample is small.
 5. **Threadify writes 3.** Name the shape the top raw posts share (`top_raw`: opening line, length, format, the claim they commit to), tied to the named posts. Never paste a past post as copy. Make one `generate_content` call per post with `strict_facts: true`, the model order in [generation-models.json](references/generation-models.json) (Claude Opus 5.5 when the plan allows it, Gemini as fallback) and `inputText` = that shape plus the zero-hedge brief: "Commit to one claim. Zero hedges, zero both-sides, no closing question, no disclaimers, no softened asks. Cut any claim you cannot back." No offer and no link in the post. Keep Threadify's exact text and `draft_id`, and record the model the response reports. Never claim a model the response does not confirm.
 6. **Gate.** Run `node scripts/hedge_gate.mjs --json` on every post as `{"posts":[{"id","text"}]}`. On FAIL, call `generate_content` again for that post with the same brief plus the gate's exact `reasons`. Three `generate_content` calls per post, total. A post that fails a third time is held: show it with its reasons, never patch it, never schedule it. Lowercase when the owner asks or when `raw_lowercase_share` is 0.5 or higher: run `casing-guard.mjs lowercase` with the proper nouns to keep, then `check`. Show the proof per post, for example "gate PASS (attempt 1) · guard: lower(original) == lower(final) PASS". Run the gate again on the final text.
-7. **One Auto Plug each.** Call `list_offers` and let the owner pick one offer if more than one fits. For each post, make one more `generate_content` call with that `offer_id`, asking for a one-post plug reply that continues that exact post and names what the link gives. Every plug goes through the same gate (softened CTAs fail), the same three-call limit and the casing guard. The plug's link is the offer's saved destination. Never advertise an unavailable workflow, download or free offer. Threadify links on Threads are auto-tracked, so add no UTM tags. If `link_tracking` is off or unknown, say clicks are not measured and leave the setting alone. If the plan has no Auto Plug, say so and ask whether to schedule the posts without plugs or stop.
+7. **One Auto Plug each.** Call `list_offers` and let the owner pick one offer if more than one fits. Each plug sells that offer, the product the owner sells, never this workflow or Unslop itself. It is specific, it fits the post it replies to, and it reads as the next thing that post would say. For each post, make one more `generate_content` call with that `offer_id`. The brief names the post the plug continues and asks for exactly this structure, one short line per slot, with a blank line between slots:
+
+```text
+[cheeky transition sentence from the post to the subject of the offer]
+
+[concise pain point]
+
+[concise example of how the offer is the solution]
+
+free to try - join [number of people] [community word]
+
+[link]
+```
+
+   - The "free to try" line goes in only when the offer really is free to try and the number of people comes from a verified, dated source: the offer facts, the owner's confirmation or account data. Never invent the number or round it up. If either one is unknown, ask the owner for the number or drop the line. Never guess.
+   - The community word is the owner's own word for their audience when the Brain or the offer has one, for example "thriends". Otherwise it is "people".
+   - The link is the offer's saved destination, exact. Threadify links on Threads are auto-tracked, so add no UTM tags.
+
+   Every plug goes through the same gate (softened CTAs fail), the same three-call limit and the casing guard. Never advertise an unavailable workflow, download or free offer. If `link_tracking` is off or unknown, say clicks are not measured and leave the setting alone. If the plan has no Auto Plug, say so and ask whether to schedule the posts without plugs or stop.
 8. **Pick 3 slots.** Call `best_time_to_post` (owner's timezone) and `list_scheduled_posts`. A truncated response is not an empty calendar. Pick one slot on each of the next three days, at the best measured time, with no scheduled post within 90 minutes and at least 60 minutes from now. Call `validate_post` on every post and plug. On a validation failure, say why and ask Threadify for a replacement through steps 5-7.
 9. **One approval packet.** Send one message:
 
@@ -35,7 +53,9 @@ Unslop · @handle · <timezone>
 Raw pattern: <one line from step 5>
 1) <weekday date, local time> · gate PASS (attempt <n>) · <unchanged | casing guard PASS> · model <reported>
 <exact final post text>
-Auto Plug (15 min after): <exact plug text> · gate PASS
+Auto Plug (15 min after) · gate PASS (attempt <n>) · <unchanged | casing guard PASS>
+<exact plug text, every line and blank line as written>
+Join count: <number> · <source>, <date> | line dropped: <reason>
 Destination: <exact offer destination>
 2) ...
 3) ...
@@ -49,7 +69,7 @@ Reply "yes" to schedule them, or "no" to schedule nothing.
 
 ## Receipt
 
-Keep a local receipt: account, real window, script output, every gate attempt and reason, models requested and reported, casing guard results, the approval reply, scheduled post ids, slots and Auto Plug echo, and the readback. A scheduled post is not a published post.
+Keep a local receipt: account, real window, script output, every gate attempt and reason, each plug brief with the join count, its source and date or why the line was dropped, models requested and reported, casing guard results, the approval reply, scheduled post ids, slots and Auto Plug echo, and the readback. A scheduled post is not a published post.
 
 ## When something is missing
 

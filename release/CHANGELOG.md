@@ -1,3 +1,10 @@
+# 0.29.2
+
+- Unslop: every Auto Plug sells the owner's offer, the product they sell, never the Unslop workflow. It is specific to the post it replies to and continues it.
+- Unslop: the plug brief sent to `generate_content` with the `offer_id` names the post it continues and asks for one fixed structure, one short line per slot with a blank line between: a cheeky transition from the post to the offer, a concise pain point, a concise example of the offer solving it, `free to try - join [number of people] [community word]`, then the link.
+- Unslop: the join line appears only when the offer is free to try and the number comes from a verified, dated source (offer facts, owner confirmation or account data). The number is never invented or rounded up; when either is unknown, the agent asks the owner for the number or drops the line. The community word is the owner's own word for their audience from the Brain or offer, otherwise "people". The link stays the offer's exact saved destination with no UTM tags.
+- Unslop: the approval packet shows the plug on its own lines with its gate attempt, casing result and the join count's source and date, or why the line was dropped. The zero-hedge gate, the three-call limit and the casing guard are unchanged; a regression test proves the template join line passes the gate.
+
 # 0.29.1
 
 - Unslop: the offenders table collapses reposts into one row. Posts with the same normalised text (lowercase, whitespace collapsed), or the same first line and flagged phrases, show once with the most-viewed copy and a repeat count, for example `If you're drawn to: (x4)`. The JSON adds `repeats` and `repeat_ids` per offender.
