@@ -337,6 +337,47 @@ test('the casing guard allows lowercasing only, keeping proper nouns', () => {
   assert.equal(nounLowered.status, 'FAIL', 'a lowercased proper noun fails the guard');
 });
 
+const PLUG_STRUCTURE = [
+  '[cheeky transition sentence from the post to the subject of the offer]',
+  '[concise pain point]',
+  '[concise example of how the offer is the solution]',
+  'free to try - join [number of people] [community word]',
+  '[link]',
+].join('\n\n');
+
+test('every Auto Plug sells the offer in the fixed five-line structure', () => {
+  const skill = read(source);
+  const step = skill.slice(skill.indexOf('7. **One Auto Plug each.**'), skill.indexOf('8. **Pick 3 slots.**'));
+  assert.ok(step.includes(`\`\`\`text\n${PLUG_STRUCTURE}\n\`\`\``), 'step 7 holds the exact plug structure');
+  assert.match(step, /never this workflow or Unslop itself/);
+  assert.match(step, /make one more `generate_content` call with that `offer_id`/);
+  assert.match(step, /The brief names the post the plug continues and asks for exactly this structure, one short line per slot, with a blank line between slots/);
+  assert.match(step, /only when the offer really is free to try and the number of people comes from a verified, dated source: the offer facts, the owner's confirmation or account data/);
+  assert.match(step, /Never invent the number or round it up\. If either one is unknown, ask the owner for the number or drop the line\. Never guess\./);
+  assert.match(step, /owner's own word for their audience when the Brain or the offer has one, for example "thriends"\. Otherwise it is "people"\./);
+  assert.match(step, /The link is the offer's saved destination, exact\. Threadify links on Threads are auto-tracked, so add no UTM tags\./);
+  assert.match(step, /Every plug goes through the same gate \(softened CTAs fail\), the same three-call limit and the casing guard\./);
+  assert.doesNotMatch(step, /—/);
+  const packet = [...skill.matchAll(/```text\n([\s\S]+?)```/g)][1][1];
+  assert.match(packet, /Auto Plug \(15 min after\) · gate PASS \(attempt <n>\) · <unchanged \| casing guard PASS>\n<exact plug text, every line and blank line as written>\n/);
+  assert.match(packet, /Join count: <number> · <source>, <date> \| line dropped: <reason>/);
+  assert.match(packet, /Destination: <exact offer destination>/);
+});
+
+test('a plug in the new structure passes the gate, and the join line never trips it', () => {
+  const plug = "speaking of posting - most people's drafts die in their notes app.\n\nyou plan 10 posts and ship 0.\n\nthreadify writes them in your voice and schedules the week in one go.\n\nfree to try - join 1,970 thriends\n\nhttps://www.threadify.app/home";
+  const result = gatePosts({ posts: [{ id: 'x', text: plug }] });
+  assert.equal(result.status, 'PASS', result.posts[0].reasons.join('; '));
+  for (const line of ['free to try - join 1,970 thriends', 'free to try - join 250 people', 'Free to try - join 12 people', 'free to try - join [number of people] [community word]']) {
+    assert.equal(gate(line).status, 'PASS', `join line passes: ${line} -> ${gate(line).reasons.join('; ')}`);
+  }
+  const cli = spawnSync(process.execPath, [gateScript, '--json'], { input: JSON.stringify({ posts: [{ id: 'x', text: plug }] }), encoding: 'utf8' });
+  assert.equal(cli.status, 0, cli.stdout + cli.stderr);
+  assert.equal(JSON.parse(cli.stdout).status, 'PASS');
+  const soft = plug.replace('free to try - join 1,970 thriends', 'feel free to try it if you want');
+  assert.equal(gate(soft).status, 'FAIL', 'a softened CTA in the join slot still fails');
+});
+
 /** Prose minus inline code spans: the lexical list is quoted in backticks on purpose. */
 const prose = (text) => text.replace(/`[^`\n]+`/g, '');
 
@@ -354,8 +395,9 @@ test('the skill, its references and its templates contain zero hedges', () => {
   for (const text of [manifest.summary, ...manifest.fallback.instructions, ...manifest.free_capabilities]) {
     assert.deepEqual(findHedges(text), [], `manifest hedges in: ${text}`);
   }
-  const template = read(source).match(/```text\n([\s\S]+?)```/)[1];
-  assert.deepEqual(findHedges(template), [], 'approval packet template has zero hedges');
+  const templates = [...read(source).matchAll(/```text\n([\s\S]+?)```/g)].map((match) => match[1]);
+  assert.equal(templates.length, 2, 'the plug structure and the approval packet');
+  for (const template of templates) assert.deepEqual(findHedges(template), [], `template has zero hedges: ${template.slice(0, 40)}`);
 });
 
 test('the bundled skill ships the gate, the score script, the guard and the rules', () => {

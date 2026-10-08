@@ -10,7 +10,7 @@ Then it puts raw against polished on your own numbers: median views for each cla
 
 Threadify then writes three new posts in the shape of your best raw posts. Every post runs through a zero-hedge gate. Zero means zero: no `might`, no `maybe`, no `i think`, no both-sides, no closing question that dodges the take, no disclaimers, no soft asks. A post that fails goes back to Threadify with the reasons, three attempts in total. Your agent never rewrites a word. The one change it makes is lowercasing, and a casing guard proves `lower(original) == lower(final)`.
 
-Each post gets a tracked Auto Plug for your saved offer, and the plug passes the same gate. You see one approval packet. Nothing is scheduled until you say "yes", and nothing is published immediately.
+Each post gets a tracked Auto Plug for your saved offer. The plug sells your offer, never Unslop, and it picks up from the post it replies to. It has five short lines with a blank line between each: a cheeky turn from the post to your offer, the pain, how your offer fixes it, `free to try - join [number] [your word for your people]` and the link. The join line only goes in when your offer is free to try and the number comes from a real, dated source. No number, no line. Your link goes in exactly as saved, with no UTM tags. Every plug passes the same gate. You see one approval packet. Nothing is scheduled until you say "yes", and nothing is published immediately.
 
 No post history? Paste 5-20 posts or drafts. You get the flags and the offenders, labelled with no view comparison, and a prompt to connect Threadify so it writes the three raw posts.
 

@@ -81,6 +81,7 @@
       "account and timezone",
       "exact posts with gate results",
       "exact Auto Plugs and destination",
+      "join count with its source and date, or why the line was dropped",
       "local dates and times",
       "action"
     ]
@@ -91,6 +92,7 @@
       "Never write or edit posts or plugs yourself; Threadify generates every word and the only permitted change is lowercasing proved by the casing guard.",
       "When a post fails the zero-hedge gate three times, hold it with its reasons and never schedule it.",
       "When the casing guard fails, present Threadify's original text unchanged.",
+      "When the offer is not free to try or the join count has no verified, dated source, ask the owner for the number or drop the free-to-try line; never invent or round up the number.",
       "With zero posts in the window or no Threadify connection, score 5-20 pasted posts or drafts, label them as having no view comparison and say how to connect Threadify.",
       "When a number is not returned, show it as unknown, never 0.",
       "When polished posts beat raw posts on the account, report that result."
@@ -103,6 +105,7 @@
       "performance window",
       "slop scores, flagged phrases and verdict label",
       "gate attempts and reasons",
+      "plug briefs and join count sources",
       "models requested and reported",
       "casing guard results",
       "approval reply",
