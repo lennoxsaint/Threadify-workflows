@@ -1645,6 +1645,55 @@
       ]
     },
     {
+      "workflow_id": "unslop",
+      "version": "0.1.0",
+      "title": "Threadify Unslop",
+      "summary": "Score your last 90 days of Threads posts for slop (corporate voice, AI tells, hedging, over-formatting), show raw vs polished median views on your account with the worst offenders quoted, then have Threadify write three raw posts that pass a zero-hedge gate, each with a tracked Auto Plug, and schedule them only after one exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-unslop",
+      "entrypoint": "skills/threadify-unslop/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-unslop/SKILL.md",
+      "source_manifest": "workflows/unslop/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/unslop/README.md"
+        ]
+      },
+      "triggers": [
+        "unslop",
+        "which of my posts sound like slop",
+        "no hedging"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "connected account and 90 days of post performance, or 5-20 pasted posts or drafts, and a saved offer",
+            "schema_ref": "inline:unslop-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "slop verdict, offenders, gate results, approval packet and schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "threads-teach",
       "version": "0.1.1",
       "title": "Threads Teach",
