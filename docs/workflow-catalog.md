@@ -32,6 +32,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Threadify Growth Loop (`growth-loop`) | skill | `threadify-growth-loop` | advanced | build my self-improving content machine; run my Threadify growth loop; learn from mature posts and prepare tomorrow's drafts |
 | Threadify Inbound Replies (`inbound-replies`) | skill | `threadify-inbound-replies` | advanced | review my Threads reply backlog; use Threadify inbound replies |
 | Threadify Offer Builder (`offer-builder`) | skill | `threadify-offer-builder` | advanced | build my offer; interview me and make an offer page |
+| Threadify Unslop (`unslop`) | skill | `threadify-unslop` | advanced | unslop; which of my posts sound like slop; no hedging |
 | Threads Teach (`threads-teach`) | skill | `threadify-threads-teach` | advanced | teach me Threads; teach me how to write Threads posts; continue my Threads lessons |
 | Viral Carousel Maker (`viral-carousel-maker`) | skill | `threadify-viral-carousel-maker` | advanced | make a viral carousel; create and review a controlled-mutation carousel |
 | Viral Vault Setup (`vault-setup`) | skill | `threadify-vault-setup` | creator | set up my Viral Vault; build a starter inspiration Vault |
