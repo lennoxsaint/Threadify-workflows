@@ -6,7 +6,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { describeWorkflow, loadWorkflowRegistry } from '../../lib/workflow-registry.mjs';
 import { findHedges, gate, gatePosts, scoreText } from '../../plugins/threadify/skills/threadify-unslop/scripts/hedge_gate.mjs';
-import { scorePosts, NO_VIEWS_LABEL } from '../../plugins/threadify/skills/threadify-unslop/scripts/unslop-score.mjs';
+import { scorePosts, NO_VIEWS_LABEL, hedgedLine } from '../../plugins/threadify/skills/threadify-unslop/scripts/unslop-score.mjs';
 import { checkPosts, lowercasePosts } from '../../plugins/threadify/skills/threadify-unslop/scripts/casing-guard.mjs';
 
 const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
@@ -224,12 +224,79 @@ test('the verdict compares raw vs polished medians on your account and keeps unk
   assert.equal(result.verdict.small_sample, false);
   assert.match(result.verdict_table, /Unslop verdict · @creator · last 90 days · on your account/);
   assert.match(result.verdict_table, /Raw beat polished 5\.7x on your account\./);
-  assert.equal(result.offenders.length, 5);
+  assert.equal(result.offenders.length, 2, 'five identical reposts collapse into one row');
+  assert.equal(result.offenders[0].repeats, 5);
   assert.deepEqual(result.offenders[0].families.hedging, ['might help', 'Thoughts?']);
   assert.match(result.offenders_table, /"might help", "Thoughts\?", "leverage"/);
   assert.equal(result.raw_lowercase_share, 1);
   const unknown = result.posts.find((post) => post.id === 'u1');
   assert.equal(unknown.views, null);
+});
+
+const row = (id, text, views) => ({ post_id: id, text, published_at: '2026-09-01T00:00:00Z', metrics: { views } });
+const rawRows = Array.from({ length: 6 }, (_, index) => row(`r${index}`, `raw take ${index}. polish is dead.`, 1000 + index * 100));
+const listicle = "If you're drawn to:\n— calm\n— craft\n— code\n— coffee\n— quiet\n— books\n— walks";
+
+test('offenders collapse reposts into one row with a repeat count, keeping the most-viewed copy', () => {
+  const result = scorePosts({
+    handle: '@creator',
+    performance: {
+      posts: [
+        ...rawRows,
+        row('d1', listicle, 2452),
+        row('d2', listicle, 2946),
+        row('d3', listicle.toUpperCase().replace(/\n/g, '\n\n'), 2569),
+        row('d4', `${listicle.replace('quiet', 'rain')}`, 2945),
+      ],
+    },
+  });
+  assert.equal(result.counts.polished, 4, 'every copy still counts as a post');
+  assert.equal(result.offenders.length, 1);
+  const [offender] = result.offenders;
+  assert.equal(offender.id, 'd2');
+  assert.equal(offender.views, 2946);
+  assert.equal(offender.repeats, 4, 'same text, normalised case and spacing, and same first line plus phrases all collapse');
+  assert.deepEqual(offender.repeat_ids.sort(), ['d1', 'd3', 'd4']);
+  assert.match(result.offenders_table, /\| 1 \| If you're drawn to: \(x4\) \| 2,946 \| 8 \|/);
+  assert.doesNotMatch(result.offenders_table, /\| 2 \|/);
+});
+
+test('a hedged post outranks a higher-score marker-only post', () => {
+  const result = scorePosts({
+    handle: '@creator',
+    performance: { posts: [...rawRows, row('m1', listicle, 9000), row('h1', 'SCOOP\nthis might ship tonight.', 300), row('h2', 'creator to creator. try this, it could help.', 100)] },
+  });
+  assert.deepEqual(result.offenders.map((post) => post.id), ['h2', 'h1', 'm1']);
+  assert.ok(result.offenders[2].score > result.offenders[0].score, 'the marker-only post has the higher slop score');
+  assert.equal(result.offenders[2].hedges, 0);
+  assert.match(result.offenders_table.split('\n')[2], /^\| 1 \| creator to creator/);
+});
+
+test('polished_with_hedges counts every polished post with a hedge and prints one plain line', () => {
+  const result = scorePosts({
+    handle: '@creator',
+    performance: { posts: [...rawRows, row('m1', listicle, 9000), row('m2', listicle, 8000), row('h1', 'this might ship tonight.', 300), row('h2', 'this might ship tonight.', 200), row('h3', 'Raw probably wins.', 100)] },
+  });
+  assert.equal(result.counts.polished, 5);
+  assert.equal(result.polished_with_hedges, 3, 'reposts count once per post, not once per row');
+  assert.match(result.verdict_table, /\| Polished \| 5 \| [^\n]+\n\n3 of 5 polished posts had a hedge\.\n\nRaw beat polished/);
+  assert.deepEqual(findHedges(hedgedLine(30, 39)), [], 'the hedged-count line has zero hedge words');
+  const pasted = scorePosts({ posts: ['raw one.', 'raw two.', 'This might work.', 'Maybe.', 'polish is dead.'].map((text) => ({ text })) });
+  assert.equal(pasted.polished_with_hedges, 2);
+  const none = scorePosts({ handle: '@creator', performance: { posts: rawRows } });
+  assert.equal(none.polished_with_hedges, 0);
+  assert.doesNotMatch(none.verdict_table, /polished posts had a hedge/, 'no line when there are no polished posts');
+});
+
+test('the dedupe leaves the verdict medians unchanged', () => {
+  const polishedViews = [2452, 2946, 2569, 2945, 300, 100];
+  const posts = [...rawRows, ...polishedViews.slice(0, 4).map((views, index) => row(`d${index}`, listicle, views)), row('h1', 'this might ship.', 300), row('h2', 'Raw probably wins.', 100)];
+  const result = scorePosts({ handle: '@creator', performance: { posts } });
+  assert.equal(result.offenders.length, 3, 'four reposts are one offender row');
+  assert.equal(result.verdict.polished.posts, 6);
+  assert.equal(result.verdict.polished.posts_with_views, 6);
+  assert.equal(result.verdict.polished.median_views, (2452 + 2569) / 2, 'median of all six polished posts, reposts included');
+  assert.equal(result.verdict.raw.median_views, 1250);
 });
 
 test('a polished win is reported, never hidden', () => {
