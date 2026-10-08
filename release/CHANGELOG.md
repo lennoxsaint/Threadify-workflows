@@ -1,3 +1,12 @@
+# 0.29.0
+
+- Add Threadify Unslop (`/threadify-unslop`, "AI doesn't make your posts slop. Polish does."): scores the last 90 days of Threads posts on four slop families (corporate and LinkedIn voice, AI tells, hedging, over-formatting) with hedging weighted 3x, quotes every flagged phrase, and compares raw vs polished median views, labelled "on your account", with the top 5 offenders. A polished win or a tie is reported as found.
+- Zero-hedge rule: one hedge fails a post. A bundled no-dependency gate (`scripts/hedge_gate.mjs`) runs standalone and prints PASS or FAIL with the matched phrases. It covers lexical hedges, both-sides balancing, closing questions that dodge a stance, disclaimers, trailing qualifiers, softened CTAs and "and that's okay", and it passes "May" the month, "can" as real ability and hedge words inside quoted titles or proper nouns. The rule overrides softer hedging advice in other anti-slop sources; an unbacked claim is cut, not softened.
+- Threadify writes three posts in the owner's top raw pattern (Claude Opus 5.5 when the plan allows it, Gemini as fallback). Each post and each Auto Plug runs through the gate; a failure goes back to Threadify with the reasons, three generations per post in total, and a post that fails three times is held, never patched. The agent never edits words: lowercasing is the one permitted change, proved by the casing guard (`lower(original) == lower(final)`).
+- One approval packet with gate results, then `schedule_post` and `get_schedule_status` readback only after an explicit yes. Never publishes now.
+- No-data path: 5-20 pasted posts or drafts get flags and offenders, labelled "pasted posts: no view data, no view comparison", plus a prompt to connect Threadify.
+- `references/slop-markers.md` holds the rules as original prose and credits humanizer (MIT), no-ai-slop (MIT) and Wikipedia's "Signs of AI writing" (linked, not copied).
+
 # 0.28.0
 
 - Run My Threads sources hooks from actual posts, assigns distinct batch evidence, and holds slots without suitable evidence.
