@@ -1,3 +1,9 @@
+# 0.29.1
+
+- Unslop: the offenders table collapses reposts into one row. Posts with the same normalised text (lowercase, whitespace collapsed), or the same first line and flagged phrases, show once with the most-viewed copy and a repeat count, for example `If you're drawn to: (x4)`. The JSON adds `repeats` and `repeat_ids` per offender.
+- Unslop: offenders rank by hedge count, then slop score, then views, so hedged posts lead the top 5 whenever any exist. Hedging is the highest-weighted family; a marker-only listicle no longer pushes every hedged post off the table.
+- Unslop: the JSON adds `polished_with_hedges`, and the verdict table adds one line: "X of Y polished posts had a hedge." The raw vs polished medians are unchanged and still count every post, reposts included.
+
 # 0.29.0
 
 - Add Threadify Unslop (`/threadify-unslop`, "AI doesn't make your posts slop. Polish does."): scores the last 90 days of Threads posts on four slop families (corporate and LinkedIn voice, AI tells, hedging, over-formatting) with hedging weighted 3x, quotes every flagged phrase, and compares raw vs polished median views, labelled "on your account", with the top 5 offenders. A polished win or a tie is reported as found.

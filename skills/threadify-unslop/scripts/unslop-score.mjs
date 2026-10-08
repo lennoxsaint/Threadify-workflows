@@ -12,6 +12,11 @@
 // (no views) get flags and offenders only, labelled as having no view
 // comparison. Missing views stay unknown, never 0. JSON on stdout with
 // ready-to-show tables. Exit 0 on success, 1 on bad input. Node 18+ only.
+//
+// Offenders: reposts collapse into one row (same normalised text, or same
+// first line and flagged phrases), keeping the most-viewed copy with a repeat
+// count. Rows rank by hedges, then slop score, then views, so hedged posts lead
+// whenever any exist. The verdict medians still count every post.
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { scoreText, WEIGHTS } from './hedge_gate.mjs';
@@ -73,6 +78,38 @@ const isLowercase = (text) => {
   return letters.length > 0 && letters.every((letter) => letter === letter.toLowerCase());
 };
 
+/** Lowercase and collapse whitespace so reposts with cosmetic differences match. */
+export const normalise = (text) => text.toLowerCase().replace(/\s+/g, ' ').trim();
+
+const fullFirstLine = (text) => text.split(/\r?\n/).map((part) => part.trim()).find(Boolean) ?? '';
+
+/** Every flagged phrase across the four families, normalised, deduplicated and sorted. */
+const phraseSet = (families) => [...new Set(Object.values(families).flat().map(normalise))].sort().join('\u0000');
+
+/**
+ * Collapse reposts among polished posts. Two posts are one offender when their
+ * normalised full text matches, or their first line and flagged-phrase set
+ * match. The most-viewed copy represents the group; `repeats` counts the group.
+ */
+export function dedupeOffenders(posts) {
+  const groups = [];
+  const byKey = new Map();
+  const byViews = [...posts].sort((a, b) => (b.post.views ?? -1) - (a.post.views ?? -1));
+  for (const { post, text } of byViews) {
+    const keys = [`text:${normalise(text)}`, `line:${normalise(fullFirstLine(text))}\u0001${phraseSet(post.families)}`];
+    const group = keys.map((key) => byKey.get(key)).find(Boolean);
+    if (group) group.ids.push(post.id);
+    else groups.push({ post, ids: [post.id] });
+    const target = group ?? groups[groups.length - 1];
+    for (const key of keys) if (!byKey.has(key)) byKey.set(key, target);
+  }
+  return groups.map(({ post, ids }) => ({ ...post, repeats: ids.length, repeat_ids: ids.slice(1) }));
+}
+
+/** Hedges first: hedge count, then slop score, then views. */
+export const rankOffenders = (offenders) =>
+  [...offenders].sort((a, b) => b.hedges - a.hedges || b.score - a.score || (b.views ?? -1) - (a.views ?? -1));
+
 const fmt = (value) => (value === null ? 'unknown' : Math.round(value).toLocaleString('en-US'));
 
 export function scorePosts(input) {
@@ -99,11 +136,13 @@ export function scorePosts(input) {
   });
   const raw = scored.filter((post) => post.class === 'raw');
   const polished = scored.filter((post) => post.class === 'polished');
+  const polishedWithHedges = polished.filter((post) => post.hedges > 0).length;
   const hasViews = mode === 'account' && scored.some((post) => post.views !== null);
   const verdict = hasViews ? buildVerdict(raw, polished) : null;
-  const offenders = [...polished]
-    .sort((a, b) => b.score - a.score || b.hedges - a.hedges || (b.views ?? -1) - (a.views ?? -1))
-    .slice(0, OFFENDERS_SHOWN);
+  const polishedWithText = scored
+    .map((post, index) => ({ post, text: usable[index].text }))
+    .filter(({ post }) => post.class === 'polished');
+  const offenders = rankOffenders(dedupeOffenders(polishedWithText)).slice(0, OFFENDERS_SHOWN);
   const topRaw = [...raw].sort((a, b) => (b.views ?? -1) - (a.views ?? -1)).slice(0, TOP_RAW_SHOWN);
   return {
     mode,
@@ -116,11 +155,12 @@ export function scorePosts(input) {
       polished: `any hedge, or ${RAW_MAX_MARKERS + 1}+ other markers`,
     },
     counts: { posts: scored.length, raw: raw.length, polished: polished.length, unknown_views: scored.filter((post) => post.views === null).length },
+    polished_with_hedges: polishedWithHedges,
     verdict,
     offenders,
     top_raw: topRaw,
     raw_lowercase_share: raw.length ? Math.round((raw.filter((post) => post.lowercase).length / raw.length) * 100) / 100 : null,
-    verdict_table: hasViews ? verdictTable(input.handle, input.window_days ?? 90, verdict) : null,
+    verdict_table: hasViews ? verdictTable(input.handle, input.window_days ?? 90, verdict, polishedWithHedges) : null,
     offenders_table: offendersTable(offenders, hasViews),
     posts: scored,
   };
@@ -159,7 +199,10 @@ function headline(winner, multiple) {
   return `No median to compare ${ACCOUNT_LABEL}: views are unknown for one class.`;
 }
 
-function verdictTable(handle, days, verdict) {
+/** One plain line for the verdict table. Contains zero hedge words. */
+export const hedgedLine = (withHedges, polishedCount) => `${withHedges} of ${polishedCount} polished posts had a hedge.`;
+
+function verdictTable(handle, days, verdict, polishedWithHedges) {
   return [
     `Unslop verdict · ${handle ?? '@handle'} · last ${days} days · ${ACCOUNT_LABEL}`,
     '',
@@ -168,6 +211,7 @@ function verdictTable(handle, days, verdict) {
     `| Raw | ${verdict.raw.posts} | ${fmt(verdict.raw.median_views)} |`,
     `| Polished | ${verdict.polished.posts} | ${fmt(verdict.polished.median_views)} |`,
     '',
+    ...(verdict.polished.posts ? [hedgedLine(polishedWithHedges, verdict.polished.posts), ''] : []),
     verdict.headline + (verdict.small_sample ? ` Small sample: fewer than ${SMALL_SAMPLE} posts with views in one class.` : ''),
   ].join('\n');
 }
@@ -179,7 +223,7 @@ function offendersTable(offenders, hasViews) {
     const phrases = [...post.families.hedging, ...post.families.corporate, ...post.families.ai_tells, ...post.families.over_formatting];
     const shown = phrases.slice(0, PHRASES_SHOWN).map((phrase) => `"${phrase.replace(/\|/g, '/').replace(/\s+/g, ' ')}"`).join(', ');
     const more = phrases.length > PHRASES_SHOWN ? ` +${phrases.length - PHRASES_SHOWN}` : '';
-    const line = post.first_line.replace(/\|/g, '/');
+    const line = post.first_line.replace(/\|/g, '/') + (post.repeats > 1 ? ` (x${post.repeats})` : '');
     return hasViews
       ? `| ${index + 1} | ${line} | ${fmt(post.views)} | ${post.score} | ${shown}${more} |`
       : `| ${index + 1} | ${line} | ${post.score} | ${shown}${more} |`;
