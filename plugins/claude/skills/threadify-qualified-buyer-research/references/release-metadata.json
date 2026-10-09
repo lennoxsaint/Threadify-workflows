@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.30.10",
+  "release_version": "0.30.12",
   "skill_version": "0.12.1",
-  "plugin_version": "0.30.10",
+  "plugin_version": "0.30.12",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Package the OpenAI plugin in the Codex format so Codex offers every Threadify tool (#60)"
+  "summary": "List the OpenAI plugin under Business & Operations, the category that matches a lead generation listing"
 }
