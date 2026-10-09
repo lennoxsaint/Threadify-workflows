@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/public-rule-proposal.v1.json",
+  "title": "PublicRuleProposalV1",
+  "type": "object",
+  "required": ["record_type", "proposal_id", "scope", "change", "evidence_class", "aggregate_evidence", "synthetic_reproduction", "privacy_result", "rollback", "promotion_state"],
+  "properties": {
+    "record_type": {"const": "PublicRuleProposalV1"},
+    "proposal_id": {"type": "string", "minLength": 8},
+    "scope": {"enum": ["candidate", "message"]},
+    "change": {"type": "object"},
+    "evidence_class": {"enum": ["safety_defect", "correctness_defect", "comparable_outcomes"]},
+    "aggregate_evidence": {"type": "object"},
+    "synthetic_reproduction": {"type": "object"},
+    "privacy_result": {"enum": ["passed", "failed"]},
+    "rollback": {"type": "object"},
+    "promotion_state": {"enum": ["draft_proposal", "promotion_recommended", "rejected"]}
+  },
+  "additionalProperties": false
+}

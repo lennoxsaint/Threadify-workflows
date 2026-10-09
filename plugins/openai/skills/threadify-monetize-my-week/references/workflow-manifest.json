@@ -1,0 +1,82 @@
+{
+  "workflow_id": "monetize-my-week",
+  "version": "0.1.0",
+  "title": "Monetize My Week",
+  "summary": "Select seven offer-relevant existing drafts, preserve their body copy, attach tailored tracked Auto Plugs, and schedule only after exact campaign approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-monetize-my-week",
+    "source": "plugins/threadify/skills/threadify-monetize-my-week/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/monetize-my-week/README.md"] },
+  "triggers": [
+    "monetize my week from my existing drafts",
+    "turn my draft backlog into a tracked seven-post offer campaign"
+  ],
+  "io": {
+    "inputs": [{ "name": "draft backlog and saved offer", "schema_ref": "inline:monetize-my-week-input" }],
+    "outputs": [{ "name": "campaign review and schedule receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "list_offers",
+    "list_drafts",
+    "get_draft",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": ["read_link_attribution", "read_post_performance"],
+  "free_capabilities": [
+    "local campaign review from an owner-approved draft and offer export"
+  ],
+  "paid_capability_stubs": [
+    "connected Threadify account access",
+    "Auto Plug entitlement",
+    "connected scheduling and attribution"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "seven exact unchanged posts",
+      "seven exact Auto Plugs and destination",
+      "seven local dates and times",
+      "50-minute trigger",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "local-campaign-review-packet",
+    "instructions": [
+      "Use only an owner-approved draft and offer export when connected reads are unavailable.",
+      "Keep provider selection, timing, tracking and scheduling unverified.",
+      "Offer manual follow-up replies when Auto Plug is not entitled."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "offer and tracked destination",
+      "unchanged post bodies",
+      "approved Auto Plug payloads",
+      "schedule and automation readback",
+      "attribution window",
+      "fallback state"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Choose Your First Offer"
+  short_description: "Compare three models and choose what to validate"
+  default_prompt: "Use $threadify-choose-your-first-offer to compare three offer models and choose my first truthful validation test."

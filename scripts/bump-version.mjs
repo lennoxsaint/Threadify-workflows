@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Move every copy of the release version forward in one step, so a release never
-// drifts across package.json, the three plugin manifests, the release intent,
+// drifts across package.json, the four plugin manifests, the release intent,
 // installation.md and the changelog. Generated bundles are refreshed afterwards.
 //
 //   node scripts/bump-version.mjs [patch|minor|major|<x.y.z>] --summary "<line>" [--summary "<line>" ...]
@@ -18,11 +18,12 @@ const FILES = {
   codexPlugin: '.codex-plugin/plugin.json',
   claudePlugin: 'plugins/claude/.claude-plugin/plugin.json',
   compatibilityPlugin: 'plugins/threadify/.codex-plugin/plugin.json',
+  openaiPlugin: 'plugins/openai/plugin.json',
   intent: 'release/release-intent.json',
   installation: 'installation.md',
   changelog: 'release/CHANGELOG.md',
 };
-const BUNDLE_SCRIPTS = ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs', 'build-workflow-bundles.mjs', 'build-claude-plugin.mjs'];
+const BUNDLE_SCRIPTS = ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs', 'build-workflow-bundles.mjs', 'build-claude-plugin.mjs', 'build-openai-plugin.mjs'];
 
 function fail(message) {
   console.error(`bump-version: ${message}`);
@@ -78,7 +79,7 @@ const current = intent.release_version;
 if (intent.plugin_version !== current) fail(`release intent has release_version ${current} but plugin_version ${intent.plugin_version}`);
 const next = nextVersion(current, options.bump);
 
-for (const key of ['codexPlugin', 'claudePlugin', 'compatibilityPlugin']) {
+for (const key of ['codexPlugin', 'claudePlugin', 'compatibilityPlugin', 'openaiPlugin']) {
   const manifest = readJson(FILES[key]);
   if (manifest.version !== current) fail(`${FILES[key]} is at ${manifest.version}, expected ${current}`);
   manifest.version = next;

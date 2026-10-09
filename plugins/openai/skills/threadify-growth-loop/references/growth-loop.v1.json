@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/growth-loop.v1.json",
+  "title": "Threadify Growth Loop setup status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["revision", "status"],
+  "properties": {
+    "revision": { "type": "integer", "minimum": 1 },
+    "status": { "$ref": "#/$defs/status" }
+  },
+  "$defs": {
+    "account": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "verified", "id_sha256"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "verified": { "const": true },
+        "id_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "scheduler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter", "route", "interval_hours", "job_id", "next_run_at", "verified"],
+      "properties": {
+        "adapter": { "enum": ["codex", "claude", "cursor", "gemini", "openclaw", "hermes", "manual"] },
+        "route": { "type": "string", "minLength": 1 },
+        "interval_hours": { "const": 6 },
+        "job_id": { "type": ["string", "null"] },
+        "next_run_at": { "type": ["string", "null"] },
+        "verified": { "type": "boolean" },
+        "timezone": { "type": "string", "minLength": 1 },
+        "verified_invocation_id": { "type": "string", "minLength": 1 },
+        "device_requirement": { "type": "string", "minLength": 1 },
+        "pause_command": { "type": "string", "minLength": 1 }
+      }
+    },
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflow_id", "account", "timezone", "goal", "draft_save_scope", "paused", "scheduler",
+        "observation_count", "hypothesis_count", "day_count", "pending_save_count",
+        "next_challenger_hypothesis_ids", "updated_at", "external_actions_performed"
+      ],
+      "properties": {
+        "workflow_id": { "const": "growth-loop" },
+        "account": { "$ref": "#/$defs/account" },
+        "timezone": { "type": "string", "minLength": 1 },
+        "goal": { "enum": ["reach", "balanced"] },
+        "draft_save_scope": { "const": "six_daily_drafts" },
+        "paused": { "type": "boolean" },
+        "scheduler": { "$ref": "#/$defs/scheduler" },
+        "observation_count": { "type": "integer", "minimum": 0 },
+        "hypothesis_count": { "type": "integer", "minimum": 0 },
+        "day_count": { "type": "integer", "minimum": 0 },
+        "pending_save_count": { "type": "integer", "minimum": 0 },
+        "next_challenger_hypothesis_ids": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "updated_at": { "type": "string", "minLength": 1 },
+        "external_actions_performed": { "const": false }
+      }
+    }
+  }
+}

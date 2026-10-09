@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/youtube-synthesizer-delivery.v1.json",
+  "title": "YouTube Synthesizer delivery contracts",
+  "oneOf": [
+    { "$ref": "#/$defs/input" },
+    { "$ref": "#/$defs/packet" },
+    { "$ref": "#/$defs/fallback" }
+  ],
+  "$defs": {
+    "nonempty": { "type": "string", "minLength": 1 },
+    "hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "thread": {
+      "type": "array",
+      "minItems": 8,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["platform", "account_id", "account_handle"],
+      "properties": {
+        "platform": { "const": "threads" },
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "account_handle": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "image": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "reference", "sha256", "mime_type", "bytes"],
+          "properties": {
+            "kind": { "const": "local" },
+            "reference": { "$ref": "#/$defs/nonempty" },
+            "sha256": { "$ref": "#/$defs/hash" },
+            "mime_type": { "$ref": "#/$defs/nonempty" },
+            "bytes": { "type": "integer", "minimum": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "reference", "sha256", "provider_url"],
+          "properties": {
+            "kind": { "const": "provider" },
+            "reference": { "$ref": "#/$defs/nonempty" },
+            "sha256": { "$ref": "#/$defs/hash" },
+            "provider_url": { "type": "string", "format": "uri", "pattern": "^https://" }
+          }
+        }
+      ]
+    },
+    "automation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auto_plug", "auto_repost", "global_auto_repost"],
+      "properties": {
+        "auto_plug": { "type": "null" },
+        "auto_repost": { "type": "null" },
+        "global_auto_repost": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["known", "enabled", "evidence_ref"],
+          "properties": {
+            "known": { "const": true },
+            "enabled": { "type": "boolean" },
+            "evidence_ref": { "$ref": "#/$defs/nonempty" }
+          }
+        }
+      }
+    },
+    "fresh_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_ref", "checked_at", "valid_until"],
+      "properties": {
+        "evidence_ref": { "$ref": "#/$defs/nonempty" },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" }
+      }
+    },
+    "account_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account_id", "account_handle", "timezone", "evidence_ref"],
+      "properties": {
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "account_handle": { "$ref": "#/$defs/nonempty" },
+        "timezone": { "$ref": "#/$defs/nonempty" },
+        "evidence_ref": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "best_time_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account_id", "timezone", "recommended_at", "evidence_ref", "checked_at", "valid_until"],
+      "properties": {
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "timezone": { "$ref": "#/$defs/nonempty" },
+        "recommended_at": { "type": "string", "format": "date-time" },
+        "evidence_ref": { "$ref": "#/$defs/nonempty" },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" }
+      }
+    },
+    "calendar_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["account_id", "timezone", "evidence_ref", "checked_at", "valid_until"],
+      "properties": {
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "timezone": { "$ref": "#/$defs/nonempty" },
+        "evidence_ref": { "$ref": "#/$defs/nonempty" },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validate_post", "schedule", "publish_now", "readback", "evidence_ref"],
+      "properties": {
+        "validate_post": { "type": "boolean" },
+        "schedule": { "type": "boolean" },
+        "publish_now": { "type": "boolean" },
+        "readback": { "type": "boolean" },
+        "evidence_ref": { "$ref": "#/$defs/nonempty" }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "account_id", "ordered_thread_sha256", "evidence_ref", "checked_at", "valid_until"],
+      "properties": {
+        "status": { "const": "passed" },
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "ordered_thread_sha256": { "$ref": "#/$defs/hash" },
+        "evidence_ref": { "$ref": "#/$defs/nonempty" },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" }
+      }
+    },
+    "calendar_entry": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["account_id", "scheduled_at"],
+      "properties": {
+        "account_id": { "$ref": "#/$defs/nonempty" },
+        "scheduled_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "input": {
+      "type": "object",
+      "required": ["record_type", "ordered_thread", "synthesis_output_sha256", "target", "timezone", "prepared_at", "automation", "connection", "capabilities", "validation"],
+      "properties": {
+        "record_type": { "const": "YouTubeSynthesizerDeliveryInputV1" },
+        "ordered_thread": { "$ref": "#/$defs/thread" },
+        "synthesis_output_sha256": { "$ref": "#/$defs/hash" },
+        "target": { "$ref": "#/$defs/target" },
+        "action": { "enum": ["schedule", "publish_now"], "default": "schedule" },
+        "timezone": { "$ref": "#/$defs/nonempty" },
+        "scheduled_at": { "type": ["string", "null"], "format": "date-time" },
+        "best_time_evidence": { "oneOf": [{ "$ref": "#/$defs/best_time_evidence" }, { "type": "null" }] },
+        "calendar": { "type": "array", "items": { "$ref": "#/$defs/calendar_entry" } },
+        "calendar_evidence": { "oneOf": [{ "$ref": "#/$defs/calendar_evidence" }, { "type": "null" }] },
+        "image": { "$ref": "#/$defs/image" },
+        "automation": { "$ref": "#/$defs/automation" },
+        "prepared_at": { "type": "string", "format": "date-time" },
+        "connection": { "$ref": "#/$defs/account_evidence" },
+        "capabilities": { "$ref": "#/$defs/capabilities" },
+        "validation": { "$ref": "#/$defs/validation" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "action": { "const": "publish_now" } }, "required": ["action"] },
+          "then": {
+            "properties": {
+              "scheduled_at": { "type": "null" },
+              "best_time_evidence": { "type": "null" },
+              "calendar_evidence": { "type": "null" }
+            }
+          },
+          "else": {
+            "required": ["scheduled_at", "best_time_evidence", "calendar", "calendar_evidence"],
+            "properties": {
+              "scheduled_at": { "type": "string", "format": "date-time" },
+              "best_time_evidence": { "$ref": "#/$defs/best_time_evidence" },
+              "calendar_evidence": { "$ref": "#/$defs/calendar_evidence" }
+            }
+          }
+        }
+      ]
+    },
+    "packet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_type", "schema_version", "module_version", "state", "prepared_at", "thread", "target", "timing", "image", "automation", "evidence", "approval_packet", "media_transfer", "delivery", "provider_writes"],
+      "properties": {
+        "record_type": { "const": "YouTubeSynthesizerDeliveryV1" },
+        "schema_version": { "const": "youtube-synthesizer-delivery.v1" },
+        "module_version": { "const": "1.0.0" },
+        "state": { "enum": ["awaiting_media_transfer_approval", "media_transfer_approved", "media_transfer_pending", "media_transfer_unknown", "awaiting_delivery_approval", "delivery_approved", "delivery_pending", "reconciliation_required", "outcome_unknown", "scheduled", "published"] },
+        "prepared_at": { "type": "string", "format": "date-time" },
+        "thread": {
+          "type": "object",
+          "required": ["ordered_thread", "ordered_thread_sha256", "synthesis_output_sha256"],
+          "properties": {
+            "ordered_thread": { "$ref": "#/$defs/thread" },
+            "ordered_thread_sha256": { "$ref": "#/$defs/hash" },
+            "synthesis_output_sha256": { "$ref": "#/$defs/hash" }
+          }
+        },
+        "target": { "$ref": "#/$defs/target" },
+        "timing": { "type": "object" },
+        "image": { "$ref": "#/$defs/image" },
+        "automation": { "$ref": "#/$defs/automation" },
+        "evidence": { "type": "object" },
+        "approval_packet": { "type": ["object", "null"] },
+        "media_transfer": { "type": ["object", "null"] },
+        "delivery": { "type": ["object", "null"] },
+        "provider_writes": { "type": "integer", "minimum": 0, "maximum": 2 }
+      }
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_type", "schema_version", "status", "reason", "approval_packet", "ordered_thread", "target", "timing", "image", "automation", "provider_writes"],
+      "properties": {
+        "record_type": { "const": "YouTubeSynthesizerDeliveryFallbackV1" },
+        "schema_version": { "const": "youtube-synthesizer-delivery.v1" },
+        "status": { "const": "manual_private_handoff" },
+        "reason": { "$ref": "#/$defs/nonempty" },
+        "approval_packet": { "type": ["object", "null"] },
+        "ordered_thread": { "$ref": "#/$defs/thread" },
+        "target": { "$ref": "#/$defs/target" },
+        "timing": { "type": "object" },
+        "image": { "$ref": "#/$defs/image" },
+        "automation": { "$ref": "#/$defs/automation" },
+        "provider_writes": { "const": 0 }
+      }
+    }
+  }
+}

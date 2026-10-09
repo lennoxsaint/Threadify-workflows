@@ -1,0 +1,4 @@
+interface:
+  display_name: "Publish Everywhere"
+  short_description: "One video to YouTube, Threads and X after one exact yes"
+  default_prompt: "Use $threadify-publish-everywhere to check where this video can go, have Threadify write the post and YouTube title, and schedule it to YouTube, Threads and X for my approval."

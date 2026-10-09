@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/niche-report.v1.json",
+  "title": "Threadify Niche Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "generated_at", "account", "window", "coverage", "evidence_method", "niche", "ideal_client", "themes", "content_pillars", "emphasize", "stop_pursuing", "next_profile_action", "confidence", "limitations"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "account": {
+      "type": "object", "additionalProperties": false, "required": ["label", "verified"],
+      "properties": { "label": { "type": "string", "minLength": 1 }, "verified": { "type": "boolean" } }
+    },
+    "window": {
+      "type": "object", "additionalProperties": false,
+      "required": ["start", "end", "requested_days", "expanded_days", "owned_post_count"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" }, "end": { "type": "string", "format": "date-time" },
+        "requested_days": { "const": 90 }, "expanded_days": { "type": "integer", "minimum": 90, "maximum": 365 },
+        "owned_post_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "coverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["posts_complete", "audience_comments_complete", "creator_replies_complete", "gaps"],
+      "properties": {
+        "posts_complete": { "type": "boolean" }, "audience_comments_complete": { "type": "boolean" }, "creator_replies_complete": { "type": "boolean" },
+        "gaps": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      }
+    },
+    "evidence_method": { "enum": ["provider_ranked", "user_export_ranked", "sampled"] },
+    "niche": {
+      "type": "object", "additionalProperties": false, "required": ["statement", "avatar", "problem", "mechanism", "why"],
+      "properties": { "statement": { "type": "string", "minLength": 1 }, "avatar": { "type": "string", "minLength": 1 }, "problem": { "type": "string", "minLength": 1 }, "mechanism": { "type": "string", "minLength": 1 }, "why": { "type": "string", "minLength": 1 } }
+    },
+    "ideal_client": {
+      "type": "object", "additionalProperties": false, "required": ["label", "situation", "pains", "desired_outcomes", "language", "objections", "purchase_intent_proven"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 }, "situation": { "type": "string", "minLength": 1 },
+        "pains": { "$ref": "#/$defs/nonEmptyStrings" }, "desired_outcomes": { "$ref": "#/$defs/nonEmptyStrings" }, "language": { "$ref": "#/$defs/nonEmptyStrings" }, "objections": { "$ref": "#/$defs/nonEmptyStrings" },
+        "purchase_intent_proven": { "const": false }
+      }
+    },
+    "themes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/theme" } },
+    "content_pillars": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/$defs/pillar" } },
+    "emphasize": { "$ref": "#/$defs/nonEmptyStrings" }, "stop_pursuing": { "$ref": "#/$defs/nonEmptyStrings" },
+    "next_profile_action": { "type": "string", "minLength": 1 },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "limitations": { "$ref": "#/$defs/nonEmptyStrings" }
+  },
+  "$defs": {
+    "nonEmptyStrings": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "theme": {
+      "type": "object", "additionalProperties": false, "required": ["theme", "lane", "observation", "distinct_sources", "evidence_refs"],
+      "properties": {
+        "theme": { "type": "string", "minLength": 1 }, "lane": { "enum": ["owned_post", "audience_comment", "creator_reply", "cross_lane"] },
+        "observation": { "type": "string", "minLength": 1 }, "distinct_sources": { "type": "integer", "minimum": 1 },
+        "evidence_refs": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    },
+    "pillar": {
+      "type": "object", "additionalProperties": false, "required": ["name", "promise", "example_topics"],
+      "properties": { "name": { "type": "string", "minLength": 1 }, "promise": { "type": "string", "minLength": 1 }, "example_topics": { "$ref": "#/$defs/nonEmptyStrings" } }
+    }
+  }
+}

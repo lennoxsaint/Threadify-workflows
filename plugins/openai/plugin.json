@@ -1,0 +1,104 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "threadify-workflows",
+  "version": "0.30.8",
+  "description": "Your lead generation agent for Threads, X, LinkedIn and YouTube: the Threadify connection plus guided workflows to write and schedule posts in your voice, reply to comments, and track the leads and sales your posts bring.",
+  "author": {
+    "name": "Threadify",
+    "url": "https://www.threadify.app"
+  },
+  "homepage": "https://www.threadify.app",
+  "license": "MIT",
+  "keywords": [
+    "threadify",
+    "threads",
+    "lead-generation",
+    "social-media",
+    "workflows",
+    "agent-skills"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Threadify",
+        "shortDescription": "Your lead generation agent",
+        "longDescription": "Threadify is the lead generation agent and OS for creators on Threads, X, LinkedIn and YouTube. It turns attention into leads, and this plugin lets you run it in plain language: the Threadify connection plus the Threadify Workflows skills.\n\nCreate posts that bring leads: draft posts and threads from your Threadify Brain (your voice, your facts and the patterns of your best-performing posts), weave in your offers (a course, community, newsletter or product), then schedule them or publish now and cross-post the same content to your connected X, LinkedIn and YouTube accounts.\n\nTurn conversations into leads: work through comments and mentions and draft replies in your voice.\n\nSee what converts: with link tracking on, links in your posts are tracked, you can make tracked bio links, and conversion tracking for platforms like Skool, beehiiv, Gumroad, Whop and Stripe shows which posts drove clicks, signups and sales. You can also read how your posts performed, find your best time to post, see audience demographics and growth, and manage your calendar, drafts, projects and saved inspiration.\n\nRun guided workflows: start with Get Set Up, then use workflows such as Growth Loop (learn from your mature posts and prepare the next drafts), Money Posts (rank posts by clicks per 1,000 views), Offer Builder, Qualified Buyer Research, YouTube Synthesizer (turn a YouTube video or pasted transcript into hooks and a long-form draft in your voice), Publish Everywhere and Threads Teach. Some workflows run helper scripts included with the plugin and keep private notes on your computer where your app supports it, such as Codex.\n\nYou stay in control: the exact text (and time, for scheduling) is confirmed with you before anything is posted, scheduled or sent, and this plugin has no autopilot mode. Everything acts on the Threadify account you choose when you connect; you can disconnect any time from Threadify's Agent tab.\n\nRequires an existing Threadify account with a connected Threads account.",
+        "developerName": "Threadify",
+        "category": "Productivity",
+        "capabilities": [
+          "Interactive",
+          "Read",
+          "Write"
+        ],
+        "websiteURL": "https://www.threadify.app",
+        "supportURL": "https://www.threadify.app/contact",
+        "privacyPolicyURL": "https://www.threadify.app/privacy",
+        "termsOfServiceURL": "https://www.threadify.app/terms",
+        "defaultPrompt": [
+          "Get Set Up",
+          "Write a Threads post in my voice about why consistency beats intensity",
+          "Which of my posts drove the most link clicks this month?"
+        ],
+        "brandColor": "#DC0000",
+        "brandColorDark": "#FF5C5C",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/threadify-get-set-up/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Write a post in the account's voice",
+              "prompt": "Write a Threads post in my voice about why consistency beats intensity.",
+              "tools_triggered": "get_connection_defaults, generate_content",
+              "expected_behavior": "Threadify writes a draft in the account's voice from its Brain and shows it for review. Nothing is posted or scheduled."
+            },
+            {
+              "description": "Read post performance and the best time to post",
+              "prompt": "How did my posts do this week, and when is my best time to post?",
+              "tools_triggered": "read_post_performance, best_time_to_post",
+              "expected_behavior": "A summary of the week's posts and the best day and time to post, from the account's own data."
+            },
+            {
+              "description": "Draft replies to new comments",
+              "prompt": "Draft replies to my new Threads comments.",
+              "tools_triggered": "generate_replies",
+              "expected_behavior": "Draft replies in the account's voice. None is sent until the user confirms each one."
+            },
+            {
+              "description": "Find the posts that drove the most link clicks",
+              "prompt": "Which of my posts drove the most link clicks this month?",
+              "tools_triggered": "read_link_attribution",
+              "expected_behavior": "Tracked links ranked by clicks, with signups and sales where conversion tracking is set up."
+            },
+            {
+              "description": "Schedule a draft only after confirmation",
+              "prompt": "Schedule my latest draft for tomorrow at 9am.",
+              "tools_triggered": "list_drafts, validate_post, schedule_post",
+              "expected_behavior": "The exact text and the resolved time are shown and the user is asked to confirm before schedule_post runs."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Off-topic request: Threadify should not be used",
+              "prompt": "What's the weather in Sydney?"
+            },
+            {
+              "description": "Posting to an account the user has not connected: refused, the plugin acts only on the user's connected accounts",
+              "prompt": "Post this to @someoneelse's Threads account."
+            },
+            {
+              "description": "Publishing without confirmation: the plugin still shows the exact text and asks before publishing, because this connection has no autopilot",
+              "prompt": "Publish something about AI right now, don't show me first."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin does not sell products or process payments."
+      },
+      "publication": {
+        "release_notes": "First release on OpenAI: the Threadify connection and the Threadify Workflows skills."
+      }
+    }
+  }
+}

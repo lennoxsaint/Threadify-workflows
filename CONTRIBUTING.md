@@ -57,6 +57,10 @@ repo only pins a specific Eddy **release tag**. The current pin is **v1.9.1**.
 
 `plugins/claude` is the Claude Code plugin root and the folder submitted to the Claude plugin directory. `scripts/build-claude-plugin.mjs` mirrors `skills/` and the threadify entry of `.mcp.json` into it; `npm run bundle:build` regenerates it and `npm run bundle:check` fails on drift. Edit skills at the root, never inside the mirror. `plugins/claude/.claude-plugin/plugin.json` and `icon.png` are source files: the manifest version moves with `npm run bump`, and the icon is the directory listing icon.
 
+## OpenAI plugin folder
+
+`plugins/openai` is the package submitted to OpenAI's plugin directory (ChatGPT and Codex). `scripts/build-openai-plugin.mjs` copies the skills from `plugins/claude/skills`, so both directories carry the same workflows, and changes only what OpenAI's platform needs: the connection points at `https://www.threadify.app/api/mcp/openai`, and no skill links to Threadify's plans page, offers a free trial or states an upgrade URL (OpenAI's commerce rules); two YouTube Synthesizer example posts that advertised a plan are replaced by a marked omission and that library's integrity lock is recomputed with the skill's own checks. Each of those rewrites must match an exact number of files, so rewording a source sentence fails `npm run bundle:check` until the build is updated. `npm run bundle:build` regenerates the folder after the Claude mirror. `plugins/openai/plugin.json`, `README.md` and `assets/` are source files: the manifest version moves with `npm run bump`. To submit, zip the folder's contents so `plugin.json` sits at the ZIP root (the README has the command).
+
 ## Versions and releases
 
 Every merge to `main` is a stable release: the release workflow tags it and publishes the assets, and Claude Code plugin installs see it as an update. The version lives in several files, so never edit them by hand. Run one command in your branch instead:
@@ -65,6 +69,6 @@ Every merge to `main` is a stable release: the release workflow tags it and publ
 npm run bump -- patch --summary "One changelog line describing the change"
 ```
 
-Use `minor` or `major` instead of `patch` when the change warrants it, repeat `--summary` for more changelog lines, or pass an explicit `x.y.z`. The command moves `package.json`, the lockfile, the Codex, Claude and compatibility plugin manifests, `release/release-intent.json`, `installation.md` and `release/CHANGELOG.md` together, then refreshes the generated bundles. `npm run validate` fails if any copy drifts.
+Use `minor` or `major` instead of `patch` when the change warrants it, repeat `--summary` for more changelog lines, or pass an explicit `x.y.z`. The command moves `package.json`, the lockfile, the Codex, Claude, OpenAI and compatibility plugin manifests, `release/release-intent.json`, `installation.md` and `release/CHANGELOG.md` together, then refreshes the generated bundles. `npm run validate` fails if any copy drifts.
 
 If a merge lands without a bump, the `auto-bump` workflow bumps the patch version on `main`, using the merged commit subjects as the changelog lines, and the release workflow publishes it. It needs the `RELEASE_BUMP_TOKEN` repository secret, a fine-grained token with Contents: read and write, because `main` requires pull requests and the default Actions token cannot push there.

@@ -1,0 +1,76 @@
+{
+  "workflow_id": "weekly-buyer-outcomes",
+  "version": "0.1.0",
+  "title": "Weekly Buyer Outcomes",
+  "summary": "Review the past seven days of buyer actions and commitments while separating owner-reported results from provider-observed evidence.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-weekly-buyer-outcomes",
+    "source": "plugins/threadify/skills/threadify-weekly-buyer-outcomes/SKILL.md"
+  },
+  "bundle": { "kind": "conversation", "standalone": false },
+  "dependencies": {
+    "workflows": ["follow-through"],
+    "files": [
+      "workflows/weekly-buyer-outcomes/README.md",
+      "schemas/conversation-records.v1.json",
+      "schemas/conversation-lifecycle.v1.json"
+    ]
+  },
+  "triggers": [
+    "review my buyer outcomes for the past seven days",
+    "show this week's provider-observed and owner-reported buyer results"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "action commitment and outcome records", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ],
+    "outputs": [
+      { "name": "seven-day buyer outcome review", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults"],
+  "free_capabilities": [
+    "local seven-day outcome review",
+    "owner-reported and provider-observed separation",
+    "unknown and open-work preservation",
+    "review-only next-step candidate"
+  ],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "exact seven-day window and timezone",
+      "outcome evidence origin",
+      "unknown and open items",
+      "exact proposed next action",
+      "action hash",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-weekly-outcome-review",
+    "artifact_schema": "conversation-lifecycle.v1",
+    "instructions": [
+      "Review only records observed inside the requested past-seven-day window.",
+      "Separate owner-reported outcomes from provider-observed evidence and retain unknowns.",
+      "Do not infer leads, calls, offers, payments or sales from likes or generic engagement."
+    ]
+  },
+  "receipt": {
+    "schema": "conversation-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "state revision",
+      "window and timezone",
+      "owner-reported outcomes",
+      "provider-observed outcomes and readback source",
+      "unknown and open items",
+      "approved next action if any",
+      "fallback state"
+    ]
+  }
+}

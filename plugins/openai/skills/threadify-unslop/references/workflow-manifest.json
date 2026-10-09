@@ -1,0 +1,117 @@
+{
+  "workflow_id": "unslop",
+  "version": "0.1.0",
+  "title": "Threadify Unslop",
+  "summary": "Score your last 90 days of Threads posts for slop (corporate voice, AI tells, hedging, over-formatting), show raw vs polished median views on your account with the worst offenders quoted, then have Threadify write three raw posts that pass a zero-hedge gate, each with a tracked Auto Plug, and schedule them only after one exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-unslop",
+    "source": "plugins/threadify/skills/threadify-unslop/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/unslop/README.md"
+    ]
+  },
+  "triggers": [
+    "unslop",
+    "which of my posts sound like slop",
+    "no hedging"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "connected account and 90 days of post performance, or 5-20 pasted posts or drafts, and a saved offer",
+        "schema_ref": "inline:unslop-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slop verdict, offenders, gate results, approval packet and schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_post_performance",
+    "generate_content",
+    "list_offers",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "get_post_thread",
+    "search_posts"
+  ],
+  "free_capabilities": [
+    "deterministic slop score on four families with hedging weighted highest and every flagged phrase quoted",
+    "raw vs polished median views labelled on your account",
+    "zero-hedge gate that prints PASS or FAIL with the matched phrases",
+    "pasted-post scoring with no view comparison",
+    "local casing guard that proves lower(original) == lower(final) for every post and plug"
+  ],
+  "paid_capability_stubs": [
+    "post performance history depends on the plan's analytics window",
+    "Threadify post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "exact posts with gate results",
+      "exact Auto Plugs and destination",
+      "join count with its source and date, or why the line was dropped",
+      "local dates and times",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "score-only-without-substitute-copy",
+    "instructions": [
+      "Never write or edit posts or plugs yourself; Threadify generates every word and the only permitted change is lowercasing proved by the casing guard.",
+      "When a post fails the zero-hedge gate three times, hold it with its reasons and never schedule it.",
+      "When the casing guard fails, present Threadify's original text unchanged.",
+      "When the offer is not free to try or the join count has no verified, dated source, ask the owner for the number or drop the free-to-try line; never invent or round up the number.",
+      "With zero posts in the window or no Threadify connection, score 5-20 pasted posts or drafts, label them as having no view comparison and say how to connect Threadify.",
+      "When a number is not returned, show it as unknown, never 0.",
+      "When polished posts beat raw posts on the account, report that result."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "performance window",
+      "slop scores, flagged phrases and verdict label",
+      "gate attempts and reasons",
+      "plug briefs and join count sources",
+      "models requested and reported",
+      "casing guard results",
+      "approval reply",
+      "scheduled posts, slots and Auto Plug echo",
+      "schedule readback",
+      "fallback state"
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "workflow_id": "refresh-your-threads-profile",
+  "version": "0.1.0",
+  "title": "Refresh Your Threads Profile",
+  "summary": "Interview a creator and turn their niche and approved context into three coherent bio-and-profile-picture systems with a safe review-and-apply path.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-refresh-your-threads-profile",
+    "source": "plugins/threadify/skills/threadify-refresh-your-threads-profile/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "workflows/refresh-your-threads-profile/CONTRACT.md", "target": "references/profile-contract.md" },
+      { "source": "schemas/profile-plan.v1.json", "target": "references/profile-plan.v1.json" },
+      { "source": "docs/research/threads-profile-bios-and-pictures.md", "target": "references/profile-research.md" },
+      { "source": "tools/profile-plan/cli.mjs", "target": "scripts/cli.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": ["find-your-niche"],
+    "files": [
+      "workflows/refresh-your-threads-profile/README.md",
+      "workflows/refresh-your-threads-profile/CONTRACT.md",
+      "schemas/profile-plan.v1.json",
+      "docs/research/threads-profile-bios-and-pictures.md"
+    ]
+  },
+  "triggers": [
+    "refresh my Threads bio and profile picture",
+    "redesign my Threads profile from my niche",
+    "help me safely apply a new Threads profile"
+  ],
+  "io": {
+    "inputs": [{ "name": "interview and approved profile context", "schema_ref": "inline:approved-profile-context" }],
+    "outputs": [{ "name": "private profile plan", "schema_ref": "schemas/profile-plan.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools", "call_agent_action"],
+  "free_capabilities": ["adaptive interview", "three local profile systems", "private HTML and Markdown plan", "manual apply instructions", "deterministic visual fallback"],
+  "paid_capability_stubs": ["connected profile reads depend on current Threadify scopes and plan entitlement", "agent-controlled profile editing depends on current host browser or native UI capabilities"],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["verified Threads account", "exact bio", "selected picture", "sync and verification state", "exact external action", "fallback state"]
+  },
+  "fallback": {
+    "mode": "private-local-plan-and-manual-apply",
+    "artifact_schema": "profile-plan.v1",
+    "instructions": [
+      "Use an owner-supplied screenshot or baseline when connected profile reads are unavailable.",
+      "Emit a labelled deterministic visual placeholder when a consented source image or image generation is unavailable.",
+      "Give current manual editor steps when safe browser or native UI control is unavailable, and do not claim the profile changed."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["plan hash", "selected candidate", "visual delivery", "approval state", "readback state", "fallback state"]
+  }
+}
