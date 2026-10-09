@@ -25,7 +25,7 @@ Lesson 1 comes first for everyone. After that, pick the lesson that is the small
 
 A learner who already knows a lesson can skip it. Record what they said they know, then check it with one retrieval question in a later session.
 
-## Retrieval practice
+## Practice by retrieval
 
 From the second session on, start with two or three questions about earlier lessons, answered from memory. Use the lesson's own framework note to write them. Good questions ask the learner to do the thing ("label the hook, hold and help in this post of yours"), not to recite it.
 

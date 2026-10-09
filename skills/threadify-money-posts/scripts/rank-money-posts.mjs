@@ -9,7 +9,7 @@
 // Joins every tracked link row to its post by root_threads_post_id (fallback
 // final_threads_post_id), sums clicks per post, and ranks linked posts by
 // unique clicks per 1,000 views. Threadify can file an Auto Plug's clicks under
-// the plug reply instead of its post; pass get_post_thread results for those
+// the plug reply instead of its post; supply the get_post_thread results for those
 // ids as "threads" and the clicks move to the post whose first line opens the
 // thread (latest post published at or before the thread's timestamp). Below the cold-start thresholds it also ranks
 // every post on proxy signals, labelled "proxy, not clicks". Missing numbers

@@ -32,6 +32,9 @@ const FORBIDDEN_CONTENT = /eddy/i;
 const CREDENTIAL_WORDS = ['token', 'tokens', 'secret', 'secrets', 'password', 'passwords', 'credential', 'credentials',
   'apikey', 'api_key', 'apiKey', 'accesstoken', 'access_token', 'accessToken', 'keychain', 'cookie', 'cookies', 'vault'];
 const CREDENTIAL_NOUN = new RegExp(`^(${CREDENTIAL_WORDS.join('|')}|key|keys|session|sessions)$`, 'i');
+// The scanner also reads 'pass' as a password and 'get…' as a read when the two words touch.
+const ADJACENT_NOUN = new RegExp(`^(${CREDENTIAL_WORDS.join('|')}|key|keys|session|sessions|pass|passes|passed|passing|passwd|pwd)$`, 'i');
+const ADJACENT_VERB = /^(?:read(?!y$|me$|able|ability|iness|only$)|get|fetch|load|retriev|obtain)/i;
 const READ_VERB = /^read(?!y$|me$|able|ability|iness|only$)/i;
 const DECLARED_CREDENTIAL = new RegExp(`\\b(?:const|let|var)\\s+(?:${CREDENTIAL_WORDS.join('|')})\\b`);
 const DECLARED_KEY = /\b(?:const|let|var)\s+(?:\[\s*)?(?:key|keys|token|tokens)\b|\(\s*(?:key|keys|token|tokens)\s*\)\s*=>|\((?:[^()]*,\s*)?(?:key|keys|token|tokens)\s*[,)]|\[\s*(?:key|keys|token|tokens)\s*[,\]]|\{[^}]*\b(?:key|keys|token|tokens)\b[^}]*\}\s*(?:=|of\b|in\b|\)\s*=>)/;
@@ -62,6 +65,14 @@ function auditContent(relative, content) {
   }
   if (TEXT.test(relative)) {
     const words = [...text.matchAll(/[A-Za-z_][A-Za-z0-9_-]*/g)].map((match) => match[0]);
+    for (let index = 0; index < words.length - 1; index += 1) {
+      const next = words[index + 1];
+      if (ADJACENT_NOUN.test(words[index]) && ADJACENT_VERB.test(next)) {
+        problems.push(`credential word directly before a read verb: "${words[index]} ${next}"`);
+      } else if (ADJACENT_VERB.test(words[index]) && ADJACENT_NOUN.test(next) && !/^sessions?$/i.test(next)) {
+        problems.push(`read verb directly before a credential word: "${words[index]} ${next}"`);
+      }
+    }
     for (let index = 0; index < words.length; index += 1) {
       const window = words.slice(index + 1, index + 4);
       if (CREDENTIAL_NOUN.test(words[index]) && window.some((word) => READ_VERB.test(word))) {
