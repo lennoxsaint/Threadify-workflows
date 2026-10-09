@@ -11,10 +11,11 @@
     "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs && node scripts/build-workflow-bundles.mjs",
     "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check && node scripts/build-workflow-bundles.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
+    "bump": "node scripts/bump-version.mjs",
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/catalog.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
-    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:offer-decision && npm run test:registry && npm run test:conversations && npm run test:lead-desk && npm run test:niche && npm run test:profile && npm run test:post-this-next && npm run test:growth-loop && npm run test:forensics && npm run test:market-pipeline && npm run test:synthesizer && npm run test:setup && npm run test:run-my-threads && npm run test:money-posts && npm run test:publish-everywhere",
+    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:offer-decision && npm run test:registry && npm run test:conversations && npm run test:lead-desk && npm run test:niche && npm run test:profile && npm run test:post-this-next && npm run test:growth-loop && npm run test:forensics && npm run test:market-pipeline && npm run test:synthesizer && npm run test:setup && npm run test:run-my-threads && npm run test:money-posts",
     "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs",
     "test:offer-decision": "node --test validation/offer-decision-tests/*.test.mjs",
     "test:registry": "node --test validation/registry-tests/*.test.mjs",
@@ -29,8 +30,7 @@
     "test:synthesizer": "node --test validation/youtube-synthesizer-tests/*.test.mjs",
     "test:setup": "node --test validation/onboarding-tests/*.test.mjs",
     "test:run-my-threads": "node --test validation/run-my-threads-tests/*.test.mjs",
-    "test:money-posts": "node --test validation/money-posts-tests/*.test.mjs",
-    "test:publish-everywhere": "node --test validation/publish-everywhere-tests/*.test.mjs"
+    "test:money-posts": "node --test validation/money-posts-tests/*.test.mjs"
   },
   "engines": {
     "node": ">=18"

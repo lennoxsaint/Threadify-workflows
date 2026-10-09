@@ -6,6 +6,10 @@
 - YouTube privacy is asked on every run and never defaulted, and `made_for_kids` is never set without asking. `scripts/publish-card.mjs` refuses to build the approval card until those are decided, and returns the `schedule_post` arguments only for the exact reply "yes" to that exact card.
 - One approval card: exact post, YouTube title, format and privacy, each platform with handle and time, anything dropped and why, the X metered note and a note when global auto-repost is on. Then one `schedule_post` with `platforms`, `youtube_options` and an `idempotency_key`, and a `get_schedule_status` readback. An unclear result is inspected before any retry. One video per run, nothing deleted, never publishes now, and a 402 or quota error stops the run.
 
+# 0.29.3
+
+- Add one-command version bump and post-merge auto-bump workflow (#50)
+
 # 0.29.2
 
 - Unslop: every Auto Plug sells the owner's offer, the product they sell, never the Unslop workflow. It is specific to the post it replies to and continues it.

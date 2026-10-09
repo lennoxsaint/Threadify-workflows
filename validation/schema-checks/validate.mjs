@@ -451,6 +451,11 @@ function validateDurableRuleContracts() {
   assert(claudeEntry?.source === './', 'Claude marketplace must list the root plugin with source "./"');
   const mcp = readJson(path.join(root, '.mcp.json'));
   assert(mcp?.mcpServers?.threadify?.type === 'streamable-http', '.mcp.json threadify server must declare its transport type');
+  const changelog = fs.readFileSync(path.join(root, 'release', 'CHANGELOG.md'), 'utf8').replace(/\r\n/g, '\n');
+  assert(changelog.startsWith(`# ${releaseIntent.release_version}\n`), 'release/CHANGELOG.md must start with the current release version');
+  const installation = fs.readFileSync(path.join(root, 'installation.md'), 'utf8');
+  assert(installation.includes(`**${releaseIntent.release_version}**`) && installation.includes(`#v${releaseIntent.release_version}`),
+    'installation.md must reference the current release version');
 }
 
 const files = walk(root);
