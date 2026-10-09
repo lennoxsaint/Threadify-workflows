@@ -44,7 +44,7 @@ Use `vault30-next`. Show only its returned card, source lineage, rights basis, l
 - `skip`: preserve the copy for tomorrow and advance.
 - `reject`: close the card and advance.
 
-Connected approval is not scheduling by itself. After `vault30-decide`, refresh account, timezone, facts, rights, provider validation and calendar. Use `vault30-begin-attempt` to persist the exact idempotent request before calling `schedule_post`. Never call `publish_now`. Then call `get_schedule_status` and use `vault30-reconcile` only when account, draft, copy, time, idempotency key and `scheduled` state match exactly.
+Connected approval is not scheduling by itself. After `vault30-decide`, refresh account, timezone, facts, rights, provider validation and calendar. Use `vault30-begin-attempt` to persist the exact idempotent request before calling `schedule_post`. Never call `publish_now`. Then call `get_schedule_status` and use `vault30-reconcile` only when account, draft, copy, time, idempotency id and `scheduled` state match exactly.
 
 An unavailable or ambiguous result stays `approved_unscheduled`, queues no retry and blocks the next card. Inspect provider state before doing anything else. Disconnected cards may use `vault30-complete-local` after exact approval; say “reviewed locally,” not “scheduled.”
 
