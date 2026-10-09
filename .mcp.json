@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "threadify": {
+      "type": "streamable-http",
       "url": "https://www.threadify.app/api/mcp/threadify"
     }
   }

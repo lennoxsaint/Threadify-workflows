@@ -1,0 +1,21 @@
+{
+  "name": "threadify-workflows",
+  "displayName": "Threadify Workflows",
+  "version": "0.30.0",
+  "description": "Set up Threadify, then learn from mature posts and prepare the next six drafts through one private growth loop.",
+  "author": {
+    "name": "Threadify",
+    "url": "https://www.threadify.app"
+  },
+  "homepage": "https://www.threadify.app",
+  "repository": "https://github.com/lennoxsaint/Threadify-workflows",
+  "license": "MIT",
+  "keywords": [
+    "threadify",
+    "threads",
+    "mcp",
+    "workflows",
+    "lead-generation",
+    "agent-skills"
+  ]
+}

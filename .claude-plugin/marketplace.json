@@ -1,0 +1,15 @@
+{
+  "name": "threadify",
+  "description": "Threadify Workflows for Claude Code: setup, Brain and voice, growth loop, buyer workflows and approved delivery through Threadify.",
+  "owner": {
+    "name": "Threadify",
+    "url": "https://www.threadify.app"
+  },
+  "plugins": [
+    {
+      "name": "threadify-workflows",
+      "source": "./",
+      "description": "Set up Threadify, then learn from mature posts and prepare the next six drafts through one private growth loop."
+    }
+  ]
+}
