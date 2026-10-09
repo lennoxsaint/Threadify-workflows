@@ -1,0 +1,95 @@
+name: auto-bump
+
+# Every merge to main is a release. When a merge lands without moving the
+# release version, bump the patch version, add the merged commit subjects to
+# the changelog and push the bump. The release workflow then publishes it.
+# The default token cannot push to main (pull requests are required), so the
+# push uses the RELEASE_BUMP_TOKEN secret: a fine-grained token for this
+# repository with Contents: read and write. Pushes made with it trigger the
+# validate and stable-release workflows like any other push.
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+concurrency:
+  group: threadify-workflows-auto-bump
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: bump-when-merge-did-not
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_BUMP_TOKEN || github.token }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Compare the release version with the previous main tip
+        id: detect
+        shell: bash
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          before="$BEFORE"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before^{commit}" 2>/dev/null; then
+            before="$(git rev-parse HEAD^ 2>/dev/null || true)"
+          fi
+          current="$(node -p "require('./release/release-intent.json').release_version")"
+          previous="none"
+          if [ -n "$before" ] && git cat-file -e "$before:release/release-intent.json" 2>/dev/null; then
+            previous="$(git show "$before:release/release-intent.json" | node -p "JSON.parse(require('fs').readFileSync(0, 'utf8')).release_version")"
+          fi
+          echo "before=$before" >> "$GITHUB_OUTPUT"
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+          echo "previous=$previous" >> "$GITHUB_OUTPUT"
+          if [ "$previous" = "none" ] || [ "$current" != "$previous" ]; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "Release version already moved ($previous -> $current); nothing to bump."
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "Release version still $current after this push; bumping."
+          fi
+      - name: Collect the merged commit subjects for the changelog
+        if: steps.detect.outputs.needed == 'true'
+        shell: bash
+        env:
+          BEFORE: ${{ steps.detect.outputs.before }}
+        run: |
+          subjects="$RUNNER_TEMP/subjects.txt"
+          if [ -n "$BEFORE" ]; then git log --no-merges --format=%s "$BEFORE..HEAD" > "$subjects"; fi
+          if [ ! -s "$subjects" ]; then git log -1 --format=%s HEAD > "$subjects"; fi
+          cat "$subjects"
+      - name: Install locked dependencies
+        if: steps.detect.outputs.needed == 'true'
+        run: npm ci --ignore-scripts
+      - name: Bump the patch version
+        if: steps.detect.outputs.needed == 'true'
+        run: node scripts/bump-version.mjs patch --summary-file "$RUNNER_TEMP/subjects.txt"
+      - name: Validate the bumped tree
+        if: steps.detect.outputs.needed == 'true'
+        run: npm run validate
+      - name: Commit and push the release bump
+        if: steps.detect.outputs.needed == 'true'
+        shell: bash
+        env:
+          TOKEN_PRESENT: ${{ secrets.RELEASE_BUMP_TOKEN != '' }}
+        run: |
+          if [ "$TOKEN_PRESENT" != "true" ]; then
+            echo "::error::RELEASE_BUMP_TOKEN is not set. main requires pull requests, so the default token cannot push the bump. Add a fine-grained token with Contents: read and write for this repository as the RELEASE_BUMP_TOKEN secret."
+            exit 1
+          fi
+          version="$(node -p "require('./release/release-intent.json').release_version")"
+          subject="$(head -n 1 "$RUNNER_TEMP/subjects.txt")"
+          git config user.name "threadify-release-bot"
+          git config user.email "noreply@threadify.app"
+          git add -A
+          git commit -m "Release ${version}: ${subject}" -m "Automatic patch bump: the merged change did not move the release version."
+          git push origin HEAD:main
