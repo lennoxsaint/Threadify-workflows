@@ -1,3 +1,7 @@
+# 0.30.3
+
+- Clear the last two directory scan holds (#53)
+
 # 0.30.2
 
 - Clear directory credential-scan false positives in bundled scripts (#52)

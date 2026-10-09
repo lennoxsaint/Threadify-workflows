@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.30.2",
+  "release_version": "0.30.3",
   "skill_version": "0.12.1",
-  "plugin_version": "0.30.2",
+  "plugin_version": "0.30.3",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Clear directory credential-scan false positives in bundled scripts (#52)"
+  "summary": "Clear the last two directory scan holds (#53)"
 }
