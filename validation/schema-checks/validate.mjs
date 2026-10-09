@@ -467,6 +467,11 @@ function validateDurableRuleContracts() {
   const listing = openaiPlugin?.interface ?? {};
   assert(typeof listing.displayName === 'string' && listing.displayName.length > 0 && listing.displayName.length <= 30, 'OpenAI displayName must be 1-30 characters');
   assert(typeof listing.shortDescription === 'string' && listing.shortDescription.length > 0 && listing.shortDescription.length <= 30, 'OpenAI shortDescription must be 1-30 characters');
+  // OpenAI's accepted values (submission errors reference, plugin_category_unknown). Business & Operations, not
+  // Productivity: the portal could not confirm Productivity for a listing about lead generation and sales (2026-10-10).
+  const openaiCategories = ['Productivity', 'Creativity', 'Developer Tools', 'Business & Operations', 'Data & Analytics', 'Communication',
+    'Education & Research', 'Security', 'Finance', 'Healthcare', 'Travel', 'Entertainment', 'Other'];
+  assert(openaiCategories.includes(listing.category), `OpenAI category must be one of: ${openaiCategories.join(', ')}`);
   assert(typeof listing.longDescription === 'string' && listing.longDescription.length > 0 && listing.longDescription.length <= 4000, 'OpenAI longDescription must be 1-4000 characters');
   for (const field of ['websiteURL', 'supportURL', 'privacyPolicyURL', 'termsOfServiceURL']) {
     assert(/^https:\/\//.test(listing[field] ?? ''), `OpenAI ${field} must be an HTTPS URL`);

@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.30.11",
+  "release_version": "0.30.12",
   "skill_version": "0.12.1",
-  "plugin_version": "0.30.11",
+  "plugin_version": "0.30.12",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Add the demo video link to the OpenAI plugin's review information, which OpenAI requires before submission"
+  "summary": "List the OpenAI plugin under Business & Operations, the category that matches a lead generation listing"
 }
