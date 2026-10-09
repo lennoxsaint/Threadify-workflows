@@ -18,7 +18,7 @@ const FILES = {
   codexPlugin: '.codex-plugin/plugin.json',
   claudePlugin: 'plugins/claude/.claude-plugin/plugin.json',
   compatibilityPlugin: 'plugins/threadify/.codex-plugin/plugin.json',
-  openaiPlugin: 'plugins/openai/plugin.json',
+  openaiPlugin: 'plugins/openai/.codex-plugin/plugin.json',
   intent: 'release/release-intent.json',
   installation: 'installation.md',
   changelog: 'release/CHANGELOG.md',

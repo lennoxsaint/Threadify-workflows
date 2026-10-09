@@ -1,5 +1,4 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "threadify-workflows",
   "version": "0.30.9",
   "description": "Your lead generation agent for Threads, X, LinkedIn and YouTube: the Threadify connection plus guided workflows to write and schedule posts in your voice, reply to comments, and track the leads and sales your posts bring.",
@@ -17,32 +16,34 @@
     "workflows",
     "agent-skills"
   ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Threadify",
+    "shortDescription": "Your lead generation agent",
+    "longDescription": "Threadify is the lead generation agent and OS for creators on Threads, X, LinkedIn and YouTube. It turns attention into leads, and this plugin lets you run it in plain language: the Threadify connection plus the Threadify Workflows skills.\n\nCreate posts that bring leads: draft posts and threads from your Threadify Brain (your voice, your facts and the patterns of your best-performing posts), weave in your offers (a course, community, newsletter or product), then schedule them or publish now and cross-post the same content to your connected X, LinkedIn and YouTube accounts.\n\nTurn conversations into leads: work through comments and mentions and draft replies in your voice.\n\nSee what converts: with link tracking on, links in your posts are tracked, you can make tracked bio links, and conversion tracking for platforms like Skool, beehiiv, Gumroad, Whop and Stripe shows which posts drove clicks, signups and sales. You can also read how your posts performed, find your best time to post, see audience demographics and growth, and manage your calendar, drafts, projects and saved inspiration.\n\nRun guided workflows: start with Get Set Up, then use workflows such as Growth Loop (learn from your mature posts and prepare the next drafts), Money Posts (rank posts by clicks per 1,000 views), Offer Builder, Qualified Buyer Research, YouTube Synthesizer (turn a YouTube video or pasted transcript into hooks and a long-form draft in your voice), Publish Everywhere and Threads Teach. Some workflows run helper scripts included with the plugin and keep private notes on your computer where your app supports it, such as Codex.\n\nYou stay in control: the exact text (and time, for scheduling) is confirmed with you before anything is posted, scheduled or sent, and this plugin has no autopilot mode. Everything acts on the Threadify account you choose when you connect; you can disconnect any time from Threadify's Agent tab.\n\nRequires an existing Threadify account with a connected Threads account.",
+    "developerName": "Threadify",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://www.threadify.app",
+    "supportURL": "https://www.threadify.app/contact",
+    "privacyPolicyURL": "https://www.threadify.app/privacy",
+    "termsOfServiceURL": "https://www.threadify.app/terms",
+    "defaultPrompt": [
+      "Get Set Up",
+      "Write a Threads post in my voice about why consistency beats intensity",
+      "Which of my posts drove the most link clicks this month?"
+    ],
+    "brandColor": "#DC0000",
+    "brandColorDark": "#FF5C5C",
+    "logo": "./assets/logo.png"
+  },
   "extensions": {
     "com.openai": {
-      "interface": {
-        "displayName": "Threadify",
-        "shortDescription": "Your lead generation agent",
-        "longDescription": "Threadify is the lead generation agent and OS for creators on Threads, X, LinkedIn and YouTube. It turns attention into leads, and this plugin lets you run it in plain language: the Threadify connection plus the Threadify Workflows skills.\n\nCreate posts that bring leads: draft posts and threads from your Threadify Brain (your voice, your facts and the patterns of your best-performing posts), weave in your offers (a course, community, newsletter or product), then schedule them or publish now and cross-post the same content to your connected X, LinkedIn and YouTube accounts.\n\nTurn conversations into leads: work through comments and mentions and draft replies in your voice.\n\nSee what converts: with link tracking on, links in your posts are tracked, you can make tracked bio links, and conversion tracking for platforms like Skool, beehiiv, Gumroad, Whop and Stripe shows which posts drove clicks, signups and sales. You can also read how your posts performed, find your best time to post, see audience demographics and growth, and manage your calendar, drafts, projects and saved inspiration.\n\nRun guided workflows: start with Get Set Up, then use workflows such as Growth Loop (learn from your mature posts and prepare the next drafts), Money Posts (rank posts by clicks per 1,000 views), Offer Builder, Qualified Buyer Research, YouTube Synthesizer (turn a YouTube video or pasted transcript into hooks and a long-form draft in your voice), Publish Everywhere and Threads Teach. Some workflows run helper scripts included with the plugin and keep private notes on your computer where your app supports it, such as Codex.\n\nYou stay in control: the exact text (and time, for scheduling) is confirmed with you before anything is posted, scheduled or sent, and this plugin has no autopilot mode. Everything acts on the Threadify account you choose when you connect; you can disconnect any time from Threadify's Agent tab.\n\nRequires an existing Threadify account with a connected Threads account.",
-        "developerName": "Threadify",
-        "category": "Productivity",
-        "capabilities": [
-          "Interactive",
-          "Read",
-          "Write"
-        ],
-        "websiteURL": "https://www.threadify.app",
-        "supportURL": "https://www.threadify.app/contact",
-        "privacyPolicyURL": "https://www.threadify.app/privacy",
-        "termsOfServiceURL": "https://www.threadify.app/terms",
-        "defaultPrompt": [
-          "Get Set Up",
-          "Write a Threads post in my voice about why consistency beats intensity",
-          "Which of my posts drove the most link clicks this month?"
-        ],
-        "brandColor": "#DC0000",
-        "brandColorDark": "#FF5C5C",
-        "logo": "./assets/logo.png"
-      },
       "onboardingSkill": "./skills/threadify-get-set-up/SKILL.md",
       "review": {
         "test_cases": {

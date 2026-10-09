@@ -1,10 +1,20 @@
 // Mirror the Claude plugin's skills into plugins/openai, the package submitted to OpenAI's plugin
 // directory (ChatGPT and Codex). Same ingredients as the Claude plugin: the skills are copied from
 // plugins/claude/skills, so both directories carry the same workflows, and only what the platform
-// needs differs. The layout follows developers.openai.com/plugins (read 2026-10-09): plugin.json,
-// mcp.json, skills/ and assets/ at the package root, no apps or hooks (a ZIP with either cannot be
-// submitted). `--check` verifies parity without writing. plugin.json, README.md and assets/ are
-// source files and are left untouched.
+// needs differs. It is packaged in OpenAI's Codex format (developers.openai.com/plugins/deploy/submission,
+// "Codex format", read 2026-10-09): .codex-plugin/plugin.json, .mcp.json, skills/ and assets/, no apps or
+// hooks (a ZIP with either cannot be submitted). `--check` verifies parity without writing.
+// .codex-plugin/, README.md and assets/ are source files and are left untouched.
+//
+// NOT the portable Agent Plugins format (a root plugin.json declaring the agent-plugins.org schema, plus
+// mcp.json). Shipped that way in 0.30.9 and replaced the same day: Codex treats such a package as an
+// Agent Plugin and bounds its MCP tools to 8,000 bytes per tool and 64,000 bytes in total, hiding the
+// rest (openai/codex codex-rs/core/src/mcp_tool_exposure.rs, MAX_AGENT_PLUGIN_MCP_SPEC_BYTES /
+// MAX_AGENT_PLUGIN_MCP_TOTAL_BYTES, added in 56b82e676 "without changing legacy plugins"). Threadify's
+// 91 tools are about 220,000 bytes, so Codex offered about 21 of them and hid get_connection_defaults,
+// the tool every workflow calls first (measured in Codex 0.162.0-alpha.17.2, 2026-10-09). The format
+// is chosen by codex-rs/utils/plugins/src/plugin_namespace.rs find_plugin_manifest_path: a root
+// plugin.json with that schema wins, so the build refuses one here.
 //
 // Platform differences, each verified below:
 // - The connection is Threadify's OpenAI address, /api/mcp/openai, which follows OpenAI's plugin rules
@@ -36,7 +46,7 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
 const claudeSkills = path.join(root, 'plugins', 'claude', 'skills');
 const pluginRoot = path.join(root, 'plugins', 'openai');
-const SOURCE_ONLY = new Set(['plugin.json', 'README.md', 'assets']);
+const SOURCE_ONLY = new Set(['.codex-plugin', 'README.md', 'assets']);
 const IGNORED = new Set(['.DS_Store']);
 const TEXT = /\.(?:md|json|txt|html|css|mjs|js|cjs|ts|yaml|yml)$/;
 const STANDARD_ADDRESS = 'https://www.threadify.app/api/mcp/threadify';
@@ -200,10 +210,14 @@ for (const [key, content] of expected) {
   if (text.includes('/api/mcp/threadify')) throw new Error(`${key} still names the standard Threadify address`);
   if (PROMOTION.test(text)) throw new Error(`${key} still promotes a Threadify plan, trial or upgrade: ${text.match(PROMOTION)[0]}`);
 }
-expected.set('mcp.json', Buffer.from(`${JSON.stringify({
-  $schema: 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json',
-  mcpServers: { threadify: { type: 'streamable-http', url: OPENAI_ADDRESS } },
+expected.set('.mcp.json', Buffer.from(`${JSON.stringify({
+  mcpServers: { threadify: { url: OPENAI_ADDRESS } },
 }, null, 2)}\n`));
+for (const agentPluginFile of ['plugin.json', 'mcp.json']) {
+  if (fs.existsSync(path.join(pluginRoot, agentPluginFile))) {
+    throw new Error(`plugins/openai/${agentPluginFile} would make Codex load this package as an Agent Plugin and hide most Threadify tools; use .codex-plugin/plugin.json and .mcp.json`);
+  }
+}
 
 const failures = [];
 function audit(directory, relative = '') {
@@ -233,7 +247,7 @@ for (const [relative, content] of expected) {
     fs.writeFileSync(file, content);
   }
 }
-for (const required of ['plugin.json', 'README.md', 'assets/logo.png']) {
+for (const required of ['.codex-plugin/plugin.json', 'README.md', 'assets/logo.png']) {
   if (!fs.existsSync(path.join(pluginRoot, required))) failures.push(`missing ${required}`);
 }
 if (failures.length) throw new Error(`OpenAI plugin drift: ${failures.join(', ')}`);

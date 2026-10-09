@@ -449,15 +449,22 @@ function validateDurableRuleContracts() {
   const claudeMarketplace = readJson(path.join(root, '.claude-plugin', 'marketplace.json'));
   const claudeEntry = claudeMarketplace?.plugins?.find((entry) => entry?.name === plugin?.name);
   assert(claudeEntry?.source === './plugins/claude', 'Claude marketplace must point at plugins/claude');
-  // The OpenAI plugin directory package (plugins/openai): same name and version as the other plugins,
-  // OpenAI's package rules (developers.openai.com/plugins/deploy/submission, read 2026-10-09) and
-  // Threadify's OpenAI connection address.
-  const openaiPlugin = readJson(path.join(root, 'plugins', 'openai', 'plugin.json'));
+  // The OpenAI plugin directory package (plugins/openai), in OpenAI's Codex format: same name and version
+  // as the other plugins, OpenAI's package rules (developers.openai.com/plugins/deploy/submission, read
+  // 2026-10-09) and Threadify's OpenAI connection address. Never a root plugin.json/mcp.json: Codex would
+  // load it as an Agent Plugin and hide most tools (scripts/build-openai-plugin.mjs header).
+  for (const agentPluginFile of ['plugin.json', 'mcp.json']) {
+    assert(!fs.existsSync(path.join(root, 'plugins', 'openai', agentPluginFile)),
+      `plugins/openai/${agentPluginFile} must not exist: the OpenAI package uses the Codex format`);
+  }
+  const openaiPlugin = readJson(path.join(root, 'plugins', 'openai', '.codex-plugin', 'plugin.json'));
+  assert(openaiPlugin?.skills === './skills/' && openaiPlugin?.mcpServers === './.mcp.json',
+    'OpenAI plugin must declare skills ./skills/ and mcpServers ./.mcp.json');
   assert(openaiPlugin?.name === plugin?.name, 'OpenAI plugin name must match root plugin');
   assert(openaiPlugin?.version === releaseIntent?.plugin_version, 'OpenAI plugin version must match release intent');
   const openai = openaiPlugin?.extensions?.['com.openai'];
   assert(!openai?.apps && !openai?.hooks, 'OpenAI plugin must not declare apps or hooks: the directory refuses a ZIP with either');
-  const listing = openai?.interface ?? {};
+  const listing = openaiPlugin?.interface ?? {};
   assert(typeof listing.displayName === 'string' && listing.displayName.length > 0 && listing.displayName.length <= 30, 'OpenAI displayName must be 1-30 characters');
   assert(typeof listing.shortDescription === 'string' && listing.shortDescription.length > 0 && listing.shortDescription.length <= 30, 'OpenAI shortDescription must be 1-30 characters');
   assert(typeof listing.longDescription === 'string' && listing.longDescription.length > 0 && listing.longDescription.length <= 4000, 'OpenAI longDescription must be 1-4000 characters');
@@ -474,7 +481,7 @@ function validateDurableRuleContracts() {
   assert((cases?.positive ?? []).every((item) => item.description && item.prompt && item.tools_triggered && item.expected_behavior),
     'Every positive OpenAI test case needs description, prompt, tools_triggered and expected_behavior');
   assert((cases?.negative ?? []).every((item) => item.description && item.prompt), 'Every negative OpenAI test case needs description and prompt');
-  const openaiMcp = readJson(path.join(root, 'plugins', 'openai', 'mcp.json'));
+  const openaiMcp = readJson(path.join(root, 'plugins', 'openai', '.mcp.json'));
   const openaiServers = Object.keys(openaiMcp?.mcpServers ?? {});
   assert(openaiServers.length === 1 && openaiMcp.mcpServers.threadify?.url === 'https://www.threadify.app/api/mcp/openai',
     'OpenAI plugin must declare exactly one MCP server, threadify, at the OpenAI address');
