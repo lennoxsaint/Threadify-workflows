@@ -1,3 +1,7 @@
+# 0.30.4
+
+- Reword vault skill opening and drop explicit child environment for the directory scanner (#54)
+
 # 0.30.3
 
 - Clear the last two directory scan holds (#53)
