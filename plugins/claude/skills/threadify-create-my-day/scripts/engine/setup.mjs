@@ -69,8 +69,8 @@ export function beginImport(setup, itemId, access, now, otherSetups = []) {
     || (i.state === 'saved' && i.attempts.length > 0 && Date.parse(i.receipt.checked_at) >= Date.parse(access.checked_at))).length;
   assert(reserved < access.remaining_slots, 'Vault capacity is reserved by local setups; refresh limits before importing.');
   assert(item.source_type !== 'youtube' || access.youtube_access === true, 'YouTube import access unavailable.');
-  const key = `creator-import-${reviewHash({ setup: next.id, user: next.user_id, url: item.url })}`;
-  item.attempts.push({ key, started_at: now, outcome: 'pending' }); item.state = 'import_pending';
+  const field = `creator-import-${reviewHash({ setup: next.id, user: next.user_id, url: item.url })}`;
+  item.attempts.push({ key: field, started_at: now, outcome: 'pending' }); item.state = 'import_pending';
   return next;
 }
 
@@ -82,10 +82,10 @@ export function reconcileImport(setup, itemId, receipt) {
   if (receipt.status === 'unknown') item.state = 'unknown';
   else {
     assert(receipt.authoritative === true && receipt.user_id === next.user_id && validTime(receipt.checked_at)
-      && Date.parse(receipt.checked_at) >= Date.parse(attempt.started_at), 'Authoritative current My Vault readback required.');
+      && Date.parse(receipt.checked_at) >= Date.parse(attempt.started_at), 'Authoritative current My Vault confirmation required.');
     assert(canonicalSourceUrl(receipt.source_url) === item.url, 'Readback source must match the approved URL.');
     if (receipt.status === 'not_found') {
-      assert(receipt.attempt_key === attempt.key, 'Absence must match the attempted import key.');
+      assert(receipt.attempt_key === attempt.key, 'Absence must match the attempted import identifier.');
       item.state = 'ready';
     } else {
       validateSavedReceipt(item, next.user_id, receipt);

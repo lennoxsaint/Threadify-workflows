@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
 const assets = { '/': ['index.html', 'text/html; charset=utf-8'], '/app.js': ['app.js', 'text/javascript; charset=utf-8'], '/style.css': ['style.css', 'text/css; charset=utf-8'] };
 export async function serve(store, account, port = 0) {
-  const token = randomBytes(32).toString('hex');
+  const sessionNonce = randomBytes(32).toString('hex');
   let origin;
   const server = http.createServer(async (req, res) => {
     const headers = { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'none'; frame-ancestors 'none'; form-action 'none'; base-uri 'none'" };
@@ -15,7 +15,7 @@ export async function serve(store, account, port = 0) {
         const [file, type] = assets[url.pathname]; res.writeHead(200, { ...headers, 'Content-Type': type }); return res.end(fs.readFileSync(new URL(file, import.meta.url)));
       }
       const supplied = Buffer.from(req.headers['x-review-session'] || '');
-      const expected = Buffer.from(token);
+      const expected = Buffer.from(sessionNonce);
       if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) return send(403, { error: 'session_required' });
       if (req.method === 'GET' && url.pathname === '/api/status') return send(200, store.status(account));
       if (req.method !== 'POST' || !['/api/edit', '/api/decide', '/api/preference'].includes(url.pathname)) return send(404, { error: 'not_found' });
@@ -32,5 +32,5 @@ export async function serve(store, account, port = 0) {
   server.requestTimeout = 10000;
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
   origin = `http://127.0.0.1:${server.address().port}`;
-  return { server, url: origin + '/#' + token };
+  return { server, url: origin + '/#' + sessionNonce };
 }

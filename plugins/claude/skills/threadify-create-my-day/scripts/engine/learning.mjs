@@ -5,7 +5,7 @@ const time = (s) => typeof s === 'string' && Number.isFinite(Date.parse(s));
 const parts = (p) => Array.isArray(p) && p.length > 0 && p.every(text);
 
 export function createFeedback(input) {
-  assert(['id', 'account_id', 'review_id', 'card_id', 'instruction'].every((key) => text(input[key])) && time(input.now), 'Feedback identity, instruction and time required.');
+  assert(['id', 'account_id', 'review_id', 'card_id', 'instruction'].every((field) => text(input[field])) && time(input.now), 'Feedback identity, instruction and time required.');
   assert(parts(input.original_parts) && parts(input.final_parts), 'Exact original and final parts required.');
   assert(input.rating === null || (Number.isInteger(input.rating) && input.rating >= 1 && input.rating <= 5), 'Rating must be null or one through five.');
   const content = { id: input.id, account_id: input.account_id, review_id: input.review_id, card_id: input.card_id,

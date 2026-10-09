@@ -29,8 +29,8 @@ export function transition(previous, event) {
     requireThat(!slot.original, 'successful_slot_exists');
     const a = event.assignment;
     requireThat(a?.source?.url && a.source.text && a.source.performance && a.source.observed_at && a.template && a.adaptation, 'missing_source');
-    for (const key of ['angle', 'mechanism', 'proof']) {
-      requireThat(a[key] && !s.slots.some(x => x.id !== slot.id && x.assignment?.[key] === a[key]), `duplicate_or_missing_${key}`);
+    for (const field of ['angle', 'mechanism', 'proof']) {
+      requireThat(a[field] && !s.slots.some(x => x.id !== slot.id && x.assignment?.[field] === a[field]), `duplicate_or_missing_${field}`);
     }
     slot.assignment = a; slot.status = 'assigned';
   } else if (event.type === 'hold') {

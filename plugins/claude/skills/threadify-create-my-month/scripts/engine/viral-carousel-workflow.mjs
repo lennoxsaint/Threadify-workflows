@@ -4,7 +4,7 @@ const assert = (condition, message) => { if (!condition) throw new Error(message
 const sha256 = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const canonical = (value) => {
   if (Array.isArray(value)) return value.map(canonical);
-  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]));
+  if (value && typeof value === 'object') return Object.fromEntries(Object.keys(value).sort().map((field) => [field, canonical(value[field])]));
   return value;
 };
 const digest = (value) => sha256(JSON.stringify(canonical(value)));

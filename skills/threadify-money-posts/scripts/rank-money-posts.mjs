@@ -9,7 +9,7 @@
 // Joins every tracked link row to its post by root_threads_post_id (fallback
 // final_threads_post_id), sums clicks per post, and ranks linked posts by
 // unique clicks per 1,000 views. Threadify can file an Auto Plug's clicks under
-// the plug reply instead of its post; pass get_post_thread results for those
+// the plug reply instead of its post; supply the get_post_thread results for those
 // ids as "threads" and the clicks move to the post whose first line opens the
 // thread (latest post published at or before the thread's timestamp). Below the cold-start thresholds it also ranks
 // every post on proxy signals, labelled "proxy, not clicks". Missing numbers
@@ -71,9 +71,9 @@ export function joinLinks(links) {
       unmatched += 1;
       continue;
     }
-    const key = String(id);
-    const entry = byPost.get(key) ?? {
-      post_id: key,
+    const field = String(id);
+    const entry = byPost.get(field) ?? {
+      post_id: field,
       link_rows: 0,
       clicks: 0,
       unique_clicks: 0,
@@ -91,7 +91,7 @@ export function joinLinks(links) {
     entry.permalink ??= link.root_permalink ?? link.post_permalink ?? null;
     entry.link_first_line ??= firstLine(link.root_post_text);
     if (link.source_kind && !entry.source_kinds.includes(link.source_kind)) entry.source_kinds.push(link.source_kind);
-    byPost.set(key, entry);
+    byPost.set(field, entry);
   }
   return { byPost, unmatched };
 }

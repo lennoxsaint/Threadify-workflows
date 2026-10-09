@@ -12,7 +12,7 @@ Events in order: runtime, connection, discovery, summary, brain, offer, vault, v
 
 Summary facts: audience, voice, comma-separated topics, outcome, timezone, posts_per_day (1–5), times (one distinct HH:MM per post). Each source carries reference and supports. The customer confirms the exact `summary-hash`; keep their confirmation reference. A changed summary preserves history, invalidates downstream phases and pauses the routine until reconfirmed.
 
-Brain evidence: summary_hash, processing_complete, retrieval_verified, durable_voice_verified. Offer: confirmed_none or readback_verified with offer_ids. Vault: selection_approved, readback_verified. Voice: sample_approved, sample_hash. All include matching summary_hash.
+Brain evidence: summary_hash, processing_complete, retrieval_verified, durable_voice_verified. Vault: selection_approved, with the saved items confirmed as readback_verified. Offer: confirmed_none or readback_verified with offer_ids. Voice: sample_approved, sample_hash. All include matching summary_hash.
 
 Week evidence: summary_hash, timezone, days:7, actual draft_count, content_verified, scheduled_count, calendar_readback_verified when scheduled. Reviewed drafts awaiting approval are shown as prepared, not scheduled. Automatic mode requires the prepared first week to have matching schedule readback.
 

@@ -9,7 +9,7 @@ export function validateAutomation(value, plug = false, draft = false) {
     ? ['content', 'trigger', 'delay_minutes', 'likes_threshold']
     : ['trigger', 'delay_minutes', 'likes_threshold'];
   assert(
-    Object.keys(value).every((key) => allowed.includes(key)),
+    Object.keys(value).every((field) => allowed.includes(field)),
     'Unknown automation field.',
   );
   assert(['time', 'likes'].includes(value.trigger), 'Choose a time or likes trigger.');
@@ -20,13 +20,13 @@ export function validateAutomation(value, plug = false, draft = false) {
         [...value.content].length <= (draft ? 20000 : 500),
       'Auto Plug needs 1–500 characters.',
     );
-  const key = value.trigger === 'time' ? 'delay_minutes' : 'likes_threshold';
+  const field = value.trigger === 'time' ? 'delay_minutes' : 'likes_threshold';
   assert(
-    draft ? Number.isFinite(value[key]) : Number.isSafeInteger(value[key]) && value[key] >= (key === 'delay_minutes' ? 5 : 1),
+    draft ? Number.isFinite(value[field]) : Number.isSafeInteger(value[field]) && value[field] >= (field === 'delay_minutes' ? 5 : 1),
     'Invalid automation trigger value.',
   );
   assert(
-    value[key === 'delay_minutes' ? 'likes_threshold' : 'delay_minutes'] === undefined,
+    value[field === 'delay_minutes' ? 'likes_threshold' : 'delay_minutes'] === undefined,
     'Use only the selected trigger.',
   );
 }
@@ -37,8 +37,8 @@ export function validateGlobalRepost(value) {
     'Explicit account-wide Auto Repost state required.',
   );
   assert(
-    Object.keys(value).every((key) =>
-      ['known', 'enabled', 'trigger', 'delay_minutes', 'likes_threshold'].includes(key),
+    Object.keys(value).every((field) =>
+      ['known', 'enabled', 'trigger', 'delay_minutes', 'likes_threshold'].includes(field),
     ),
     'Unknown account-wide Auto Repost field.',
   );
@@ -47,9 +47,9 @@ export function validateGlobalRepost(value) {
       value.known && ['time', 'likes'].includes(value.trigger),
       'Enabled account-wide Auto Repost requires known settings.',
     );
-    const key = value.trigger === 'time' ? 'delay_minutes' : 'likes_threshold';
+    const field = value.trigger === 'time' ? 'delay_minutes' : 'likes_threshold';
     assert(
-      Number.isSafeInteger(value[key]) && value[key] >= (value.trigger === 'time' ? 5 : 1),
+      Number.isSafeInteger(value[field]) && value[field] >= (value.trigger === 'time' ? 5 : 1),
       'Invalid account-wide Auto Repost trigger.',
     );
   }

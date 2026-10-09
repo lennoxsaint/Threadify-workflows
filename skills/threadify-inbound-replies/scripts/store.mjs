@@ -81,31 +81,31 @@ export class Store {
       if (s.batches[id]) return this.view(s, id);
       const excluded = new Set(packet.exclude_ids || []);
       const ids = new Set(Object.values(s.items).filter(i => !terminal(i) && !excluded.has(i.source_id)).map(i => i.id));
-      for (const key of ids) if (s.items[key].state === 'deferred') s.items[key].state = s.items[key].final_text ? 'drafted' : 'captured';
+      for (const field of ids) if (s.items[field].state === 'deferred') s.items[field].state = s.items[field].final_text ? 'drafted' : 'captured';
       for (const source of packet.items) {
         requireThat(['comment', 'mention', 'quote'].includes(source.lane) && text(source.source_id) && source.source_id.length > 0, 'native_identity_required');
         if (excluded.has(source.source_id)) continue;
-        const key = itemKey(s.account, source.lane, source.source_id), existing = s.items[key];
+        const field = itemKey(s.account, source.lane, source.source_id), existing = s.items[field];
         if (terminal(existing || {})) continue;
-        if (existing && existing.lane !== source.lane) { ids.add(key); continue; }
+        if (existing && existing.lane !== source.lane) { ids.add(field); continue; }
         const occurred = time(source.occurred_at);
-        if (!(occurred >= time(packet.start) && occurred < time(packet.end)) && !ids.has(key)) continue;
+        if (!(occurred >= time(packet.start) && occurred < time(packet.end)) && !ids.has(field)) continue;
         if (source.safety !== 'safe' || source.pending !== true || source.available !== true) {
           if (existing && !inFlight(existing)) { existing.state = 'unavailable'; existing.reason = 'source_not_eligible'; }
-          if (!existing || !inFlight(existing)) ids.delete(key); continue;
+          if (!existing || !inFlight(existing)) ids.delete(field); continue;
         }
         requireThat(text(source.author) && text(source.text) && text(source.post?.text), 'full_text_and_author_required');
-        const group = source.post?.id && source.post?.verified === true ? 'post:' + source.post.id : 'source:' + key;
+        const group = source.post?.id && source.post?.verified === true ? 'post:' + source.post.id : 'source:' + field;
         const context = { source_id: source.source_id, lane: source.lane, author: source.author, text: source.text, url: source.url || null, occurred_at: source.occurred_at, post: source.post, ancestry: source.ancestry || [], context_complete: source.context_complete === true, group };
         if (existing) {
           requireThat(existing.author === context.author, 'source_author_changed');
           Object.assign(existing, context);
           if (existing.state === 'deferred') existing.state = existing.final_text ? 'drafted' : 'captured';
-        } else s.items[key] = { ...context, id: key, state: 'captured', revision: 0, original_text: null, draft_text: '', final_text: '', history: [] };
-        ids.add(key);
+        } else s.items[field] = { ...context, id: field, state: 'captured', revision: 0, original_text: null, draft_text: '', final_text: '', history: [] };
+        ids.add(field);
       }
-      const ordered = groupedIds([...ids].filter(key => !terminal(s.items[key])), s.items);
-      const sources = ordered.map(key => { const i=s.items[key]; return JSON.parse(JSON.stringify({id:i.id, source_id:i.source_id, lane:i.lane, author:i.author, text:i.text, url:i.url, occurred_at:i.occurred_at, post:i.post, ancestry:i.ancestry})); });
+      const ordered = groupedIds([...ids].filter(field => !terminal(s.items[field])), s.items);
+      const sources = ordered.map(field => { const i=s.items[field]; return JSON.parse(JSON.stringify({id:i.id, source_id:i.source_id, lane:i.lane, author:i.author, text:i.text, url:i.url, occurred_at:i.occurred_at, post:i.post, ancestry:i.ancestry})); });
       s.batches[id] = { id, sources, snapshot_hash:hash(sources), start: packet.start, end: packet.end, coverage: packet.coverage, ids: ordered, created: this.now(), closed: false };
       s.active = id;
       return this.view(s, id);
@@ -201,12 +201,12 @@ export class Store {
         return { id: item.id, revision: item.revision, source_id: item.source_id, kind: item.lane === 'quote' ? proof.quote_target_kind : item.lane, text: item.final_text, final_hash: hash(item.final_text), author: item.author };
       });
       requireThat(new Set(selected.map(i => i.id)).size === selected.length, 'duplicate_target');
-      const key = hash([s.account, batch.id, selected.map(i => [i.id, i.revision, i.final_hash]).sort()]);
-      requireThat(!s.attempts[key], 'attempt_already_exists');
-      const attempt = { key, batch_id: batch.id, created: this.now(), authorization: packet.authorization, items: selected, state: 'uncertain', results: {} };
-      s.attempts[key] = attempt;
-      for (const row of selected) { s.items[row.id].state = 'uncertain'; s.items[row.id].attempt = key; }
-      return { attempt, mcp: { account: s.account, idempotency_key: key, drafts: selected.map(i => ({ [i.kind === 'mention' ? 'mention_id' : 'comment_id']: i.source_id, text: i.text })) } };
+      const field = hash([s.account, batch.id, selected.map(i => [i.id, i.revision, i.final_hash]).sort()]);
+      requireThat(!s.attempts[field], 'attempt_already_exists');
+      const attempt = { key: field, batch_id: batch.id, created: this.now(), authorization: packet.authorization, items: selected, state: 'uncertain', results: {} };
+      s.attempts[field] = attempt;
+      for (const row of selected) { s.items[row.id].state = 'uncertain'; s.items[row.id].attempt = field; }
+      return { attempt, mcp: { account: s.account, idempotency_key: field, drafts: selected.map(i => ({ [i.kind === 'mention' ? 'mention_id' : 'comment_id']: i.source_id, text: i.text })) } };
     });
   }
   recordSend(packet) {

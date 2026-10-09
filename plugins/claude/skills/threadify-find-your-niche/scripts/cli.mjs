@@ -15,12 +15,12 @@ export function validateReport(report) {
   if (!report.account?.label || typeof report.account.verified !== 'boolean') fail('account label and verified state are required');
   const window = report.window ?? {};
   if (window.requested_days !== 90 || !Number.isInteger(window.expanded_days) || window.expanded_days < 90 || window.expanded_days > 365 || !Number.isInteger(window.owned_post_count) || window.owned_post_count < 0) fail('window must use the bounded 90-to-365-day contract');
-  for (const key of ['posts_complete', 'audience_comments_complete', 'creator_replies_complete']) if (typeof report.coverage?.[key] !== 'boolean') fail(`coverage.${key} is required`);
+  for (const field of ['posts_complete', 'audience_comments_complete', 'creator_replies_complete']) if (typeof report.coverage?.[field] !== 'boolean') fail(`coverage.${field} is required`);
   if (!Array.isArray(report.coverage?.gaps)) fail('coverage.gaps must be an array');
   if (!['provider_ranked', 'user_export_ranked', 'sampled'].includes(report.evidence_method)) fail('invalid evidence_method');
   if (!report.niche?.statement || !report.niche?.avatar || !report.niche?.problem || !report.niche?.mechanism || !report.niche?.why) fail('complete niche recommendation is required');
   if (report.ideal_client?.purchase_intent_proven !== false) fail('purchase intent cannot be claimed from this workflow');
-  for (const key of ['pains', 'desired_outcomes', 'language', 'objections']) strings(report.ideal_client?.[key], `ideal_client.${key}`);
+  for (const field of ['pains', 'desired_outcomes', 'language', 'objections']) strings(report.ideal_client?.[field], `ideal_client.${field}`);
   if (!Array.isArray(report.themes) || !report.themes.length) fail('at least one evidence theme is required');
   for (const [index, theme] of report.themes.entries()) {
     if (!theme.theme || !theme.observation || !['owned_post', 'audience_comment', 'creator_reply', 'cross_lane'].includes(theme.lane) || !Number.isInteger(theme.distinct_sources) || theme.distinct_sources < 1) fail(`themes[${index}] is incomplete`);

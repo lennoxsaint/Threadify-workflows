@@ -2,7 +2,7 @@ export function canonicalSourceUrl(value) {
   const url = new URL(value);
   if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error('Public HTTP source URL required.');
   url.hash = '';
-  for (const key of [...url.searchParams.keys()]) if (/^utm_|^(fbclid|igshid|si)$/i.test(key)) url.searchParams.delete(key);
+  for (const name of [...url.searchParams.keys()]) if (/^utm_|^(fbclid|igshid|si)$/i.test(name)) url.searchParams.delete(name);
   if (/^(www\.)?threads\.(net|com)$/.test(url.hostname)) {
     url.hostname = 'www.threads.com'; url.protocol = 'https:'; url.search = '';
     url.pathname = url.pathname.replace(/\/$/, '');

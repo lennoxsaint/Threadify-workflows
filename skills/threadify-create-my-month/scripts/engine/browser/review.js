@@ -3,10 +3,10 @@ const saved = document.querySelector('#saved');
 const errorBox = document.querySelector('#error');
 const fragment = location.hash.slice(1);
 if (fragment) {
-  sessionStorage.setItem('review-session', fragment);
+  sessionStorage.setItem('review-fragment', fragment);
   history.replaceState(null, '', '/');
 }
-const session = sessionStorage.getItem('review-session');
+const reviewFragment = sessionStorage.getItem('review-fragment');
 let state;
 let edits;
 let index = 0;
@@ -34,7 +34,7 @@ async function api(route, body) {
   const response = await fetch(`/api/${route}`, {
     method: body ? 'POST' : 'GET',
     headers: {
-      Authorization: `Bearer ${session}`,
+      Authorization: `Bearer ${reviewFragment}`,
       ...(body ? { 'Content-Type': 'application/json' } : {}),
     },
     ...(body ? { body: JSON.stringify(body) } : {}),
@@ -121,18 +121,18 @@ function textEditor(value, label, onInput) {
   requestAnimationFrame(() => resize(area));
   return box;
 }
-function automationOption(key, label) {
+function automationOption(fieldName, label) {
   const section = el('section', undefined, 'option');
   const row = el('div', undefined, 'option-row');
   row.append(el('span', label));
   const controls = el('div', undefined, 'switch-group');
-  const value = edits[index][key];
+  const value = edits[index][fieldName];
   const global = state.automation.global_repost;
-  const blocked = !state.automation.available || (key === 'auto_repost' && (!global.known || global.enabled));
+  const blocked = !state.automation.available || (fieldName === 'auto_repost' && (!global.known || global.enabled));
   const status =
-    key === 'auto_repost' && !global.known
+    fieldName === 'auto_repost' && !global.known
       ? 'Unknown'
-      : key === 'auto_repost' && global.enabled
+      : fieldName === 'auto_repost' && global.enabled
         ? 'Account-wide'
         : value
           ? 'On'
@@ -142,15 +142,15 @@ function automationOption(key, label) {
   toggle.type = 'button';
   toggle.setAttribute('role', 'switch');
   toggle.setAttribute('aria-label', label);
-  toggle.setAttribute('aria-checked', String(Boolean(value) || (key === 'auto_repost' && global.enabled)));
+  toggle.setAttribute('aria-checked', String(Boolean(value) || (fieldName === 'auto_repost' && global.enabled)));
   toggle.disabled = blocked && !value;
   toggle.addEventListener('click', () => {
-    edits[index][key] = value
+    edits[index][fieldName] = value
       ? null
       : {
           trigger: 'time',
-          delay_minutes: key === 'auto_plug' ? 15 : 720,
-          ...(key === 'auto_plug' ? { content: '' } : {}),
+          delay_minutes: fieldName === 'auto_plug' ? 15 : 720,
+          ...(fieldName === 'auto_plug' ? { content: '' } : {}),
         };
     changed();
     render();
@@ -158,7 +158,7 @@ function automationOption(key, label) {
   controls.append(toggle);
   row.append(controls);
   section.append(row);
-  if (key === 'auto_repost' && global.enabled)
+  if (fieldName === 'auto_repost' && global.enabled)
     section.append(
       el(
         'p',
@@ -178,7 +178,7 @@ function automationOption(key, label) {
     );
   if (value && !blocked) {
     const fields = el('div', undefined, 'option-fields');
-    if (key === 'auto_plug')
+    if (fieldName === 'auto_plug')
       fields.append(
         textEditor(value.content, 'Auto Plug text', (text) => {
           value.content = text;
@@ -200,10 +200,10 @@ function automationOption(key, label) {
     select.setAttribute('aria-label', `${label} trigger`);
     select.addEventListener('change', () => {
       const content = value.content;
-      edits[index][key] = {
+      edits[index][fieldName] = {
         trigger: select.value,
         ...(select.value === 'time'
-          ? { delay_minutes: key === 'auto_plug' ? 15 : 720 }
+          ? { delay_minutes: fieldName === 'auto_plug' ? 15 : 720 }
           : { likes_threshold: 10 }),
         ...(content !== undefined ? { content } : {}),
       };

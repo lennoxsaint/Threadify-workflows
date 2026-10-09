@@ -18,7 +18,7 @@ function canonical(value) {
   if (typeof value === 'number' && Number.isFinite(value)) return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
   assert(value && Object.getPrototypeOf(value) === Object.prototype, 'Viral Vault records must be plain JSON.');
-  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`;
+  return `{${Object.keys(value).sort().map((field) => `${JSON.stringify(field)}:${canonical(value[field])}`).join(',')}}`;
 }
 
 export const viralVaultHash = (value) => createHash('sha256').update(canonical(value)).digest('hex');
@@ -174,9 +174,9 @@ export function createViralVaultPacket({ plan, id, date, now, cards, reuse_proof
   }
   const seen = new Set();
   for (const card of contents) {
-    const key = `${card.source.id}\n${card.source.url}`;
-    assert(!seen.has(key), 'Duplicate daily sources are not allowed.');
-    seen.add(key);
+    const field = `${card.source.id}\n${card.source.url}`;
+    assert(!seen.has(field), 'Duplicate daily sources are not allowed.');
+    seen.add(field);
   }
   const queue = contents.map((content, index) => {
     const instant = suggestions?.[content.id]?.instant;
@@ -352,14 +352,14 @@ function getPacket(data, id) {
   const packet = data.viral_vault_packets.find((candidate) => candidate.id === id); assert(packet, 'Unknown 30-Day Viral Vault packet.'); return packet;
 }
 
-const READS = new Set(['vault30-status', 'vault30-next', 'vault30-continue']);
+const QUERY_COMMANDS = new Set(['vault30-status', 'vault30-next', 'vault30-continue']);
 const WRITES = new Set(['vault30-plan', 'vault30-add-day', 'vault30-record-validation', 'vault30-decide',
   'vault30-begin-attempt', 'vault30-reconcile', 'vault30-complete-local']);
-export const isViralVaultCommand = (command) => READS.has(command) || WRITES.has(command);
+export const isViralVaultCommand = (command) => QUERY_COMMANDS.has(command) || WRITES.has(command);
 
 export async function runViralVaultCommand(command, { root, revision, input = {} }) {
   assert(isViralVaultCommand(command), 'Unsupported 30-Day Viral Vault command.');
-  if (READS.has(command)) {
+  if (QUERY_COMMANDS.has(command)) {
     const state = await readState(root); const data = workspace(state.payload);
     let result;
     if (command === 'vault30-status') result = { plans: data.viral_vault_plans.length, packets: data.viral_vault_packets.length,

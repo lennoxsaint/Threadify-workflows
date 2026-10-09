@@ -27,8 +27,8 @@ export function recordOutcome(pack, cardId, receipt) {
     const last = card.outcomes?.at(-1)?.receipt.checked_at ?? card.publication.published_at;
     assert(Date.parse(receipt.checked_at) >= Date.parse(last), 'Observation evidence must be chronological.');
     assert(receipt.metrics && typeof receipt.metrics === 'object' && !Array.isArray(receipt.metrics)
-      && Object.keys(receipt.metrics).length > 0 && Object.entries(receipt.metrics).every(([key, value]) =>
-        METRICS.has(key) && (value === null || (Number.isSafeInteger(value) && value >= 0))), 'Observed metrics must be known nonnegative counts or null.');
+      && Object.keys(receipt.metrics).length > 0 && Object.entries(receipt.metrics).every(([field, value]) =>
+        METRICS.has(field) && (value === null || (Number.isSafeInteger(value) && value >= 0))), 'Observed metrics must be known nonnegative counts or null.');
   }
   card.outcomes = [...(card.outcomes ?? []), { schema_version: 'creator-outcome.v1', id: receipt.id, hash, receipt: structuredClone(receipt) }];
   card.state = receipt.status; card.outcome_attribution = 'directional_only';

@@ -53,8 +53,8 @@ export async function createBrowserReview(root, input) {
     global_repost: { known: false, enabled: false },
   };
   assert(
-    Object.keys(automation).every((key) =>
-      ['available', 'global_repost', 'checked_at', 'evidence_ref'].includes(key),
+    Object.keys(automation).every((field) =>
+      ['available', 'global_repost', 'checked_at', 'evidence_ref'].includes(field),
     ),
     'Pass only the normalized automation settings, never full connection data.',
   );

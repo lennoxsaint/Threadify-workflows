@@ -15,7 +15,7 @@ function canonical(value) {
   if (typeof value === 'number' && Number.isFinite(value)) return JSON.stringify(value)
   if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`
   assert(value && Object.getPrototypeOf(value) === Object.prototype, 'Delivery data must be plain JSON without undefined values.')
-  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`
+  return `{${Object.keys(value).sort().map((field) => `${JSON.stringify(field)}:${canonical(value[field])}`).join(',')}}`
 }
 
 export const deliveryHash = (value) => crypto.createHash('sha256').update(canonical(value)).digest('hex')
