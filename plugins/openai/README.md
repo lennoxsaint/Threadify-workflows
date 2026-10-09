@@ -1,11 +1,11 @@
 # Threadify for ChatGPT and Codex
 
-This folder is the plugin package submitted to OpenAI's plugin directory. It carries the same skills as the Claude plugin in `plugins/claude`, packaged the way OpenAI's directory expects: `plugin.json`, `mcp.json`, `skills/` and `assets/` at the package root.
+This folder is the plugin package submitted to OpenAI's plugin directory. It carries the same skills as the Claude plugin in `plugins/claude`, packaged in OpenAI's Codex format: `.codex-plugin/plugin.json`, `.mcp.json`, `skills/` and `assets/`. Not the portable Agent Plugins format (a root `plugin.json`): Codex limits an Agent Plugin's connection to 64,000 bytes of tool definitions and hid most of Threadify's tools, including `get_connection_defaults` (see `scripts/build-openai-plugin.mjs`).
 
 ## What the plugin contains
 
 - **Skills**: `skills/<name>/SKILL.md` plus the references and scripts each skill needs, copied from the Claude plugin. The scripts run with Node 18 or newer where the app can run them, and keep their state in a private directory the owner chooses.
-- **One MCP server**: `threadify`, declared in `mcp.json` as a streamable HTTP endpoint at `https://www.threadify.app/api/mcp/openai`. That is Threadify's address for OpenAI's directory: it has no autopilot mode and no upgrade prompts. It uses OAuth; the app asks the owner to sign in on first use, and nothing is sent to it until a skill reaches a step that needs the connected account and the owner approves that step.
+- **One MCP server**: `threadify`, declared in `.mcp.json` as a remote endpoint at `https://www.threadify.app/api/mcp/openai`. That is Threadify's address for OpenAI's directory: it has no autopilot mode and no upgrade prompts. It uses OAuth; the app asks the owner to sign in on first use, and nothing is sent to it until a skill reaches a step that needs the connected account and the owner approves that step.
 - **No other network destinations**, except that the YouTube Synthesizer skill fetches public video metadata and captions from YouTube when the owner supplies a video link.
 
 ## How it differs from the Claude plugin
@@ -18,7 +18,7 @@ Only where the platform needs it, applied by `scripts/build-openai-plugin.mjs`:
 
 ## Building and packaging
 
-Do not edit files in `skills/` or `mcp.json` here: edit the skills at the repository root and run `npm run bundle:build`. `plugin.json`, this README and `assets/` are source files. To make the ZIP for the submission portal, zip the contents of this folder so `plugin.json` sits at the ZIP root:
+Do not edit files in `skills/` or `.mcp.json` here: edit the skills at the repository root and run `npm run bundle:build`. `.codex-plugin/plugin.json`, this README and `assets/` are source files. To make the ZIP for the submission portal, zip the contents of this folder, hidden folders included, so `.codex-plugin/` sits at the ZIP root:
 
 ```sh
 mkdir -p dist && (cd plugins/openai && zip -qr -X ../../dist/threadify-openai-plugin.zip . -x '.DS_Store')
