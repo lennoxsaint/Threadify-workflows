@@ -71,9 +71,9 @@ export function joinLinks(links) {
       unmatched += 1;
       continue;
     }
-    const key = String(id);
-    const entry = byPost.get(key) ?? {
-      post_id: key,
+    const field = String(id);
+    const entry = byPost.get(field) ?? {
+      post_id: field,
       link_rows: 0,
       clicks: 0,
       unique_clicks: 0,
@@ -91,7 +91,7 @@ export function joinLinks(links) {
     entry.permalink ??= link.root_permalink ?? link.post_permalink ?? null;
     entry.link_first_line ??= firstLine(link.root_post_text);
     if (link.source_kind && !entry.source_kinds.includes(link.source_kind)) entry.source_kinds.push(link.source_kind);
-    byPost.set(key, entry);
+    byPost.set(field, entry);
   }
   return { byPost, unmatched };
 }

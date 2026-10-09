@@ -69,8 +69,8 @@ export function beginImport(setup, itemId, access, now, otherSetups = []) {
     || (i.state === 'saved' && i.attempts.length > 0 && Date.parse(i.receipt.checked_at) >= Date.parse(access.checked_at))).length;
   assert(reserved < access.remaining_slots, 'Vault capacity is reserved by local setups; refresh limits before importing.');
   assert(item.source_type !== 'youtube' || access.youtube_access === true, 'YouTube import access unavailable.');
-  const key = `creator-import-${reviewHash({ setup: next.id, user: next.user_id, url: item.url })}`;
-  item.attempts.push({ key, started_at: now, outcome: 'pending' }); item.state = 'import_pending';
+  const field = `creator-import-${reviewHash({ setup: next.id, user: next.user_id, url: item.url })}`;
+  item.attempts.push({ key: field, started_at: now, outcome: 'pending' }); item.state = 'import_pending';
   return next;
 }
 

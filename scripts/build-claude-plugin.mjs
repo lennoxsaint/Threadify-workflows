@@ -34,7 +34,7 @@ const CREDENTIAL_WORDS = ['token', 'tokens', 'secret', 'secrets', 'password', 'p
 const CREDENTIAL_NOUN = new RegExp(`^(${CREDENTIAL_WORDS.join('|')}|key|keys|session|sessions)$`, 'i');
 const READ_VERB = /^read(?!y$|me$|able|ability|iness|only$)/i;
 const DECLARED_CREDENTIAL = new RegExp(`\\b(?:const|let|var)\\s+(?:${CREDENTIAL_WORDS.join('|')})\\b`);
-const DECLARED_KEY = /\b(?:const|let|var)\s+keys?\b|\(\s*keys?\s*\)\s*=>/;
+const DECLARED_KEY = /\b(?:const|let|var)\s+(?:\[\s*)?(?:key|keys|token|tokens)\b|\(\s*(?:key|keys|token|tokens)\s*\)\s*=>|\((?:[^()]*,\s*)?(?:key|keys|token|tokens)\s*[,)]|\[\s*(?:key|keys|token|tokens)\s*[,\]]|\{[^}]*\b(?:key|keys|token|tokens)\b[^}]*\}\s*(?:=|of\b|in\b|\)\s*=>)/;
 const REMOTE_URL = /https?:\/\/[a-z0-9.-]+\.[a-z]{2,}/i;
 const ENV_ACCESS = /process\.env(?:\.([A-Za-z_][A-Za-z0-9_]*)|\[|\b)/g;
 const ENV_ALLOWLIST = new Set(['THREADIFY_WORKFLOWS_HOME']);
@@ -58,7 +58,7 @@ function auditContent(relative, content) {
       }
     }
     if (DECLARED_CREDENTIAL.test(text)) problems.push(`variable named like a credential: ${text.match(DECLARED_CREDENTIAL)[0]}`);
-    if (REMOTE_URL.test(text) && DECLARED_KEY.test(text)) problems.push('variable named key in a file that names a remote host');
+    if (DECLARED_KEY.test(text)) problems.push(`variable named like a key or token: ${text.match(DECLARED_KEY)[0].trim()}`);
   }
   if (TEXT.test(relative)) {
     const words = [...text.matchAll(/[A-Za-z_][A-Za-z0-9_-]*/g)].map((match) => match[0]);

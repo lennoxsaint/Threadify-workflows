@@ -11,13 +11,13 @@ function fail(message){ throw new Error(message); }
 export function inspect(input){
   if (!['real','demo'].includes(input.mode)) fail('mode must be real or demo');
   if (input.mode === 'real' && input.confirmed !== true) fail('real decisions require confirmed facts');
-  for (const key of ['audience','problem','result','boundary']) if (!String(input[key]??'').trim()) fail(`missing ${key}`);
+  for (const field of ['audience','problem','result','boundary']) if (!String(input[field]??'').trim()) fail(`missing ${field}`);
   if (!input.evidence || !Array.isArray(input.evidence.limitations) || !input.evidence.limitations.length) fail('evidence limitations are required');
   const ranked = ids.map((id) => {
     const model=input.models?.[id]; if(!model) fail(`missing model ${id}`);
     const notes=model.notes; if(!Array.isArray(notes)||notes.length!==5||notes.some((n)=>!String(n).trim())) fail(`${id} requires five evidence notes`);
-    for(const [key] of Object.entries(weights)){ const score=model.scores?.[key]; if(!Number.isInteger(score)||score<1||score>5) fail(`${id}.${key} must be 1-5`); }
-    const weighted_score=Object.entries(weights).reduce((sum,[key,weight])=>sum+model.scores[key]*weight/5,0);
+    for(const [field] of Object.entries(weights)){ const score=model.scores?.[field]; if(!Number.isInteger(score)||score<1||score>5) fail(`${id}.${field} must be 1-5`); }
+    const weighted_score=Object.entries(weights).reduce((sum,[field,weight])=>sum+model.scores[field]*weight/5,0);
     return {id,name:model.name,weighted_score:Number(weighted_score.toFixed(1)),scores:model.scores,notes};
   }).sort((a,b)=>b.weighted_score-a.weighted_score||b.scores.speed_to_valid_signal-a.scores.speed_to_valid_signal||b.scores.fulfillment_simplicity-a.scores.fulfillment_simplicity||ids.indexOf(a.id)-ids.indexOf(b.id));
   return {status:input.evidence.coverage_complete?'evidence_informed_hypothesis':'constraint_led_hypothesis',ranked,selected:ranked[0]};

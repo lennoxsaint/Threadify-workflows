@@ -60,14 +60,14 @@ export function reviewPacket(input) {
     const expected = structuredClone(previous);
     if (!Array.isArray(changes) || !changes.length) errors.push('revision changes required');
     for (const change of changes ?? []) {
-      const keys = change.path?.split('.') ?? [];
+      const fields = change.path?.split('.') ?? [];
       let target = expected;
-      for (const key of keys.slice(0, -1)) target = target?.[key];
-      const key = keys.at(-1), value = target?.[key];
+      for (const field of fields.slice(0, -1)) target = target?.[field];
+      const field = fields.at(-1), value = target?.[field];
       if (typeof value !== 'string' || !nonempty(change.before) || typeof change.after !== 'string' || value.split(change.before).length !== 2) {
         errors.push('revision must identify one exact text span'); continue;
       }
-      target[key] = value.replace(change.before, change.after);
+      target[field] = value.replace(change.before, change.after);
     }
     if (JSON.stringify(expected) !== JSON.stringify(packet)) errors.push('revision changed undeclared fields');
   }

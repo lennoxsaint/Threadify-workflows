@@ -96,12 +96,12 @@ export function dedupeOffenders(posts) {
   const byKey = new Map();
   const byViews = [...posts].sort((a, b) => (b.post.views ?? -1) - (a.post.views ?? -1));
   for (const { post, text } of byViews) {
-    const keys = [`text:${normalise(text)}`, `line:${normalise(fullFirstLine(text))}\u0001${phraseSet(post.families)}`];
-    const group = keys.map((key) => byKey.get(key)).find(Boolean);
+    const fields = [`text:${normalise(text)}`, `line:${normalise(fullFirstLine(text))}\u0001${phraseSet(post.families)}`];
+    const group = fields.map((field) => byKey.get(field)).find(Boolean);
     if (group) group.ids.push(post.id);
     else groups.push({ post, ids: [post.id] });
     const target = group ?? groups[groups.length - 1];
-    for (const key of keys) if (!byKey.has(key)) byKey.set(key, target);
+    for (const field of fields) if (!byKey.has(field)) byKey.set(field, target);
   }
   return groups.map(({ post, ids }) => ({ ...post, repeats: ids.length, repeat_ids: ids.slice(1) }));
 }

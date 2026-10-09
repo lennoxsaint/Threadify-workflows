@@ -22,8 +22,8 @@ This engine never calls Threadify or publishes. Persist an attempt before a sepa
   const options = {};
   for (let i = 0; i < args.length; i++) {
     if (!['--state', '--revision'].includes(args[i]) || args[i + 1] === undefined) throw new Error('Expected --state PATH or --revision N.');
-    const key = args[i++];
-    if (key === '--state') options.root = args[i];
+    const field = args[i++];
+    if (field === '--state') options.root = args[i];
     else {
       if (!/^\d+$/.test(args[i])) throw new Error('Revision must be a nonnegative integer.');
       options.revision = Number(args[i]);
