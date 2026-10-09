@@ -1,3 +1,7 @@
+# 0.30.6
+
+- Rename the browser review page's session storage key (#56)
+
 # 0.30.5
 
 - Reword creator docs so Vault is not paired with read (#55)
