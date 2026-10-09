@@ -473,6 +473,8 @@ function validateDurableRuleContracts() {
   }
   const prompts = Array.isArray(listing.defaultPrompt) ? listing.defaultPrompt : [listing.defaultPrompt].filter(Boolean);
   assert(prompts.length <= 3 && prompts.every((prompt) => prompt.length <= 128), 'OpenAI defaultPrompt allows at most three prompts of at most 128 characters');
+  // OpenAI: "Codex package validation requires both" logo and composerIcon (submission guide, Icons and screenshots).
+  assert(listing.logo && listing.composerIcon, 'OpenAI plugin must declare both interface.logo and interface.composerIcon');
   for (const asset of [listing.logo, listing.composerIcon, openai?.onboardingSkill].filter(Boolean)) {
     assert(asset.startsWith('./') && fs.existsSync(path.join(root, 'plugins', 'openai', asset)), `OpenAI plugin references a missing file: ${asset}`);
   }

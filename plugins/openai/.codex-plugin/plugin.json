@@ -40,6 +40,7 @@
     ],
     "brandColor": "#DC0000",
     "brandColorDark": "#FF5C5C",
+    "composerIcon": "./assets/logo.png",
     "logo": "./assets/logo.png"
   },
   "extensions": {
