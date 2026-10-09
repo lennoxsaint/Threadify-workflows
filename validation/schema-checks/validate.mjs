@@ -441,6 +441,14 @@ function validateDurableRuleContracts() {
   const compatibilityPlugin = readJson(path.join(root, 'plugins', 'threadify', '.codex-plugin', 'plugin.json'));
   assert(compatibilityPlugin?.name === plugin?.name, 'Threadify compatibility plugin name must match root plugin');
   assert(compatibilityPlugin?.version === releaseIntent?.plugin_version, 'Threadify compatibility plugin version must match release intent');
+  const claudePlugin = readJson(path.join(root, '.claude-plugin', 'plugin.json'));
+  assert(claudePlugin?.name === plugin?.name, 'Claude plugin name must match root plugin');
+  assert(claudePlugin?.version === releaseIntent?.plugin_version, 'Claude plugin version must match release intent');
+  const claudeMarketplace = readJson(path.join(root, '.claude-plugin', 'marketplace.json'));
+  const claudeEntry = claudeMarketplace?.plugins?.find((entry) => entry?.name === plugin?.name);
+  assert(claudeEntry?.source === './', 'Claude marketplace must list the root plugin with source "./"');
+  const mcp = readJson(path.join(root, '.mcp.json'));
+  assert(mcp?.mcpServers?.threadify?.type === 'streamable-http', '.mcp.json threadify server must declare its transport type');
 }
 
 const files = walk(root);

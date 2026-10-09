@@ -71,6 +71,23 @@ npx --yes github:lennoxsaint/Threadify-workflows install --workflows all --targe
 
 Change `codex` to `claude`, `cursor`, `gemini`, `openclaw` or `hermes`. Omit `--targets` to use detected clients. A fresh install selects the full runnable catalog. An upgrade with no workflow selection preserves that client's existing selection.
 
+### Claude Code plugin
+
+Install the full catalog as a Claude Code plugin, with the Threadify MCP server included:
+
+```sh
+/plugin install threadify-workflows --marketplace lennoxsaint/Threadify-workflows
+```
+
+On Claude Code before 2.1.275, add the marketplace first, then install:
+
+```sh
+claude plugin marketplace add lennoxsaint/Threadify-workflows
+claude plugin install threadify-workflows@threadify
+```
+
+Skills appear as `/threadify-workflows:<skill>`, for example `/threadify-workflows:threadify-get-set-up`. Update with `claude plugin update threadify-workflows@threadify`. The plugin route installs the same skills as the installer below but does not run the installer's release-manifest and checksum checks; use the installer when you need a pinned, checksum-verified release.
+
 From a source checkout, use the local executable:
 
 ```sh
