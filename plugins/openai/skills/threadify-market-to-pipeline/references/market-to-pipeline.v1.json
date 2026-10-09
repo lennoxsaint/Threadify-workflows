@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/market-to-pipeline.v1.json",
+  "title": "Market to Pipeline packets",
+  "oneOf": [
+    { "$ref": "#/$defs/input" },
+    { "$ref": "#/$defs/state" },
+    { "$ref": "#/$defs/publicReceipt" }
+  ],
+  "$defs": {
+    "input": {
+      "type": "object",
+      "required": ["record_type", "schema_version", "run_id", "observed_at", "offer", "market_scope", "account", "sources", "signals", "themes", "prospects", "campaign"],
+      "properties": {
+        "record_type": { "const": "MarketToPipelineInputV1" },
+        "schema_version": { "const": 1 },
+        "run_id": { "type": "string", "minLength": 1 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "offer": { "type": "object" },
+        "market_scope": { "type": "object" },
+        "account": { "type": "object" },
+        "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
+        "signals": { "type": "array", "minItems": 1, "maxItems": 50, "items": { "$ref": "#/$defs/signal" } },
+        "themes": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/theme" } },
+        "prospects": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/prospect" } },
+        "campaign": { "$ref": "#/$defs/campaign" }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_id", "provider", "stage", "sequence", "endpoint", "observed_at", "requested_count", "returned_count", "complete", "auth_mode", "pricing_status", "quoted_micro", "charged_micro", "call_id", "evidence_ref", "fit_gate_prospect_ids", "limitations"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "provider": { "enum": ["threadify", "treg", "local"] },
+        "stage": { "enum": ["buyer_signal", "discovery", "company_fit", "person", "contact"] },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "endpoint": { "type": "string", "minLength": 1 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "requested_count": { "type": "integer", "minimum": 0 },
+        "returned_count": { "type": "integer", "minimum": 0 },
+        "complete": { "type": "boolean" },
+        "auth_mode": { "type": "string", "minLength": 1 },
+        "pricing_status": { "enum": ["free", "quoted", "unavailable"] },
+        "quoted_micro": { "type": "integer", "minimum": 0 },
+        "charged_micro": { "type": "integer", "minimum": 0 },
+        "call_id": { "type": ["string", "null"] },
+        "evidence_ref": { "type": "string", "minLength": 1 },
+        "fit_gate_prospect_ids": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "limitations": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "signal": {
+      "type": "object",
+      "required": ["signal_id", "source_id", "observed_at", "kind", "summary", "public_url", "rights_basis", "explicit", "relevant_to_offer", "channel", "prospect_ids"],
+      "properties": {
+        "signal_id": { "type": "string", "minLength": 1 },
+        "source_id": { "type": "string", "minLength": 1 },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "kind": { "enum": ["problem", "failed_attempt", "desired_outcome", "recipient_interest", "channel_permission", "company_fit", "current_role", "work_contact_verification", "lawful_basis"] },
+        "summary": { "type": "string", "minLength": 1 },
+        "public_url": { "type": ["string", "null"] },
+        "rights_basis": { "type": "string", "minLength": 1 },
+        "explicit": { "type": "boolean" },
+        "relevant_to_offer": { "type": "boolean" },
+        "channel": { "type": ["string", "null"] },
+        "prospect_ids": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "object",
+      "required": ["theme_id", "summary", "signal_ids", "deidentified"],
+      "properties": {
+        "theme_id": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "signal_ids": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "deidentified": { "const": true }
+      },
+      "additionalProperties": false
+    },
+    "prospect": {
+      "type": "object",
+      "required": ["prospect_id", "display_name", "stable_company_id", "company_name", "role", "lane", "signal_ids", "fit_score", "fit_reasons", "excluded", "contact", "action"],
+      "properties": {
+        "prospect_id": { "type": "string", "minLength": 1 },
+        "display_name": { "type": "string", "minLength": 1 },
+        "stable_company_id": { "type": "string", "minLength": 1 },
+        "company_name": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "lane": { "enum": ["warm", "cold_b2b"] },
+        "signal_ids": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+        "fit_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "fit_reasons": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "excluded": { "type": "boolean" },
+        "contact": { "type": "object" },
+        "action": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+    "campaign": {
+      "type": "object",
+      "required": ["platform", "posts"],
+      "properties": {
+        "platform": { "enum": ["threads", "x", "linkedin", "bluesky"] },
+        "posts": { "type": "array", "minItems": 7, "maxItems": 7, "items": {
+          "type": "object",
+          "required": ["post_id", "angle", "exact_text", "evidence_theme_ids", "limitation"],
+          "properties": {
+            "post_id": { "type": "string", "minLength": 1 },
+            "angle": { "type": "string", "minLength": 1 },
+            "exact_text": { "type": "string", "minLength": 1 },
+            "evidence_theme_ids": { "type": "array", "minItems": 1, "items": { "type": "string" }, "uniqueItems": true },
+            "limitation": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        } }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "required": ["record_type", "schema_version", "run_id", "status", "observed_at", "offer", "market_scope", "account", "coverage", "sources", "signals", "themes", "pipeline", "campaign", "receipts"],
+      "properties": {
+        "record_type": { "const": "MarketToPipelineStateV1" },
+        "schema_version": { "const": 1 },
+        "run_id": { "type": "string" },
+        "status": { "const": "prepared_privately" },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "offer": { "type": "object" }, "market_scope": { "type": "object" }, "account": { "type": "object" },
+        "coverage": { "type": "object" }, "sources": { "type": "array" }, "signals": { "type": "array" },
+        "themes": { "type": "array" }, "pipeline": { "type": "array", "maxItems": 10 },
+        "campaign": { "$ref": "#/$defs/campaign" }, "receipts": { "type": "array", "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "publicReceipt": {
+      "type": "object",
+      "required": ["record_type", "schema_version", "run_id", "status", "provider_write_status", "provider_writes_performed", "raw_signal_bodies_retained_in_receipt", "contact_destinations_retained_in_receipt"],
+      "properties": {
+        "record_type": { "const": "MarketToPipelinePublicReceiptV1" },
+        "schema_version": { "const": 1 },
+        "run_id": { "type": "string" },
+        "status": { "enum": ["prepared_privately", "provider_attempt_pending", "provider_write_unknown", "provider_write_reconciled"] },
+        "provider_write_status": { "enum": ["none_confirmed", "attempt_pending", "unknown", "succeeded"] },
+        "provider_writes_performed": { "type": ["boolean", "null"] },
+        "raw_signal_bodies_retained_in_receipt": { "const": false },
+        "contact_destinations_retained_in_receipt": { "const": false }
+      },
+      "additionalProperties": true
+    }
+  }
+}

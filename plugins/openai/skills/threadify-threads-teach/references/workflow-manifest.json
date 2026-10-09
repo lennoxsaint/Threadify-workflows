@@ -1,0 +1,85 @@
+{
+  "workflow_id": "threads-teach",
+  "version": "0.1.1",
+  "title": "Threads Teach",
+  "summary": "Learn to write for Threads in short lessons on your own posts, with a private learning workspace and one self-written post per lesson, saved or scheduled only after exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-threads-teach",
+    "source": "plugins/threadify/skills/threadify-threads-teach/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/threads-teach/README.md"] },
+  "triggers": [
+    "teach me Threads",
+    "teach me how to write Threads posts",
+    "continue my Threads lessons"
+  ],
+  "io": {
+    "inputs": [{ "name": "learner mission and own posts", "schema_ref": "inline:threads-teach-input" }],
+    "outputs": [{ "name": "lesson, learning record and one learner-written post", "schema_ref": "inline:threads-teach-workspace" }]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_growth_signal",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "validate_post",
+    "save_draft",
+    "get_draft",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "free_capabilities": [
+    "ten core framework lessons",
+    "private mission, lesson and learning-record workspace",
+    "coaching on pasted posts without a connection"
+  ],
+  "paid_capability_stubs": [
+    "connected reads of the learner's own posts and results depend on current Threadify scopes and plan entitlement",
+    "connected draft saving and scheduling",
+    "the deeper Threads system beyond the core lessons"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "exact learner-written post text",
+      "action",
+      "local date and time when scheduling",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "local-lessons-on-pasted-posts",
+    "instructions": [
+      "Teach on posts the learner pastes and call them a sample, never their best posts.",
+      "Say plainly which results, rankings and numbers cannot be seen or checked.",
+      "Hand the finished post to the learner to schedule themselves and record it as handed over, not saved or scheduled."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "lesson taught",
+      "learner-written post text",
+      "approval for each write",
+      "draft or schedule readback",
+      "fallback state"
+    ]
+  }
+}

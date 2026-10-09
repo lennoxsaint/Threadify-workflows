@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run My Threads"
+  short_description: "Approve a planned day of five Threadify posts every morning"
+  default_prompt: "Use $threadify-run-my-threads to set up one daily run that prepares my Threadify posts for approval."

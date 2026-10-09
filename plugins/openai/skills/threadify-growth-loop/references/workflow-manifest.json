@@ -1,0 +1,105 @@
+{
+  "workflow_id": "growth-loop",
+  "version": "0.1.0",
+  "title": "Threadify Growth Loop",
+  "summary": "Review mature post evidence every six hours, promote repeatable hypotheses, prepare a four-proven/two-challenger daily queue, and save six drafts without scheduling them.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-growth-loop",
+    "source": "plugins/threadify/skills/threadify-growth-loop/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "schemas/growth-loop.v1.json", "target": "references/growth-loop.v1.json" },
+      { "source": "docs/growth-loop-adapters.md", "target": "references/setup-adapters.md" },
+      { "source": "lib/growth-loop.mjs", "target": "scripts/growth-loop.mjs" },
+      { "source": "lib/growth-loop-store.mjs", "target": "scripts/growth-loop-store.mjs" },
+      { "source": "lib/growth-loop-cli.mjs", "target": "scripts/growth-loop-cli.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": ["30-day-viral-vault"],
+    "files": [
+      "workflows/growth-loop/README.md",
+      "schemas/growth-loop.v1.json",
+      "docs/growth-loop-adapters.md"
+    ]
+  },
+  "triggers": [
+    "build my self-improving content machine",
+    "run my Threadify growth loop",
+    "learn from mature posts and prepare tomorrow's drafts"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "verified account, mature post evidence, sources, templates, and private draft bodies", "schema_ref": "inline:growth-loop-input-v1" }
+    ],
+    "outputs": [
+      { "name": "versioned private hypothesis ledger, six-card day, and body-free readbacks", "schema_ref": "schemas/growth-loop.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "gemini", "openclaw", "hermes"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "list_offers",
+    "greatest_hits",
+    "list_viral_items",
+    "get_viral_item",
+    "list_vault_items",
+    "get_vault_item",
+    "read_post_performance",
+    "get_audience_demographics",
+    "get_best_time",
+    "save_draft",
+    "list_drafts",
+    "audit_log"
+  ],
+  "free_capabilities": [
+    "private maturity and hypothesis ledger",
+    "72-hour reach and attributed 7-day commercial evaluation",
+    "four-proven/two-challenger daily portfolio validation",
+    "body-free run, hypothesis, pause, and save readbacks"
+  ],
+  "paid_capability_stubs": [
+    "connected analytics, source libraries, best-time evidence, offer reads, and draft saves depend on current Threadify scopes and plan entitlement",
+    "persistent execution depends on the selected agent host and an approved native or operating-system scheduler"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "verified account and timezone",
+      "automatic draft-save scope",
+      "six daily times and six-hour maturity interval",
+      "source rights and private state location",
+      "persistent runner route, device requirement, next run, and pause command",
+      "draft-only boundary with no automatic scheduling or publishing"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-private-growth-loop",
+    "artifact_schema": "growth-loop.v1",
+    "instructions": [
+      "Keep observations, hypotheses, exact draft bodies, and state in a private owner-controlled directory.",
+      "If connected evidence is unavailable, record it as unknown and do not invent a result or promotion.",
+      "Prepare the same six-card mix locally and hand drafts to the owner without claiming they were saved, scheduled, published, or commercially attributed."
+    ]
+  },
+  "receipt": {
+    "schema": "growth-loop.v1",
+    "must_prove": [
+      "verified account and timezone",
+      "mature evidence references and checkpoint",
+      "hypothesis threshold and commercial regression state",
+      "two-two-two sources, four-two roles, and two-two-two topics",
+      "draft-save intent and authoritative provider readback",
+      "persistent runner status, next run, and pause state",
+      "no automatic scheduling or publishing",
+      "fallback state"
+    ]
+  }
+}
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Threadify Unslop"
+  short_description: "Find your slop posts, then schedule 3 raw ones with zero hedges"
+  default_prompt: "Use $threadify-unslop to score my last 90 days of Threads posts for slop and prepare three raw, zero-hedge posts for my approval."
