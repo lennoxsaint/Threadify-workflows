@@ -1,3 +1,7 @@
+# 0.30.8
+
+- Add terms, support and documentation links to the Claude plugin manifest (#58)
+
 # 0.30.7
 
 - Pass the plugin directory credential scan with a build-time audit (#57)
