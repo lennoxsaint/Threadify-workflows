@@ -3,7 +3,7 @@
   "observed_at": "2026-09-27T00:07:26Z",
   "metric_definition": "Sum only the current root-post views for the strict long-form Synthesizer cohort. Replies are not added to the total.",
   "rights_basis": "All bundled originals are creator-owned @lennox_saint works; Lennox attested redistribution permission on 2026-09-27.",
-  "integrity_contract": "posts are the exact ordered word-for-word thread parts returned by the owned-account read. The validator computes SHA-256 over each posts array joined by two newline characters.",
+  "integrity_contract": "posts are the exact ordered word-for-word thread parts returned by the owned-account read. The validator computes SHA-256 over each posts array joined by two newline characters. In the OpenAI plugin package, a closing call to action for a paid plan is replaced by an omission marker and the lock is recomputed.",
   "originals": [
     {
       "original_id": "threads:18102797542920814",
@@ -704,7 +704,7 @@
         "the fifth truth: you've got intelligence wrong.\n\nit's not iq.\n\nit's the ability to get what you want.\n\nlow iq = hitting a roadblock and quitting.\nhigh iq = realizing any problem can be solved if you don't fucking quit.\n\nyou have ai. you have the internet.\n\nyour excuses are a choice.",
         "cheat sheet:\n\n1. your behavior reveals your real goal.\n2. identity > actions.\n3. the lifestyle is the outcome.\n4. quitting is just navigation.\n5. intelligence = solving problems.\n\nwhich one have you been ignoring? be honest. comment the number below:",
         "changing your identity is brutal.\n\ndoing it solo is worse.\n\nthreadify is the system that quietly rewires you: ideas in, posts out, reps stacked, feedback baked in.\n\nso your threads start looking like the life you say you want, not the one you're trying to escape.",
-        "join 173+ creators going viral with @threadify.app\n\nget a 7-day free trial of our $49/mo plan.\n\nno card required.\n\nclick the red button once you're on the page:\n\nhttps://www.threadify.app/plans\n\nyour new identity's waiting."
+        "[The creator's closing call to action for a paid plan is omitted from this package.]"
       ],
       "attribution": "@lennox_saint, Threads root 18101019202662414, published 2026-01-17T11:00:11+00:00",
       "rights_basis": "creator-owned; Lennox attested redistribution permission on 2026-09-27"
@@ -1130,7 +1130,7 @@
         "4. your content strategy is your posting schedule\n\nmost creators spend 80% of their time creating and 20% distributing. flip it. create fast. distribute everywhere. reply to comments. engage with 60 people a day. distribution is the strategy",
         "5. use tools that remove friction\n\ni co-built Threadify because i was spending 2 hours scheduling what should take 20 minutes. Voice Learning writes in your style. Auto-Schedule picks your best posting times. remove the friction and you'll post more consistently",
         "the 5-part content system:\n\n1. write hooks first - 80% of your reach\n2. one idea per post - depth > width\n3. study what's working now - adapt weekly\n4. distribute more than you create\n5. use tools that remove friction\n\nsave this",
-        "Start Threadify Free in one tap: \n\nhttps://www.threadify.app/plans/?utm_source=threads_lennox&utm_medium=organic&utm_campaign=growth&utm_content=2026-03-07-4-ni-tg"
+        "[The creator's closing call to action for a paid plan is omitted from this package.]"
       ],
       "attribution": "@lennox_saint, Threads root 18301030195276613, published 2026-03-07T12:00:07+00:00",
       "rights_basis": "creator-owned; Lennox attested redistribution permission on 2026-09-27"

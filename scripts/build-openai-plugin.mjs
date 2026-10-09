@@ -14,13 +14,23 @@
 //   not display subscription plans, initiate new subscriptions, or promote upgrades", nor link to a
 //   page that starts one. So the setup guide drops its plans-page link and "plan choices", the setup
 //   question drops the free-trial option, Get Set Up starts from an existing account instead of
-//   opening signup and purchase, and Monetize My Week no longer states an upgrade URL (the OpenAI
-//   address returns none). Two attributed originals in YouTube Synthesizer quote real posts that
-//   advertise a Threadify plan; they are immutable quotations of a creator's post, kept verbatim, and
-//   are the only files the promotion guard allows.
+//   opening signup and purchase, Monetize My Week no longer states an upgrade URL (the OpenAI address
+//   returns none), and Monetize My Week and Offer Builder no longer send the agent to the plans page
+//   when Threadify is the user's offer (the user's saved offer destination still applies).
+// - YouTube Synthesizer's example library quotes two @lennox_saint threads whose last post advertises
+//   a Threadify plan. In this package that one post of each is replaced by OMITTED_POST, and the
+//   library's integrity lock is recomputed with the skill's own sha256 and checked with its own
+//   validators, so the skill still verifies itself. Nothing is exempt from the promotion guard
+//   (lennoxsaint/Threadify-workflows#59 review: "these promotions should be removed or transformed
+//   rather than blanket-exempted").
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  sha256,
+  validateIntegrityLock,
+  validateOriginalLibrary,
+} from '../skills/threadify-youtube-synthesizer/scripts/youtube-synthesizer.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
@@ -74,14 +84,23 @@ const REWRITES = [
     from: 'state the returned current tier, required tier, allowed alternative and upgrade URL.',
     to: 'state the returned current tier, required tier and allowed alternative.',
   },
+  {
+    files: 1,
+    from: ' If Threadify itself is the offer, require the current canonical plans destination with campaign attribution parameters; do not reuse an old episode URL or invent plan claims.',
+    to: '',
+  },
+  {
+    files: 1,
+    from: " When Threadify itself is the offer, require current approved facts and the canonical /plans destination with the current brand's full attribution parameters; do not invent the attribution key set or use historical promotion URLs.",
+    to: '',
+  },
 ];
-// After the rewrites, nothing may link to Threadify's plans page, offer a free trial or state an upgrade
-// URL, except the two attributed originals (verbatim quotations of a creator's real posts).
-const PROMOTION = /threadify\.app\/plans|free trial|upgrade url/i;
-const QUOTED_ORIGINALS = new Set([
-  'skills/threadify-youtube-synthesizer/references/originals.v1.json',
-  'skills/threadify-youtube-synthesizer/references/template-gallery.md',
-]);
+// After every change, nothing may link to Threadify's plans page, offer a free trial, quote a plan price
+// or state an upgrade URL.
+const PROMOTION = /threadify\.app\/plans|\/plans destination|plans destination|plans page|free trial|upgrade url|\$\d+\s*\/\s*mo\b/i;
+const SYNTH = 'skills/threadify-youtube-synthesizer/references';
+const OMITTED_POST = "[The creator's closing call to action for a paid plan is omitted from this package.]";
+const PROMOTED_POSTS = 2;
 
 function collect(directory, relative = '') {
   const files = [];
@@ -123,12 +142,63 @@ for (const [relative, original] of collect(claudeSkills)) {
 for (const [rewrite, count] of changed) {
   if (count !== rewrite.files) throw new Error(`OpenAI rewrite changed ${count} files, expected ${rewrite.files}: ${rewrite.from.slice(0, 60)}`);
 }
+
+// YouTube Synthesizer: the promoted posts are found in the library itself, never retyped. Each is
+// replaced in originals.v1.json (as its JSON string) and in template-gallery.md (as its text), exactly
+// once, then the integrity lock is recomputed for the changed originals and the library.
+{
+  const originalsKey = `${SYNTH}/originals.v1.json`;
+  const galleryKey = `${SYNTH}/template-gallery.md`;
+  const lockKey = `${SYNTH}/integrity.v1.json`;
+  const templates = JSON.parse(expected.get(`${SYNTH}/templates.v1.json`).toString('utf8'));
+  const before = JSON.parse(expected.get(originalsKey).toString('utf8'));
+  const lockBefore = JSON.parse(expected.get(lockKey).toString('utf8'));
+  const beforeAudit = validateIntegrityLock(templates, before, lockBefore);
+  if (!beforeAudit.ok) throw new Error(`YouTube Synthesizer library does not verify before the change: ${beforeAudit.errors.join(', ')}`);
+  const promoted = before.originals.flatMap((original) => original.posts
+    .filter((post) => PROMOTION.test(post))
+    .map((post) => ({ id: original.original_id, post })));
+  if (promoted.length !== PROMOTED_POSTS) throw new Error(`Expected ${PROMOTED_POSTS} promoted posts in the YouTube Synthesizer library, found ${promoted.length}`);
+  let originalsText = expected.get(originalsKey).toString('utf8');
+  let galleryText = expected.get(galleryKey).toString('utf8');
+  for (const { post } of promoted) {
+    for (const [label, text, needle] of [['originals', originalsText, JSON.stringify(post)], ['gallery', galleryText, post]]) {
+      const matches = text.split(needle).length - 1;
+      if (matches !== 1) throw new Error(`Promoted post must appear once in the ${label} file; found ${matches}: ${post.slice(0, 50)}`);
+    }
+    originalsText = originalsText.replace(JSON.stringify(post), JSON.stringify(OMITTED_POST));
+    galleryText = galleryText.replace(post, OMITTED_POST);
+  }
+  const contractFrom = 'The validator computes SHA-256 over each posts array joined by two newline characters.';
+  if (originalsText.split(contractFrom).length !== 2) throw new Error('YouTube Synthesizer integrity_contract wording changed');
+  originalsText = originalsText.replace(contractFrom, `${contractFrom} In the OpenAI plugin package, a closing call to action for a paid plan is replaced by an omission marker and the lock is recomputed.`);
+  const after = JSON.parse(originalsText);
+  let lockText = expected.get(lockKey).toString('utf8');
+  const replaceHash = (oldHash, newHash) => {
+    if (lockText.split(oldHash).length !== 2) throw new Error(`Integrity hash ${oldHash} must appear once in the lock`);
+    lockText = lockText.replace(oldHash, newHash);
+  };
+  replaceHash(lockBefore.original_library_sha256, sha256(after));
+  for (const id of new Set(promoted.map((item) => item.id))) {
+    const original = after.originals.find((item) => item.original_id === id);
+    replaceHash(lockBefore.originals[id], sha256(original.posts.join('\n\n')));
+  }
+  const lockAfter = JSON.parse(lockText);
+  const afterAudit = validateIntegrityLock(templates, after, lockAfter);
+  const libraryAudit = validateOriginalLibrary(after, templates);
+  if (!afterAudit.ok || !libraryAudit.ok) {
+    throw new Error(`YouTube Synthesizer library fails its own checks after the change: ${[...afterAudit.errors, ...libraryAudit.errors].join(', ')}`);
+  }
+  expected.set(originalsKey, Buffer.from(originalsText, 'utf8'));
+  expected.set(galleryKey, Buffer.from(galleryText, 'utf8'));
+  expected.set(lockKey, Buffer.from(lockText, 'utf8'));
+}
 if (addressRewrites === 0) throw new Error(`No skill mentions ${STANDARD_ADDRESS}; the address rewrite matched nothing`);
 for (const [key, content] of expected) {
   if (!TEXT.test(key)) continue;
   const text = content.toString('utf8');
   if (text.includes('/api/mcp/threadify')) throw new Error(`${key} still names the standard Threadify address`);
-  if (PROMOTION.test(text) && !QUOTED_ORIGINALS.has(key)) throw new Error(`${key} still promotes a Threadify plan, trial or upgrade: ${text.match(PROMOTION)[0]}`);
+  if (PROMOTION.test(text)) throw new Error(`${key} still promotes a Threadify plan, trial or upgrade: ${text.match(PROMOTION)[0]}`);
 }
 expected.set('mcp.json', Buffer.from(`${JSON.stringify({
   $schema: 'https://agent-plugins.org/schemas/1.0.0/mcp.schema.json',

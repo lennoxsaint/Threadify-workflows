@@ -58,6 +58,6 @@ Missing tools/auth, denied scope, invalid/missing link, duplicate ambiguity or r
 
 The plugin supplies workflow instructions. The OAuth app connection supplies access to Threadify tools. Connect through the client's supported MCP settings using `https://www.threadify.app/api/mcp/openai`, then authorize the intended account and needed offer permissions. If the client lacks remote MCP, use the local page and copy the confirmed fields into CTA Studio manually; record manual verification separately. Do not imply every client exposes the same installation controls. See references/threadify-001.md for repository setup guidance.
 
-No system-wide installation is needed: tell an agent to read this SKILL.md and start question 1, optionally “in shortened filming mode.” A plugin release is a separate step. When Threadify itself is the offer, require current approved facts and the canonical /plans destination with the current brand's full attribution parameters; do not invent the attribution key set or use historical promotion URLs.
+No system-wide installation is needed: tell an agent to read this SKILL.md and start question 1, optionally “in shortened filming mode.” A plugin release is a separate step.
 
 Return the page path, owner handoff path, mode, questions answered/skipped, unknowns, confirmation state, action approval state, actual save/readback/UI state and remaining step. Store private provider IDs/account details only in local owner receipts, never public examples or repository fixtures.

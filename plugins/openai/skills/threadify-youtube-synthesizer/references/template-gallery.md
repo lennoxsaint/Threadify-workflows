@@ -2984,17 +2984,7 @@ so your threads start looking like the life you say you want, not the one you're
 **Post 10 of 10**
 
 ```text
-join 173+ creators going viral with @threadify.app
-
-get a 7-day free trial of our $49/mo plan.
-
-no card required.
-
-click the red button once you're on the page:
-
-https://www.threadify.app/plans
-
-your new identity's waiting.
+[The creator's closing call to action for a paid plan is omitted from this package.]
 ```
 
 </details>
@@ -4767,9 +4757,7 @@ save this
 **Post 10 of 10**
 
 ```text
-Start Threadify Free in one tap: 
-
-https://www.threadify.app/plans/?utm_source=threads_lennox&utm_medium=organic&utm_campaign=growth&utm_content=2026-03-07-4-ni-tg
+[The creator's closing call to action for a paid plan is omitted from this package.]
 ```
 
 </details>

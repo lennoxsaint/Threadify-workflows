@@ -24,7 +24,7 @@ If the owner requests a different account, offer, volume, cadence, delay, editin
 ## Preflight
 
 1. Read current tool schemas. Call `get_connection_defaults` first. Verify the intended owned account, timezone, scopes, automation state and current entitlement. State the exact `@handle`. Do not infer an account or plan from installation.
-2. Call `list_offers` for that account. If more than one offer could match, ask the owner to choose. Preserve the saved offer destination and approved facts exactly. If Threadify itself is the offer, require the current canonical plans destination with campaign attribution parameters; do not reuse an old episode URL or invent plan claims.
+2. Call `list_offers` for that account. If more than one offer could match, ask the owner to choose. Preserve the saved offer destination and approved facts exactly.
 3. Call `list_scheduled_posts` with enough coverage to identify seven wholly unoccupied local dates. Treat an occupied date as unavailable. A truncated response is not an empty calendar.
 4. Call `best_time_to_post` for current measured timing. If it is unavailable, ask for one posting time instead of guessing or claiming an analytic recommendation.
 5. Page `list_drafts` with `status: "unposted"` until the complete metadata set is covered. Record the observed total and snapshot time. Retrieve the full text of finalists with `get_draft`; previews are not sufficient for approval or offer-fit review.

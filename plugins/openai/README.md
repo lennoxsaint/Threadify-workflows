@@ -13,7 +13,8 @@ This folder is the plugin package submitted to OpenAI's plugin directory. It car
 Only where the platform needs it, applied by `scripts/build-openai-plugin.mjs`:
 
 - Every mention of Threadify's standard connection address points at the OpenAI address instead.
-- No plan, trial or upgrade promotion, as OpenAI's commerce rules require: the shared setup guide has no plans-page link, the setup question offers connecting an existing account or working locally, Get Set Up starts from an existing Threadify account, and Monetize My Week explains a plan limit without pointing anywhere to change plans. Two example posts in YouTube Synthesizer are kept word for word because they quote a creator's real posts.
+- No plan, trial or upgrade promotion, as OpenAI's commerce rules require: the shared setup guide has no plans-page link, the setup question offers connecting an existing account or working locally, Get Set Up starts from an existing Threadify account, Monetize My Week explains a plan limit without pointing anywhere to change plans, and Monetize My Week and Offer Builder use the user's saved offer destination even when Threadify is the offer.
+- YouTube Synthesizer's example library quotes two creator threads whose last post advertised a Threadify plan. In this package those two posts are replaced by a marked omission, and the library's integrity lock is recomputed with the skill's own checks, so the skill still verifies itself.
 
 ## Building and packaging
 
