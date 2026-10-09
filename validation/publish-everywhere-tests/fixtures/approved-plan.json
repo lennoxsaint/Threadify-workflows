@@ -1,0 +1,33 @@
+{
+  "brand": "Example Brand",
+  "timezone": "Australia/Perth",
+  "handles": { "youtube": "@examplechannel", "threads": "examplecreator", "x": "@examplecreator" },
+  "platforms": ["youtube", "threads", "x"],
+  "video": {
+    "name": "clip.mov",
+    "duration": "58 s",
+    "dimensions": "1080 x 1920",
+    "size_mb": 70,
+    "container": "MOV (hevc)",
+    "url": "https://media.example.com/public/clip.mov"
+  },
+  "post": {
+    "original": "I filmed one video and scheduled it in three places.\n\nOne approval. No copy and paste.",
+    "final": "I filmed one video and scheduled it in three places.\n\nOne approval. No copy and paste.",
+    "casing": "unchanged"
+  },
+  "youtube": {
+    "format": "short",
+    "format_reason": "vertical video of 58 s (3 minutes or less), so YouTube format is short",
+    "privacy": "unlisted",
+    "title": "I filmed one video and scheduled it in three places.",
+    "title_source": "first_line_of_post"
+  },
+  "times": {
+    "youtube": { "at": "2026-10-12T09:00:00+08:00", "label": "Mon 12 Oct, 9:00 am" },
+    "threads": { "at": "2026-10-12T09:00:00+08:00", "label": "Mon 12 Oct, 9:00 am" },
+    "x": { "at": "2026-10-12T11:00:00+08:00", "label": "Mon 12 Oct, 11:00 am" }
+  },
+  "dropped": [],
+  "global_auto_repost": true
+}

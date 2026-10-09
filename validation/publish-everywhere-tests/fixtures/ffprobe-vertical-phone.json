@@ -1,0 +1,20 @@
+{
+  "streams": [
+    {
+      "codec_type": "video",
+      "codec_name": "hevc",
+      "width": 1920,
+      "height": 1080,
+      "side_data_list": [
+        { "side_data_type": "Display Matrix", "rotation": -90 }
+      ]
+    },
+    { "codec_type": "audio", "codec_name": "aac" }
+  ],
+  "format": {
+    "filename": "clip.mov",
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+    "duration": "58.400000",
+    "size": "73400320"
+  }
+}
