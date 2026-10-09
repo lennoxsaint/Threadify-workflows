@@ -1,3 +1,7 @@
+# 0.30.7
+
+- Pass the plugin directory credential scan with a build-time audit (#57)
+
 # 0.30.6
 
 - Rename the browser review page's session storage key (#56)
