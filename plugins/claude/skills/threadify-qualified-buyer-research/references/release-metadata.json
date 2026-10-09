@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.30.9",
+  "release_version": "0.30.10",
   "skill_version": "0.12.1",
-  "plugin_version": "0.30.9",
+  "plugin_version": "0.30.10",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Add the OpenAI plugin package for ChatGPT and Codex (#59)"
+  "summary": "Package the OpenAI plugin in the Codex format so Codex offers every Threadify tool (#60)"
 }

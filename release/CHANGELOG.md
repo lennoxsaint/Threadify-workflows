@@ -1,3 +1,7 @@
+# 0.30.10
+
+- Package the OpenAI plugin in the Codex format so Codex offers every Threadify tool (#60)
+
 # 0.30.9
 
 - Add the OpenAI plugin package for ChatGPT and Codex (#59)
