@@ -5,7 +5,7 @@ description: Plan 30 days and prepare six rights-cleared Threads posts daily whi
 
 # 30-Day Viral Vault
 
-Read `references/creator-system.md` and `references/creator-engine.md`. Use this skill's bundled `scripts/creator.mjs` with Node 18+ and a dedicated private state directory. The engine performs no provider calls.
+Follow `references/creator-system.md` and `references/creator-engine.md`. Use this skill's bundled `scripts/creator.mjs` with Node 18+ and a dedicated private state directory. The engine performs no provider calls.
 
 ## Start or resume
 
