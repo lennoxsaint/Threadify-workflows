@@ -1,3 +1,7 @@
+# 0.29.3
+
+- Add one-command version bump and post-merge auto-bump workflow (#50)
+
 # 0.29.2
 
 - Unslop: every Auto Plug sells the owner's offer, the product they sell, never the Unslop workflow. It is specific to the post it replies to and continues it.
