@@ -263,7 +263,7 @@ export async function startBrowserReview({ root, input, onSubmit = () => {} }) {
     : await createBrowserReview(root, input);
   const { sessionRoot } = created;
   await browserReviewStatus(root, sessionRoot);
-  const token = randomBytes(32).toString('hex');
+  const sessionNonce = randomBytes(32).toString('hex');
   let origin;
   const assets = new Map([
     ['/', ['index.html', 'text/html; charset=utf-8']],
@@ -289,7 +289,7 @@ export async function startBrowserReview({ root, input, onSubmit = () => {} }) {
       if (request.method === 'GET' && asset)
         return send(200, await readFile(new URL(`./browser/${asset[0]}`, import.meta.url)), asset[1]);
       const supplied = request.headers.authorization?.replace(/^Bearer /, '') ?? '';
-      if (supplied.length !== token.length || !timingSafeEqual(Buffer.from(supplied), Buffer.from(token)))
+      if (supplied.length !== sessionNonce.length || !timingSafeEqual(Buffer.from(supplied), Buffer.from(sessionNonce)))
         return send(403, { error: 'Open the private editor link from your host.' });
       if (request.method === 'GET' && request.url === '/api/state')
         return send(200, await browserReviewStatus(root, sessionRoot));
@@ -330,5 +330,5 @@ export async function startBrowserReview({ root, input, onSubmit = () => {} }) {
     server.listen(0, '127.0.0.1', resolve);
   });
   origin = `http://127.0.0.1:${server.address().port}`;
-  return { server, sessionRoot, url: `${origin}/#${token}` };
+  return { server, sessionRoot, url: `${origin}/#${sessionNonce}` };
 }
