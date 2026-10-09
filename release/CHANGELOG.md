@@ -1,3 +1,7 @@
+# 0.30.2
+
+- Clear directory credential-scan false positives in bundled scripts (#52)
+
 # 0.30.1
 
 - Move the Claude Code plugin to plugins/claude for the plugin directory (#51)
