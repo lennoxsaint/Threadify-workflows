@@ -52,3 +52,15 @@ repo only pins a specific Eddy **release tag**. The current pin is **v1.9.1**.
 - Do not edit Eddy source from this repo; send Eddy changes upstream to `lennoxsaint/eddy`.
 - The validator (`npm test`) intentionally skips `engines/eddy`; Eddy validates itself in its own
   repo.
+
+## Versions and releases
+
+Every merge to `main` is a stable release: the release workflow tags it and publishes the assets, and Claude Code plugin installs see it as an update. The version lives in several files, so never edit them by hand. Run one command in your branch instead:
+
+```sh
+npm run bump -- patch --summary "One changelog line describing the change"
+```
+
+Use `minor` or `major` instead of `patch` when the change warrants it, repeat `--summary` for more changelog lines, or pass an explicit `x.y.z`. The command moves `package.json`, the lockfile, the Codex, Claude and compatibility plugin manifests, `release/release-intent.json`, `installation.md` and `release/CHANGELOG.md` together, then refreshes the generated bundles. `npm run validate` fails if any copy drifts.
+
+If a merge lands without a bump, the `auto-bump` workflow bumps the patch version on `main`, using the merged commit subjects as the changelog lines, and the release workflow publishes it. It needs the `RELEASE_BUMP_TOKEN` repository secret, a fine-grained token with Contents: read and write, because `main` requires pull requests and the default Actions token cannot push there.
