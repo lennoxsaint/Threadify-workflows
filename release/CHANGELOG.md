@@ -1,3 +1,7 @@
+# 0.30.5
+
+- Reword creator docs so Vault is not paired with read (#55)
+
 # 0.30.4
 
 - Reword vault skill opening and drop explicit child environment for the directory scanner (#54)
