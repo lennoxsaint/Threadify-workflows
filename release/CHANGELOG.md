@@ -1,3 +1,7 @@
+# 0.30.11
+
+- Add the demo video link to the OpenAI plugin's review information, which OpenAI requires before submission
+
 # 0.30.10
 
 - Package the OpenAI plugin in the Codex format so Codex offers every Threadify tool (#60)

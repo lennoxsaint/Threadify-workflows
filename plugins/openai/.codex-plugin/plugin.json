@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.30.10",
+  "version": "0.30.11",
   "description": "Your lead generation agent for Threads, X, LinkedIn and YouTube: the Threadify connection plus guided workflows to write and schedule posts in your voice, reply to comments, and track the leads and sales your posts bring.",
   "author": {
     "name": "Threadify",
@@ -95,6 +95,7 @@
             }
           ]
         },
+        "demo_recording_url": "https://drive.google.com/file/d/1JJnjoYf2qI7zbEyhALK66vWe8QtX6N4I/view?usp=share_link",
         "commerce": false,
         "commerce_description": "This plugin does not sell products or process payments."
       },

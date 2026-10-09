@@ -483,6 +483,8 @@ function validateDurableRuleContracts() {
   assert((cases?.positive ?? []).every((item) => item.description && item.prompt && item.tools_triggered && item.expected_behavior),
     'Every positive OpenAI test case needs description, prompt, tools_triggered and expected_behavior');
   assert((cases?.negative ?? []).every((item) => item.description && item.prompt), 'Every negative OpenAI test case needs description and prompt');
+  // OpenAI: demo_recording_url is "Required for MCP review"; the portal will not submit without it (submission guide).
+  assert(/^https:\/\//.test(openai?.review?.demo_recording_url ?? ''), 'OpenAI review needs demo_recording_url, an HTTPS link reviewers can open');
   const openaiMcp = readJson(path.join(root, 'plugins', 'openai', '.mcp.json'));
   const openaiServers = Object.keys(openaiMcp?.mcpServers ?? {});
   assert(openaiServers.length === 1 && openaiMcp.mcpServers.threadify?.url === 'https://www.threadify.app/api/mcp/openai',
