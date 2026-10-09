@@ -1,0 +1,114 @@
+{
+  "workflow_id": "publish-everywhere",
+  "version": "0.1.0",
+  "title": "Publish Everywhere",
+  "summary": "Hand your agent one video. It checks where the video can go, has Threadify write the post and the YouTube title in your voice, and schedules it to YouTube, Threads and X only after one exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-publish-everywhere",
+    "source": "plugins/threadify/skills/threadify-publish-everywhere/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/publish-everywhere/README.md"
+    ]
+  },
+  "triggers": [
+    "publish everywhere",
+    "post this video to youtube",
+    "upload this video",
+    "schedule this video on youtube threads and x"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "one local MP4 or MOV video path or public URL, a one-line description, a YouTube privacy choice and a time",
+        "schema_ref": "inline:publish-everywhere-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "platform decisions, approval card and schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "list_brands",
+    "generate_content",
+    "create_media_upload",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "list_scheduled_posts"
+  ],
+  "optional_mcp_tools": [],
+  "free_capabilities": [
+    "local video check with ffprobe: size, length, shape and file type",
+    "per-platform decision from a small limits table, with a plain reason for every dropped platform",
+    "YouTube short or long format choice from shape and length",
+    "local casing guard that proves lower(original) == lower(final) for the post and the title",
+    "one approval card that is blocked until YouTube privacy and every time are chosen"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post generation counts toward the plan's AI generations",
+    "video storage and connected scheduling to YouTube, Threads and X",
+    "X posts are metered"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "brand and timezone",
+      "exact post text",
+      "YouTube title, format and privacy",
+      "each platform with its handle and time",
+      "anything dropped and why",
+      "global auto-repost note",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "check-only-without-substitute-copy",
+    "instructions": [
+      "Never write or reword the post or the title yourself; Threadify generates the post and the only permitted change is lowercasing proved by the casing guard.",
+      "When YouTube is not connected, stop and say to connect it at threadify.app (Brands); never continue silently.",
+      "When a platform cannot take the video, drop it with a plain-English reason and show it on the approval card.",
+      "Never default YouTube privacy and never set made_for_kids without asking.",
+      "When ffprobe is missing, ask the owner for the length and shape; never guess.",
+      "When a schedule result is unclear, inspect with get_schedule_status or list_scheduled_posts before any retry.",
+      "On HTTP 402 or a quota error, stop with a plain message.",
+      "With no Threadify connection, report where the video would fit and say how to connect Threadify."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "brand and handles",
+      "video facts",
+      "platform decisions and reasons",
+      "YouTube format, privacy and title source",
+      "casing guard result",
+      "approval card and reply",
+      "idempotency key",
+      "scheduled post and per-platform times",
+      "schedule readback",
+      "fallback state"
+    ]
+  }
+}

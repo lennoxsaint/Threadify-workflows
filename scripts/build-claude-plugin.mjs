@@ -6,15 +6,22 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadWorkflowRegistry, listWorkflows } from '../lib/workflow-registry.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
 const pluginRoot = path.join(root, 'plugins', 'claude');
 const SOURCE_ONLY = new Set(['.claude-plugin']);
 const IGNORED = new Set(['.DS_Store']);
-// Skills that drive the external Eddy engine stay out of the Claude plugin: the
-// plugin never ships Eddy, and the directory should not list a skill it cannot run.
-const EXCLUDED_SKILLS = new Set(['threadify-youtube-edit']);
+// Skills that drive an external engine (Eddy today) stay out of the Claude plugin:
+// the plugin never ships the engine and the directory must list Threadify-only
+// skills. The rule comes from each workflow manifest's external_engines, so a
+// future engine-backed skill is excluded without editing this script.
+const registry = loadWorkflowRegistry({ root });
+const EXCLUDED_SKILLS = new Set(listWorkflows(registry, { kind: 'skill' })
+  .filter((workflow) => (workflow.external_engines ?? []).length > 0)
+  .map((workflow) => workflow.skill_name));
+const FORBIDDEN_CONTENT = /eddy/i;
 
 function collect(directory, relative = '') {
   const files = [];
@@ -33,6 +40,7 @@ function collect(directory, relative = '') {
 const expected = new Map();
 for (const [relative, content] of collect(path.join(root, 'skills'))) {
   if (EXCLUDED_SKILLS.has(relative.split('/')[0])) continue;
+  if (FORBIDDEN_CONTENT.test(content.toString('utf8'))) throw new Error(`External engine reference in plugin content: skills/${relative}`);
   expected.set(`skills/${relative}`, content);
 }
 const rootMcp = JSON.parse(fs.readFileSync(path.join(root, '.mcp.json'), 'utf8'));
