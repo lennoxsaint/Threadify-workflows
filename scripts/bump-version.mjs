@@ -16,13 +16,13 @@ const FILES = {
   pkg: 'package.json',
   lock: 'package-lock.json',
   codexPlugin: '.codex-plugin/plugin.json',
-  claudePlugin: '.claude-plugin/plugin.json',
+  claudePlugin: 'plugins/claude/.claude-plugin/plugin.json',
   compatibilityPlugin: 'plugins/threadify/.codex-plugin/plugin.json',
   intent: 'release/release-intent.json',
   installation: 'installation.md',
   changelog: 'release/CHANGELOG.md',
 };
-const BUNDLE_SCRIPTS = ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs', 'build-workflow-bundles.mjs'];
+const BUNDLE_SCRIPTS = ['build-qbr-bundle.mjs', 'build-creator-bundles.mjs', 'build-advanced-bundles.mjs', 'build-workflow-bundles.mjs', 'build-claude-plugin.mjs'];
 
 function fail(message) {
   console.error(`bump-version: ${message}`);

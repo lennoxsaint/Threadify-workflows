@@ -1,0 +1,66 @@
+{
+  "record_type": "SelfContainedSkillBundleV1",
+  "skill": "threadify-qualified-buyer-research",
+  "generated_from": [
+    {
+      "source": "docs/threadify-001.md",
+      "target": "threadify-001.md",
+      "sha256": "7703d0958e634a8c90e47b407e5f7c8ffd5c0ee6c9dc28f9871c23250419ac1b"
+    },
+    {
+      "source": "workflows/qualified-buyer-research/manifest.json",
+      "target": "workflow-manifest.json",
+      "sha256": "9d3b64fa9acb762b5817931d05fab86a055db1a3edb7f93441b62a1285d86795"
+    },
+    {
+      "source": "workflows/qualified-buyer-research/README.md",
+      "target": "workflow-readme.md",
+      "sha256": "e76bc8e13b127089d617927df2ce2f60b54955b31a5fa1845396c730341e920a"
+    },
+    {
+      "source": "workflows/qualified-buyer-research/reference-policy.mjs",
+      "target": "reference-policy.mjs",
+      "sha256": "91c7012b5c9f808e18d98670c484b3846c6b80e1fc1c42d009f9b5de439dbba4"
+    },
+    {
+      "source": "public-rules/qualified-buyer-research.v1.json",
+      "target": "public-rules.v1.json",
+      "sha256": "0390f71dffd718dbd54cf0ea7f19e1f809040d3ee8575a5dc3faf506eb75d704"
+    },
+    {
+      "source": "schemas/qualified-buyer-research.v1.json",
+      "target": "qualified-buyer-research.v1.json",
+      "sha256": "6d1ff0b3911f17f3c93e0af5c08c92a566e372bb0dd03e34414d0c232af46444"
+    },
+    {
+      "source": "schemas/durable-rule.v1.json",
+      "target": "durable-rule.v1.json",
+      "sha256": "92ca591f7220b869ada22087df55970d316bd97488febd77c529d100d92216fc"
+    },
+    {
+      "source": "schemas/public-rule-proposal.v1.json",
+      "target": "public-rule-proposal.v1.json",
+      "sha256": "c264d58fbcbbd8ea752b747a731d2c65c174fa856bfe7a21d9b0a6469fedb3aa"
+    },
+    {
+      "source": "schemas/stable-release-manifest.v1.json",
+      "target": "stable-release-manifest.v1.json",
+      "sha256": "6d8ebd760ea9b49527396965ff3f527d178b0f2250c5090630bdd809789bea31"
+    },
+    {
+      "source": "schemas/update-receipt.v1.json",
+      "target": "update-receipt.v1.json",
+      "sha256": "db0076d99e0e3a310670b9d2b154afd36dd73fecae958b372ddeba2b7be9d40d"
+    },
+    {
+      "source": "release/release-intent.json",
+      "target": "release-metadata.json",
+      "sha256": "e1c9445bb4bd185d641f7c9cef2621cc2bba86090725e607c4422f7a5d5ed676"
+    },
+    {
+      "source": "scripts/qualified-buyer-update-on-use.mjs",
+      "target": "update-on-use.mjs",
+      "sha256": "8687348681694ee06e44f17c5549da58fa0c0db528646efbd1a2fcdb27f1e244"
+    }
+  ]
+}

@@ -1,0 +1,1914 @@
+{
+  "record_type": "YouTubeSynthesizerTemplateLibraryV1",
+  "version": "1.0.0",
+  "immutable_contract": "Fixed text outside {{PLACEHOLDERS}} is word-for-word and MUST NOT be rewritten. A placeholder may be filled only by its evidence-map value. Omit optional blocks only as complete placeholder values; never delete or alter surrounding fixed text.",
+  "categories": [
+    {
+      "id": "authority",
+      "label": "Authority"
+    },
+    {
+      "id": "investigation_data",
+      "label": "Investigation / Data"
+    },
+    {
+      "id": "wisdom",
+      "label": "Wisdom"
+    },
+    {
+      "id": "playbook_case_study",
+      "label": "Playbook / Case Study"
+    }
+  ],
+  "templates": [
+    {
+      "id": "authority-binge-watch-breakdown",
+      "category": "authority",
+      "name": "Binge-Watch Breakdown",
+      "use_when": "The transcript or supplied video set contains multiple distinct, attributable lessons from one expert, series, or bounded viewing session.",
+      "avoid_when": "The source contains fewer than three distinct lessons, the viewing quantity is unknown, or the hook would imply videos or hours not actually inspected.",
+      "evidence_requirements": [
+        {
+          "id": "source_identity",
+          "description": "Named expert, channel, series, or source shown in metadata or transcript.",
+          "minimum": 1
+        },
+        {
+          "id": "bounded_consumption",
+          "description": "Exact inspected video count or transcript-supported duration.",
+          "minimum": 1
+        },
+        {
+          "id": "distinct_lessons",
+          "description": "At least three non-duplicate lessons, each with a timestamped transcript span.",
+          "minimum": 3
+        }
+      ],
+      "score_signals": [
+        "multiple numbered lessons",
+        "explicit source identity",
+        "bounded video count or duration",
+        "specific surprising takeaway"
+      ],
+      "hook_template": "I watched {{VIDEO_COUNT_OR_DURATION}} of {{SOURCE_OR_SERIES}} so you don't have to.\n\nHere are {{LESSON_COUNT}} ideas I can't stop thinking about:",
+      "body_template": [
+        "{{HOOK_PAYOFF}}\n\nEvery point below comes from the video—not my imagination.",
+        "1. {{LESSON_1}}\n\n{{WHY_IT_MATTERS_1}}\n\nSource: {{SOURCE_CUE_1}}",
+        "2. {{LESSON_2}}\n\n{{WHY_IT_MATTERS_2}}\n\nSource: {{SOURCE_CUE_2}}",
+        "3. {{LESSON_3}}\n\n{{WHY_IT_MATTERS_3}}\n\nSource: {{SOURCE_CUE_3}}",
+        "{{OPTIONAL_LESSONS_BLOCK}}",
+        "The pattern underneath all of this:\n\n{{CONNECTING_PATTERN}}\n\nSource: {{PATTERN_SOURCE_CUES}}",
+        "What I would do with this tomorrow:\n\n{{ACTION_1}}\n{{ACTION_2}}\n{{ACTION_3}}",
+        "The part I am still thinking about:\n\n{{FINAL_INSIGHT}}\n\nSource: {{FINAL_SOURCE_CUE}}",
+        "Save this for the next time you need to {{READER_JOB}}.\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "VIDEO_COUNT_OR_DURATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_OR_SERIES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "HOOK_PAYOFF",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "WHY_IT_MATTERS_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "WHY_IT_MATTERS_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "WHY_IT_MATTERS_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_LESSONS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CONNECTING_PATTERN",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FINAL_INSIGHT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FINAL_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "READER_JOB",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18102797542920814",
+        "threads:17853427068197770",
+        "threads:18074089058588555"
+      ]
+    },
+    {
+      "id": "authority-borrowed-authority-co-sign",
+      "category": "authority",
+      "name": "Borrowed-Authority Co-Sign",
+      "use_when": "A clearly identified expert makes a strong, supported claim and the creator can add a distinct evidence-backed interpretation.",
+      "avoid_when": "Authority credentials are vague, the expert does not make the claimed statement, or the creator's agreement would be invented.",
+      "evidence_requirements": [
+        {
+          "id": "expert_identity",
+          "description": "Expert name and transcript- or metadata-supported authority proof.",
+          "minimum": 1
+        },
+        {
+          "id": "expert_claim",
+          "description": "Exact or faithful claim with a timestamped source span.",
+          "minimum": 1
+        },
+        {
+          "id": "creator_interpretation",
+          "description": "A creator-authored interpretation clearly separated from the source.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "credible named expert",
+        "sharp source claim",
+        "creator point of view",
+        "practical consequence"
+      ],
+      "hook_template": "{{EXPERT_NAME}} has {{AUTHORITY_PROOF}}.\n\nI watched {{VIDEO_TITLE}} and stole their entire playbook for {{DESIRED_OUTCOME}}:",
+      "body_template": [
+        "First, the claim:\n\n“{{SOURCE_QUOTE}}”\n\nSource: {{SOURCE_CUE}}",
+        "Most people hear that and think:\n\n{{COMMON_INTERPRETATION}}\n\nI think that misses the point.",
+        "The real lesson is {{CORE_LESSON}}.\n\nHere is why:",
+        "1. {{REASON_1}}\n\nEvidence: {{REASON_SOURCE_1}}",
+        "2. {{REASON_2}}\n\nEvidence: {{REASON_SOURCE_2}}",
+        "3. {{REASON_3}}\n\nEvidence: {{REASON_SOURCE_3}}",
+        "Steal this part:\n\n{{REUSABLE_PLAYBOOK}}",
+        "Do not copy {{WHAT_NOT_TO_COPY}}.\n\nCopy {{WHAT_TO_COPY}}.",
+        "My takeaway:\n\n{{CREATOR_TAKEAWAY}}\n\nWatch the original: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "EXPERT_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "AUTHORITY_PROOF",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "DESIRED_OUTCOME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_QUOTE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMON_INTERPRETATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CORE_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_SOURCE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_SOURCE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REASON_SOURCE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REUSABLE_PLAYBOOK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "WHAT_NOT_TO_COPY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "WHAT_TO_COPY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CREATOR_TAKEAWAY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18555522496054909",
+        "threads:17936254520941292",
+        "threads:17915664789254575"
+      ]
+    },
+    {
+      "id": "authority-mastermind-interview-cheat-sheet",
+      "category": "authority",
+      "name": "Mastermind Interview Cheat Sheet",
+      "use_when": "The video is a real interview or conversation with identifiable host and guest and at least four useful exchanges.",
+      "avoid_when": "The speaker roles cannot be verified, the video is a monologue, or fewer than four attributable exchanges qualify.",
+      "evidence_requirements": [
+        {
+          "id": "speaker_roles",
+          "description": "Host and guest identities supported by metadata or transcript.",
+          "minimum": 2
+        },
+        {
+          "id": "interview_moments",
+          "description": "At least four useful exchanges with timestamps and correct speaker attribution.",
+          "minimum": 4
+        },
+        {
+          "id": "topic",
+          "description": "A coherent topic connecting the selected moments.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "named host and guest",
+        "question-answer structure",
+        "four or more tactical moments",
+        "coherent masterclass topic"
+      ],
+      "hook_template": "I studied {{INTERVIEW_NAME}} between {{HOST_NAME}} and {{GUEST_NAME}}.\n\nThese {{LESSON_COUNT}} moments are a free masterclass in {{TOPIC}}:",
+      "body_template": [
+        "The conversation is {{VIDEO_DURATION}} long.\n\nThis is the cheat sheet.",
+        "1. {{MOMENT_1_TITLE}}\n\n{{MOMENT_1_LESSON}}\n\nSource: {{MOMENT_1_CUE}}",
+        "2. {{MOMENT_2_TITLE}}\n\n{{MOMENT_2_LESSON}}\n\nSource: {{MOMENT_2_CUE}}",
+        "3. {{MOMENT_3_TITLE}}\n\n{{MOMENT_3_LESSON}}\n\nSource: {{MOMENT_3_CUE}}",
+        "4. {{MOMENT_4_TITLE}}\n\n{{MOMENT_4_LESSON}}\n\nSource: {{MOMENT_4_CUE}}",
+        "{{OPTIONAL_MOMENTS_BLOCK}}",
+        "The host kept returning to {{RECURRING_QUESTION}}.\n\nThe guest's answer, in one line:\n\n{{ONE_LINE_ANSWER}}\n\nSource: {{ANSWER_SOURCE_CUE}}",
+        "Use this tomorrow:\n\n{{ACTIONABLE_SUMMARY}}",
+        "Full credit to {{HOST_NAME}} and {{GUEST_NAME}}.\n\nWatch the original: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "INTERVIEW_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "HOST_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "GUEST_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TOPIC",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_DURATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_1_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_1_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_1_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_2_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_2_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_2_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_3_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_3_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_3_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_4_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_4_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MOMENT_4_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_MOMENTS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "RECURRING_QUESTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ONE_LINE_ANSWER",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ANSWER_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTIONABLE_SUMMARY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18098154020503286",
+        "threads:18348404785098043",
+        "threads:17977325345688796"
+      ]
+    },
+    {
+      "id": "investigation-ai-corpus-audit",
+      "category": "investigation_data",
+      "name": "AI Corpus Audit",
+      "use_when": "A bounded transcript corpus was actually inspected with a named method and supports counted patterns.",
+      "avoid_when": "Only one short transcript exists, AI analysis was not performed, corpus size is vague, or pattern counts cannot be reproduced.",
+      "evidence_requirements": [
+        {
+          "id": "corpus_boundary",
+          "description": "Exact corpus size and included source scope.",
+          "minimum": 1
+        },
+        {
+          "id": "method",
+          "description": "Named analysis method or query that can be reproduced.",
+          "minimum": 1
+        },
+        {
+          "id": "counted_patterns",
+          "description": "At least three patterns with supporting transcript spans and honest counts.",
+          "minimum": 3
+        }
+      ],
+      "score_signals": [
+        "bounded corpus",
+        "reproducible analysis method",
+        "counted patterns",
+        "counterintuitive result"
+      ],
+      "hook_template": "I gave an AI {{CORPUS_SIZE}} of {{SOURCE_NAME}}.\n\nIt found {{PATTERN_COUNT}} patterns nobody talks about:",
+      "body_template": [
+        "The method:\n\n{{METHOD_SUMMARY}}\n\nCorpus: {{CORPUS_BOUNDARY}}",
+        "I asked one question:\n\n{{ANALYSIS_QUESTION}}",
+        "Pattern 1: {{PATTERN_1}}\n\nCount: {{COUNT_1}}\nEvidence: {{PATTERN_SOURCE_CUES_1}}",
+        "Pattern 2: {{PATTERN_2}}\n\nCount: {{COUNT_2}}\nEvidence: {{PATTERN_SOURCE_CUES_2}}",
+        "Pattern 3: {{PATTERN_3}}\n\nCount: {{COUNT_3}}\nEvidence: {{PATTERN_SOURCE_CUES_3}}",
+        "{{OPTIONAL_PATTERNS_BLOCK}}",
+        "The surprising part:\n\n{{SURPRISING_RESULT}}\n\nEvidence: {{SURPRISE_SOURCE_CUES}}",
+        "What this does not prove:\n\n{{LIMITATION}}",
+        "What I would test next:\n\n{{NEXT_TEST}}\n\nSource material: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "CORPUS_SIZE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "METHOD_SUMMARY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CORPUS_BOUNDARY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ANALYSIS_QUESTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COUNT_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_SOURCE_CUES_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COUNT_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_SOURCE_CUES_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COUNT_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_SOURCE_CUES_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_PATTERNS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SURPRISING_RESULT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SURPRISE_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LIMITATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "NEXT_TEST",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18312615568256077",
+        "threads:18118899847671685",
+        "threads:18339601024172419"
+      ]
+    },
+    {
+      "id": "investigation-pattern-hunt",
+      "category": "investigation_data",
+      "name": "Pattern Hunt",
+      "use_when": "The video contains repeated examples that answer one explicit research question.",
+      "avoid_when": "The hook starts without a real research question, examples are unrelated, or repeated-pattern evidence is absent.",
+      "evidence_requirements": [
+        {
+          "id": "research_question",
+          "description": "One explicit bounded research question.",
+          "minimum": 1
+        },
+        {
+          "id": "repeated_examples",
+          "description": "At least three transcript examples that support a shared pattern.",
+          "minimum": 3
+        },
+        {
+          "id": "pattern_synthesis",
+          "description": "A synthesis tied back to all cited examples.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "explicit question",
+        "repeated examples",
+        "three or more patterns",
+        "clear synthesis"
+      ],
+      "hook_template": "I watched {{VIDEO_TITLE}} looking for one thing:\n\n{{RESEARCH_QUESTION}}\n\nI found {{PATTERN_COUNT}} patterns:",
+      "body_template": [
+        "I ignored everything that did not answer the question.\n\nHere is what survived.",
+        "Pattern 1: {{PATTERN_1}}\n\n{{EXPLANATION_1}}\n\nEvidence: {{SOURCE_CUES_1}}",
+        "Pattern 2: {{PATTERN_2}}\n\n{{EXPLANATION_2}}\n\nEvidence: {{SOURCE_CUES_2}}",
+        "Pattern 3: {{PATTERN_3}}\n\n{{EXPLANATION_3}}\n\nEvidence: {{SOURCE_CUES_3}}",
+        "{{OPTIONAL_PATTERNS_BLOCK}}",
+        "What all {{PATTERN_COUNT}} patterns have in common:\n\n{{SHARED_MECHANISM}}\n\nEvidence: {{MECHANISM_SOURCE_CUES}}",
+        "The exception:\n\n{{COUNTEREXAMPLE_OR_LIMIT}}\n\nSource: {{EXCEPTION_SOURCE_CUE}}",
+        "My working conclusion:\n\n{{BOUNDED_CONCLUSION}}",
+        "Steal the question, not the conclusion:\n\n{{REUSABLE_RESEARCH_PROMPT}}\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "VIDEO_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "RESEARCH_QUESTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EXPLANATION_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUES_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EXPLANATION_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUES_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PATTERN_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EXPLANATION_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUES_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_PATTERNS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SHARED_MECHANISM",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MECHANISM_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COUNTEREXAMPLE_OR_LIMIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EXCEPTION_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "BOUNDED_CONCLUSION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REUSABLE_RESEARCH_PROMPT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:17911406439217560",
+        "threads:18054691589143231",
+        "threads:17977748717781662"
+      ]
+    },
+    {
+      "id": "investigation-contrarian-data-debunk",
+      "category": "investigation_data",
+      "name": "Contrarian Data Debunk",
+      "use_when": "The transcript directly addresses a recognizable belief and contains multiple pieces of evidence that contradict or materially qualify it.",
+      "avoid_when": "The opposing belief is a straw man, the source only offers opinion, or the evidence cannot support 'opposite' language.",
+      "evidence_requirements": [
+        {
+          "id": "popular_belief",
+          "description": "A recognizable belief stated fairly.",
+          "minimum": 1
+        },
+        {
+          "id": "contrary_evidence",
+          "description": "At least three transcript-supported facts, examples, or data points.",
+          "minimum": 3
+        },
+        {
+          "id": "bounded_verdict",
+          "description": "A conclusion no broader than the cited source allows.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "fair popular belief",
+        "direct contrary evidence",
+        "numbers or concrete examples",
+        "bounded verdict"
+      ],
+      "hook_template": "Everyone says {{POPULAR_BELIEF}}.\n\nBut the evidence in {{VIDEO_TITLE}} says the opposite:",
+      "body_template": [
+        "The popular case:\n\n{{BEST_VERSION_OF_POPULAR_CASE}}",
+        "Now the evidence.",
+        "1. {{EVIDENCE_1}}\n\nWhy it matters: {{IMPLICATION_1}}\nSource: {{SOURCE_CUE_1}}",
+        "2. {{EVIDENCE_2}}\n\nWhy it matters: {{IMPLICATION_2}}\nSource: {{SOURCE_CUE_2}}",
+        "3. {{EVIDENCE_3}}\n\nWhy it matters: {{IMPLICATION_3}}\nSource: {{SOURCE_CUE_3}}",
+        "{{OPTIONAL_EVIDENCE_BLOCK}}",
+        "The honest verdict:\n\n{{BOUNDED_VERDICT}}",
+        "What the video cannot tell us:\n\n{{LIMITATION}}",
+        "So instead of {{OLD_ACTION}}, try {{NEW_ACTION}}.\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "POPULAR_BELIEF",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "BEST_VERSION_OF_POPULAR_CASE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EVIDENCE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "IMPLICATION_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EVIDENCE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "IMPLICATION_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "EVIDENCE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "IMPLICATION_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_EVIDENCE_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "BOUNDED_VERDICT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LIMITATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OLD_ACTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "NEW_ACTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18065226506663765",
+        "threads:17912394180264875",
+        "threads:17964870447115948"
+      ]
+    },
+    {
+      "id": "wisdom-sage-translator",
+      "category": "wisdom",
+      "name": "Sage Translator",
+      "use_when": "One teacher expresses a coherent philosophy that can be translated into concrete modern actions without changing its meaning.",
+      "avoid_when": "The source is tactical rather than philosophical, the teacher's meaning is ambiguous, or the translation would add unsupported doctrine.",
+      "evidence_requirements": [
+        {
+          "id": "teacher_identity",
+          "description": "Named teacher and attributable source.",
+          "minimum": 1
+        },
+        {
+          "id": "principles",
+          "description": "At least three distinct principles with transcript spans.",
+          "minimum": 3
+        },
+        {
+          "id": "translations",
+          "description": "A practical translation for each principle, clearly marked as creator interpretation.",
+          "minimum": 3
+        }
+      ],
+      "score_signals": [
+        "coherent philosophy",
+        "memorable language",
+        "three principles",
+        "practical translation"
+      ],
+      "hook_template": "{{TEACHER_NAME}} explained {{TOPIC}} in a way I can't unsee.\n\nHere are {{LESSON_COUNT}} lessons I wish I heard {{TIME_REFERENCE}} ago:",
+      "body_template": [
+        "Their words first. My translation second.",
+        "1. “{{SOURCE_LINE_1}}”\n\nTranslation: {{TRANSLATION_1}}\nSource: {{SOURCE_CUE_1}}",
+        "2. “{{SOURCE_LINE_2}}”\n\nTranslation: {{TRANSLATION_2}}\nSource: {{SOURCE_CUE_2}}",
+        "3. “{{SOURCE_LINE_3}}”\n\nTranslation: {{TRANSLATION_3}}\nSource: {{SOURCE_CUE_3}}",
+        "{{OPTIONAL_LESSONS_BLOCK}}",
+        "The thread connecting every lesson:\n\n{{CONNECTING_IDEA}}\n\nEvidence: {{CONNECTING_SOURCE_CUES}}",
+        "The mistake would be to turn this into {{SHALLOW_INTERPRETATION}}.",
+        "The practice is simpler:\n\n{{PRACTICE}}",
+        "I am keeping this line:\n\n“{{FINAL_SOURCE_LINE}}”\n\nSource: {{FINAL_SOURCE_CUE}}\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "TEACHER_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TOPIC",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TIME_REFERENCE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_LINE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TRANSLATION_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_LINE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TRANSLATION_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_LINE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TRANSLATION_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_LESSONS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CONNECTING_IDEA",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CONNECTING_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SHALLOW_INTERPRETATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "PRACTICE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FINAL_SOURCE_LINE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FINAL_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18104584546674221",
+        "threads:18069846320115496",
+        "threads:18101019202662414"
+      ]
+    },
+    {
+      "id": "wisdom-greatest-sentences",
+      "category": "wisdom",
+      "name": "Greatest Sentences",
+      "use_when": "The transcript contains several short, self-contained lines worth quoting exactly and all can be verified against timestamps.",
+      "avoid_when": "Quotes require heavy rewriting, quote boundaries are uncertain, or the workflow cannot retain exact attribution.",
+      "evidence_requirements": [
+        {
+          "id": "exact_quotes",
+          "description": "At least five short verbatim transcript quotes with timestamps.",
+          "minimum": 5
+        },
+        {
+          "id": "speaker_attribution",
+          "description": "Verified speaker identity for every quote.",
+          "minimum": 5
+        },
+        {
+          "id": "commentary",
+          "description": "Creator interpretation clearly separated from each quote.",
+          "minimum": 5
+        }
+      ],
+      "score_signals": [
+        "five or more exact quotes",
+        "memorable standalone language",
+        "verified speaker",
+        "varied implications"
+      ],
+      "hook_template": "I pulled the {{QUOTE_COUNT}} best sentences from {{VIDEO_TITLE}}.\n\nNumber {{TEASER_NUMBER}} changed how I think about {{TOPIC}}:",
+      "body_template": [
+        "No paraphrased quote cards.\n\nThese are the exact lines.",
+        "1. “{{QUOTE_1}}”\n\nWhy I saved it: {{COMMENTARY_1}}\nSource: {{SOURCE_CUE_1}}",
+        "2. “{{QUOTE_2}}”\n\nWhy I saved it: {{COMMENTARY_2}}\nSource: {{SOURCE_CUE_2}}",
+        "3. “{{QUOTE_3}}”\n\nWhy I saved it: {{COMMENTARY_3}}\nSource: {{SOURCE_CUE_3}}",
+        "4. “{{QUOTE_4}}”\n\nWhy I saved it: {{COMMENTARY_4}}\nSource: {{SOURCE_CUE_4}}",
+        "5. “{{QUOTE_5}}”\n\nWhy I saved it: {{COMMENTARY_5}}\nSource: {{SOURCE_CUE_5}}",
+        "{{OPTIONAL_QUOTES_BLOCK}}",
+        "The sentence underneath the sentences:\n\n{{SYNTHESIS}}\n\nEvidence: {{SYNTHESIS_SOURCE_CUES}}",
+        "Which line are you keeping?\n\nFull conversation: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "QUOTE_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TEASER_NUMBER",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TOPIC",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "QUOTE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMENTARY_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "QUOTE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMENTARY_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "QUOTE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMENTARY_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "QUOTE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMENTARY_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "QUOTE_5",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COMMENTARY_5",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_5",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_QUOTES_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SYNTHESIS",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SYNTHESIS_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18078874354655146",
+        "threads:18218279170262422",
+        "threads:18022196834030251"
+      ]
+    },
+    {
+      "id": "wisdom-life-changing-video-lessons",
+      "category": "wisdom",
+      "name": "Life-Changing Video Lessons",
+      "use_when": "The source offers multiple consequential lessons and the claimed saved cost or time is concrete and supported rather than theatrical.",
+      "avoid_when": "'Life-changing' rests on hype, the stated cost/time is invented, or lessons are generic.",
+      "evidence_requirements": [
+        {
+          "id": "consequential_lessons",
+          "description": "At least three specific lessons with timestamped evidence.",
+          "minimum": 3
+        },
+        {
+          "id": "cost_or_time",
+          "description": "A concrete source-supported downside, cost, or time horizon.",
+          "minimum": 1
+        },
+        {
+          "id": "application",
+          "description": "A credible next action for each lesson.",
+          "minimum": 3
+        }
+      ],
+      "score_signals": [
+        "high-consequence topic",
+        "concrete avoidable cost",
+        "three lessons",
+        "immediate application"
+      ],
+      "hook_template": "I watched {{VIDEO_TITLE}}.\n\nThese {{LESSON_COUNT}} lessons could save you {{COST_OR_TIME}}:",
+      "body_template": [
+        "That claim needs proof.\n\nHere is exactly what the video supports.",
+        "1. {{LESSON_1}}\n\nThe cost of missing it: {{COST_1}}\nSource: {{SOURCE_CUE_1}}",
+        "2. {{LESSON_2}}\n\nThe cost of missing it: {{COST_2}}\nSource: {{SOURCE_CUE_2}}",
+        "3. {{LESSON_3}}\n\nThe cost of missing it: {{COST_3}}\nSource: {{SOURCE_CUE_3}}",
+        "{{OPTIONAL_LESSONS_BLOCK}}",
+        "The lesson behind the lessons:\n\n{{META_LESSON}}\n\nEvidence: {{META_SOURCE_CUES}}",
+        "Start here:\n\n{{FIRST_ACTION}}",
+        "Do not use this thread as {{NOT_A_SUBSTITUTE_FOR}}.\n\n{{DOMAIN_LIMITATION}}",
+        "Save the summary. Watch the source.\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "VIDEO_TITLE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COST_OR_TIME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COST_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COST_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "LESSON_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "COST_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_LESSONS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "META_LESSON",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "META_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FIRST_ACTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "NOT_A_SUBSTITUTE_FOR",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "DOMAIN_LIMITATION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18114320897069500",
+        "threads:18570993868063879",
+        "threads:18105696187746712"
+      ]
+    },
+    {
+      "id": "playbook-success-system-reverse-engineer",
+      "category": "playbook_case_study",
+      "name": "Success-System Reverse Engineer",
+      "use_when": "The video documents a before state, an after state, and at least four causal-mechanism claims that can be represented as a system without asserting causation beyond the source.",
+      "avoid_when": "There is no verified before/after, the steps are reconstructed from speculation, or the outcome is presented as typical.",
+      "evidence_requirements": [
+        {
+          "id": "before_after",
+          "description": "Source-supported before and after states.",
+          "minimum": 2
+        },
+        {
+          "id": "system_steps",
+          "description": "At least four ordered steps or mechanisms with transcript spans.",
+          "minimum": 4
+        },
+        {
+          "id": "result_boundary",
+          "description": "Explicit note that this is one documented case, not a promised result.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "clear transformation",
+        "four or more ordered mechanisms",
+        "specific decisions",
+        "case-study boundary"
+      ],
+      "hook_template": "{{SUBJECT_NAME}} went from {{BEFORE_STATE}} to {{AFTER_STATE}}.\n\nI reverse-engineered the {{STEP_COUNT}}-step system behind it:",
+      "body_template": [
+        "This is one documented case—not a promise that you will get the same result.",
+        "Step 1: {{STEP_1}}\n\nWhy it mattered: {{MECHANISM_1}}\nSource: {{SOURCE_CUE_1}}",
+        "Step 2: {{STEP_2}}\n\nWhy it mattered: {{MECHANISM_2}}\nSource: {{SOURCE_CUE_2}}",
+        "Step 3: {{STEP_3}}\n\nWhy it mattered: {{MECHANISM_3}}\nSource: {{SOURCE_CUE_3}}",
+        "Step 4: {{STEP_4}}\n\nWhy it mattered: {{MECHANISM_4}}\nSource: {{SOURCE_CUE_4}}",
+        "{{OPTIONAL_STEPS_BLOCK}}",
+        "The bottleneck was not {{OBVIOUS_BOTTLENECK}}.\n\nIt was {{REAL_BOTTLENECK}}.\n\nEvidence: {{BOTTLENECK_SOURCE_CUES}}",
+        "The smallest version you could test:\n\n{{MINIMUM_VIABLE_TEST}}",
+        "Study the system. Keep the boundary.\n\nOriginal case: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "SUBJECT_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "BEFORE_STATE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "AFTER_STATE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MECHANISM_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MECHANISM_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MECHANISM_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MECHANISM_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_STEPS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OBVIOUS_BOTTLENECK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "REAL_BOTTLENECK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "BOTTLENECK_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MINIMUM_VIABLE_TEST",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:17933441225774321",
+        "threads:17940471545719956",
+        "threads:18049928317641229"
+      ]
+    },
+    {
+      "id": "playbook-growth-framework",
+      "category": "playbook_case_study",
+      "name": "Growth Framework",
+      "use_when": "The source names or clearly defines a reusable framework and supports a measured result plus ordered application steps.",
+      "avoid_when": "The result lacks a measurement window, the framework name is invented, or steps are generic advice rather than source-grounded operations.",
+      "evidence_requirements": [
+        {
+          "id": "measured_result",
+          "description": "Exact metric and time window from the source.",
+          "minimum": 1
+        },
+        {
+          "id": "framework",
+          "description": "Named or clearly bounded framework in the source.",
+          "minimum": 1
+        },
+        {
+          "id": "framework_steps",
+          "description": "At least four ordered, supported steps.",
+          "minimum": 4
+        }
+      ],
+      "score_signals": [
+        "measured result",
+        "named framework",
+        "ordered steps",
+        "implementation detail"
+      ],
+      "hook_template": "{{SUBJECT_NAME}} used {{FRAMEWORK_NAME}} to {{MEASURED_RESULT}}.\n\nHere is the exact framework, step by step:",
+      "body_template": [
+        "Result first:\n\n{{RESULT_DETAIL}}\n\nSource: {{RESULT_SOURCE_CUE}}",
+        "The framework has {{STEP_COUNT}} parts.",
+        "1. {{STEP_1}}\n\nDo: {{ACTION_1}}\nMeasure: {{MEASURE_1}}\nSource: {{SOURCE_CUE_1}}",
+        "2. {{STEP_2}}\n\nDo: {{ACTION_2}}\nMeasure: {{MEASURE_2}}\nSource: {{SOURCE_CUE_2}}",
+        "3. {{STEP_3}}\n\nDo: {{ACTION_3}}\nMeasure: {{MEASURE_3}}\nSource: {{SOURCE_CUE_3}}",
+        "4. {{STEP_4}}\n\nDo: {{ACTION_4}}\nMeasure: {{MEASURE_4}}\nSource: {{SOURCE_CUE_4}}",
+        "{{OPTIONAL_STEPS_BLOCK}}",
+        "The dependency most summaries miss:\n\n{{HIDDEN_DEPENDENCY}}\n\nEvidence: {{DEPENDENCY_SOURCE_CUES}}",
+        "Treat this as a test, not a forecast.\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "SUBJECT_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FRAMEWORK_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MEASURED_RESULT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "RESULT_DETAIL",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "RESULT_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MEASURE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MEASURE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MEASURE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "ACTION_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "MEASURE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_STEPS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "HIDDEN_DEPENDENCY",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "DEPENDENCY_SOURCE_CUES",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18118711768725474",
+        "threads:17927968017238047",
+        "threads:18098935717962477"
+      ]
+    },
+    {
+      "id": "playbook-start-over-playbook",
+      "category": "playbook_case_study",
+      "name": "Start-Over Playbook",
+      "use_when": "The source explicitly answers a start-over or from-zero scenario with concrete constraints and ordered actions.",
+      "avoid_when": "The starting constraint is invented, the advice is retrospective inference rather than a stated answer, or fewer than four steps are supported.",
+      "evidence_requirements": [
+        {
+          "id": "start_over_scenario",
+          "description": "Explicit from-zero prompt or answer and its starting constraints.",
+          "minimum": 1
+        },
+        {
+          "id": "ordered_actions",
+          "description": "At least four source-supported actions in an honest order.",
+          "minimum": 4
+        },
+        {
+          "id": "tradeoffs",
+          "description": "At least one source-supported tradeoff or thing to avoid.",
+          "minimum": 1
+        }
+      ],
+      "score_signals": [
+        "explicit start-over scenario",
+        "real constraint",
+        "ordered actions",
+        "tradeoff"
+      ],
+      "hook_template": "If {{SUBJECT_NAME}} had to start again with {{STARTING_CONSTRAINT}}, this is what they would do:\n\nThe {{STEP_COUNT}}-step playbook:",
+      "body_template": [
+        "The constraint matters:\n\n{{CONSTRAINT_DETAIL}}\n\nSource: {{CONSTRAINT_SOURCE_CUE}}",
+        "Step 1: {{STEP_1}}\n\n{{STEP_DETAIL_1}}\n\nSource: {{SOURCE_CUE_1}}",
+        "Step 2: {{STEP_2}}\n\n{{STEP_DETAIL_2}}\n\nSource: {{SOURCE_CUE_2}}",
+        "Step 3: {{STEP_3}}\n\n{{STEP_DETAIL_3}}\n\nSource: {{SOURCE_CUE_3}}",
+        "Step 4: {{STEP_4}}\n\n{{STEP_DETAIL_4}}\n\nSource: {{SOURCE_CUE_4}}",
+        "{{OPTIONAL_STEPS_BLOCK}}",
+        "What they would not do:\n\n{{AVOID_ACTION}}\n\nWhy: {{TRADEOFF}}\nSource: {{TRADEOFF_SOURCE_CUE}}",
+        "Your first {{FIRST_WINDOW}}:\n\n{{FIRST_WINDOW_PLAN}}",
+        "This is their playbook under their constraints.\n\nAdapt it; do not treat it as a promised outcome.\n\nOriginal video: {{VIDEO_CREDIT}}"
+      ],
+      "placeholders": [
+        {
+          "name": "SUBJECT_NAME",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STARTING_CONSTRAINT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_COUNT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CONSTRAINT_DETAIL",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "CONSTRAINT_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_DETAIL_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_1",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_DETAIL_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_2",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_DETAIL_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_3",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "STEP_DETAIL_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "SOURCE_CUE_4",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "OPTIONAL_STEPS_BLOCK",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "AVOID_ACTION",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TRADEOFF",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "TRADEOFF_SOURCE_CUE",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FIRST_WINDOW",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "FIRST_WINDOW_PLAN",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        },
+        {
+          "name": "VIDEO_CREDIT",
+          "source": "transcript_or_metadata",
+          "rule": "Fill only from transcript or verified video metadata evidence. Preserve fixed text byte-for-byte; creator voice may change phrasing only inside the supported value without adding a claim."
+        }
+      ],
+      "original_ids": [
+        "threads:18301030195276613",
+        "threads:18447649561022937",
+        "threads:18105744676365471"
+      ]
+    }
+  ]
+}
+

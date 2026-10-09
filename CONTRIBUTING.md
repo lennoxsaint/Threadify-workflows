@@ -53,6 +53,10 @@ repo only pins a specific Eddy **release tag**. The current pin is **v1.9.1**.
 - The validator (`npm test`) intentionally skips `engines/eddy`; Eddy validates itself in its own
   repo.
 
+## Claude Code plugin folder
+
+`plugins/claude` is the Claude Code plugin root and the folder submitted to the Claude plugin directory. `scripts/build-claude-plugin.mjs` mirrors `skills/` and the threadify entry of `.mcp.json` into it; `npm run bundle:build` regenerates it and `npm run bundle:check` fails on drift. Edit skills at the root, never inside the mirror. `plugins/claude/.claude-plugin/plugin.json` and `icon.png` are source files: the manifest version moves with `npm run bump`, and the icon is the directory listing icon.
+
 ## Versions and releases
 
 Every merge to `main` is a stable release: the release workflow tags it and publishes the assets, and Claude Code plugin installs see it as an update. The version lives in several files, so never edit them by hand. Run one command in your branch instead:

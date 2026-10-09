@@ -8,8 +8,8 @@
     "threadify-workflows": "./bin/threadify-workflows.mjs"
   },
   "scripts": {
-    "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs && node scripts/build-workflow-bundles.mjs",
-    "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check && node scripts/build-workflow-bundles.mjs --check",
+    "bundle:build": "node scripts/build-qbr-bundle.mjs && node scripts/build-creator-bundles.mjs && node scripts/build-advanced-bundles.mjs && node scripts/build-workflow-bundles.mjs && node scripts/build-claude-plugin.mjs",
+    "bundle:check": "node scripts/build-qbr-bundle.mjs --check && node scripts/build-creator-bundles.mjs --check && node scripts/build-advanced-bundles.mjs --check && node scripts/build-workflow-bundles.mjs --check && node scripts/build-claude-plugin.mjs --check",
     "release:build": "node scripts/build-release-assets.mjs",
     "bump": "node scripts/bump-version.mjs",
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/catalog.test.mjs",

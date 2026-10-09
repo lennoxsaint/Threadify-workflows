@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refresh Your Threads Profile"
+  short_description: "Design and safely apply a clearer Threads profile"
+  default_prompt: "Use $threadify-refresh-your-threads-profile to interview me, create three coherent bio and profile-picture systems, and safely help me choose and apply one."

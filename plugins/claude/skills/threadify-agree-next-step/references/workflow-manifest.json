@@ -1,0 +1,79 @@
+{
+  "workflow_id": "agree-next-step",
+  "version": "0.1.0",
+  "title": "Agree the Next Step",
+  "summary": "Turn current conversation evidence into one explicit next step with exact text, owner approval and separate recipient permission.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-agree-next-step",
+    "source": "plugins/threadify/skills/threadify-agree-next-step/SKILL.md"
+  },
+  "bundle": { "kind": "conversation", "standalone": false },
+  "dependencies": {
+    "workflows": ["offer-builder", "your-next-moves"],
+    "files": [
+      "workflows/agree-next-step/README.md",
+      "schemas/conversation-records.v1.json",
+      "schemas/conversation-lifecycle.v1.json"
+    ]
+  },
+  "triggers": [
+    "agree the next step with this buyer",
+    "prepare one clear next step from this conversation"
+  ],
+  "io": {
+    "inputs": [
+      { "name": "reviewed conversation action", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ],
+    "outputs": [
+      { "name": "approved next-step action", "schema_ref": "schemas/conversation-lifecycle.v1.json" }
+    ]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults"],
+  "free_capabilities": [
+    "local next-step preparation",
+    "exact text and destination review",
+    "separate interest permission and approval evidence",
+    "pending-attempt and result reconciliation"
+  ],
+  "paid_capability_stubs": [],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "source reference and fresh inspection",
+      "exact next step and text",
+      "recipient and destination",
+      "date when promised",
+      "recipient interest",
+      "channel permission",
+      "action hash",
+      "fallback state"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-next-step-review",
+    "artifact_schema": "conversation-lifecycle.v1",
+    "instructions": [
+      "Prepare one exact next step with source evidence, recipient, destination, text and date.",
+      "Keep recipient interest, channel permission and owner approval as separate fields.",
+      "Let the owner perform unsupported delivery and record the outcome without inferring it."
+    ]
+  },
+  "receipt": {
+    "schema": "conversation-lifecycle.v1",
+    "must_prove": [
+      "workflow ID",
+      "state revision",
+      "source reinspection",
+      "exact action hash",
+      "recipient interest",
+      "channel permission",
+      "owner decision",
+      "attempt and result",
+      "fallback state"
+    ]
+  }
+}

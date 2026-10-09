@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/stable-release-manifest.v1.json",
+  "title": "StableReleaseManifestV1",
+  "type": "object",
+  "required": ["record_type", "release_version", "skill_version", "plugin_version", "rules_version", "commit", "change_class", "assets"],
+  "properties": {
+    "record_type": {"const": "StableReleaseManifestV1"},
+    "release_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "skill_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "plugin_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "rules_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "change_class": {"enum": ["rules_only", "skill_logic", "installer"]},
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "sha256", "bytes"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "bytes": {"type": "integer", "minimum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

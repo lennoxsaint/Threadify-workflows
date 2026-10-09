@@ -1,0 +1,73 @@
+{
+  "workflow_id": "content-brain-repair",
+  "version": "0.1.0",
+  "title": "Content Brain Repair",
+  "summary": "Public orchestration for Content Brain Repair, with review, exact approval and readback.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-content-brain-repair",
+    "source": "plugins/threadify/skills/threadify-content-brain-repair/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": {
+    "workflows": [],
+    "files": ["workflows/content-brain-repair/README.md"]
+  },
+  "triggers": ["repair my Content Brain", "compare content before and after a Brain repair"],
+  "io": {
+    "inputs": [{ "name": "approved creator context", "schema_ref": "inline:approved-creator-context" }],
+    "outputs": [{ "name": "repair receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "get_brain_overview",
+    "query_brain",
+    "remember",
+    "correct_memory"
+  ],
+  "free_capabilities": [
+    "local review and preparation from approved sources"
+  ],
+  "paid_capability_stubs": [
+    "Hosted Threadify tools require current connection scopes and plan entitlement"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account",
+      "exact payload",
+      "action",
+      "time or memory category",
+      "source and changed facts"
+    ]
+  },
+  "fallback": {
+    "mode": "local-review-packet",
+    "instructions": [
+      "Use approved local source material when provider tools are unavailable.",
+      "Keep provider operations not attempted and report exact setup or entitlement gaps."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "source",
+      "approved payload",
+      "actual operation",
+      "readback",
+      "fallback state"
+    ]
+  }
+}
