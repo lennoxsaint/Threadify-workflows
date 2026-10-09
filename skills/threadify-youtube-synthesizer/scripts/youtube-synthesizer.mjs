@@ -193,20 +193,6 @@ async function extractWithYtDlp(url, language, executable = 'yt-dlp') {
       timeout: 120_000,
       maxBuffer: 1_000_000,
       windowsHide: true,
-      // Pass only what a captions download needs, never the whole environment.
-      env: Object.fromEntries(Object.entries({
-        PATH: process.env.PATH,
-        HOME: process.env.HOME,
-        TMPDIR: process.env.TMPDIR,
-        TEMP: process.env.TEMP,
-        TMP: process.env.TMP,
-        LANG: process.env.LANG,
-        LC_ALL: process.env.LC_ALL,
-        SystemRoot: process.env.SystemRoot,
-        USERPROFILE: process.env.USERPROFILE,
-        APPDATA: process.env.APPDATA,
-        LOCALAPPDATA: process.env.LOCALAPPDATA,
-      }).filter(([, value]) => value !== undefined)),
     });
     const files = fs.readdirSync(tempRoot).filter((name) => name.toLowerCase().endsWith('.vtt'));
     if (!files.length) fail('yt_dlp_captions_not_found');
