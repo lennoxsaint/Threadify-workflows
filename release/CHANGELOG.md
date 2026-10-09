@@ -1,3 +1,7 @@
+# 0.30.9
+
+- Add the OpenAI plugin package for ChatGPT and Codex (#59)
+
 # 0.30.8
 
 - Add terms, support and documentation links to the Claude plugin manifest (#58)

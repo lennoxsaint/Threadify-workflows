@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "threadify-workflows",
-  "version": "0.30.8",
+  "version": "0.30.9",
   "description": "Your lead generation agent for Threads, X, LinkedIn and YouTube: the Threadify connection plus guided workflows to write and schedule posts in your voice, reply to comments, and track the leads and sales your posts bring.",
   "author": {
     "name": "Threadify",
