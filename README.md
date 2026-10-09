@@ -141,3 +141,5 @@ The MIT-licensed repository contains public workflow methods, local state contro
 Run My Threads now uses actual source posts, scoped owner edits and revision-bound approval. See [the workflow](workflows/run-my-threads/README.md) and [private state and local previews](docs/run-my-threads-state.md).
 
 Threadify Unslop scores your posts for slop, puts raw against polished on your own numbers and has Threadify write three raw posts that pass a zero-hedge gate. See [the workflow](workflows/unslop/README.md).
+
+Publish Everywhere takes one video, says which of YouTube, Threads and X can take it, has Threadify write the post and the YouTube title, and schedules it only after one exact yes. See [the workflow](workflows/publish-everywhere/README.md).

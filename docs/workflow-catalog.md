@@ -26,6 +26,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Money Posts (`money-posts`) | skill | `threadify-money-posts` | advanced | money posts; which of my posts actually get clicks; stop chasing views |
 | Personal Brain Sync / Current Self Packet (`personal-brain-sync-current-self`) | skill | `threadify-personal-brain-sync` | advanced | sync my current self to Threadify Brain; review personal context before saving memories |
 | Post This Next (`post-this-next`) | skill | `threadify-post-this-next` | advanced | post this next; choose my next Threadify draft; review every draft and tell me what to finish next |
+| Publish Everywhere (`publish-everywhere`) | skill | `threadify-publish-everywhere` | advanced | publish everywhere; post this video to youtube; upload this video; schedule this video on youtube threads and x |
 | Qualified Buyer Research (`qualified-buyer-research`) | skill | `threadify-qualified-buyer-research` | advanced + standalone | find qualified buyers on Threads; research buyer language and stage one reply |
 | Refresh Your Threads Profile (`refresh-your-threads-profile`) | skill | `threadify-refresh-your-threads-profile` | advanced | refresh my Threads bio and profile picture; redesign my Threads profile from my niche; help me safely apply a new Threads profile |
 | Run My Threads (`run-my-threads`) | skill | `threadify-run-my-threads` | advanced | run my Threads for me; prepare my Threads posts every morning for approval; set up Run My Threads; plan my Threads week and prepare each day for approval |

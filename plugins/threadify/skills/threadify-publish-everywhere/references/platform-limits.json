@@ -1,0 +1,33 @@
+{
+  "record_type": "PublishEverywherePlatformLimitsV1",
+  "summary": "Where one video can go. A platform that cannot take the video is dropped with a plain reason, never silently. When a Threadify tool reports a tighter limit, the tool's answer wins.",
+  "containers": {
+    "mp4": "video/mp4",
+    "mov": "video/quicktime"
+  },
+  "storage_max_mb": 1024,
+  "platforms": {
+    "threads": {
+      "label": "Threads",
+      "max_duration_seconds": 300
+    },
+    "x": {
+      "label": "X",
+      "max_duration_seconds": 1200,
+      "metered": true
+    },
+    "youtube": {
+      "label": "YouTube",
+      "max_duration_seconds": 43200,
+      "uncleared_max_duration_seconds": 900
+    }
+  },
+  "youtube_format": {
+    "short_max_duration_seconds": 180,
+    "short_shapes": [
+      "vertical",
+      "square"
+    ]
+  },
+  "youtube_title_max_characters": 100
+}

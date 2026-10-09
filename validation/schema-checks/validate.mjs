@@ -56,6 +56,8 @@ const allowedTools = new Set([
   'edit_draft',
   'save_final_draft',
   'upload_media',
+  'create_media_upload',
+  'list_brands',
   'validate_post',
   'schedule_post',
   'publish_now',
