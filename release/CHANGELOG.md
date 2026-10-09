@@ -1,3 +1,7 @@
+# 0.30.1
+
+- Move the Claude Code plugin to plugins/claude for the plugin directory (#51)
+
 # 0.30.0
 
 - Add Publish Everywhere (`/threadify-publish-everywhere`, "One video. Three places. One yes."): hand your agent one MP4 or MOV video. It reads back the brand and each connected handle, measures the video locally with ffprobe (size, length, shape, file type) and says which of YouTube, Threads and X can take it and why. If YouTube is not connected it stops and points to threadify.app (Brands).
