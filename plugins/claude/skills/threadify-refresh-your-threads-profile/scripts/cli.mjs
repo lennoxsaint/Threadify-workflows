@@ -29,9 +29,9 @@ function isObject(value) { return Boolean(value) && typeof value === 'object' &&
 function isAssetRef(value) { return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value); }
 function exactKeys(value, allowed, field) {
   if (!isObject(value)) fail(`${field} must be an object`);
-  const extras = Object.keys(value).filter((key) => !allowed.includes(key));
+  const extras = Object.keys(value).filter((field) => !allowed.includes(field));
   if (extras.length) fail(`${field} contains undeclared fields: ${extras.join(', ')}`);
-  const missing = allowed.filter((key) => !Object.hasOwn(value, key));
+  const missing = allowed.filter((field) => !Object.hasOwn(value, field));
   if (missing.length) fail(`${field} is missing fields: ${missing.join(', ')}`);
 }
 function strings(value, field, minimum = 0) {
@@ -70,7 +70,7 @@ export function validatePlan(plan) {
   const interview = plan.interview_summary ?? {};
   exactKeys(interview, ['audience', 'niche', 'desired_action', 'credible_proof', 'tone', 'claims_to_avoid', 'visual_preferences', 'source_rights_confirmed', 'external_image_transfer'], 'interview_summary');
   exactKeys(interview.external_image_transfer, ['status', 'provider', 'terms_reviewed', 'no_upload_fallback_offered'], 'interview_summary.external_image_transfer');
-  for (const key of ['audience', 'niche', 'desired_action', 'tone']) if (!interview[key]) fail(`interview_summary.${key} is required`);
+  for (const field of ['audience', 'niche', 'desired_action', 'tone']) if (!interview[field]) fail(`interview_summary.${field} is required`);
   strings(interview.credible_proof, 'interview_summary.credible_proof');
   strings(interview.claims_to_avoid, 'interview_summary.claims_to_avoid');
   strings(interview.visual_preferences, 'interview_summary.visual_preferences');
