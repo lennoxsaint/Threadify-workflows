@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "threadify-workflows",
-      "source": "./",
+      "source": "./plugins/claude",
       "description": "Set up Threadify, then learn from mature posts and prepare the next six drafts through one private growth loop."
     }
   ]

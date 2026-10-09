@@ -75,7 +75,7 @@ const plugin = JSON.parse(fs.readFileSync(pluginFile, 'utf8'));
 plugin.version = releaseVersion;
 fs.writeFileSync(pluginFile, `${JSON.stringify(plugin, null, 2)}\n`);
 
-const claudePluginFile = path.join(root, '.claude-plugin', 'plugin.json');
+const claudePluginFile = path.join(root, 'plugins', 'claude', '.claude-plugin', 'plugin.json');
 const claudePlugin = JSON.parse(fs.readFileSync(claudePluginFile, 'utf8'));
 claudePlugin.version = releaseVersion;
 fs.writeFileSync(claudePluginFile, `${JSON.stringify(claudePlugin, null, 2)}\n`);

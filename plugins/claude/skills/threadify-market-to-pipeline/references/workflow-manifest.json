@@ -1,0 +1,98 @@
+{
+  "workflow_id": "market-to-pipeline",
+  "version": "0.1.0",
+  "title": "Market to Pipeline",
+  "summary": "Turn one offer and one bounded market into a private qualified pipeline, exact permission-aware actions, seven de-identified posts, and body-free receipts using normalized Threadify and optional Treg evidence.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-market-to-pipeline",
+    "source": "plugins/threadify/skills/threadify-market-to-pipeline/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "schemas/market-to-pipeline.v1.json", "target": "references/market-to-pipeline.v1.json" },
+      { "source": "lib/market-to-pipeline.mjs", "target": "scripts/market-to-pipeline.mjs" },
+      { "source": "lib/market-to-pipeline-cli.mjs", "target": "scripts/market-to-pipeline-cli.mjs" },
+      { "source": "docs/market-to-pipeline-treg-attribution.md", "target": "references/treg-attribution.md" },
+      { "source": "workflows/market-to-pipeline/synthetic-market.json", "target": "references/synthetic-market.json" }
+    ]
+  },
+  "dependencies": {
+    "workflows": ["offer-builder", "qualified-buyer-research", "agree-next-step"],
+    "files": [
+      "workflows/market-to-pipeline/README.md",
+      "workflows/market-to-pipeline/synthetic-market.json",
+      "schemas/market-to-pipeline.v1.json",
+      "docs/market-to-pipeline-treg-attribution.md"
+    ]
+  },
+  "triggers": [
+    "turn this market into a qualified pipeline",
+    "run Market to Pipeline with Threadify and Treg",
+    "find permission-aware leads and build seven posts"
+  ],
+  "io": {
+    "inputs": [{ "name": "one versioned offer, one bounded market, normalized Threadify and optional Treg evidence", "schema_ref": "schemas/market-to-pipeline.v1.json" }],
+    "outputs": [{ "name": "private pipeline, exact actions, seven-post campaign, action lifecycle, and body-free receipts", "schema_ref": "schemas/market-to-pipeline.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "gemini", "openclaw", "hermes"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "list_dispatcher_tools",
+    "call_agent_action",
+    "greatest_hits",
+    "query_brain",
+    "generate_content",
+    "audit_log"
+  ],
+  "free_capabilities": [
+    "local deterministic qualification and deduplication for at most 50 normalized signals and 10 selected prospects",
+    "separate warm permission and cold B2B compliance readiness lanes",
+    "private JSON, CSV, and HTML review artifacts",
+    "exactly seven de-identified evidence-linked campaign posts",
+    "account/evidence/compliance-bound approval, pending-attempt persistence, authoritative reconciliation, and lifecycle-aware body-free receipts"
+  ],
+  "paid_capability_stubs": [
+    "Treg discovery or enrichment is optional, host-supplied, price-previewed, and separately approved before a metered call",
+    "connected Threadify reads depend on current account capabilities and entitlement",
+    "provider delivery requires a separately available channel capability and exact owner approval"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "verified Threadify source account, sending account, and destination",
+      "warm or cold B2B lane and every passing gate",
+      "source coverage, observation times, and limitations",
+      "quoted and charged spend against the run cap",
+      "exact action text, action hash, and idempotency key",
+      "sender identity, unsubscribe path, and suppression result when applicable",
+      "the consequence of an unknown provider result and the same-attempt reconciliation path"
+    ]
+  },
+  "fallback": {
+    "mode": "local-normalized-evidence",
+    "artifact_schema": "market-to-pipeline.v1",
+    "instructions": [
+      "Use owner-approved local exports or manually normalized public business evidence when Threadify or Treg is unavailable.",
+      "Mark unavailable or incomplete sources and retain the useful private pipeline and seven-post draft without weakening any gate.",
+      "Do not claim a provider read, qualification, consent, send, response, lead count, or revenue without authoritative evidence."
+    ]
+  },
+  "receipt": {
+    "schema": "market-to-pipeline.v1",
+    "must_prove": [
+      "offer and bounded market hashes",
+      "provider sequence, coverage, observation times, quotes, and charges",
+      "raw and selected counts against caps",
+      "action hashes, readiness states, and blocker counts",
+      "exactly seven campaign posts and their package hash",
+      "no raw bodies or contact destinations in the public receipt",
+      "provider write state as false, null for pending or unknown, or true only after authoritative success readback",
+      "fallback state"
+    ]
+  }
+}

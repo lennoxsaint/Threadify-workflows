@@ -1,0 +1,94 @@
+{
+  "workflow_id": "post-this-next",
+  "version": "0.1.0",
+  "title": "Post This Next",
+  "summary": "Review every eligible Threadify draft and recommend the next draft to finish for usefulness, owned engagement-pattern fit, or readiness without predicting performance.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-post-this-next",
+    "source": "plugins/threadify/skills/threadify-post-this-next/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "schemas/post-this-next.v1.json", "target": "references/post-this-next.v1.json" },
+      { "source": "lib/post-this-next.mjs", "target": "scripts/post-this-next.mjs" },
+      { "source": "lib/post-this-next-cli.mjs", "target": "scripts/post-this-next-cli.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/post-this-next/README.md",
+      "schemas/post-this-next.v1.json"
+    ]
+  },
+  "triggers": [
+    "post this next",
+    "choose my next Threadify draft",
+    "review every draft and tell me what to finish next"
+  ],
+  "io": {
+    "inputs": [{ "name": "complete eligible draft snapshot and normalized decision evaluations", "schema_ref": "inline:post-this-next-input-v1" }],
+    "outputs": [{ "name": "private advisory draft decision", "schema_ref": "schemas/post-this-next.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "list_drafts",
+    "read_post_performance",
+    "get_audience_demographics",
+    "get_brain_overview",
+    "query_brain",
+    "list_offers",
+    "assess_jev_fit",
+    "evaluate_with_jev",
+    "jev_score",
+    "jev_ask"
+  ],
+  "free_capabilities": [
+    "complete local draft inventory",
+    "three fixed advisory scorecards",
+    "manual top-two fallback",
+    "private result and body-free receipt"
+  ],
+  "paid_capability_stubs": [
+    "connected draft, Brain, audience, offer and owned-performance reads depend on current Threadify scopes and plan entitlement",
+    "Jev evaluation depends on the separately configured provider and its current pricing and retention route"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "verified account",
+      "eligible draft count",
+      "selected goal",
+      "external Jev data route",
+      "exact draft bodies that will leave Threadify",
+      "no-write boundary"
+    ]
+  },
+  "fallback": {
+    "mode": "manual-local-scorecard",
+    "artifact_schema": "post-this-next.v1",
+    "instructions": [
+      "Keep the complete frozen draft snapshot local.",
+      "Apply the same selected goal rubric manually and return only a top-two shortlist.",
+      "Do not label a manual shortlist as a Jev recommendation or a traffic prediction."
+    ]
+  },
+  "receipt": {
+    "schema": "post-this-next.v1",
+    "must_prove": [
+      "verified account label",
+      "complete draft snapshot hash",
+      "eligible draft count",
+      "goal status",
+      "provider and privacy route",
+      "zero external actions",
+      "fallback state"
+    ]
+  }
+}

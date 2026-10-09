@@ -8,7 +8,9 @@
     "url": "https://www.threadify.app"
   },
   "homepage": "https://www.threadify.app",
+  "privacyPolicyUrl": "https://www.threadify.app/privacy",
   "repository": "https://github.com/lennoxsaint/Threadify-workflows",
+  "icon": "./.claude-plugin/icon.png",
   "license": "MIT",
   "keywords": [
     "threadify",

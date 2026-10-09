@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lennoxsaint/Threadify-workflows/schemas/offer-decision.v1.json",
+  "type": "object",
+  "required": ["mode", "confirmed", "audience", "problem", "result", "boundary", "evidence", "models"],
+  "properties": {
+    "mode": {"enum": ["real", "demo"]},
+    "confirmed": {"type": "boolean"},
+    "audience": {"type": "string", "minLength": 3, "maxLength": 180},
+    "problem": {"type": "string", "minLength": 3, "maxLength": 240},
+    "result": {"type": "string", "minLength": 3, "maxLength": 240},
+    "boundary": {"type": "string", "minLength": 3, "maxLength": 240},
+    "evidence": {"type": "object", "required": ["coverage_complete", "summary", "limitations"], "properties": {"coverage_complete": {"type": "boolean"}, "summary": {"type": "string", "minLength": 3, "maxLength": 500}, "limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 240}}}, "additionalProperties": false},
+    "models": {"type": "object", "required": ["intensive", "lab", "kit"], "additionalProperties": false, "properties": {"intensive": {"$ref": "#/$defs/model"}, "lab": {"$ref": "#/$defs/model"}, "kit": {"$ref": "#/$defs/model"}}}
+  },
+  "$defs": {"model": {"type": "object", "required": ["name", "scores", "notes"], "properties": {"name": {"type": "string", "minLength": 3, "maxLength": 100}, "scores": {"type": "object", "required": ["audience_evidence_fit", "speed_to_valid_signal", "credible_deliverability_now", "fulfillment_simplicity", "scalability"], "additionalProperties": false, "properties": {"audience_evidence_fit": {"type": "integer", "minimum": 1, "maximum": 5}, "speed_to_valid_signal": {"type": "integer", "minimum": 1, "maximum": 5}, "credible_deliverability_now": {"type": "integer", "minimum": 1, "maximum": 5}, "fulfillment_simplicity": {"type": "integer", "minimum": 1, "maximum": 5}, "scalability": {"type": "integer", "minimum": 1, "maximum": 5}}}, "notes": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "string", "minLength": 3, "maxLength": 180}}}, "additionalProperties": false}},
+  "additionalProperties": false
+}

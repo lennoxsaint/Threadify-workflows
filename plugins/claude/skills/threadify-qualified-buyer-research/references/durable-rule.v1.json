@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://threadify.app/schemas/durable-rule.v1.json",
+  "title": "DurableRuleV1",
+  "type": "object",
+  "required": ["record_type", "rule_id", "scope", "instruction", "evidence_class", "hard_gate", "introduced_version"],
+  "properties": {
+    "record_type": {"const": "DurableRuleV1"},
+    "rule_id": {"type": "string", "pattern": "^(candidate|message)\\.[a-z0-9-]+$"},
+    "scope": {"enum": ["candidate", "message"]},
+    "instruction": {"type": "string", "minLength": 20},
+    "evidence_class": {"type": "string", "minLength": 3},
+    "hard_gate": {"type": "boolean"},
+    "introduced_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"}
+  },
+  "additionalProperties": false
+}

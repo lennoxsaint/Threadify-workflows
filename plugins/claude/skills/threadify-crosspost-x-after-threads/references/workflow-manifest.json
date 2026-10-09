@@ -1,0 +1,56 @@
+{
+  "workflow_id": "crosspost-x-after-threads",
+  "version": "0.1.0",
+  "title": "Cross-post To X After Threads",
+  "summary": "Read a Threads schedule or publish status and prepare an X-ready fallback artifact. Live X execution is not part of public v0.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-crosspost-x-after-threads",
+    "source": "plugins/threadify/skills/threadify-crosspost-x-after-threads/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": [], "files": ["workflows/crosspost-x-after-threads/README.md"] },
+  "triggers": ["cross-post my Threads post to X", "prepare an X-ready follow-up"],
+  "io": {
+    "inputs": [{ "name": "Threads post status", "schema_ref": "inline:threads-post-status" }],
+    "outputs": [{ "name": "X-ready artifact", "schema_ref": "schemas/threadify-ready-output.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "get_schedule_status",
+    "list_scheduled_posts",
+    "get_publish_status",
+    "validate_post"
+  ],
+  "optional_mcp_tools": ["record_feedback"],
+  "free_capabilities": [
+    "Threads status readback",
+    "X-ready artifact preparation",
+    "manual fallback receipt"
+  ],
+  "paid_capability_stubs": [
+    "additional platform execution",
+    "cross-platform analytics",
+    "premium cross-post automation"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["source status", "exact X-ready text", "media", "manual action", "fallback state"]
+  },
+  "fallback": {
+    "mode": "manual-crosspost-artifact",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Keep feedback local unless the user gives explicit opt-in to share the exact feedback with Threadify.",
+      "Confirm Threads status when available.",
+      "Return an X-ready artifact.",
+      "Do not claim X was posted by Threadify."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "source status", "approved text", "fallback state", "timestamp"]
+  }
+}

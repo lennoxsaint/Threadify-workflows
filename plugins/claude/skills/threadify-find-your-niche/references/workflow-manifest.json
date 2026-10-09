@@ -1,0 +1,59 @@
+{
+  "workflow_id": "find-your-niche",
+  "version": "0.1.0",
+  "title": "Find Your Niche",
+  "summary": "Use owned Threads posts and conversations to recommend one evidence-backed niche, one ideal-client avatar and a private saveable report.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-find-your-niche",
+    "source": "plugins/threadify/skills/threadify-find-your-niche/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "workflows/find-your-niche/CONTRACT.md", "target": "references/niche-contract.md" },
+      { "source": "schemas/niche-report.v1.json", "target": "references/niche-report.v1.json" },
+      { "source": "tools/niche-report/cli.mjs", "target": "scripts/cli.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/find-your-niche/README.md",
+      "workflows/find-your-niche/CONTRACT.md",
+      "schemas/niche-report.v1.json"
+    ]
+  },
+  "triggers": [
+    "find my niche from my Threads data",
+    "use my best Threads posts and comments to find my niche"
+  ],
+  "io": {
+    "inputs": [{ "name": "bounded owned Threads evidence", "schema_ref": "inline:owned-threads-evidence" }],
+    "outputs": [{ "name": "private niche report", "schema_ref": "schemas/niche-report.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools", "call_agent_action", "greatest_hits"],
+  "free_capabilities": ["local evidence synthesis", "private HTML and Markdown report", "export fallback"],
+  "paid_capability_stubs": ["connected account and analytics reads depend on current Threadify scopes and plan entitlement"],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["account", "exact external action", "destination", "fallback state"]
+  },
+  "fallback": {
+    "mode": "local-export-analysis",
+    "artifact_schema": "niche-report.v1",
+    "instructions": [
+      "Use a user-supplied export when connected read actions are unavailable.",
+      "Call evidence sampled rather than highest-performing when comparable metrics or provider ranking are absent.",
+      "Keep raw post and comment bodies private and render only deidentified themes and source references."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["account", "window", "coverage", "evidence method", "report hash", "fallback state"]
+  }
+}

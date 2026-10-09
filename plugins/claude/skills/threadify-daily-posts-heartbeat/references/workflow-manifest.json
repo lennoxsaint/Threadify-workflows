@@ -1,0 +1,57 @@
+{
+  "workflow_id": "daily-posts-heartbeat",
+  "version": "0.1.0",
+  "title": "Daily Posts Heartbeat",
+  "summary": "Validate approved daily post copy, schedule it through Threadify MCP after explicit approval, read back status, and capture feedback.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-daily-posts-heartbeat",
+    "source": "plugins/threadify/skills/threadify-daily-posts-heartbeat/SKILL.md"
+  },
+  "bundle": { "kind": "advanced", "standalone": false },
+  "dependencies": { "workflows": ["create-my-day"], "files": ["workflows/daily-posts-heartbeat/README.md"] },
+  "triggers": ["schedule my approved daily posts", "run my daily posts heartbeat"],
+  "io": {
+    "inputs": [{ "name": "approved post copy", "schema_ref": "schemas/threadify-ready-output.v1.json" }],
+    "outputs": [{ "name": "schedule receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+  },
+  "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "list_scheduled_posts"
+  ],
+  "optional_mcp_tools": ["record_feedback"],
+  "free_capabilities": [
+    "connection defaults",
+    "post validation",
+    "approved scheduling",
+    "schedule readback",
+    "structured feedback receipt"
+  ],
+  "paid_capability_stubs": [
+    "native post generation",
+    "advanced analytics selection",
+    "premium workflow variants"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": ["account handle", "exact text", "media", "optional lane blockers", "scheduled time", "timezone", "action"]
+  },
+  "fallback": {
+    "mode": "threadify-ready-artifact",
+    "artifact_schema": "threadify-ready-output.v1",
+    "instructions": [
+      "Return exact text and media.",
+      "Mark MCP execution as unavailable.",
+      "Tell the user to schedule manually in Threadify."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": ["workflow ID", "adapter", "account handle", "approved text", "optional review item metadata", "status", "timestamp", "tool path", "fallback state"]
+  }
+}
