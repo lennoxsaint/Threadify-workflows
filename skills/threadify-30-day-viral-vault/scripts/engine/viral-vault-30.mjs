@@ -352,14 +352,14 @@ function getPacket(data, id) {
   const packet = data.viral_vault_packets.find((candidate) => candidate.id === id); assert(packet, 'Unknown 30-Day Viral Vault packet.'); return packet;
 }
 
-const READS = new Set(['vault30-status', 'vault30-next', 'vault30-continue']);
+const QUERY_COMMANDS = new Set(['vault30-status', 'vault30-next', 'vault30-continue']);
 const WRITES = new Set(['vault30-plan', 'vault30-add-day', 'vault30-record-validation', 'vault30-decide',
   'vault30-begin-attempt', 'vault30-reconcile', 'vault30-complete-local']);
-export const isViralVaultCommand = (command) => READS.has(command) || WRITES.has(command);
+export const isViralVaultCommand = (command) => QUERY_COMMANDS.has(command) || WRITES.has(command);
 
 export async function runViralVaultCommand(command, { root, revision, input = {} }) {
   assert(isViralVaultCommand(command), 'Unsupported 30-Day Viral Vault command.');
-  if (READS.has(command)) {
+  if (QUERY_COMMANDS.has(command)) {
     const state = await readState(root); const data = workspace(state.payload);
     let result;
     if (command === 'vault30-status') result = { plans: data.viral_vault_plans.length, packets: data.viral_vault_packets.length,

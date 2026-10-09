@@ -1,11 +1,11 @@
-const token = location.hash.slice(1) || sessionStorage.getItem('review-session') || '';
-if (token) sessionStorage.setItem('review-session', token);
+const reviewFragment = location.hash.slice(1) || sessionStorage.getItem('review-fragment') || '';
+if (reviewFragment) sessionStorage.setItem('review-fragment', reviewFragment);
 history.replaceState(null, '', location.pathname);
 const $ = id => document.getElementById(id);
 let state, page = 0, visible = 50, saveFailed = false;
 const pending = new Map();
 async function api(route, body) {
-  const response = await fetch('/api/' + route, { method: body ? 'POST' : 'GET', headers: { 'X-Review-Session': token, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
+  const response = await fetch('/api/' + route, { method: body ? 'POST' : 'GET', headers: { 'X-Review-Session': reviewFragment, 'Content-Type': 'application/json' }, ...(body ? { body: JSON.stringify(body) } : {}) });
   const result = await response.json();
   if (!response.ok) throw new Error(result.error);
   return result;

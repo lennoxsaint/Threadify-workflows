@@ -78,7 +78,7 @@ Output contains the durable `attempt.key` and exact prepared reply payload. The 
 - `failed`: requires `definitely_not_sent:true` and `failure_receipt`; returns the item to unapproved drafted state for a fresh check and approval.
 - `uncertain`: blocks another send and retains the item for further readback.
 
-`feedback`: `{key,receipt}` records a successful provider feedback call. Pending feedback payloads are in status and remain retryable independently of publication. `close`: optional `batch_id`; reports coverage/checkpoint and feedback backlog. `status --batch ID` reads a historical batch's current item states.
+The `feedback` entry `{key,receipt}` records a successful provider feedback call. Pending feedback payloads are in status and remain retryable independently of publication. `close`: optional `batch_id`; reports coverage/checkpoint and feedback backlog. `status --batch ID` reads a historical batch's current item states.
 
 The helper trusts the authorized agent to gather actual MCP evidence. It checks identity, revisions, hashes, timestamps and required proof fields; it cannot independently authenticate provider receipts or grant sending authority.
 

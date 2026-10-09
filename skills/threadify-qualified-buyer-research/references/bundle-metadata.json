@@ -60,7 +60,7 @@
     {
       "source": "scripts/qualified-buyer-update-on-use.mjs",
       "target": "update-on-use.mjs",
-      "sha256": "8687348681694ee06e44f17c5549da58fa0c0db528646efbd1a2fcdb27f1e244"
+      "sha256": "0c11bd0069dae24667cc9a49ed79a08ec1e1546fb723ff7115427c05a972da84"
     }
   ]
 }

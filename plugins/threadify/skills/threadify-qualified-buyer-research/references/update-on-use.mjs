@@ -35,7 +35,6 @@ if (config.auto_update_enabled !== true) {
 
 const result = spawnSync(process.execPath, [currentCli, 'update', '--on-use', '--json'], {
   encoding: 'utf8',
-  env: process.env,
 });
 if (result.status !== 0) {
   output({

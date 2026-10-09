@@ -3,10 +3,10 @@ const saved = document.querySelector('#saved');
 const errorBox = document.querySelector('#error');
 const fragment = location.hash.slice(1);
 if (fragment) {
-  sessionStorage.setItem('review-session', fragment);
+  sessionStorage.setItem('review-fragment', fragment);
   history.replaceState(null, '', '/');
 }
-const session = sessionStorage.getItem('review-session');
+const reviewFragment = sessionStorage.getItem('review-fragment');
 let state;
 let edits;
 let index = 0;
@@ -34,7 +34,7 @@ async function api(route, body) {
   const response = await fetch(`/api/${route}`, {
     method: body ? 'POST' : 'GET',
     headers: {
-      Authorization: `Bearer ${session}`,
+      Authorization: `Bearer ${reviewFragment}`,
       ...(body ? { 'Content-Type': 'application/json' } : {}),
     },
     ...(body ? { body: JSON.stringify(body) } : {}),

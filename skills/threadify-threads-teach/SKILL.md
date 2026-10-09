@@ -30,6 +30,8 @@ If the host cannot keep files, say so, keep the same records in the conversation
 
 ## Start of every session
 
+Do this before anything else.
+
 1. Read whichever of these exist: `MISSION.md`, every learning record, `NOTES.md` and the last lesson. A missing file is normal, not an error. If there is no confirmed mission, run or resume the mission setup below before teaching anything.
 2. Say in one or two lines where the last session ended and what happened to the last post, if the learner knows.
 3. Run retrieval practice: ask two or three short questions about earlier lessons. The learner answers from memory before you show any notes. Mix older lessons in with the latest one. Skip this in the first session.

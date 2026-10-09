@@ -82,10 +82,10 @@ export function reconcileImport(setup, itemId, receipt) {
   if (receipt.status === 'unknown') item.state = 'unknown';
   else {
     assert(receipt.authoritative === true && receipt.user_id === next.user_id && validTime(receipt.checked_at)
-      && Date.parse(receipt.checked_at) >= Date.parse(attempt.started_at), 'Authoritative current My Vault readback required.');
+      && Date.parse(receipt.checked_at) >= Date.parse(attempt.started_at), 'Authoritative current My Vault confirmation required.');
     assert(canonicalSourceUrl(receipt.source_url) === item.url, 'Readback source must match the approved URL.');
     if (receipt.status === 'not_found') {
-      assert(receipt.attempt_key === attempt.key, 'Absence must match the attempted import key.');
+      assert(receipt.attempt_key === attempt.key, 'Absence must match the attempted import identifier.');
       item.state = 'ready';
     } else {
       validateSavedReceipt(item, next.user_id, receipt);

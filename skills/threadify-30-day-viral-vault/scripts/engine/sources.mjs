@@ -28,19 +28,19 @@ export function similarity(sourceParts, finalParts) {
   const original = tokenize(sourceParts);
   const final = tokenize(finalParts);
   const counts = new Map();
-  for (const token of original) counts.set(token, (counts.get(token) ?? 0) + 1);
+  for (const word of original) counts.set(word, (counts.get(word) ?? 0) + 1);
   let shared = 0;
-  for (const token of final) {
-    if ((counts.get(token) ?? 0) > 0) { shared++; counts.set(token, counts.get(token) - 1); }
+  for (const word of final) {
+    if ((counts.get(word) ?? 0) > 0) { shared++; counts.set(word, counts.get(word) - 1); }
   }
   let longest = null;
   if (same(original, final)) longest = original.length;
   else if (original.length * final.length <= 1_000_000) {
     let previous = new Uint32Array(final.length + 1); longest = 0;
-    for (const token of original) {
+    for (const word of original) {
       const current = new Uint32Array(final.length + 1);
       for (let index = 0; index < final.length; index++) {
-        if (token === final[index]) current[index + 1] = previous[index] + 1;
+        if (word === final[index]) current[index + 1] = previous[index] + 1;
         longest = Math.max(longest, current[index + 1]);
       }
       previous = current;
@@ -89,8 +89,8 @@ export function resolveAdaptation(input, context) {
       values.set(p.key, p);
     }
     assert(same(sorted(inventory), sorted(placeholders.map((p) => p.source_text))), 'Source-span inventory must match placeholders exactly.');
-    const tokens = templates.flatMap((part) => [...part.matchAll(TOKEN)].map((m) => m[1]));
-    assert(same(sorted(new Set(tokens)), sorted(values.keys())), 'Undeclared or unused template tokens.');
+    const templateNames = templates.flatMap((part) => [...part.matchAll(TOKEN)].map((m) => m[1]));
+    assert(same(sorted(new Set(templateNames)), sorted(values.keys())), 'Undeclared or unused template tokens.');
     assert(templates.every((part) => !/[{}]/.test(part.replace(TOKEN, ''))), 'Malformed template tokens.');
     // One replace pass prevents replacement strings from creating new tokens.
     const render = (field) => templates.map((part) => part.replace(TOKEN, (_, key) => values.get(key)[field]));

@@ -20,9 +20,9 @@ function parse(argv) {
   }
   return { command, options };
 }
-function required(options, key) {
-  if (!options[key]) throw new Error(`missing_option:--${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`);
-  return options[key];
+function required(options, name) {
+  if (!options[name]) throw new Error(`missing_option:--${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`);
+  return options[name];
 }
 function readJson(file) { return JSON.parse(fs.readFileSync(path.resolve(file), 'utf8')); }
 
