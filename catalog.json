@@ -1218,6 +1218,56 @@
       ]
     },
     {
+      "workflow_id": "publish-everywhere",
+      "version": "0.1.0",
+      "title": "Publish Everywhere",
+      "summary": "Hand your agent one video. It checks where the video can go, has Threadify write the post and the YouTube title in your voice, and schedules it to YouTube, Threads and X only after one exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-publish-everywhere",
+      "entrypoint": "skills/threadify-publish-everywhere/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-publish-everywhere/SKILL.md",
+      "source_manifest": "workflows/publish-everywhere/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/publish-everywhere/README.md"
+        ]
+      },
+      "triggers": [
+        "publish everywhere",
+        "post this video to youtube",
+        "upload this video",
+        "schedule this video on youtube threads and x"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "one local MP4 or MOV video path or public URL, a one-line description, a YouTube privacy choice and a time",
+            "schema_ref": "inline:publish-everywhere-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "platform decisions, approval card and schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "qualified-buyer-research",
       "version": "0.4.1",
       "title": "Qualified Buyer Research",

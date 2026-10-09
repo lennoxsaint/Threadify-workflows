@@ -26,6 +26,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Money Posts | yes | yes | yes | yes | yes | yes | yes |
 | Personal Brain Sync / Current Self Packet | yes | yes | yes | yes | yes | yes | yes |
 | Post This Next | yes | yes | yes | yes | yes | yes | yes |
+| Publish Everywhere | yes | yes | yes | yes | yes | yes | yes |
 | Qualified Buyer Research | yes | yes | yes | yes | yes | yes | yes |
 | Refresh Your Threads Profile | yes | yes | yes | yes | yes | yes | yes |
 | Run My Threads | yes | yes | yes | yes | yes | yes | yes |
