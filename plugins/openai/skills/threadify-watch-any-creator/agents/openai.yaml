@@ -1,0 +1,4 @@
+interface:
+  display_name: "Watch Any Creator"
+  short_description: "A creator's whole archive, ranked rules, posts in your voice"
+  default_prompt: "Use $threadify-watch-any-creator to watch every video from this YouTube creator, rank their rules with evidence, have Threadify write a thread draft and one post in my voice, and schedule the post for my approval."

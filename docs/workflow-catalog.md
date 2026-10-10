@@ -37,6 +37,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Threads Teach (`threads-teach`) | skill | `threadify-threads-teach` | advanced | teach me Threads; teach me how to write Threads posts; continue my Threads lessons |
 | Viral Carousel Maker (`viral-carousel-maker`) | skill | `threadify-viral-carousel-maker` | advanced | make a viral carousel; create and review a controlled-mutation carousel |
 | Viral Vault Setup (`vault-setup`) | skill | `threadify-vault-setup` | creator | set up my Viral Vault; build a starter inspiration Vault |
+| Watch Any Creator (`watch-any-creator`) | skill | `threadify-watch-any-creator` | advanced | watch any creator; watch every video from this creator; what are this creator's rules; turn a creator's whole archive into posts |
 | Weekly Buyer Outcomes (`weekly-buyer-outcomes`) | skill | `threadify-weekly-buyer-outcomes` | conversation | review my buyer outcomes for the past seven days; show this week's provider-observed and owner-reported buyer results |
 | Weekly Winner Replication (`weekly-winner-replication`) | skill | `threadify-weekly-winner-replication` | advanced | replicate this week's winners; prepare transformed drafts from recent winning posts |
 | X Article From Daily Post (`x-article-from-daily-post`) | skill | `threadify-x-article-from-daily-post` | advanced | turn my daily post into an X Article; prepare a draft-only X Article packet |

@@ -37,6 +37,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Threads Teach | yes | yes | yes | yes | yes | yes | yes |
 | Viral Carousel Maker | yes | yes | yes | yes | yes | yes | yes |
 | Viral Vault Setup | yes | yes | yes | yes | yes | yes | yes |
+| Watch Any Creator | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Buyer Outcomes | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Winner Replication | yes | yes | yes | yes | yes | yes | yes |
 | X Article From Daily Post | yes | yes | yes | yes | yes | yes | yes |

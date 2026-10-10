@@ -1892,6 +1892,68 @@
       ]
     },
     {
+      "workflow_id": "watch-any-creator",
+      "version": "0.1.0",
+      "title": "Watch Any Creator",
+      "summary": "Watch every video a YouTube creator has published, rank the rules their numbers support, have Threadify write them as a ten-post thread in your voice saved as a draft plus one post, and schedule that one post only after one exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-watch-any-creator",
+      "entrypoint": "skills/threadify-watch-any-creator/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-watch-any-creator/SKILL.md",
+      "source_manifest": "workflows/watch-any-creator/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false,
+        "references": [
+          {
+            "source": "lib/watch-any-creator.mjs",
+            "target": "scripts/watch-any-creator.mjs"
+          },
+          {
+            "source": "lib/ai-content-forensics.mjs",
+            "target": "scripts/ai-content-forensics.mjs"
+          }
+        ]
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/watch-any-creator/README.md",
+          "lib/watch-any-creator.mjs",
+          "lib/ai-content-forensics.mjs"
+        ]
+      },
+      "triggers": [
+        "watch any creator",
+        "watch every video from this creator",
+        "what are this creator's rules",
+        "turn a creator's whole archive into posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "a YouTube creator handle, a local corpus cache or ScrapeCreators access, an optional older rules file, and a connected Threads account",
+            "schema_ref": "inline:watch-any-creator-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "ranked rules with evidence, then-vs-now verdicts, a ten-post thread draft, one approval card and a body-free schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "weekly-buyer-outcomes",
       "version": "0.1.0",
       "title": "Weekly Buyer Outcomes",

@@ -1,0 +1,121 @@
+{
+  "workflow_id": "watch-any-creator",
+  "version": "0.1.0",
+  "title": "Watch Any Creator",
+  "summary": "Watch every video a YouTube creator has published, rank the rules their numbers support, have Threadify write them as a ten-post thread in your voice saved as a draft plus one post, and schedule that one post only after one exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-watch-any-creator",
+    "source": "plugins/threadify/skills/threadify-watch-any-creator/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false,
+    "references": [
+      { "source": "lib/watch-any-creator.mjs", "target": "scripts/watch-any-creator.mjs" },
+      { "source": "lib/ai-content-forensics.mjs", "target": "scripts/ai-content-forensics.mjs" }
+    ]
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/watch-any-creator/README.md",
+      "lib/watch-any-creator.mjs",
+      "lib/ai-content-forensics.mjs"
+    ]
+  },
+  "triggers": [
+    "watch any creator",
+    "watch every video from this creator",
+    "what are this creator's rules",
+    "turn a creator's whole archive into posts"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "a YouTube creator handle, a local corpus cache or ScrapeCreators access, an optional older rules file, and a connected Threads account",
+        "schema_ref": "inline:watch-any-creator-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "ranked rules with evidence, then-vs-now verdicts, a ten-post thread draft, one approval card and a body-free schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "generate_content",
+    "get_draft",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "save_draft",
+    "list_offers"
+  ],
+  "free_capabilities": [
+    "local reader for a whole YouTube archive cache: long-form and Shorts listings plus transcripts",
+    "dedupe and the 20-item comparison rule from the AI Content Forensics engine, with Shorts and long-form kept apart",
+    "ranked rules from views per day, title formulas, length buckets, first-minute hooks and topics, each with evidence numbers and example video ids",
+    "then-vs-now verdicts against an older rules file: held, broke, new or untestable",
+    "thread structure check, casing guard and one approval card that stays blocked until every proof is in"
+  ],
+  "paid_capability_stubs": [
+    "a ScrapeCreators pull uses the owner's own ScrapeCreators account and credits, estimated and approved before any call",
+    "Threadify thread and post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "scheduling uses the connected Threads account"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account handle and timezone",
+      "creator watched and verified video counts",
+      "the thread saved as a draft and not scheduled",
+      "exact post text and its casing proof",
+      "exact Auto Plug text and destination, or why there is none",
+      "scheduled time with its timezone offset",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "local-rules-without-substitute-copy",
+    "instructions": [
+      "Never write or reword the thread, the post or the plug; Threadify generates them and the only permitted change is lowercasing proved by the casing guard.",
+      "Show the ScrapeCreators call and credit estimate and wait for yes before any paid call; stop when charged credits pass the approved estimate.",
+      "Keep transcripts on the owner's computer; never paste or post them and quote at most twelve words.",
+      "Rank a rule only with at least 20 videos on each side inside one format family; describe smaller groups.",
+      "Without a Threadify connection, return the ranked rules and then-vs-now verdicts and say how to connect Threadify.",
+      "On HTTP 402 or a quota error, stop with a plain message.",
+      "When a schedule result is unclear, read back with get_schedule_status before any retry."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "creator, provider, observation time and verified counts",
+      "ranked rule ids",
+      "thread draft id, post count and hash, not scheduled",
+      "post and plug hashes and casing proof",
+      "approval card hash and reply",
+      "idempotency key and scheduled post",
+      "schedule readback",
+      "fallback state"
+    ]
+  }
+}
