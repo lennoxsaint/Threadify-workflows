@@ -146,3 +146,19 @@ test('an avoid length rule stays out of the ranking but is still compared', () =
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('a small archive with fewer than seven ranked rules still gets a brief from its avoid rules', () => {
+  const { root: dir, analysis } = analysed();
+  try {
+    assert.ok(analysis.rules.length < 7, 'the plain fixture ranks fewer than seven actionable rules');
+    assert.ok(analysis.reserve_rules.length > 0, 'avoid length or topic rules wait in reserve');
+    const briefs = generationBriefs(analysis, { account: '@owner', agent: 'Claude' });
+    assert.equal(briefs.rule_ids.length, 7, 'the brief fills seven rules');
+    for (const rule of analysis.reserve_rules) {
+      assert.equal(rule.direction, 'avoid');
+      assert.match(rule.copy_this, /^(keep the (video|Short) out of|make fewer videos about) /, `${rule.rule_id} template says to skip, never to copy`);
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
