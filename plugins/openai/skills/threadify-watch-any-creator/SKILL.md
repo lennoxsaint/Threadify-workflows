@@ -32,7 +32,11 @@ Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) 
         `node "<absolute path to scripts/scrapecreators-key.mjs>" save`
      Tell me when it says saved."
      Fill in the real absolute path. If the owner pastes the API key into the chat instead, pipe it to `node scripts/scrapecreators-key.mjs save` through stdin (a heredoc, never a command-line argument), never repeat it, and say once that it is now in this chat's history.
-   - **Check it (free).** Run `curl -s -w '\n%{http_code}' -H @"<header_file from status>" https://api.scrapecreators.com/v1/account/credit-balance | node scripts/scrapecreators-key.mjs balance`. Say "ScrapeCreators connected · <credits_remaining> credits left". On `rejected`, ask the owner to copy it again and run save again. Never guess a balance.
+   - **Check it (free)** through whichever route is in use:
+     - Saved header file: `curl -s -w '\n%{http_code}' -H @"<header_file from status>" https://api.scrapecreators.com/v1/account/credit-balance | node scripts/scrapecreators-key.mjs balance`.
+     - Environment variable: the same curl and pipe, with the shell filling the `x-api-key` header from SCRAPECREATORS_API_KEY instead of `-H @<file>`.
+     - Connected ScrapeCreators tool: use its balance call when it has one; otherwise say "balance unknown" and go on.
+     Say "ScrapeCreators connected · <credits_remaining> credits left". On `rejected`, ask the owner to copy the API key again (and run save again for the saved route). Never guess a balance.
    - **Every call sends the header file, never the value:** `curl -s -H @"<header_file>" "https://api.scrapecreators.com/..."`. With the environment variable, curl sends it as the `x-api-key` header from the shell, never echoed.
    - Run `node scripts/watch-any-creator.mjs estimate --long <videos> --shorts 0 --transcripts 0` with the channel's video count for the listing estimate. Show it with the balance: "Listing: <calls> calls, <credits> credits. You have <balance>. Reply yes to pull the list." Wait for "yes". Unknown count: the first "yes" covers the 1-credit channel lookup only, then show the listing estimate.
    - Page the long-form list and the Shorts list to the end. Save every raw page and the manifest as the layout says.
@@ -75,4 +79,4 @@ Reply "yes" to schedule it, or "no" to schedule nothing.
 
 ## When something is missing
 
-No cache and no ScrapeCreators access: give the step 2 setup message and wait; continue only after the free balance check says `ok`. Without a Threadify connection, stop after step 4 with the rules and say: "Connect Threadify at threadify.app to have the thread and the post written in your voice." Without generation access (HTTP 402 or no quota left), stop and say what ran out. Never write the posts yourself instead.
+No cache and no ScrapeCreators access: give the step 2 setup message and wait; continue only after the free balance check says `ok` (or, with a connected tool that has no balance call, after its first successful call). Without a Threadify connection, stop after step 4 with the rules and say: "Connect Threadify at threadify.app to have the thread and the post written in your voice." Without generation access (HTTP 402 or no quota left), stop and say what ran out. Never write the posts yourself instead.
