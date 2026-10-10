@@ -1,3 +1,7 @@
+# 0.31.2
+
+- Watch Any Creator: an avoid rule now carries its own copy template, so no rule tells you to copy what it says to skip; avoid-length and avoid-topic rules stay out of the ranking (they only restate a winning rule).
+
 # 0.31.1
 
 - Watch Any Creator: older rules are matched by meaning through a mapping file (new features and prior commands); a topic word in passing no longer matches an older rule.

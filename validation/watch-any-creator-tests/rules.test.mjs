@@ -10,8 +10,10 @@ import { writeCorpus } from './fixture.mjs';
 const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const cli = path.join(root, 'lib/watch-any-creator.mjs');
 
-function analysed() {
-  const fixture = writeCorpus();
+// The bracket penalty adds a real avoid rule, so the ranking has the seven
+// actionable rules a thread needs.
+function analysed(options = {}) {
+  const fixture = writeCorpus(options);
   return { ...fixture, analysis: analyseCorpus(loadCorpus(fixture.corpus)) };
 }
 
@@ -96,7 +98,7 @@ test('the analyse CLI writes rules.json and rules.md in a private folder', () =>
 });
 
 test('the Threadify briefs carry the evidence, never finished copy, and the thread gate checks the shape', () => {
-  const { root: dir, analysis } = analysed();
+  const { root: dir, analysis } = analysed({ plantBracketPenalty: true });
   try {
     const briefs = generationBriefs(analysis, { account: '@owner', agent: 'Claude' });
     assert.match(briefs.thread_input_text, /ten-post Threads thread in my voice for @owner/);
@@ -112,6 +114,50 @@ test('the Threadify briefs carry the evidence, never finished copy, and the thre
     assert.equal(bad.status, 'FAIL');
     assert.deepEqual(bad.reasons, ['post 4 has no "copy this:" line', 'post 10 is 501 characters (limit 500)']);
     assert.match(checkThread({ posts: good.slice(0, 9) }).reasons[0], /needs exactly 10 posts, got 9/);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('every ranked rule carries a template that matches its direction', () => {
+  const { root: dir, analysis } = analysed({ plantBracketPenalty: true });
+  try {
+    assert.ok(analysis.rules.some((rule) => rule.direction === 'avoid'), 'the planted avoid rule is ranked');
+    for (const rule of analysis.rules) {
+      assert.ok(rule.copy_this, `${rule.rule_id} has a template`);
+      if (rule.direction !== 'avoid') continue;
+      const feature = FEATURES.find((entry) => entry.id === rule.feature);
+      assert.ok(feature, `${rule.rule_id}: an avoid rule is a fixed feature, never a length bucket or a topic`);
+      assert.equal(rule.copy_this, feature.avoid_copy, `${rule.rule_id} uses the avoid template`);
+      assert.notEqual(rule.copy_this, feature.copy, `${rule.rule_id} never tells the viewer to copy what it says to skip`);
+    }
+    for (const feature of FEATURES) assert.ok(feature.avoid_copy, `${feature.id} has an avoid template`);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('an avoid length rule stays out of the ranking but is still compared', () => {
+  const { root: dir, analysis } = analysed();
+  try {
+    assert.ok(!analysis.rules.some((rule) => rule.axis === 'length' && rule.direction === 'avoid'), 'no avoid length rule is ranked');
+    assert.ok(analysis.comparisons.some((entry) => entry.axis === 'length'), 'length buckets are still compared for then-vs-now');
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a small archive with fewer than seven ranked rules still gets a brief from its avoid rules', () => {
+  const { root: dir, analysis } = analysed();
+  try {
+    assert.ok(analysis.rules.length < 7, 'the plain fixture ranks fewer than seven actionable rules');
+    assert.ok(analysis.reserve_rules.length > 0, 'avoid length or topic rules wait in reserve');
+    const briefs = generationBriefs(analysis, { account: '@owner', agent: 'Claude' });
+    assert.equal(briefs.rule_ids.length, 7, 'the brief fills seven rules');
+    for (const rule of analysis.reserve_rules) {
+      assert.equal(rule.direction, 'avoid');
+      assert.match(rule.copy_this, /^(keep the (video|Short) out of|make fewer videos about) /, `${rule.rule_id} template says to skip, never to copy`);
+    }
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
