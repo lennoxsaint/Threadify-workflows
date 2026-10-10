@@ -1,3 +1,7 @@
+# 0.31.3
+
+- Watch Any Creator: first-time ScrapeCreators setup in plain words - sign up, paste the key once into a hidden prompt (saved only on your computer, never printed), and see your live credit balance next to every estimate
+
 # 0.31.2
 
 - Watch Any Creator: an avoid rule now carries its own copy template, so no rule tells you to copy what it says to skip; avoid-length and avoid-topic rules stay out of the ranking (they only restate a winning rule).

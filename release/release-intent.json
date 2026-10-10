@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.31.2",
+  "release_version": "0.31.3",
   "skill_version": "0.12.1",
-  "plugin_version": "0.31.2",
+  "plugin_version": "0.31.3",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Watch Any Creator: an avoid rule now carries its own copy template, so no rule tells you to copy what it says to skip; avoid-length and avoid-topic rules stay out of the ranking (they only restate a winning rule)."
+  "summary": "Watch Any Creator: first-time ScrapeCreators setup in plain words - sign up, paste the key once into a hidden prompt (saved only on your computer, never printed), and see your live credit balance next to every estimate"
 }
