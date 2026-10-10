@@ -1,3 +1,7 @@
+# 0.31.1
+
+- Watch Any Creator: older rules are matched by meaning through a mapping file (new features and prior commands); a topic word in passing no longer matches an older rule.
+
 # 0.31.0
 
 - Add Watch Any Creator: read a YouTube creator's whole archive from a local cache or a ScrapeCreators pull (credit estimate and yes first), rank the rules their numbers support with evidence and example video ids, compare them with an older rules file (held, broke, new), and have Threadify write a ten-post thread draft and one post in your voice, scheduling that one post only after one exact yes

@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.31.0",
+  "release_version": "0.31.1",
   "skill_version": "0.12.1",
-  "plugin_version": "0.31.0",
+  "plugin_version": "0.31.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Add Watch Any Creator: read a YouTube creator's whole archive from a local cache or a ScrapeCreators pull (credit estimate and yes first), rank the rules their numbers support with evidence and example video ids, compare them with an older rules file (held, broke, new), and have Threadify write a ten-post thread draft and one post in your voice, scheduling that one post only after one exact yes"
+  "summary": "Watch Any Creator: older rules are matched by meaning through a mapping file (new features and prior commands); a topic word in passing no longer matches an older rule."
 }
