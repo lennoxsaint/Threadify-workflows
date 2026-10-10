@@ -51,7 +51,7 @@ An entry whose `channel.handle` names another channel is skipped and counted. `c
 
 ## ScrapeCreators calls (Oct 2026)
 
-Base `https://api.scrapecreators.com`, one credit per call, the key in the `x-api-key` header from the environment, never in a file.
+Base `https://api.scrapecreators.com`, one credit per call, the API key in the `x-api-key` header: from the SCRAPECREATORS_API_KEY environment variable, or from the header file `scripts/scrapecreators-key.mjs save` writes (`curl -H @<file>`). It never appears in a command line or output. The balance (`/v1/account/credit-balance`, field `creditCount`) is free.
 
 | Call | Path and query | Page size seen |
 | --- | --- | --- |

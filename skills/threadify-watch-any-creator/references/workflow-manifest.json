@@ -98,6 +98,7 @@
     "instructions": [
       "Never write or reword the thread, the post or the plug; Threadify generates them and the only permitted change is lowercasing proved by the casing guard.",
       "Show the ScrapeCreators call and credit estimate and wait for yes before any paid call; stop when charged credits pass the approved estimate.",
+      "Without ScrapeCreators access, walk the owner through signup and the hidden-prompt save in scripts/scrapecreators-key.mjs, then run the free balance check; never print, repeat or put the API key in a command line.",
       "Keep transcripts on the owner's computer; never paste or post them and quote at most twelve words.",
       "Rank a rule only with at least 20 videos on each side inside one format family; describe smaller groups.",
       "Without a Threadify connection, return the ranked rules and then-vs-now verdicts and say how to connect Threadify.",

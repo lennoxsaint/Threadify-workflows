@@ -17,16 +17,26 @@ Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) 
 - Missing numbers stay "unknown", never 0.
 - Before any paid ScrapeCreators call, show the call and credit estimate and wait for "yes". Stop and report when the credits charged pass the approved estimate.
 - Never schedule the thread. Never publish now. Schedule the one post only after the exact reply "yes" to the exact card.
-- Never print the ScrapeCreators API key, tokens or account ids.
+- Never print, repeat or echo the ScrapeCreators API key, tokens or account ids, and never put the API key in a command line. `scripts/scrapecreators-key.mjs save` is the only thing that writes it, to `~/.threadify-workflows/secrets/` with owner-only permissions.
 
 ## Steps
 
 1. **Confirm the job.** Call `get_connection_defaults`. Say the Threads account as "@handle · timezone". Confirm the creator's YouTube handle by name, and say the rights note: "Public titles, numbers and transcripts, read privately on this computer. Transcripts are never shared; quotes stay under twelve words." Note the plan for Auto Plug and `link_tracking`.
 
-2. **Load the archive.** Use the cache when there is one: a folder with `manifest.json`, `videos/`, `shorts/` and `transcripts/`, laid out as in [corpus-layout.md](references/corpus-layout.md). Without a cache, pull one into `~/.threadify-workflows/state/watch-any-creator/<handle>/corpus/` with the host's ScrapeCreators connector, or with curl sending the SCRAPECREATORS_API_KEY environment variable as the `x-api-key` header from the shell, never echoed and never written to a file:
-   - Run `node scripts/watch-any-creator.mjs estimate --long <videos> --shorts 0 --transcripts 0` with the channel's video count for the listing estimate. Show it: "Listing: <calls> calls, <credits> credits. Reply yes to pull the list." Wait for "yes". Unknown count: the first "yes" covers the 1-credit channel lookup only, then show the listing estimate.
+2. **Load the archive.** Use the cache when there is one: a folder with `manifest.json`, `videos/`, `shorts/` and `transcripts/`, laid out as in [corpus-layout.md](references/corpus-layout.md). Without a cache, pull one into `~/.threadify-workflows/state/watch-any-creator/<handle>/corpus/` with the owner's own ScrapeCreators account.
+   - **Set up ScrapeCreators once.** Skip this when the SCRAPECREATORS_API_KEY environment variable is set or the client has a connected ScrapeCreators tool. Otherwise run `node scripts/scrapecreators-key.mjs status`. When it says `missing`, send the owner one message in plain words:
+     "Watch Any Creator reads the archive through ScrapeCreators, a data service you pay for yourself. One-time setup, about two minutes:
+     1. Sign up at https://app.scrapecreators.com. New accounts get free credits.
+     2. Copy your API key from the ScrapeCreators dashboard.
+     3. Open Terminal (Mac) or PowerShell (Windows), paste this line, press Enter, then paste your API key when it asks. It stays hidden and is saved only on this computer:
+        `node "<absolute path to scripts/scrapecreators-key.mjs>" save`
+     Tell me when it says saved."
+     Fill in the real absolute path. If the owner pastes the API key into the chat instead, pipe it to `node scripts/scrapecreators-key.mjs save` through stdin (a heredoc, never a command-line argument), never repeat it, and say once that it is now in this chat's history.
+   - **Check it (free).** Run `curl -s -w '\n%{http_code}' -H @"<header_file from status>" https://api.scrapecreators.com/v1/account/credit-balance | node scripts/scrapecreators-key.mjs balance`. Say "ScrapeCreators connected · <credits_remaining> credits left". On `rejected`, ask the owner to copy it again and run save again. Never guess a balance.
+   - **Every call sends the header file, never the value:** `curl -s -H @"<header_file>" "https://api.scrapecreators.com/..."`. With the environment variable, curl sends it as the `x-api-key` header from the shell, never echoed.
+   - Run `node scripts/watch-any-creator.mjs estimate --long <videos> --shorts 0 --transcripts 0` with the channel's video count for the listing estimate. Show it with the balance: "Listing: <calls> calls, <credits> credits. You have <balance>. Reply yes to pull the list." Wait for "yes". Unknown count: the first "yes" covers the 1-credit channel lookup only, then show the listing estimate.
    - Page the long-form list and the Shorts list to the end. Save every raw page and the manifest as the layout says.
-   - Run `estimate --long <long-form count> --shorts 0 --transcripts <long-form count>` and show the transcript credits. Wait for a second "yes". Save one raw transcript per long-form video.
+   - Run `estimate --long <long-form count> --shorts 0 --transcripts <long-form count>` and show the transcript credits next to the balance. When the estimate is more than the balance, say exactly how many credits are missing and that credit packs are bought at https://app.scrapecreators.com (the owner buys; never buy for them), or offer to read only the newest transcripts the balance covers, saying so in the counts. Wait for a second "yes". Save one raw transcript per long-form video.
 
 3. **Watch it.** Run `node scripts/watch-any-creator.mjs analyse --corpus <corpus> --out <work folder>`. It reads every listing and transcript, dedupes with the AI Content Forensics engine, and ranks the rules in seconds. Say the counts exactly as returned: videos watched, long-form, Shorts, transcripts read, observed date. Show the top rules from `rules.md` as a countdown, #5 to #1, each with its evidence line and example video ids. Say the Shorts vs long-form line as description, never as a rule. Name any gap the output lists.
 
@@ -65,4 +75,4 @@ Reply "yes" to schedule it, or "no" to schedule nothing.
 
 ## When something is missing
 
-No cache and no ScrapeCreators access: stop at step 2 and say what to connect. Without a Threadify connection, stop after step 4 with the rules and say: "Connect Threadify at threadify.app to have the thread and the post written in your voice." Without generation access (HTTP 402 or no quota left), stop and say what ran out. Never write the posts yourself instead.
+No cache and no ScrapeCreators access: give the step 2 setup message and wait; continue only after the free balance check says `ok`. Without a Threadify connection, stop after step 4 with the rules and say: "Connect Threadify at threadify.app to have the thread and the post written in your voice." Without generation access (HTTP 402 or no quota left), stop and say what ran out. Never write the posts yourself instead.
