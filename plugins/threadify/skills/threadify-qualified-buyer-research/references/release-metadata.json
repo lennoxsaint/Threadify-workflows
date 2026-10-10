@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.31.1",
+  "release_version": "0.31.2",
   "skill_version": "0.12.1",
-  "plugin_version": "0.31.1",
+  "plugin_version": "0.31.2",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Watch Any Creator: older rules are matched by meaning through a mapping file (new features and prior commands); a topic word in passing no longer matches an older rule."
+  "summary": "Watch Any Creator: an avoid rule now carries its own copy template, so no rule tells you to copy what it says to skip; avoid-length and avoid-topic rules stay out of the ranking (they only restate a winning rule)."
 }

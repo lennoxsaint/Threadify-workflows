@@ -37,7 +37,7 @@ function publishDate(index) {
  * Shorts that say "stop" get four times. Openings that ask a question get
  * double. Everything else is noise.
  */
-export function buildPages() {
+export function buildPages({ plantBracketPenalty = false } = {}) {
   const next = random(45);
   const long = [];
   for (let index = 0; index < 120; index += 1) {
@@ -45,14 +45,18 @@ export function buildPages() {
     const hasNumber = index % 2 === 0;
     const midLength = index % 3 === 0;
     const askQuestion = index % 4 < 2;
-    const title = hasNumber
+    // Optional planted avoid effect: a bracket tag costs views. Blocks of five
+    // keep it independent of the topic, number, length and question effects.
+    const bracket = plantBracketPenalty && Math.floor(index / 5) % 2 === 0;
+    const title = `${hasNumber
       ? `${(index % 9) + 2} ${topic} lessons from building company ${tag(index)}`
-      : `the ${topic} lesson from building company ${tag(index)}`;
+      : `the ${topic} lesson from building company ${tag(index)}`}${bracket ? ' (full story)' : ''}`;
     const days = 30 + index * 3;
     let perDay = 100 * (0.8 + next() * 0.4);
     if (hasNumber) perDay *= 3;
     if (midLength) perDay *= 2;
     if (askQuestion) perDay *= 2;
+    if (bracket) perDay *= 0.4;
     const seconds = midLength ? 1500 + index : 400 + index;
     long.push({
       type: 'video',
@@ -111,10 +115,10 @@ export function transcriptFor(video) {
 }
 
 /** Write the corpus cache layout the skill documents into a temp directory. */
-export function writeCorpus({ withTranscripts = true, duplicateFirstPage = true } = {}) {
+export function writeCorpus({ withTranscripts = true, duplicateFirstPage = true, plantBracketPenalty = false } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'watch-any-creator-'));
   const corpus = path.join(root, 'corpus');
-  const { long, shorts } = buildPages();
+  const { long, shorts } = buildPages({ plantBracketPenalty });
   const strip = (entry) => Object.fromEntries(Object.entries(entry).filter(([name]) => !name.startsWith('_')));
   const page = (list, field, entries, number) => {
     fs.mkdirSync(path.join(corpus, list), { recursive: true });
