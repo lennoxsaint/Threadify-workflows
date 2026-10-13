@@ -401,11 +401,14 @@ export function checkPlug({ text, destination, proof, offer_names: offerNames, p
   if (links.some((link) => clean(link) !== destination)) reasons.push('link_not_offer_destination');
   else if (links.length !== 1) reasons.push('missing_offer_link');
   const withoutLinks = links.reduce((rest, link) => rest.replace(link, ' '), text);
-  const numbers = numbersIn(withoutLinks);
+  // A plug is a claim, so "one" counts as a number here ("save one hour"),
+  // unlike in posts where it is usually ordinary English.
+  const plugNumbers = (value) => [...numbersIn(value), ...Array.from(String(value).matchAll(/\bone\b/gi), () => '1')];
+  const numbers = plugNumbers(withoutLinks);
   if (numbers.length === 0) reasons.push('no_specific_number');
   const proven = new Set((Array.isArray(proof) ? proof : [])
     .filter((item) => typeof item?.quote === 'string' && typeof item?.from === 'string' && item.from.trim())
-    .flatMap((item) => numbersIn(item.quote)));
+    .flatMap((item) => plugNumbers(item.quote)));
   for (const number of numbers) if (!proven.has(number)) reasons.push(`number_without_proof:${number}`);
   const names = (Array.isArray(offerNames) ? offerNames : []).filter((name) => typeof name === 'string' && name.trim());
   if (!names.length) reasons.push('missing_offer_names');

@@ -228,3 +228,11 @@ test('review fixes 7: repeated template words count once each, in order', () => 
   assert.equal(followsTemplate('if you ignore every remaining part of the structure the post still reads fine and keeps going for a while longer here.', skeleton), false);
   assert.equal(followsTemplate('if you post daily, if you reply fast, if you track clicks, you grow.', skeleton), true);
 });
+
+test('review fixes 8: "one" in a plug is a number that needs proof', () => {
+  const base = { destination: DESTINATION, proof: PROOF, ...CONTEXT };
+  const oneHour = `save one hour a day jumping between boards with BoardKit. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
+  assert.deepEqual(checkPlug({ ...base, text: oneHour }).reasons, ['number_without_proof:1']);
+  const proven = [...PROOF, { number: '1', quote: 'save one hour a day', from: 'https://app.example.com/' }];
+  assert.deepEqual(checkPlug({ ...base, proof: proven, text: oneHour }).reasons, []);
+});
