@@ -119,7 +119,7 @@ test('agent-written copy needs the owner\'s own words asking for it, and the car
   agent.author_override = { said: 'you make these changes yourself, not threadify' };
   const ready = buildCard(agent);
   assert.equal(ready.status, 'ready');
-  assert.match(ready.card, /Writer: you asked your agent to write these posts, not Threadify \("you make these changes yourself, not threadify"\)/);
+  assert.match(ready.card, /Writer: you asked your agent to write the copy marked below instead of Threadify \("you make these changes yourself, not threadify"\)/);
   assert.equal(ready.card.match(/written by your agent at your request \(not Threadify\) · facts PASS/g).length, 7);
   assert.ok(!ready.card.includes('written by Threadify'));
   const approved = scheduleArgs({ plan: agent, card_sha256: ready.card_sha256, reply: 'yes' });
@@ -194,4 +194,19 @@ test('review fixes 4: the offer name matches as a whole word', () => {
   assert.deepEqual(checkPlug({ ...base, offer_names: ['app'] }).reasons, ['offer_not_named'], '"happens" does not name "app"');
   assert.deepEqual(checkPlug({ ...base, offer_names: ['AI'] }).reasons, ['offer_not_named']);
   assert.deepEqual(checkPlug({ ...base, text: plug.replace('whatever happens', 'in the app'), offer_names: ['app'] }).reasons, []);
+});
+
+test('review fixes 5: a skeleton needs fixed words, and a plug-only override reads accurately', () => {
+  const { map } = buildMap(reaMap());
+  const bare = TEMPLATES.map((template) => ({ ...template }));
+  bare[0].skeleton = '{entire post}';
+  assert.match(buildBriefs({ map, picks: PICKS, templates: bare }).problems.join(' '), /template 1: at least 3 fixed words outside the \{slots\}/);
+  const bareCard = plan();
+  bareCard.posts[0].template = { source: 'viral', skeleton: '{entire post}' };
+  assert.match(buildCard(bareCard).missing.join(' '), /post 1: its outlier template/);
+  const plugOnly = plan({ author_override: { said: 'write the plugs yourself' } });
+  plugOnly.posts[0].auto_plug.author = 'agent';
+  const card = buildCard(plugOnly).card;
+  assert.ok(!card.includes('write these posts'));
+  assert.equal(card.match(/written by Threadify \(model claude-opus-5-5\)/g).length, 7, 'post rows keep their true author');
 });

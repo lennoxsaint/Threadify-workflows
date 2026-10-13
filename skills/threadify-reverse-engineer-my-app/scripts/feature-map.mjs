@@ -287,6 +287,7 @@ export function buildBriefs({ map, picks, owner = {}, templates } = {}) {
     else templates.forEach((template, index) => {
       if (!TEMPLATE_SOURCES[template?.source]) problems.push(`template ${index + 1}: its source (viral, vault or greatest_hits)`);
       if (typeof template?.skeleton !== 'string' || !/\{[^{}]+\}/.test(template.skeleton)) problems.push(`template ${index + 1}: a skeleton with at least one {slot}, never the outlier's own words`);
+      else if (fixedWords(template.skeleton).length < MIN_TEMPLATE_FIXED_WORDS) problems.push(`template ${index + 1}: at least ${MIN_TEMPLATE_FIXED_WORDS} fixed words outside the {slots}, so the outlier's shape survives`);
     });
   }
   if (problems.length) return { status: 'blocked', problems };
@@ -325,12 +326,18 @@ export function buildBriefs({ map, picks, owner = {}, templates } = {}) {
 // Threadify again with the reasons.
 
 // A post follows its template when it keeps most of the skeleton's fixed words
-// (everything outside the {slots}), in any casing.
+// (everything outside the {slots}), in any casing. A skeleton needs at least
+// three fixed words, or it carries no outlier shape to follow.
 const TEMPLATE_KEEP_SHARE = 0.6;
+export const MIN_TEMPLATE_FIXED_WORDS = 3;
+const templateWords = (value) => String(value).toLowerCase().replace(/[\u2018\u2019]/g, "'").match(/[a-z][a-z']*/g) ?? [];
+export function fixedWords(skeleton) {
+  return templateWords(String(skeleton).replace(/\{[^{}]*\}/g, ' '));
+}
 export function followsTemplate(text, skeleton) {
-  const words = (value) => String(value).toLowerCase().replace(/[\u2018\u2019]/g, "'").match(/[a-z][a-z']*/g) ?? [];
-  const fixed = words(String(skeleton).replace(/\{[^{}]*\}/g, ' '));
-  if (fixed.length === 0) return true;
+  const words = templateWords;
+  const fixed = fixedWords(skeleton);
+  if (fixed.length < MIN_TEMPLATE_FIXED_WORDS) return false;
   const present = new Set(words(text));
   return fixed.filter((word) => present.has(word)).length / fixed.length >= TEMPLATE_KEEP_SHARE;
 }

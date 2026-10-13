@@ -18,7 +18,7 @@ import crypto from 'node:crypto';
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { checkText } from './casing-guard.mjs';
-import { TEMPLATE_SOURCES, redactText } from './feature-map.mjs';
+import { MIN_TEMPLATE_FIXED_WORDS, TEMPLATE_SOURCES, fixedWords, redactText } from './feature-map.mjs';
 
 export const POSTS = 7;
 // Same Auto Plug mechanism as Monetize My Week: a time trigger 50 minutes after each post.
@@ -76,7 +76,7 @@ export function buildCard(plan = {}) {
     if (post.author === 'agent' && !post.draft_id) problems.push(`${label}: the draft_id from save_draft holding this exact text`);
     else if (post.author === 'agent' && post.draft_readback_sha256 !== sha256(post.final ?? '')) problems.push(`${label}: get_draft readback of that draft matching this exact text (draft_readback_sha256)`);
     const template = post.template ?? {};
-    const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton);
+    const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton) && fixedWords(template.skeleton).length >= MIN_TEMPLATE_FIXED_WORDS;
     if (!templateOk && !plan.template_unavailable) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
     const slot = post.slot ?? {};
     if (!ISO_WITH_OFFSET.test(slot.iso ?? '')) problems.push(`${label}: the time as ISO with the timezone offset, for example 2026-10-14T18:30:00+08:00`);
@@ -117,7 +117,7 @@ export function buildCard(plan = {}) {
     `Reverse Engineer My App · ${account} · ${plan.timezone}`,
     `App: ${app.name} · mapped from ${SOURCES[app.source]} · ${app.features} features with evidence · observed ${String(app.observed_at ?? 'unknown').slice(0, 10)}`,
     'Ownership: you said yes, you own this app or have written permission to analyse it',
-    ...(byAgent ? [`Writer: you asked your agent to write these posts, not Threadify ("${said}")`] : []),
+    ...(byAgent ? [`Writer: you asked your agent to write the copy marked below instead of Threadify ("${said}")`] : []),
     '',
     rows.join('\n\n'),
     '',

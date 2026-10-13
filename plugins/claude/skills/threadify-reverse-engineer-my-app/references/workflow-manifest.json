@@ -101,8 +101,9 @@
     "mode": "feature-map-without-substitute-copy",
     "instructions": [
       "Stop before any scan unless the owner replies yes to owning the app or having written permission to analyse it.",
-      "Without REA, offer npx rea-agents setup from the official rea-agents package (github.com/morluto/rea) only after an explicit yes; otherwise use the owner's product page or a pasted feature list.",
-      "Never write or reword a post or plug; Threadify generates them and the only permitted change is lowercasing proved by the casing guard.",
+      "Without REA, offer npx rea-agents setup from the official rea-agents package (github.com/morluto/rea), install it only after an explicit yes and continue the scan in the same run; otherwise use the owner's product page or a pasted feature list.",
+      "Never write or reword a post or plug unless the owner asks in their own words; Threadify generates them by default and the only permitted change is lowercasing proved by the casing guard. With that request, record the owner's words, save each agent-written post with save_draft, read it back with get_draft, and the card says the agent wrote it.",
+      "Without the template tools, run briefs without templates and set template_unavailable with the reason.",
       "Reject and regenerate any post that states a feature or number outside the map, at most three calls per post.",
       "Without a Threadify connection, return the feature map and the seven briefs and say how to connect Threadify.",
       "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",

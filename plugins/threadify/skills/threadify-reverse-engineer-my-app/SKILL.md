@@ -59,7 +59,7 @@ Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) 
 Reverse Engineer My App · @handle · <timezone>
 App: <name> · mapped from <REA, logged out | your product page | your feature list> · <n> features with evidence · observed <date>
 Ownership: you said yes, you own this app or have written permission to analyse it
-Writer: you asked your agent to write these posts, not Threadify ("<owner's words>")   (only when they did)
+Writer: you asked your agent to write the copy marked below instead of Threadify ("<owner's words>")   (only when they did)
 
 1) <local time> · <ISO time with offset> · <angle> · <F#>: <feature>
 <written by Threadify (model <reported>) | written by your agent at your request (not Threadify)> · facts PASS · <unchanged | lowercased, casing guard PASS>
