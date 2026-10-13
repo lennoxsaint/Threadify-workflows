@@ -74,6 +74,7 @@ export function buildCard(plan = {}) {
     if (post.validated !== true) problems.push(`${label}: validate_post passing on the exact post`);
     if (!post.feature_id || !post.angle_label) problems.push(`${label}: its feature and angle from the brief`);
     if (post.author === 'agent' && !post.draft_id) problems.push(`${label}: the draft_id from save_draft holding this exact text`);
+    else if (post.author === 'agent' && post.draft_readback_sha256 !== sha256(post.final ?? '')) problems.push(`${label}: get_draft readback of that draft matching this exact text (draft_readback_sha256)`);
     const template = post.template ?? {};
     const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton);
     if (!templateOk && !plan.template_unavailable) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);

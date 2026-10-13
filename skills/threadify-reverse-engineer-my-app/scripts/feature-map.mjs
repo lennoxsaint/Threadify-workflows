@@ -324,11 +324,23 @@ export function buildBriefs({ map, picks, owner = {}, templates } = {}) {
 // link or anything that redaction would change rejects the post: ask
 // Threadify again with the reasons.
 
+// A post follows its template when it keeps most of the skeleton's fixed words
+// (everything outside the {slots}), in any casing.
+const TEMPLATE_KEEP_SHARE = 0.6;
+export function followsTemplate(text, skeleton) {
+  const words = (value) => String(value).toLowerCase().replace(/[\u2018\u2019]/g, "'").match(/[a-z][a-z']*/g) ?? [];
+  const fixed = words(String(skeleton).replace(/\{[^{}]*\}/g, ' '));
+  if (fixed.length === 0) return true;
+  const present = new Set(words(text));
+  return fixed.filter((word) => present.has(word)).length / fixed.length >= TEMPLATE_KEEP_SHARE;
+}
+
 export function checkPost({ map, brief, text, claims } = {}) {
   const reasons = [];
   if (typeof text !== 'string' || !text.trim()) return { status: 'FAIL', reasons: ['the post text Threadify returned'] };
   const length = text.trim().length;
   if (length < POST_CHARS.min || length > POST_CHARS.max) reasons.push(`length_out_of_range:${length}`);
+  if (typeof brief?.template?.skeleton === 'string' && !followsTemplate(text, brief.template.skeleton)) reasons.push('template_not_followed');
   const ids = new Set((map?.features ?? []).map((feature) => feature.id));
   const allowed = new Set(brief?.allowed_numbers ?? numbersIn(mapText(map ?? {})));
   for (const number of numbersIn(text)) if (!allowed.has(number)) reasons.push(`number_not_in_map:${number}`);

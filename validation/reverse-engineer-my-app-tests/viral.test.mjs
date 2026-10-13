@@ -2,7 +2,10 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { POST_CHARS, PLUG_CHARS, buildBriefs, buildMap, checkPlug, checkPost } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/feature-map.mjs';
 import { buildCard, buildReceipt, scheduleArgs } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/app-card.mjs';
+import { createHash } from 'node:crypto';
 import { PICKS, reaMap } from './fixture.mjs';
+
+const hash = (text) => createHash('sha256').update(text).digest('hex');
 
 const TEMPLATES = PICKS.map((_, index) => ({
   source: ['viral', 'vault', 'greatest_hits'][index % 3],
@@ -41,7 +44,7 @@ test('each brief carries its outlier template and the hook, story loop, length a
 
 test('a post outside 100-350 characters fails the check', () => {
   const { map } = buildMap(reaMap());
-  const brief = buildBriefs({ map, picks: PICKS, templates: TEMPLATES }).briefs[2];
+  const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
   const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
   assert.deepEqual(POST_CHARS, { min: 100, max: 350 });
   assert.deepEqual(checkPost({ map, brief, text: '12 shortcuts.', claims }).reasons, ['length_out_of_range:13']);
@@ -109,7 +112,7 @@ test('the card needs a template and a passing plug check on every row, and names
 
 test('agent-written copy needs the owner\'s own words asking for it, and the card says who wrote it', () => {
   const agent = plan();
-  for (const post of agent.posts) post.author = 'agent';
+  for (const post of agent.posts) { post.author = 'agent'; post.draft_readback_sha256 = hash(post.final); }
   assert.match(buildCard(agent).missing.join(' '), /the owner's own words asking the agent to write/);
   agent.author_override = { said: 'you make these changes yourself, not threadify' };
   const ready = buildCard(agent);
@@ -147,7 +150,7 @@ test('review fixes: a stated template gap, agent-written plugs and a required of
 
 test('review fixes 2: agent copy schedules by its saved draft, and a plug names the offer and stays on its post', () => {
   const agent = plan({ author_override: { said: 'write them yourself' } });
-  for (const post of agent.posts) post.author = 'agent';
+  for (const post of agent.posts) { post.author = 'agent'; post.draft_readback_sha256 = hash(post.final); }
   delete agent.posts[2].draft_id;
   assert.match(buildCard(agent).missing.join(' '), /post 3: the draft_id from save_draft holding this exact text/);
   agent.posts[2].draft_id = 'draft-3';
@@ -163,4 +166,21 @@ test('review fixes 2: agent copy schedules by its saved draft, and a plug names 
   assert.deepEqual(checkPlug({ text: unnamed, ...context }).reasons, ['offer_not_named']);
   const offTopic = `want better sleep tonight? BoardKit fixes evenings for good. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
   assert.deepEqual(checkPlug({ text: offTopic, ...context }).reasons, ['not_relevant_to_post']);
+});
+
+test('review fixes 3: the saved draft is read back byte for byte, and a post must keep its template\'s fixed words', async () => {
+  const { createHash } = await import('node:crypto');
+  const sha = (text) => createHash('sha256').update(text).digest('hex');
+  const agent = plan({ author_override: { said: 'write them yourself' } });
+  for (const post of agent.posts) { post.author = 'agent'; post.draft_readback_sha256 = sha(post.final); }
+  assert.equal(buildCard(agent).status, 'ready');
+  agent.posts[4].draft_readback_sha256 = sha('some other text');
+  assert.match(buildCard(agent).missing.join(' '), /post 5: get_draft readback of that draft matching this exact text/);
+  const { map } = buildMap(reaMap());
+  const brief = buildBriefs({ map, picks: PICKS, templates: TEMPLATES }).briefs[2];
+  const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
+  const follows = 'mouse lovers are like "clicking is fine!" no it\'s not. look at fast teams. you know who still clicks every board? people who never tried 12 shortcuts.';
+  assert.deepEqual(checkPost({ map, brief, text: follows, claims }).reasons, []);
+  const ignores = 'jumping between boards used to take forever, so now there are 12 shortcuts for it. your hands stay on the keys and you move faster than ever before.';
+  assert.deepEqual(checkPost({ map, brief, text: ignores, claims }).reasons, ['template_not_followed']);
 });
