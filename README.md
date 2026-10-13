@@ -164,3 +164,5 @@ Threadify Unslop scores your posts for slop, puts raw against polished on your o
 Publish Everywhere takes one video, says which of YouTube, Threads and X can take it, has Threadify write the post and the YouTube title, and schedules it only after one exact yes. See [the workflow](workflows/publish-everywhere/README.md).
 
 Watch Any Creator reads every video a YouTube creator has published, ranks the rules their numbers support, and has Threadify write them in your voice: a ten-post thread saved as a draft and one post scheduled only after one exact yes. See [the workflow](workflows/watch-any-creator/README.md).
+
+Reverse Engineer My App points REA at an app you own (or your product page), gives you a plain-English feature map with evidence, and has Threadify write a week of build-in-public posts with tracked Auto Plugs, scheduled only after one exact yes. See [the workflow](workflows/reverse-engineer-my-app/README.md).
