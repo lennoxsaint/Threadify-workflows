@@ -1,3 +1,7 @@
+# 0.32.0
+
+- Add Reverse Engineer My App: built something good and nobody knows it exists? REA maps what your app (or the page for anything you sell) really does, with proof, after a yes that you own it, and Threadify writes a week of posts in your voice, one real feature a day, each with a tracked Auto Plug, scheduled only after one exact yes
+
 # 0.31.3
 
 - Watch Any Creator: first-time ScrapeCreators setup in plain words - sign up, paste the key once into a hidden prompt (saved only on your computer, never printed), and see your live credit balance next to every estimate

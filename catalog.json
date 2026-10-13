@@ -1443,6 +1443,59 @@
       ]
     },
     {
+      "workflow_id": "reverse-engineer-my-app",
+      "version": "0.1.0",
+      "title": "Reverse Engineer My App",
+      "summary": "You built something good and nobody knows it exists. Turn your app, or the page for anything you sell, into a week of posts people actually read: REA maps what your product really does with proof for every feature, and Threadify writes one post per feature in your voice, each with a tracked link to your offer, scheduled after one yes.",
+      "kind": "skill",
+      "skill_name": "threadify-reverse-engineer-my-app",
+      "entrypoint": "skills/threadify-reverse-engineer-my-app/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-reverse-engineer-my-app/SKILL.md",
+      "source_manifest": "workflows/reverse-engineer-my-app/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/reverse-engineer-my-app/README.md"
+        ]
+      },
+      "triggers": [
+        "reverse engineer my app",
+        "x-ray my app",
+        "map my app's features",
+        "turn my app into a week of build-in-public posts",
+        "nobody knows my app exists",
+        "what should i post about my product",
+        "turn my product page into a week of posts"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the owner's yes to the ownership question, then the address of a web app they own, their product or offer page, or a pasted feature list, and a connected Threads account",
+            "schema_ref": "inline:reverse-engineer-my-app-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "a redacted plain-English feature map with evidence, seven post briefs, one approval card for seven posts with tracked Auto Plugs and a body-free schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "run-my-threads",
       "version": "0.3.0",
       "title": "Run My Threads",

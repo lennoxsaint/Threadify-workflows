@@ -1,0 +1,119 @@
+{
+  "workflow_id": "reverse-engineer-my-app",
+  "version": "0.1.0",
+  "title": "Reverse Engineer My App",
+  "summary": "You built something good and nobody knows it exists. Turn your app, or the page for anything you sell, into a week of posts people actually read: REA maps what your product really does with proof for every feature, and Threadify writes one post per feature in your voice, each with a tracked link to your offer, scheduled after one yes.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-reverse-engineer-my-app",
+    "source": "plugins/threadify/skills/threadify-reverse-engineer-my-app/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/reverse-engineer-my-app/README.md"
+    ]
+  },
+  "triggers": [
+    "reverse engineer my app",
+    "x-ray my app",
+    "map my app's features",
+    "turn my app into a week of build-in-public posts",
+    "nobody knows my app exists",
+    "what should i post about my product",
+    "turn my product page into a week of posts"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the owner's yes to the ownership question, then the address of a web app they own, their product or offer page, or a pasted feature list, and a connected Threads account",
+        "schema_ref": "inline:reverse-engineer-my-app-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "a redacted plain-English feature map with evidence, seven post briefs, one approval card for seven posts with tracked Auto Plugs and a body-free schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "generate_content",
+    "list_offers",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "get_draft"
+  ],
+  "free_capabilities": [
+    "ownership gate that stops on anything but yes before any scan",
+    "logged-out REA scan of an app the owner owns, in a throwaway browser profile, or a product page or pasted feature list instead",
+    "plain-English feature map with REA script, line and column locations or exact quotes, unknowns and limitations, and no server-side claims",
+    "redaction of key-like strings, ids and email addresses before anything is shown",
+    "seven post briefs with varied angles and a fact check that rejects any feature or number outside the map",
+    "casing guard and one approval card that stays blocked until every proof is in"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post and plug generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "scheduling uses the connected Threads account"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account handle and timezone",
+      "the app, its map source and feature count",
+      "the owner's yes to the ownership question",
+      "seven exact posts with their angle, feature, reported model, fact check and casing proof",
+      "seven exact Auto Plugs and their destination, or why there are none",
+      "seven local times on seven days with their timezone offset",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "feature-map-without-substitute-copy",
+    "instructions": [
+      "Stop before any scan unless the owner replies yes to owning the app or having written permission to analyse it.",
+      "Without REA, offer npx rea-agents setup from the official rea-agents package (github.com/morluto/rea) only after an explicit yes; otherwise use the owner's product page or a pasted feature list.",
+      "Never write or reword a post or plug; Threadify generates them and the only permitted change is lowercasing proved by the casing guard.",
+      "Reject and regenerate any post that states a feature or number outside the map, at most three calls per post.",
+      "Without a Threadify connection, return the feature map and the seven briefs and say how to connect Threadify.",
+      "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",
+      "On HTTP 402 or a quota error, stop with a plain message.",
+      "When a schedule result is unclear, read back with get_schedule_status before any retry."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "ownership answer",
+      "map source, feature count and map hash",
+      "redaction count",
+      "models requested and reported",
+      "fact check and casing guard results per post",
+      "approval card hash and reply",
+      "idempotency keys and scheduled posts",
+      "schedule readback with Auto Plug echo",
+      "fallback state"
+    ]
+  }
+}

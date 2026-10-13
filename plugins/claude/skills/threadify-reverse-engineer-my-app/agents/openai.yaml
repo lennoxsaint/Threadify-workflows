@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reverse Engineer My App"
+  short_description: "Map your own app's features, then a week of posts"
+  default_prompt: "Use $threadify-reverse-engineer-my-app to map the features of my own app with evidence and have Threadify write a week of build-in-public posts with tracked Auto Plugs for my approval."
