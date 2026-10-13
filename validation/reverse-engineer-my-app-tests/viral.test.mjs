@@ -187,3 +187,11 @@ test('review fixes 3: the saved draft is read back byte for byte, and a post mus
   const ignores = 'jumping between boards used to take forever, so now there are 12 shortcuts for it. your hands stay on the keys and you move faster than ever before.';
   assert.deepEqual(checkPost({ map, brief, text: ignores, claims }).reasons, ['template_not_followed']);
 });
+
+test('review fixes 4: the offer name matches as a whole word', () => {
+  const plug = `whatever happens, jumping between boards gets quicker with 12 shortcuts. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
+  const base = { text: plug, destination: DESTINATION, proof: PROOF, post_text: PLUG_POST };
+  assert.deepEqual(checkPlug({ ...base, offer_names: ['app'] }).reasons, ['offer_not_named'], '"happens" does not name "app"');
+  assert.deepEqual(checkPlug({ ...base, offer_names: ['AI'] }).reasons, ['offer_not_named']);
+  assert.deepEqual(checkPlug({ ...base, text: plug.replace('whatever happens', 'in the app'), offer_names: ['app'] }).reasons, []);
+});

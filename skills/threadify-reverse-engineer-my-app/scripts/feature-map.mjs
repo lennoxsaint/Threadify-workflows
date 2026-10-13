@@ -390,7 +390,10 @@ export function checkPlug({ text, destination, proof, offer_names: offerNames, p
   for (const number of numbers) if (!proven.has(number)) reasons.push(`number_without_proof:${number}`);
   const names = (Array.isArray(offerNames) ? offerNames : []).filter((name) => typeof name === 'string' && name.trim());
   if (!names.length) reasons.push('missing_offer_names');
-  else if (!names.some((name) => withoutLinks.toLowerCase().includes(name.trim().toLowerCase()))) reasons.push('offer_not_named');
+  else if (!names.some((name) => {
+    const escaped = name.trim().toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+    return new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'u').test(withoutLinks.toLowerCase());
+  })) reasons.push('offer_not_named');
   if (typeof postText !== 'string' || !postText.trim()) reasons.push('missing_post_text');
   else {
     const skip = new Set(names.flatMap((name) => name.toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []));
