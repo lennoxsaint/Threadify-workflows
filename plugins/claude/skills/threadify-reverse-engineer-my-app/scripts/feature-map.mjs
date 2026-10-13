@@ -384,7 +384,12 @@ export function checkPlug({ text, destination, proof, offer_names: offerNames, p
   if (typeof text !== 'string' || !text.trim()) return { status: 'FAIL', reasons: ['the Auto Plug text'] };
   const length = text.trim().length;
   if (length < PLUG_CHARS.min || length > PLUG_CHARS.max) reasons.push(`length_out_of_range:${length}`);
-  const links = text.match(/https?:\/\/\S+|www\.\S+/gi) ?? [];
+  // Every form Threads can make clickable: full URLs, www., any scheme such as
+  // mailto: or tel:, and bare domains such as example.com.
+  const urls = text.match(/https?:\/\/\S+|www\.\S+|\b(?:mailto|tel|sms|ftp|javascript|data):\S+/gi) ?? [];
+  const rest = urls.reduce((remaining, link) => remaining.replace(link, ' '), text);
+  const bare = rest.match(/\b[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}(?:\/\S*)?/gi) ?? [];
+  const links = [...urls, ...bare];
   const clean = (link) => link.replace(/[).,!?]+$/, '');
   if (links.some((link) => clean(link) !== destination)) reasons.push('link_not_offer_destination');
   else if (links.length !== 1) reasons.push('missing_offer_link');

@@ -210,3 +210,15 @@ test('review fixes 5: a skeleton needs fixed words, and a plug-only override rea
   assert.ok(!card.includes('write these posts'));
   assert.equal(card.match(/written by Threadify \(model claude-opus-5-5\)/g).length, 7, 'post rows keep their true author');
 });
+
+test('review fixes 6: every clickable link form counts, and the template gap needs a stated reason', () => {
+  const base = { destination: DESTINATION, proof: PROOF, ...CONTEXT };
+  assert.deepEqual(checkPlug({ ...base, text: `${GOOD_PLUG} or evil.example` }).reasons, ['link_not_offer_destination']);
+  assert.deepEqual(checkPlug({ ...base, text: `${GOOD_PLUG} mailto:me@x.io` }).reasons.slice(0, 1), ['link_not_offer_destination']);
+  assert.deepEqual(checkPlug({ ...base, text: GOOD_PLUG }).reasons, [], 'the destination alone still passes');
+  for (const value of [true, {}, '   ']) {
+    const gap = plan({ template_unavailable: value });
+    for (const post of gap.posts) delete post.template;
+    assert.match(buildCard(gap).missing.join(' '), /"template_unavailable" as a sentence/);
+  }
+});

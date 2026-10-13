@@ -60,6 +60,8 @@ export function buildCard(plan = {}) {
   if (!app.name || !SOURCES[app.source] || !Number.isInteger(app.features)) problems.push('the app name, its source and the feature count from the map');
   const posts = Array.isArray(plan.posts) ? plan.posts : [];
   if (posts.length !== POSTS) problems.push(`exactly ${POSTS} posts (got ${posts.length})`);
+  const templateGap = typeof plan.template_unavailable === 'string' && plan.template_unavailable.trim() ? plan.template_unavailable.trim() : null;
+  if (plan.template_unavailable !== undefined && !templateGap) problems.push('"template_unavailable" as a sentence saying why the template tools are not available');
   const byAgent = posts.some((post) => post?.author === 'agent' || (!plan.auto_plug_unavailable && post?.auto_plug?.author === 'agent'));
   const said = typeof plan.author_override?.said === 'string' && plan.author_override.said.trim() ? redactText(plan.author_override.said.trim()).text : null;
   if (byAgent && !said) problems.push('the owner\'s own words asking the agent to write instead of Threadify (author_override.said); without them Threadify writes every post');
@@ -77,7 +79,7 @@ export function buildCard(plan = {}) {
     else if (post.author === 'agent' && post.draft_readback_sha256 !== sha256(post.final ?? '')) problems.push(`${label}: get_draft readback of that draft matching this exact text (draft_readback_sha256)`);
     const template = post.template ?? {};
     const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton) && fixedWords(template.skeleton).length >= MIN_TEMPLATE_FIXED_WORDS;
-    if (!templateOk && !plan.template_unavailable) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
+    if (!templateOk && !templateGap) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
     const slot = post.slot ?? {};
     if (!ISO_WITH_OFFSET.test(slot.iso ?? '')) problems.push(`${label}: the time as ISO with the timezone offset, for example 2026-10-14T18:30:00+08:00`);
     else {
@@ -106,7 +108,7 @@ export function buildCard(plan = {}) {
       post.author === 'agent'
         ? `written by your agent at your request (not Threadify) · facts PASS · ${copy.line ?? 'unproven'}`
         : `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
-      templateOk ? `template from ${TEMPLATE_SOURCES[template.source]}: ${template.skeleton}` : `template: none (${plan.template_unavailable})`,
+      templateOk ? `template from ${TEMPLATE_SOURCES[template.source]}: ${template.skeleton}` : `template: none (${templateGap})`,
       post.final ?? '',
       ...plugLines,
     ].join('\n'));
