@@ -61,7 +61,13 @@
     "get_schedule_status"
   ],
   "optional_mcp_tools": [
-    "get_draft"
+    "get_draft",
+    "save_draft",
+    "list_viral_items",
+    "get_viral_item",
+    "list_vault_items",
+    "get_vault_item",
+    "greatest_hits"
   ],
   "free_capabilities": [
     "ownership gate that stops on anything but yes before any scan",
@@ -69,7 +75,9 @@
     "plain-English feature map with REA script, line and column locations or exact quotes, unknowns and limitations, and no server-side claims",
     "redaction of key-like strings, ids and email addresses before anything is shown",
     "seven post briefs with varied angles and a fact check that rejects any feature or number outside the map",
-    "casing guard and one approval card that stays blocked until every proof is in"
+    "casing guard and one approval card that stays blocked until every proof is in",
+    "an outlier template with {slots} for every post, a 100-350 character length check and a story-loop hook and \"so what\" rule in every brief",
+    "an Auto Plug check: 100-250 characters, links only the offer, and every number it states is proven by a quote"
   ],
   "paid_capability_stubs": [
     "Threadify post and plug generation counts toward the plan's AI generations",
@@ -83,8 +91,8 @@
       "account handle and timezone",
       "the app, its map source and feature count",
       "the owner's yes to the ownership question",
-      "seven exact posts with their angle, feature, reported model, fact check and casing proof",
-      "seven exact Auto Plugs and their destination, or why there are none",
+      "seven exact posts with their angle, feature, writer (Threadify and its reported model, or the agent at the owner's stated request), outlier template, fact check and casing proof",
+      "seven exact Auto Plugs with their plug check and destination, or why there are none",
       "seven local times on seven days with their timezone offset",
       "action"
     ]
@@ -93,8 +101,9 @@
     "mode": "feature-map-without-substitute-copy",
     "instructions": [
       "Stop before any scan unless the owner replies yes to owning the app or having written permission to analyse it.",
-      "Without REA, offer npx rea-agents setup from the official rea-agents package (github.com/morluto/rea) only after an explicit yes; otherwise use the owner's product page or a pasted feature list.",
-      "Never write or reword a post or plug; Threadify generates them and the only permitted change is lowercasing proved by the casing guard.",
+      "Without REA, offer npx rea-agents setup from the official rea-agents package (github.com/morluto/rea), install it only after an explicit yes and continue the scan in the same run; otherwise use the owner's product page or a pasted feature list.",
+      "Never write or reword a post or plug unless the owner asks in their own words; Threadify generates them by default and the only permitted change is lowercasing proved by the casing guard. With that request, record the owner's words, save each agent-written post with save_draft, read it back with get_draft, and the card says the agent wrote it.",
+      "Without the template tools, run briefs without templates and set template_unavailable with the reason.",
       "Reject and regenerate any post that states a feature or number outside the map, at most three calls per post.",
       "Without a Threadify connection, return the feature map and the seven briefs and say how to connect Threadify.",
       "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",

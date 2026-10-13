@@ -18,6 +18,7 @@ import crypto from 'node:crypto';
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { checkText } from './casing-guard.mjs';
+import { MIN_TEMPLATE_FIXED_WORDS, TEMPLATE_SOURCES, fixedWords, redactText } from './feature-map.mjs';
 
 export const POSTS = 7;
 // Same Auto Plug mechanism as Monetize My Week: a time trigger 50 minutes after each post.
@@ -59,6 +60,11 @@ export function buildCard(plan = {}) {
   if (!app.name || !SOURCES[app.source] || !Number.isInteger(app.features)) problems.push('the app name, its source and the feature count from the map');
   const posts = Array.isArray(plan.posts) ? plan.posts : [];
   if (posts.length !== POSTS) problems.push(`exactly ${POSTS} posts (got ${posts.length})`);
+  const templateGap = typeof plan.template_unavailable === 'string' && plan.template_unavailable.trim() ? plan.template_unavailable.trim() : null;
+  if (plan.template_unavailable !== undefined && !templateGap) problems.push('"template_unavailable" as a sentence saying why the template tools are not available');
+  const byAgent = posts.some((post) => post?.author === 'agent' || (!plan.auto_plug_unavailable && post?.auto_plug?.author === 'agent'));
+  const said = typeof plan.author_override?.said === 'string' && plan.author_override.said.trim() ? redactText(plan.author_override.said.trim()).text : null;
+  if (byAgent && !said) problems.push('the owner\'s own words asking the agent to write instead of Threadify (author_override.said); without them Threadify writes every post');
   const now = Date.parse(plan.now ?? new Date().toISOString());
   const days = new Set();
   const rows = [];
@@ -69,6 +75,11 @@ export function buildCard(plan = {}) {
     if (post.fact_check !== 'PASS') problems.push(`${label}: the fact check (check-post PASS)`);
     if (post.validated !== true) problems.push(`${label}: validate_post passing on the exact post`);
     if (!post.feature_id || !post.angle_label) problems.push(`${label}: its feature and angle from the brief`);
+    if (post.author === 'agent' && !post.draft_id) problems.push(`${label}: the draft_id from save_draft holding this exact text`);
+    else if (post.author === 'agent' && post.draft_readback_sha256 !== sha256(post.final ?? '')) problems.push(`${label}: get_draft readback of that draft matching this exact text (draft_readback_sha256)`);
+    const template = post.template ?? {};
+    const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton) && fixedWords(template.skeleton).length >= MIN_TEMPLATE_FIXED_WORDS;
+    if (!templateOk && !templateGap) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
     const slot = post.slot ?? {};
     if (!ISO_WITH_OFFSET.test(slot.iso ?? '')) problems.push(`${label}: the time as ISO with the timezone offset, for example 2026-10-14T18:30:00+08:00`);
     else {
@@ -85,15 +96,19 @@ export function buildCard(plan = {}) {
         if (plugCopy.problem) problems.push(plugCopy.problem);
         if (!plug.destination) problems.push(`${label}: the offer destination for the Auto Plug`);
         if (plug.validated !== true) problems.push(`${label}: validate_post passing on the exact Auto Plug`);
+        if (plug.plug_check !== 'PASS') problems.push(`${label}: the Auto Plug check (check-plug PASS)`);
         plugLines = [
-          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plugCopy.line ?? 'unproven'}): ${plug.final ?? ''}`,
+          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plug.author === 'agent' ? 'written by your agent at your request (not Threadify)' : plugCopy.line ?? 'unproven'}, plug check PASS): ${plug.final ?? ''}`,
           `Plug link: ${plug.destination ?? 'unknown'} (Threadify tracks it)`,
         ];
       }
     }
     rows.push([
       `${index + 1}) ${slot.local ?? 'unknown'} · ${slot.iso ?? 'unknown'} · ${post.angle_label ?? 'unknown'} · ${post.feature_id ?? '?'}: ${post.feature_name ?? 'unknown'}`,
-      `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
+      post.author === 'agent'
+        ? `written by your agent at your request (not Threadify) · facts PASS · ${copy.line ?? 'unproven'}`
+        : `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
+      templateOk ? `template from ${TEMPLATE_SOURCES[template.source]}: ${template.skeleton}` : `template: none (${templateGap})`,
       post.final ?? '',
       ...plugLines,
     ].join('\n'));
@@ -104,6 +119,7 @@ export function buildCard(plan = {}) {
     `Reverse Engineer My App · ${account} · ${plan.timezone}`,
     `App: ${app.name} · mapped from ${SOURCES[app.source]} · ${app.features} features with evidence · observed ${String(app.observed_at ?? 'unknown').slice(0, 10)}`,
     'Ownership: you said yes, you own this app or have written permission to analyse it',
+    ...(byAgent ? [`Writer: you asked your agent to write the copy marked below instead of Threadify ("${said}")`] : []),
     '',
     rows.join('\n\n'),
     '',
@@ -129,7 +145,8 @@ export function scheduleArgs({ plan, card_sha256: cardHash, reply } = {}) {
     return {
       // Threadify schedules a draft's stored text when given a draft_id, so
       // lowercased copy goes as exact text without the draft_id.
-      ...(unchanged && post.draft_id ? { draft_id: post.draft_id, content_type: 'short-form' } : { text: post.final }),
+      // Agent-written copy was saved with save_draft holding the exact final text, so it always goes by draft_id.
+      ...((unchanged || post.author === 'agent') && post.draft_id ? { draft_id: post.draft_id, content_type: 'short-form' } : { text: post.final }),
       scheduled_at: post.slot.iso,
       idempotency_key: `reverse-engineer-my-app-${sha256(JSON.stringify([handle(plan.account), post.slot.iso, post.final, plug?.final ?? null])).slice(0, 32)}`,
       ...(plug ? { auto_plug: { content: plug.final, trigger: 'time', delay_minutes: PLUG_DELAY_MINUTES } } : {}),
@@ -179,6 +196,8 @@ export function buildReceipt({ plan, card_sha256: cardHash, reply, scheduled_pos
         angle: post.angle ?? null,
         model: post.model ?? 'not reported',
         draft_id: post.draft_id ?? null,
+        author: post.author === 'agent' ? 'agent_at_owner_request' : 'threadify',
+        template_source: post.template?.source ?? null,
         final_sha256: post.final ? sha256(post.final) : null,
         casing: post.original === post.final ? 'unchanged' : 'lowercased_guard_pass',
         fact_check: post.fact_check ?? null,
@@ -188,12 +207,13 @@ export function buildReceipt({ plan, card_sha256: cardHash, reply, scheduled_pos
         readback: readback?.rows?.[index]?.status ?? 'not read',
       };
     }),
+    author_override: plan?.author_override?.said ? 'owner_requested' : 'none',
     card_sha256: cardHash ?? null,
     approval: approved ? 'yes' : 'not approved',
     action: approved ? 'schedule_seven_posts' : 'none',
     readback: readback?.status ?? 'not read',
     tool_path: 'threadify_mcp',
-    fallback_state: plan?.auto_plug_unavailable ? 'auto_plug_unavailable' : 'not_used',
+    fallback_state: [plan?.auto_plug_unavailable && 'auto_plug_unavailable', plan?.template_unavailable && 'template_unavailable'].filter(Boolean).join('+') || 'not_used',
     raw_bodies_retained_in_receipt: false,
   };
 }

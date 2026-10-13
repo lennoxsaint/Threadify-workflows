@@ -3,6 +3,9 @@ import test from 'node:test';
 import { anglesFor, buildBriefs, buildMap, checkPost } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/feature-map.mjs';
 import { PICKS, reaMap } from './fixture.mjs';
 
+// Posts are 100-350 characters; this filler adds length and no claim, number or recency.
+const pad = (text) => `${text} you jump from board to board without the mouse, and your hands stay on the keys while you work.`;
+
 test('a REA map needs 5-10 features, each with a location or an exact quote', () => {
   const built = buildMap(reaMap());
   assert.equal(built.status, 'ok');
@@ -58,18 +61,18 @@ test('seven briefs, one per day, each a different angle, and the user win only w
 test('the fact check rejects a feature or a number that is not in the map', () => {
   const { map } = buildMap(reaMap());
   const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
-  const good = checkPost({ map, brief, text: 'jumping between boards used to take forever. now 12 shortcuts do it.', claims: [{ text: '12 shortcuts', feature_id: 'F3' }] });
+  const good = checkPost({ map, brief, text: pad('jumping between boards used to take forever. now 12 shortcuts do it.'), claims: [{ text: '12 shortcuts', feature_id: 'F3' }] });
   assert.deepEqual(good.reasons, []);
   assert.equal(good.status, 'PASS');
-  const newNumber = checkPost({ map, brief, text: '40 shortcuts and 3,000 happy users.', claims: [{ text: 'shortcuts', feature_id: 'F3' }] });
+  const newNumber = checkPost({ map, brief, text: pad('40 shortcuts and 3,000 happy users.'), claims: [{ text: 'shortcuts', feature_id: 'F3' }] });
   assert.deepEqual(newNumber.reasons, ['number_not_in_map:40', 'number_not_in_map:3000']);
-  const newFeature = checkPost({ map, brief, text: '12 shortcuts and an ai assistant.', claims: [{ text: '12 shortcuts', feature_id: 'F3' }, { text: 'ai assistant', feature_id: null }] });
+  const newFeature = checkPost({ map, brief, text: pad('12 shortcuts and an ai assistant.'), claims: [{ text: '12 shortcuts', feature_id: 'F3' }, { text: 'ai assistant', feature_id: null }] });
   assert.deepEqual(newFeature.reasons, ['feature_not_in_map:ai assistant']);
-  const offTopic = checkPost({ map, brief, text: 'dark mode is here.', claims: [{ text: 'dark mode', feature_id: 'F2' }] });
+  const offTopic = checkPost({ map, brief, text: pad('dark mode is here.'), claims: [{ text: 'dark mode', feature_id: 'F2' }] });
   assert.deepEqual(offTopic.reasons, ['missing_brief_feature:F3']);
-  const style = checkPost({ map, brief, text: 'shortcuts — synced on our server. see https://app.example.com', claims: [{ text: 'shortcuts', feature_id: 'F3' }] });
+  const style = checkPost({ map, brief, text: pad('shortcuts — synced on our server. see https://app.example.com'), claims: [{ text: 'shortcuts', feature_id: 'F3' }] });
   assert.deepEqual(style.reasons, ['server_claim', 'em_dash', 'link_in_post']);
-  assert.equal(checkPost({ map, brief, text: 'shortcuts.', claims: [] }).status, 'FAIL', 'claims are required');
+  assert.equal(checkPost({ map, brief, text: pad('shortcuts.'), claims: [] }).status, 'FAIL', 'claims are required');
 });
 
 test('the fact check rejects newness the map cannot prove and spelled-out numbers', () => {
@@ -77,12 +80,12 @@ test('the fact check rejects newness the map cannot prove and spelled-out number
   const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
   assert.match(brief.input_text, /do not call any feature new, recent or "now" available/);
   const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
-  assert.deepEqual(checkPost({ map, brief, text: 'new in the app: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new']);
-  assert.deepEqual(checkPost({ map, brief, text: 'the app has 12 shortcuts now.', claims }).reasons, ['recency_not_in_map:has 12 shortcuts now']);
-  assert.deepEqual(checkPost({ map, brief, text: 'we just shipped 12 shortcuts.', claims }).reasons, ['recency_not_in_map:just shipped']);
-  assert.deepEqual(checkPost({ map, brief, text: 'with three boards open, 12 shortcuts do it.', claims }).reasons, ['number_not_in_map:3']);
-  assert.deepEqual(checkPost({ map, brief, text: 'twelve shortcuts. one tap each.', claims }).reasons, [], 'a spelled number from the map is fine; "one" is ordinary English');
-  assert.deepEqual(checkPost({ map, brief, text: 'right now 12 shortcuts do it.', claims }).reasons, [], '"now" as plain timing is not a recency claim');
+  assert.deepEqual(checkPost({ map, brief, text: pad('new in the app: 12 shortcuts.'), claims }).reasons, ['recency_not_in_map:new']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('the app has 12 shortcuts now.'), claims }).reasons, ['recency_not_in_map:has 12 shortcuts now']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('we just shipped 12 shortcuts.'), claims }).reasons, ['recency_not_in_map:just shipped']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('with three boards open, 12 shortcuts do it.'), claims }).reasons, ['number_not_in_map:3']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('twelve shortcuts. one tap each.'), claims }).reasons, [], 'a spelled number from the map is fine; "one" is ordinary English');
+  assert.deepEqual(checkPost({ map, brief, text: pad('right now 12 shortcuts do it.'), claims }).reasons, [], '"now" as plain timing is not a recency claim');
 });
 
 test('plain recency words fail, audience "new" passes, and compound number words are one quantity', async () => {
@@ -90,9 +93,9 @@ test('plain recency words fail, audience "new" passes, and compound number words
   const { map } = buildMap(reaMap());
   const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
   const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
-  assert.deepEqual(checkPost({ map, brief, text: 'meet our new 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new']);
-  assert.deepEqual(checkPost({ map, brief, text: 'we recently added 12 shortcuts.', claims }).reasons, ['recency_not_in_map:recently']);
-  assert.deepEqual(checkPost({ map, brief, text: 'the latest: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:latest']);
-  assert.deepEqual(checkPost({ map, brief, text: 'new users get 12 shortcuts.', claims }).reasons, [], 'new users is an audience, not a date');
+  assert.deepEqual(checkPost({ map, brief, text: pad('meet our new 12 shortcuts.'), claims }).reasons, ['recency_not_in_map:new']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('we recently added 12 shortcuts.'), claims }).reasons, ['recency_not_in_map:recently']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('the latest: 12 shortcuts.'), claims }).reasons, ['recency_not_in_map:latest']);
+  assert.deepEqual(checkPost({ map, brief, text: pad('new users get 12 shortcuts.'), claims }).reasons, [], 'new users is an audience, not a date');
   assert.deepEqual(numbersIn('twenty five templates, two hundred users, three-thousand views'), ['25', '200', '3000']);
 });

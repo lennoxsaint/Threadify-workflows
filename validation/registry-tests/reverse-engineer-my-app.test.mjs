@@ -23,7 +23,7 @@ test('Reverse Engineer My App registers released Threadify tools only and never 
     'schedule_post',
     'get_schedule_status',
   ]);
-  assert.deepEqual(workflow.optional_mcp_tools, ['get_draft']);
+  assert.deepEqual(workflow.optional_mcp_tools, ['get_draft', 'save_draft', 'list_viral_items', 'get_viral_item', 'list_vault_items', 'get_vault_item', 'greatest_hits']);
   for (const tool of ['publish_now', 'edit_draft', 'cancel_schedule', 'reschedule_post', 'send_reply']) {
     assert.ok(![...workflow.required_mcp_tools, ...workflow.optional_mcp_tools].includes(tool), `must not use ${tool}`);
     if (tool !== 'edit_draft') assert.ok(!skill.includes(tool), `skill must not mention ${tool}`);
@@ -52,6 +52,14 @@ test('the skill states its gates in plain words', () => {
   assert.match(skill, /`contentType: "short-form"`/);
   assert.match(skill, /`get_schedule_status`/);
   assert.match(skill, /Say "scheduled", never "posted"/);
+  assert.match(skill, /Every post is built on a proven outlier template/);
+  assert.match(skill, /A post is 100-350 characters and ends on one bold, clear, polarizing "so what" line/);
+  assert.match(skill, /Every Auto Plug is 100-250 characters and passes the RSS test/);
+  assert.match(skill, /`check-plug`/);
+  assert.match(skill, /`greatest_hits` with `metric: "views"`/);
+  assert.match(skill, /continue in this same run without a restart/);
+  assert.match(skill, /`npx -y rea-agents analyze-web-bundle http:\/\/127\.0\.0\.1:9333 <targetId> --observation-ms 5000 --format json`/);
+  assert.match(skill, /written by your agent at your request \(not Threadify\)/);
   const steps = skill.match(/^\d+\. \*\*/gm) ?? [];
   assert.equal(steps.length, 9, 'nine numbered visible steps');
   const userFacing = skill.replace(/```[\s\S]*?```/g, '');
