@@ -60,7 +60,7 @@ export function buildCard(plan = {}) {
   if (!app.name || !SOURCES[app.source] || !Number.isInteger(app.features)) problems.push('the app name, its source and the feature count from the map');
   const posts = Array.isArray(plan.posts) ? plan.posts : [];
   if (posts.length !== POSTS) problems.push(`exactly ${POSTS} posts (got ${posts.length})`);
-  const byAgent = posts.some((post) => post?.author === 'agent');
+  const byAgent = posts.some((post) => post?.author === 'agent' || (!plan.auto_plug_unavailable && post?.auto_plug?.author === 'agent'));
   const said = typeof plan.author_override?.said === 'string' && plan.author_override.said.trim() ? redactText(plan.author_override.said.trim()).text : null;
   if (byAgent && !said) problems.push('the owner\'s own words asking the agent to write instead of Threadify (author_override.said); without them Threadify writes every post');
   const now = Date.parse(plan.now ?? new Date().toISOString());
@@ -75,7 +75,7 @@ export function buildCard(plan = {}) {
     if (!post.feature_id || !post.angle_label) problems.push(`${label}: its feature and angle from the brief`);
     const template = post.template ?? {};
     const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton);
-    if (!templateOk) problems.push(`${label}: its outlier template (source and skeleton with {slots})`);
+    if (!templateOk && !plan.template_unavailable) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
     const slot = post.slot ?? {};
     if (!ISO_WITH_OFFSET.test(slot.iso ?? '')) problems.push(`${label}: the time as ISO with the timezone offset, for example 2026-10-14T18:30:00+08:00`);
     else {
@@ -94,7 +94,7 @@ export function buildCard(plan = {}) {
         if (plug.validated !== true) problems.push(`${label}: validate_post passing on the exact Auto Plug`);
         if (plug.plug_check !== 'PASS') problems.push(`${label}: the Auto Plug check (check-plug PASS)`);
         plugLines = [
-          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plugCopy.line ?? 'unproven'}, plug check PASS): ${plug.final ?? ''}`,
+          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plug.author === 'agent' ? 'written by your agent at your request (not Threadify)' : plugCopy.line ?? 'unproven'}, plug check PASS): ${plug.final ?? ''}`,
           `Plug link: ${plug.destination ?? 'unknown'} (Threadify tracks it)`,
         ];
       }
@@ -104,7 +104,7 @@ export function buildCard(plan = {}) {
       post.author === 'agent'
         ? `written by your agent at your request (not Threadify) · facts PASS · ${copy.line ?? 'unproven'}`
         : `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
-      `template from ${TEMPLATE_SOURCES[template.source] ?? 'unknown'}: ${template.skeleton ?? ''}`,
+      templateOk ? `template from ${TEMPLATE_SOURCES[template.source]}: ${template.skeleton}` : `template: none (${plan.template_unavailable})`,
       post.final ?? '',
       ...plugLines,
     ].join('\n'));

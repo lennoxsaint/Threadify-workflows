@@ -350,8 +350,8 @@ export function checkPost({ map, brief, text, claims } = {}) {
 
 // ---------------------------------------------------------------------------
 // The Auto Plug check. A plug passes the RSS test (relevant, specific,
-// seamless) only when it is 100-250 characters, links nothing but the offer's
-// destination and names at least one specific number - and every number it
+// seamless) only when it is 100-250 characters, carries the offer's
+// destination as its one link and names at least one specific number - and every number it
 // states appears in a quote from a real source (the offer's saved facts or the
 // offer page), so "join 2,013+ creators" is proven, never invented.
 
@@ -363,6 +363,7 @@ export function checkPlug({ text, destination, proof } = {}) {
   const links = text.match(/https?:\/\/\S+|www\.\S+/gi) ?? [];
   const clean = (link) => link.replace(/[).,!?]+$/, '');
   if (links.some((link) => clean(link) !== destination)) reasons.push('link_not_offer_destination');
+  else if (links.length !== 1) reasons.push('missing_offer_link');
   const withoutLinks = links.reduce((rest, link) => rest.replace(link, ' '), text);
   const numbers = numbersIn(withoutLinks);
   if (numbers.length === 0) reasons.push('no_specific_number');

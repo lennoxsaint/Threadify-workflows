@@ -54,7 +54,7 @@ test('an Auto Plug is 100-250 characters, links only the offer and every number 
   const good = checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: PROOF });
   assert.deepEqual(good.reasons, []);
   assert.equal(good.status, 'PASS');
-  assert.deepEqual(checkPlug({ text: 'try BoardKit free', destination: DESTINATION, proof: PROOF }).reasons, ['length_out_of_range:17', 'no_specific_number']);
+  assert.deepEqual(checkPlug({ text: 'try BoardKit free', destination: DESTINATION, proof: PROOF }).reasons, ['length_out_of_range:17', 'missing_offer_link', 'no_specific_number']);
   const vague = `jumping between boards all day? BoardKit makes it quick, simple and painless for your whole team. try it free today: ${DESTINATION}`;
   assert.deepEqual(checkPlug({ text: vague, destination: DESTINATION, proof: PROOF }).reasons, ['no_specific_number']);
   const invented = GOOD_PLUG.replace('2,013+', '5,000+');
@@ -125,4 +125,22 @@ test('agent-written copy needs the owner\'s own words asking for it, and the car
   assert.equal(receipt.posts[0].template_source, 'viral');
   assert.equal(receipt.author_override, 'owner_requested');
   assert.ok(!JSON.stringify(receipt).includes('you make these changes yourself'), 'body-free');
+});
+
+test('review fixes: a stated template gap, agent-written plugs and a required offer link', () => {
+  const gap = plan({ template_unavailable: "Threadify's template tools are not available on this connection" });
+  for (const post of gap.posts) delete post.template;
+  const ready = buildCard(gap);
+  assert.equal(ready.status, 'ready', 'the template-free fallback can still reach approval with its reason');
+  assert.equal(ready.card.match(/template: none \(Threadify's template tools are not available on this connection\)/g).length, 7);
+  const plugOnly = plan();
+  plugOnly.posts[0].auto_plug.author = 'agent';
+  assert.match(buildCard(plugOnly).missing.join(' '), /the owner's own words asking the agent to write/);
+  plugOnly.author_override = { said: 'write the plugs yourself' };
+  const plugCard = buildCard(plugOnly);
+  assert.equal(plugCard.status, 'ready');
+  assert.match(plugCard.card, /Auto Plug, 50 min after \(written by your agent at your request \(not Threadify\), plug check PASS\)/);
+  const noLink = GOOD_PLUG.replace(`: ${DESTINATION}`, ' today.');
+  assert.deepEqual(checkPlug({ text: noLink, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
+  assert.deepEqual(checkPlug({ text: `${GOOD_PLUG} ${DESTINATION}`, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
 });
