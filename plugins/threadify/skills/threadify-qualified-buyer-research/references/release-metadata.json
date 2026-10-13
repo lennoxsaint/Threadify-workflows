@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.32.1",
+  "release_version": "0.33.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.32.1",
+  "plugin_version": "0.33.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Reverse Engineer My App: posts can no longer call a feature new, just shipped or available now (the map has no dates), and spelled-out numbers like three tabs are fact-checked like digits"
+  "summary": "Reverse Engineer My App: every post is built on an outlier template from the Viral library, Vault or greatest hits, opens a story loop, runs 100-350 characters and ends on a bold \"so what\"; every Auto Plug is 100-250 characters, passes the RSS test and states only numbers proven by a quote (new check-plug); an owner can ask the agent to write the copy and the card says so; REA installs and scans in the same run, no restart"
 }

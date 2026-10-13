@@ -14,6 +14,9 @@ const ORIGINALS = [
   'Which Card Do You Search For Most?',
 ];
 const lower = (text) => lowercasePosts({ posts: [{ original: text, keep: KEEP }] }).posts[0].final;
+const PLUG_ORIGINAL = 'Jumping Between Boards All Day? BoardKit Puts 12 Shortcuts Under Your Fingers. Join 2,013+ Creators - 7-Day Free Trial: https://app.example.com/start';
+const PLUG_FINAL = lower(PLUG_ORIGINAL);
+const TEMPLATE = { source: 'viral', skeleton: '{group} are like "{cliche}!" no it\'s not. {proof}' };
 
 function plan(overrides = {}) {
   return {
@@ -35,7 +38,8 @@ function plan(overrides = {}) {
       fact_check: 'PASS',
       validated: true,
       slot: { iso: `2026-10-${String(14 + index).padStart(2, '0')}T18:30:00+08:00`, local: `day ${index + 1}, 6:30 pm` },
-      auto_plug: { original: 'Try BoardKit Free', final: 'try BoardKit free', keep: KEEP, destination: 'https://app.example.com/start', validated: true },
+      template: TEMPLATE,
+      auto_plug: { original: PLUG_ORIGINAL, final: PLUG_FINAL, keep: KEEP, destination: 'https://app.example.com/start', validated: true, plug_check: 'PASS' },
     })),
     ...overrides,
   };
@@ -80,7 +84,7 @@ test('the ready card shows all seven exact posts, plugs, times and the action', 
   assert.equal(lines[1], 'App: BoardKit · mapped from REA, logged out · 8 features with evidence · observed 2026-10-13');
   assert.match(ready.card, /Ownership: you said yes, you own this app or have written permission to analyse it/);
   for (const original of ORIGINALS) assert.ok(ready.card.includes(lower(original)));
-  assert.equal(ready.card.match(/Auto Plug, 50 min after \(lowercased, casing guard PASS\): try BoardKit free/g).length, 7);
+  assert.equal(ready.card.split(`Auto Plug, 50 min after (lowercased, casing guard PASS, plug check PASS): ${PLUG_FINAL}`).length - 1, 7);
   assert.equal(ready.card.match(/written by Threadify \(model claude-opus-5-5\) · facts PASS · lowercased, casing guard PASS/g).length, 7);
   assert.match(ready.card, /7\) day 7, 6:30 pm · 2026-10-20T18:30:00\+08:00 · angle 7 · F7: feature 7/);
   assert.match(ready.card, /Reply "yes" to schedule all 7, or "no" to schedule nothing\.$/);
@@ -107,7 +111,7 @@ test('nothing is scheduled without the exact "yes" to the unchanged card', () =>
   for (const [index, call] of approved.schedule_post.entries()) {
     assert.equal(call.text, current.posts[index].final, 'lowercased copy goes as exact text');
     assert.equal(call.draft_id, undefined);
-    assert.deepEqual(call.auto_plug, { content: 'try BoardKit free', trigger: 'time', delay_minutes: PLUG_DELAY_MINUTES });
+    assert.deepEqual(call.auto_plug, { content: PLUG_FINAL, trigger: 'time', delay_minutes: PLUG_DELAY_MINUTES });
     assert.equal(call.platforms, undefined);
     assert.equal(call.auto_repost, undefined);
     assert.match(call.idempotency_key, /^reverse-engineer-my-app-[0-9a-f]{32}$/);
@@ -118,7 +122,7 @@ test('nothing is scheduled without the exact "yes" to the unchanged card', () =>
 
 test('every row is read back, and the receipt holds no post text', () => {
   const current = plan();
-  const statuses = current.posts.map((post) => ({ text: post.final, scheduled_at: post.slot.iso, auto_plug: { content: 'try BoardKit free', delay_minutes: 50 }, status: 'scheduled' }));
+  const statuses = current.posts.map((post) => ({ text: post.final, scheduled_at: post.slot.iso, auto_plug: { content: PLUG_FINAL, delay_minutes: 50 }, status: 'scheduled' }));
   const match = checkReadback({ plan: current, statuses });
   assert.equal(match.status, 'MATCH');
   const bad = statuses.map((status) => ({ ...status }));
@@ -142,7 +146,7 @@ test('every row is read back, and the receipt holds no post text', () => {
   assert.equal(receipt.raw_bodies_retained_in_receipt, false);
   const serialized = JSON.stringify(receipt);
   for (const original of ORIGINALS) assert.ok(!serialized.includes(lower(original)), 'body-free');
-  assert.ok(!serialized.includes('try BoardKit free'));
+  assert.ok(!serialized.includes(PLUG_FINAL));
   const refused = buildReceipt({ plan: current, reply: 'no' });
   assert.equal(refused.action, 'none');
   assert.ok(refused.posts.every((post) => post.scheduled_at === null));

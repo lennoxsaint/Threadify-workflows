@@ -18,6 +18,7 @@ import crypto from 'node:crypto';
 import { realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { checkText } from './casing-guard.mjs';
+import { TEMPLATE_SOURCES, redactText } from './feature-map.mjs';
 
 export const POSTS = 7;
 // Same Auto Plug mechanism as Monetize My Week: a time trigger 50 minutes after each post.
@@ -59,6 +60,9 @@ export function buildCard(plan = {}) {
   if (!app.name || !SOURCES[app.source] || !Number.isInteger(app.features)) problems.push('the app name, its source and the feature count from the map');
   const posts = Array.isArray(plan.posts) ? plan.posts : [];
   if (posts.length !== POSTS) problems.push(`exactly ${POSTS} posts (got ${posts.length})`);
+  const byAgent = posts.some((post) => post?.author === 'agent');
+  const said = typeof plan.author_override?.said === 'string' && plan.author_override.said.trim() ? redactText(plan.author_override.said.trim()).text : null;
+  if (byAgent && !said) problems.push('the owner\'s own words asking the agent to write instead of Threadify (author_override.said); without them Threadify writes every post');
   const now = Date.parse(plan.now ?? new Date().toISOString());
   const days = new Set();
   const rows = [];
@@ -69,6 +73,9 @@ export function buildCard(plan = {}) {
     if (post.fact_check !== 'PASS') problems.push(`${label}: the fact check (check-post PASS)`);
     if (post.validated !== true) problems.push(`${label}: validate_post passing on the exact post`);
     if (!post.feature_id || !post.angle_label) problems.push(`${label}: its feature and angle from the brief`);
+    const template = post.template ?? {};
+    const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton);
+    if (!templateOk) problems.push(`${label}: its outlier template (source and skeleton with {slots})`);
     const slot = post.slot ?? {};
     if (!ISO_WITH_OFFSET.test(slot.iso ?? '')) problems.push(`${label}: the time as ISO with the timezone offset, for example 2026-10-14T18:30:00+08:00`);
     else {
@@ -85,15 +92,19 @@ export function buildCard(plan = {}) {
         if (plugCopy.problem) problems.push(plugCopy.problem);
         if (!plug.destination) problems.push(`${label}: the offer destination for the Auto Plug`);
         if (plug.validated !== true) problems.push(`${label}: validate_post passing on the exact Auto Plug`);
+        if (plug.plug_check !== 'PASS') problems.push(`${label}: the Auto Plug check (check-plug PASS)`);
         plugLines = [
-          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plugCopy.line ?? 'unproven'}): ${plug.final ?? ''}`,
+          `Auto Plug, ${PLUG_DELAY_MINUTES} min after (${plugCopy.line ?? 'unproven'}, plug check PASS): ${plug.final ?? ''}`,
           `Plug link: ${plug.destination ?? 'unknown'} (Threadify tracks it)`,
         ];
       }
     }
     rows.push([
       `${index + 1}) ${slot.local ?? 'unknown'} · ${slot.iso ?? 'unknown'} · ${post.angle_label ?? 'unknown'} · ${post.feature_id ?? '?'}: ${post.feature_name ?? 'unknown'}`,
-      `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
+      post.author === 'agent'
+        ? `written by your agent at your request (not Threadify) · facts PASS · ${copy.line ?? 'unproven'}`
+        : `written by Threadify (model ${post.model ?? 'not reported'}) · facts PASS · ${copy.line ?? 'unproven'}`,
+      `template from ${TEMPLATE_SOURCES[template.source] ?? 'unknown'}: ${template.skeleton ?? ''}`,
       post.final ?? '',
       ...plugLines,
     ].join('\n'));
@@ -104,6 +115,7 @@ export function buildCard(plan = {}) {
     `Reverse Engineer My App · ${account} · ${plan.timezone}`,
     `App: ${app.name} · mapped from ${SOURCES[app.source]} · ${app.features} features with evidence · observed ${String(app.observed_at ?? 'unknown').slice(0, 10)}`,
     'Ownership: you said yes, you own this app or have written permission to analyse it',
+    ...(byAgent ? [`Writer: you asked your agent to write these posts, not Threadify ("${said}")`] : []),
     '',
     rows.join('\n\n'),
     '',
@@ -179,6 +191,8 @@ export function buildReceipt({ plan, card_sha256: cardHash, reply, scheduled_pos
         angle: post.angle ?? null,
         model: post.model ?? 'not reported',
         draft_id: post.draft_id ?? null,
+        author: post.author === 'agent' ? 'agent_at_owner_request' : 'threadify',
+        template_source: post.template?.source ?? null,
         final_sha256: post.final ? sha256(post.final) : null,
         casing: post.original === post.final ? 'unchanged' : 'lowercased_guard_pass',
         fact_check: post.fact_check ?? null,
@@ -188,6 +202,7 @@ export function buildReceipt({ plan, card_sha256: cardHash, reply, scheduled_pos
         readback: readback?.rows?.[index]?.status ?? 'not read',
       };
     }),
+    author_override: plan?.author_override?.said ? 'owner_requested' : 'none',
     card_sha256: cardHash ?? null,
     approval: approved ? 'yes' : 'not approved',
     action: approved ? 'schedule_seven_posts' : 'none',

@@ -1,3 +1,7 @@
+# 0.33.0
+
+- Reverse Engineer My App: every post is built on an outlier template from the Viral library, Vault or greatest hits, opens a story loop, runs 100-350 characters and ends on a bold "so what"; every Auto Plug is 100-250 characters, passes the RSS test and states only numbers proven by a quote (new check-plug); an owner can ask the agent to write the copy and the card says so; REA installs and scans in the same run, no restart
+
 # 0.32.1
 
 - Reverse Engineer My App: posts can no longer call a feature new, just shipped or available now (the map has no dates), and spelled-out numbers like three tabs are fact-checked like digits

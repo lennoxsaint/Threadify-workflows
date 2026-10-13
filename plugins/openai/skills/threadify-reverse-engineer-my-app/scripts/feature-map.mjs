@@ -5,8 +5,9 @@
 //   node feature-map.mjs gate        < {"answer": "yes"}
 //   node feature-map.mjs redact      < {"text": "..."}            (or any JSON value)
 //   node feature-map.mjs map         < feature-map.json
-//   node feature-map.mjs briefs      < {"map": {...}, "picks": ["F1", ...], "owner": {"why"?, "user_win"?}}
+//   node feature-map.mjs briefs      < {"map": {...}, "picks": ["F1", ...], "owner": {"why"?, "user_win"?}, "templates"?: [{"source", "skeleton"}, ... seven]}
 //   node feature-map.mjs check-post  < {"map": {...}, "brief": {...}, "text": "...", "claims": [{"text", "feature_id"}]}
+//   node feature-map.mjs check-plug  < {"text": "...", "destination": "https://...", "proof": [{"number", "quote", "from"}]}
 //
 // The map holds what the app shows or what its browser code does, each with
 // evidence: a REA location (script, line, column) or an exact quote from the
@@ -20,6 +21,12 @@ import { pathToFileURL } from 'node:url';
 export const MIN_FEATURES = 5;
 export const MAX_FEATURES = 10;
 export const POSTS = 7;
+// Every post is 100-350 characters; every Auto Plug is 100-250.
+export const POST_CHARS = { min: 100, max: 350 };
+export const PLUG_CHARS = { min: 100, max: 250 };
+// Where an outlier template may come from: Threadify's Viral library, the
+// owner's Vault, or the owner's own greatest hits.
+export const TEMPLATE_SOURCES = { viral: "Threadify's Viral library", vault: 'your Vault', greatest_hits: 'your greatest hits' };
 const MAX_QUOTE_WORDS = 30;
 const sha256 = (text) => crypto.createHash('sha256').update(text).digest('hex');
 
@@ -267,7 +274,7 @@ function recencyClaims(text, map) {
     .filter((phrase) => !(phrase.includes(' ') && allowed.includes(phrase.toLowerCase())));
 }
 
-export function buildBriefs({ map, picks, owner = {} } = {}) {
+export function buildBriefs({ map, picks, owner = {}, templates } = {}) {
   const problems = [];
   const features = new Map((map?.features ?? []).map((feature) => [feature.id, feature]));
   if (!features.size) problems.push('a feature map that passed the map step');
@@ -275,6 +282,13 @@ export function buildBriefs({ map, picks, owner = {} } = {}) {
   for (const id of picks ?? []) if (!features.has(id)) problems.push(`pick ${id} is not in the map`);
   if (Array.isArray(picks) && features.size >= POSTS && new Set(picks).size !== POSTS) problems.push(`${POSTS} different features (the map has ${features.size})`);
   if (Array.isArray(picks) && features.size < POSTS && new Set(picks).size !== features.size) problems.push('use every feature in the map at least once');
+  if (templates !== undefined) {
+    if (!Array.isArray(templates) || templates.length !== POSTS) problems.push(`exactly ${POSTS} templates, one per day, from Threadify's Viral library, your Vault or your greatest hits`);
+    else templates.forEach((template, index) => {
+      if (!TEMPLATE_SOURCES[template?.source]) problems.push(`template ${index + 1}: its source (viral, vault or greatest_hits)`);
+      if (typeof template?.skeleton !== 'string' || !/\{[^{}]+\}/.test(template.skeleton)) problems.push(`template ${index + 1}: a skeleton with at least one {slot}, never the outlier's own words`);
+    });
+  }
   if (problems.length) return { status: 'blocked', problems };
   const angles = anglesFor(owner);
   const { value: safeOwner } = redactValue({ why: owner.why ?? null, user_win: owner.user_win ?? null });
@@ -284,17 +298,21 @@ export function buildBriefs({ map, picks, owner = {} } = {}) {
     const extra = angle.id === 'why_i_built_it' && safeOwner.why ? ` the owner's reason, in their words: "${safeOwner.why}".`
       : angle.id === 'user_win' ? ` the user win, in the owner's words: "${safeOwner.user_win}".` : '';
     const evidence = feature.evidence?.kind === 'quote' ? ` the app's own words: "${feature.evidence.quote}".` : '';
+    const template = templates?.[index] ? { source: templates[index].source, skeleton: redactText(templates[index].skeleton).text } : null;
     const inputText = [
       `write one short build-in-public Threads post in my voice about my app ${map.app.name}.`,
       `angle: ${angle.label}. ${angle.ask}${extra}`,
       `feature: ${feature.name}. what it does: ${feature.what}.${evidence}`,
+      ...(template ? [`template, from a proven outlier post: ${template.skeleton}`, 'keep its shape and fill every {slot} with the facts above. never copy the outlier\'s own words.'] : []),
+      'the first sentence opens a story loop, and the first 3-5 words grab the reader by the throat.',
+      `${POST_CHARS.min}-${POST_CHARS.max} characters. end on one bold, clear, polarizing "so what" line.`,
       'use only these facts. do not mention any other feature, number, customer, result or price.',
       'do not say anything happens on a server or in a database.',
       'do not call any feature new, recent or "now" available: the map has no dates. write no numbers, in digits or words, that are not given above.',
       'no links, no offer, no hashtags. no em dashes. all lowercase except names.',
     ].join('\n');
     const allowed = [...new Set([...numbersIn(mapText(map)), ...numbersIn(safeOwner.why), ...numbersIn(safeOwner.user_win)])];
-    return { day: index + 1, feature_id: id, feature_name: feature.name, angle: angle.id, angle_label: angle.label, input_text: inputText, allowed_numbers: allowed };
+    return { day: index + 1, feature_id: id, feature_name: feature.name, angle: angle.id, angle_label: angle.label, input_text: inputText, allowed_numbers: allowed, ...(template ? { template } : {}) };
   });
   return { status: 'ok', briefs };
 }
@@ -309,6 +327,8 @@ export function buildBriefs({ map, picks, owner = {} } = {}) {
 export function checkPost({ map, brief, text, claims } = {}) {
   const reasons = [];
   if (typeof text !== 'string' || !text.trim()) return { status: 'FAIL', reasons: ['the post text Threadify returned'] };
+  const length = text.trim().length;
+  if (length < POST_CHARS.min || length > POST_CHARS.max) reasons.push(`length_out_of_range:${length}`);
   const ids = new Set((map?.features ?? []).map((feature) => feature.id));
   const allowed = new Set(brief?.allowed_numbers ?? numbersIn(mapText(map ?? {})));
   for (const number of numbersIn(text)) if (!allowed.has(number)) reasons.push(`number_not_in_map:${number}`);
@@ -325,6 +345,33 @@ export function checkPost({ map, brief, text, claims } = {}) {
   if (EM_DASH.test(text)) reasons.push('em_dash');
   if (/https?:\/\/|www\./i.test(text)) reasons.push('link_in_post');
   if (redactText(text).count > 0) reasons.push('sensitive_text');
+  return { status: reasons.length ? 'FAIL' : 'PASS', reasons, text_sha256: sha256(text) };
+}
+
+// ---------------------------------------------------------------------------
+// The Auto Plug check. A plug passes the RSS test (relevant, specific,
+// seamless) only when it is 100-250 characters, links nothing but the offer's
+// destination and names at least one specific number - and every number it
+// states appears in a quote from a real source (the offer's saved facts or the
+// offer page), so "join 2,013+ creators" is proven, never invented.
+
+export function checkPlug({ text, destination, proof } = {}) {
+  const reasons = [];
+  if (typeof text !== 'string' || !text.trim()) return { status: 'FAIL', reasons: ['the Auto Plug text'] };
+  const length = text.trim().length;
+  if (length < PLUG_CHARS.min || length > PLUG_CHARS.max) reasons.push(`length_out_of_range:${length}`);
+  const links = text.match(/https?:\/\/\S+|www\.\S+/gi) ?? [];
+  const clean = (link) => link.replace(/[).,!?]+$/, '');
+  if (links.some((link) => clean(link) !== destination)) reasons.push('link_not_offer_destination');
+  const withoutLinks = links.reduce((rest, link) => rest.replace(link, ' '), text);
+  const numbers = numbersIn(withoutLinks);
+  if (numbers.length === 0) reasons.push('no_specific_number');
+  const proven = new Set((Array.isArray(proof) ? proof : [])
+    .filter((item) => typeof item?.quote === 'string' && typeof item?.from === 'string' && item.from.trim())
+    .flatMap((item) => numbersIn(item.quote)));
+  for (const number of numbers) if (!proven.has(number)) reasons.push(`number_without_proof:${number}`);
+  if (EM_DASH.test(text)) reasons.push('em_dash');
+  if (redactText(withoutLinks).count > 0) reasons.push('sensitive_text');
   return { status: reasons.length ? 'FAIL' : 'PASS', reasons, text_sha256: sha256(text) };
 }
 
@@ -351,7 +398,8 @@ async function main(argv) {
   if (command === 'map') return buildMap(input);
   if (command === 'briefs') return buildBriefs(input);
   if (command === 'check-post') return checkPost(input);
-  throw new Error('usage: feature-map.mjs gate|redact|map|briefs|check-post < input.json');
+  if (command === 'check-plug') return checkPlug(input);
+  throw new Error('usage: feature-map.mjs gate|redact|map|briefs|check-post|check-plug < input.json');
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href) {
