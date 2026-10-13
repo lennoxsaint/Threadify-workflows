@@ -73,6 +73,7 @@ export function buildCard(plan = {}) {
     if (post.fact_check !== 'PASS') problems.push(`${label}: the fact check (check-post PASS)`);
     if (post.validated !== true) problems.push(`${label}: validate_post passing on the exact post`);
     if (!post.feature_id || !post.angle_label) problems.push(`${label}: its feature and angle from the brief`);
+    if (post.author === 'agent' && !post.draft_id) problems.push(`${label}: the draft_id from save_draft holding this exact text`);
     const template = post.template ?? {};
     const templateOk = Boolean(TEMPLATE_SOURCES[template.source]) && typeof template.skeleton === 'string' && /\{[^{}]+\}/.test(template.skeleton);
     if (!templateOk && !plan.template_unavailable) problems.push(`${label}: its outlier template (source and skeleton with {slots}), or "template_unavailable" with the reason`);
@@ -141,7 +142,8 @@ export function scheduleArgs({ plan, card_sha256: cardHash, reply } = {}) {
     return {
       // Threadify schedules a draft's stored text when given a draft_id, so
       // lowercased copy goes as exact text without the draft_id.
-      ...(unchanged && post.draft_id ? { draft_id: post.draft_id, content_type: 'short-form' } : { text: post.final }),
+      // Agent-written copy was saved with save_draft holding the exact final text, so it always goes by draft_id.
+      ...((unchanged || post.author === 'agent') && post.draft_id ? { draft_id: post.draft_id, content_type: 'short-form' } : { text: post.final }),
       scheduled_at: post.slot.iso,
       idempotency_key: `reverse-engineer-my-app-${sha256(JSON.stringify([handle(plan.account), post.slot.iso, post.final, plug?.final ?? null])).slice(0, 32)}`,
       ...(plug ? { auto_plug: { content: plug.final, trigger: 'time', delay_minutes: PLUG_DELAY_MINUTES } } : {}),

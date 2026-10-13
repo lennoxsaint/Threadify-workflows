@@ -7,7 +7,7 @@
 //   node feature-map.mjs map         < feature-map.json
 //   node feature-map.mjs briefs      < {"map": {...}, "picks": ["F1", ...], "owner": {"why"?, "user_win"?}, "templates"?: [{"source", "skeleton"}, ... seven]}
 //   node feature-map.mjs check-post  < {"map": {...}, "brief": {...}, "text": "...", "claims": [{"text", "feature_id"}]}
-//   node feature-map.mjs check-plug  < {"text": "...", "destination": "https://...", "proof": [{"number", "quote", "from"}]}
+//   node feature-map.mjs check-plug  < {"text": "...", "destination": "https://...", "proof": [{"number", "quote", "from"}], "offer_names": ["..."], "post_text": "..."}
 //
 // The map holds what the app shows or what its browser code does, each with
 // evidence: a REA location (script, line, column) or an exact quote from the
@@ -353,9 +353,14 @@ export function checkPost({ map, brief, text, claims } = {}) {
 // seamless) only when it is 100-250 characters, carries the offer's
 // destination as its one link and names at least one specific number - and every number it
 // states appears in a quote from a real source (the offer's saved facts or the
-// offer page), so "join 2,013+ creators" is proven, never invented.
+// offer page), so "join 2,013+ creators" is proven, never invented. With
+// offer_names it must name the offer; with post_text it must share at least one
+// real word with the post it follows, so it stays on that post's conversation.
 
-export function checkPlug({ text, destination, proof } = {}) {
+const STOP_WORDS = new Set(['about', 'after', 'again', 'their', 'there', 'these', 'those', 'which', 'while', 'would', 'could', 'should', 'every', 'where', 'other', 'still', 'never', 'always', 'today', 'right', 'really', 'thing', 'things', 'trial', 'start', 'creators', 'people']);
+const contentWords = (text, skip) => new Set((String(text ?? '').toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []).filter((word) => !STOP_WORDS.has(word) && !skip.has(word)));
+
+export function checkPlug({ text, destination, proof, offer_names: offerNames, post_text: postText } = {}) {
   const reasons = [];
   if (typeof text !== 'string' || !text.trim()) return { status: 'FAIL', reasons: ['the Auto Plug text'] };
   const length = text.trim().length;
@@ -371,6 +376,13 @@ export function checkPlug({ text, destination, proof } = {}) {
     .filter((item) => typeof item?.quote === 'string' && typeof item?.from === 'string' && item.from.trim())
     .flatMap((item) => numbersIn(item.quote)));
   for (const number of numbers) if (!proven.has(number)) reasons.push(`number_without_proof:${number}`);
+  const names = (Array.isArray(offerNames) ? offerNames : []).filter((name) => typeof name === 'string' && name.trim());
+  if (names.length && !names.some((name) => withoutLinks.toLowerCase().includes(name.trim().toLowerCase()))) reasons.push('offer_not_named');
+  if (typeof postText === 'string' && postText.trim()) {
+    const skip = new Set(names.flatMap((name) => name.toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []));
+    const postWords = contentWords(postText, skip);
+    if (![...contentWords(withoutLinks, skip)].some((word) => postWords.has(word))) reasons.push('not_relevant_to_post');
+  }
   if (EM_DASH.test(text)) reasons.push('em_dash');
   if (redactText(withoutLinks).count > 0) reasons.push('sensitive_text');
   return { status: reasons.length ? 'FAIL' : 'PASS', reasons, text_sha256: sha256(text) };

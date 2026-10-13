@@ -144,3 +144,23 @@ test('review fixes: a stated template gap, agent-written plugs and a required of
   assert.deepEqual(checkPlug({ text: noLink, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
   assert.deepEqual(checkPlug({ text: `${GOOD_PLUG} ${DESTINATION}`, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
 });
+
+test('review fixes 2: agent copy schedules by its saved draft, and a plug names the offer and stays on its post', () => {
+  const agent = plan({ author_override: { said: 'write them yourself' } });
+  for (const post of agent.posts) post.author = 'agent';
+  delete agent.posts[2].draft_id;
+  assert.match(buildCard(agent).missing.join(' '), /post 3: the draft_id from save_draft holding this exact text/);
+  agent.posts[2].draft_id = 'draft-3';
+  agent.posts[2].original = `P${agent.posts[2].final.slice(1)}`;
+  const ready = buildCard(agent);
+  const approved = scheduleArgs({ plan: agent, card_sha256: ready.card_sha256, reply: 'yes' });
+  assert.equal(approved.schedule_post[2].draft_id, 'draft-3', 'agent rows always go by draft_id');
+  assert.equal(approved.schedule_post[2].text, undefined);
+  const post = 'jumping between boards used to take forever, so BoardKit gives you 12 shortcuts.';
+  const context = { destination: DESTINATION, proof: PROOF, offer_names: ['BoardKit'], post_text: post };
+  assert.deepEqual(checkPlug({ text: GOOD_PLUG, ...context }).reasons, []);
+  const unnamed = `stuck jumping between boards? 12 shortcuts sit under your fingers. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
+  assert.deepEqual(checkPlug({ text: unnamed, ...context }).reasons, ['offer_not_named']);
+  const offTopic = `want better sleep tonight? BoardKit fixes evenings for good. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
+  assert.deepEqual(checkPlug({ text: offTopic, ...context }).reasons, ['not_relevant_to_post']);
+});
