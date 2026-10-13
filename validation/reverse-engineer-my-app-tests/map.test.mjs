@@ -77,7 +77,7 @@ test('the fact check rejects newness the map cannot prove and spelled-out number
   const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
   assert.match(brief.input_text, /do not call any feature new, recent or "now" available/);
   const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
-  assert.deepEqual(checkPost({ map, brief, text: 'new in the app: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new in']);
+  assert.deepEqual(checkPost({ map, brief, text: 'new in the app: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new']);
   assert.deepEqual(checkPost({ map, brief, text: 'the app has 12 shortcuts now.', claims }).reasons, ['recency_not_in_map:has 12 shortcuts now']);
   assert.deepEqual(checkPost({ map, brief, text: 'we just shipped 12 shortcuts.', claims }).reasons, ['recency_not_in_map:just shipped']);
   assert.deepEqual(checkPost({ map, brief, text: 'with three boards open, 12 shortcuts do it.', claims }).reasons, ['number_not_in_map:3']);
