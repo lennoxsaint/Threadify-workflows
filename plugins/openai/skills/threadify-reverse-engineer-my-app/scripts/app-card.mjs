@@ -213,7 +213,7 @@ export function buildReceipt({ plan, card_sha256: cardHash, reply, scheduled_pos
     action: approved ? 'schedule_seven_posts' : 'none',
     readback: readback?.status ?? 'not read',
     tool_path: 'threadify_mcp',
-    fallback_state: plan?.auto_plug_unavailable ? 'auto_plug_unavailable' : 'not_used',
+    fallback_state: [plan?.auto_plug_unavailable && 'auto_plug_unavailable', plan?.template_unavailable && 'template_unavailable'].filter(Boolean).join('+') || 'not_used',
     raw_bodies_retained_in_receipt: false,
   };
 }

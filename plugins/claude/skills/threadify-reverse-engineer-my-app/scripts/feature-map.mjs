@@ -383,8 +383,10 @@ export function checkPost({ map, brief, text, claims } = {}) {
 // name the offer (offer_names) and share at least one real word with the post it
 // follows (post_text); both are required.
 
-const STOP_WORDS = new Set(['about', 'after', 'again', 'their', 'there', 'these', 'those', 'which', 'while', 'would', 'could', 'should', 'every', 'where', 'other', 'still', 'never', 'always', 'today', 'right', 'really', 'thing', 'things', 'trial', 'start', 'creators', 'people']);
-const contentWords = (text, skip) => new Set((String(text ?? '').toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []).filter((word) => !STOP_WORDS.has(word) && !skip.has(word)));
+// Words that carry no topic. Topical short words ("dark", "mode", "pdf", "seo",
+// "sync", "tabs") are kept, so a plug can match its post on them.
+const STOP_WORDS = new Set(('the and for you your you\'re with this that from have has had just more than they them then what when will into out all any get got are was were not but can its it\'s our ours one day way how who why now new use via per too very also only even ever much many most some such each both here there their these those which while would could should every where other still never always today right really thing things trial start creators people about after again join free try want need make made let lets see its yes off own been being does did done going gonna').split(/\s+/));
+const contentWords = (text, skip) => new Set((String(text ?? '').toLowerCase().match(/[a-z][a-z'-]{2,}/g) ?? []).filter((word) => !STOP_WORDS.has(word) && !skip.has(word)));
 
 export function checkPlug({ text, destination, proof, offer_names: offerNames, post_text: postText } = {}) {
   const reasons = [];
@@ -418,7 +420,7 @@ export function checkPlug({ text, destination, proof, offer_names: offerNames, p
   })) reasons.push('offer_not_named');
   if (typeof postText !== 'string' || !postText.trim()) reasons.push('missing_post_text');
   else {
-    const skip = new Set(names.flatMap((name) => name.toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []));
+    const skip = new Set(names.flatMap((name) => name.toLowerCase().match(/[a-z][a-z'-]{2,}/g) ?? []));
     const postWords = contentWords(postText, skip);
     if (![...contentWords(withoutLinks, skip)].some((word) => postWords.has(word))) reasons.push('not_relevant_to_post');
   }

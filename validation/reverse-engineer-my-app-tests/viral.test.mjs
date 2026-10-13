@@ -236,3 +236,14 @@ test('review fixes 8: "one" in a plug is a number that needs proof', () => {
   const proven = [...PROOF, { number: '1', quote: 'save one hour a day', from: 'https://app.example.com/' }];
   assert.deepEqual(checkPlug({ ...base, proof: proven, text: oneHour }).reasons, []);
 });
+
+test('review fixes 9: short topical words count for relevance, and receipts record every fallback', () => {
+  const post = 'dark mode cuts glare at night, so BoardKit switches the whole board to a dark theme from settings.';
+  const plug = `dark mode in BoardKit is one tap in settings. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
+  const proof = [...PROOF, { number: '1', quote: 'one tap in settings', from: 'the feature map' }];
+  assert.deepEqual(checkPlug({ text: plug, destination: DESTINATION, proof, offer_names: ['BoardKit'], post_text: post }).reasons, []);
+  const both = plan({ template_unavailable: 'no template tools on this connection', auto_plug_unavailable: 'no Auto Plug on this plan' });
+  assert.equal(buildReceipt({ plan: both, reply: 'no' }).fallback_state, 'auto_plug_unavailable+template_unavailable');
+  assert.equal(buildReceipt({ plan: plan({ template_unavailable: 'no template tools' }), reply: 'no' }).fallback_state, 'template_unavailable');
+  assert.equal(buildReceipt({ plan: plan(), reply: 'no' }).fallback_state, 'not_used');
+});
