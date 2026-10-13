@@ -1,6 +1,6 @@
 # 0.32.0
 
-- Add Reverse Engineer My App: after a yes that you own the app (or have written permission), point REA at it logged out, or use your product page or a pasted feature list, get a redacted plain-English feature map with evidence, and have Threadify write a week of build-in-public posts with tracked Auto Plugs, scheduled one a day only after one exact yes
+- Add Reverse Engineer My App: built something good and nobody knows it exists? REA maps what your app (or the page for anything you sell) really does, with proof, after a yes that you own it, and Threadify writes a week of posts in your voice, one real feature a day, each with a tracked Auto Plug, scheduled only after one exact yes
 
 # 0.31.3
 

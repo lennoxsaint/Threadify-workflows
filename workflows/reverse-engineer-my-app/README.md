@@ -1,10 +1,14 @@
 # Reverse Engineer My App
 
-"Anyone can x-ray your app now. Building is cheap, distribution is expensive."
+**The problem:** you built an app, a course, a community or a service. It is good. Almost nobody knows it exists, and every time you sit down to post about it you write "check out my thing", or nothing at all.
+
+**What you get:** a plain-English map of what your product actually does, with proof for every feature, then 7 posts written in your voice by Threadify. One real feature a day, each with a tracked link to your offer, all scheduled after one "yes". You stop guessing what to post, and every post sells something true.
+
+**Why now:** tools like REA can x-ray and copy any app in an afternoon. Building is cheap, distribution is expensive. Nobody can copy you showing up every day with proof.
+
+**Works with:** a web app you own (REA scans it logged out), the page for anything you sell (course, service, community, newsletter, product), or a feature list you paste. It runs the same in Claude Code, Codex and ChatGPT.
 
 Use the complete [installable skill](../../skills/threadify-reverse-engineer-my-app/SKILL.md). In Claude Code type `/threadify-reverse-engineer-my-app https://your-app.com`. In Codex type `$threadify-reverse-engineer-my-app https://your-app.com`.
-
-Point REA at an app you own (or paste your product page), get a plain-English feature map with evidence, then Threadify writes a week of build-in-public posts, scheduled after one "yes".
 
 1. Confirm your Threads account and timezone.
 2. One question first: do you own this app, or have written permission to analyse it? Anything but "yes" stops the workflow and nothing is scanned. REA's own rule is the same: it is for software you own or are authorized to examine.

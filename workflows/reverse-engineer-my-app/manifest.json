@@ -2,7 +2,7 @@
   "workflow_id": "reverse-engineer-my-app",
   "version": "0.1.0",
   "title": "Reverse Engineer My App",
-  "summary": "Point REA at an app you own (or paste your product page), get a plain-English feature map with evidence, then have Threadify write a week of build-in-public posts, each with a tracked Auto Plug, scheduled one a day only after one exact approval.",
+  "summary": "You built something good and nobody knows it exists. Turn your app, or the page for anything you sell, into a week of posts people actually read: REA maps what your product really does with proof for every feature, and Threadify writes one post per feature in your voice, each with a tracked link to your offer, scheduled after one yes.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-reverse-engineer-my-app",
@@ -22,7 +22,10 @@
     "reverse engineer my app",
     "x-ray my app",
     "map my app's features",
-    "turn my app into a week of build-in-public posts"
+    "turn my app into a week of build-in-public posts",
+    "nobody knows my app exists",
+    "what should i post about my product",
+    "turn my product page into a week of posts"
   ],
   "io": {
     "inputs": [

@@ -1,11 +1,17 @@
 ---
 name: threadify-reverse-engineer-my-app
-description: Point REA at an app you own (or paste your product page), get a plain-English feature map with evidence, then have Threadify write a week of build-in-public posts, each with a tracked Auto Plug, scheduled one a day only after one exact approval. Use when someone says "reverse engineer my app", "x-ray my app", "map my app's features" or wants a week of build-in-public posts about their own product.
+description: You built something good and nobody knows it exists. Turn your app, or the page for anything you sell, into a week of posts people actually read - REA maps what your product really does with proof for every feature, and Threadify writes one post per feature in your voice, each with a tracked link to your offer, scheduled after one yes. Use when someone says "reverse engineer my app", "x-ray my app", "nobody knows my app exists", "what should i post about my product", "turn my product page into a week of posts" or wants build-in-public posts about something they sell.
 ---
 
 # Reverse Engineer My App
 
-Anyone can x-ray your app now. Building is cheap, distribution is expensive. Point REA at an app you own (or paste your product page), get a plain-English feature map with evidence, then Threadify writes a week of build-in-public posts, scheduled after one "yes". It runs the same in Claude Code, Codex and ChatGPT.
+**The problem:** you built an app, a course, a community or a service. It is good. Almost nobody knows it exists, and every time you sit down to post about it you write "check out my thing", or nothing at all.
+
+**What you get:** a plain-English map of what your product actually does, with proof for every feature, then 7 posts written in your voice by Threadify. One real feature a day, each with a tracked link to your offer, all scheduled after one "yes". You stop guessing what to post, and every post sells something true.
+
+**Why now:** tools like REA can x-ray and copy any app in an afternoon. Building is cheap, distribution is expensive. Nobody can copy you showing up every day with proof.
+
+**Works with:** a web app you own (REA scans it logged out), the page for anything you sell (course, service, community, newsletter, product), or a feature list you paste. It runs the same in Claude Code, Codex and ChatGPT.
 
 Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before the first connected call. A connection never authorizes scheduling. Only the owner's "yes" to the exact approval card does.
 
