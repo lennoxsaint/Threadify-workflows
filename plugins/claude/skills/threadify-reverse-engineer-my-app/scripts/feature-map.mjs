@@ -335,11 +335,18 @@ export function fixedWords(skeleton) {
   return templateWords(String(skeleton).replace(/\{[^{}]*\}/g, ' '));
 }
 export function followsTemplate(text, skeleton) {
-  const words = templateWords;
   const fixed = fixedWords(skeleton);
   if (fixed.length < MIN_TEMPLATE_FIXED_WORDS) return false;
-  const present = new Set(words(text));
-  return fixed.filter((word) => present.has(word)).length / fixed.length >= TEMPLATE_KEEP_SHARE;
+  // Match the fixed words in order, each post word used once, so a repeated
+  // structure ("if you ... if you ... if you") needs every repeat.
+  const postWords = templateWords(text);
+  let at = 0;
+  let kept = 0;
+  for (const word of fixed) {
+    const found = postWords.indexOf(word, at);
+    if (found !== -1) { kept += 1; at = found + 1; }
+  }
+  return kept / fixed.length >= TEMPLATE_KEEP_SHARE;
 }
 
 export function checkPost({ map, brief, text, claims } = {}) {

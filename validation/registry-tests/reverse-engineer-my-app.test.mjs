@@ -56,6 +56,7 @@ test('the skill states its gates in plain words', () => {
   assert.match(skill, /A post is 100-350 characters and ends on one bold, clear, polarizing "so what" line/);
   assert.match(skill, /Every Auto Plug is 100-250 characters and passes the RSS test/);
   assert.match(skill, /`check-plug`/);
+  assert.match(skill, /`greatest_hits` with `metric: "views"`/);
   assert.match(skill, /continue in this same run without a restart/);
   assert.match(skill, /`npx -y rea-agents analyze-web-bundle http:\/\/127\.0\.0\.1:9333 <targetId> --observation-ms 5000 --format json`/);
   assert.match(skill, /written by your agent at your request \(not Threadify\)/);

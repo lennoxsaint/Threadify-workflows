@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { POST_CHARS, PLUG_CHARS, buildBriefs, buildMap, checkPlug, checkPost } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/feature-map.mjs';
+import { POST_CHARS, PLUG_CHARS, buildBriefs, buildMap, checkPlug, checkPost, followsTemplate } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/feature-map.mjs';
 import { buildCard, buildReceipt, scheduleArgs } from '../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/app-card.mjs';
 import { createHash } from 'node:crypto';
 import { PICKS, reaMap } from './fixture.mjs';
@@ -221,4 +221,10 @@ test('review fixes 6: every clickable link form counts, and the template gap nee
     for (const post of gap.posts) delete post.template;
     assert.match(buildCard(gap).missing.join(' '), /"template_unavailable" as a sentence/);
   }
+});
+
+test('review fixes 7: repeated template words count once each, in order', () => {
+  const skeleton = 'if you {first} if you {second} if you {third}';
+  assert.equal(followsTemplate('if you ignore every remaining part of the structure the post still reads fine and keeps going for a while longer here.', skeleton), false);
+  assert.equal(followsTemplate('if you post daily, if you reply fast, if you track clicks, you grow.', skeleton), true);
 });
