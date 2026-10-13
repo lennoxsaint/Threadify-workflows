@@ -365,9 +365,9 @@ export function checkPost({ map, brief, text, claims } = {}) {
 // seamless) only when it is 100-250 characters, carries the offer's
 // destination as its one link and names at least one specific number - and every number it
 // states appears in a quote from a real source (the offer's saved facts or the
-// offer page), so "join 2,013+ creators" is proven, never invented. With
-// offer_names it must name the offer; with post_text it must share at least one
-// real word with the post it follows, so it stays on that post's conversation.
+// offer page), so "join 2,013+ creators" is proven, never invented. It must
+// name the offer (offer_names) and share at least one real word with the post it
+// follows (post_text); both are required.
 
 const STOP_WORDS = new Set(['about', 'after', 'again', 'their', 'there', 'these', 'those', 'which', 'while', 'would', 'could', 'should', 'every', 'where', 'other', 'still', 'never', 'always', 'today', 'right', 'really', 'thing', 'things', 'trial', 'start', 'creators', 'people']);
 const contentWords = (text, skip) => new Set((String(text ?? '').toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []).filter((word) => !STOP_WORDS.has(word) && !skip.has(word)));
@@ -389,8 +389,10 @@ export function checkPlug({ text, destination, proof, offer_names: offerNames, p
     .flatMap((item) => numbersIn(item.quote)));
   for (const number of numbers) if (!proven.has(number)) reasons.push(`number_without_proof:${number}`);
   const names = (Array.isArray(offerNames) ? offerNames : []).filter((name) => typeof name === 'string' && name.trim());
-  if (names.length && !names.some((name) => withoutLinks.toLowerCase().includes(name.trim().toLowerCase()))) reasons.push('offer_not_named');
-  if (typeof postText === 'string' && postText.trim()) {
+  if (!names.length) reasons.push('missing_offer_names');
+  else if (!names.some((name) => withoutLinks.toLowerCase().includes(name.trim().toLowerCase()))) reasons.push('offer_not_named');
+  if (typeof postText !== 'string' || !postText.trim()) reasons.push('missing_post_text');
+  else {
     const skip = new Set(names.flatMap((name) => name.toLowerCase().match(/[a-z][a-z'-]{4,}/g) ?? []));
     const postWords = contentWords(postText, skip);
     if (![...contentWords(withoutLinks, skip)].some((word) => postWords.has(word))) reasons.push('not_relevant_to_post');

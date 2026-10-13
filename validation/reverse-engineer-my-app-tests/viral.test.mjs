@@ -18,6 +18,8 @@ const PROOF = [
   { number: '7', quote: 'Start with a 7-day free trial', from: 'https://app.example.com/' },
   { number: '12', quote: 'lets you jump between boards with 12 shortcuts', from: 'the feature map' },
 ];
+const PLUG_POST = 'jumping between boards used to take forever, so BoardKit gives you 12 shortcuts.';
+const CONTEXT = { offer_names: ['BoardKit'], post_text: PLUG_POST };
 const GOOD_PLUG = `stuck jumping between boards? BoardKit puts 12 shortcuts under your fingers. join 2,013+ creators - 7-day free trial: ${DESTINATION}`;
 
 test('each brief carries its outlier template and the hook, story loop, length and "so what" rules', () => {
@@ -54,19 +56,19 @@ test('a post outside 100-350 characters fails the check', () => {
 
 test('an Auto Plug is 100-250 characters, links only the offer and every number has a quoted source', () => {
   assert.deepEqual(PLUG_CHARS, { min: 100, max: 250 });
-  const good = checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: PROOF });
+  const good = checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: PROOF, ...CONTEXT });
   assert.deepEqual(good.reasons, []);
   assert.equal(good.status, 'PASS');
-  assert.deepEqual(checkPlug({ text: 'try BoardKit free', destination: DESTINATION, proof: PROOF }).reasons, ['length_out_of_range:17', 'missing_offer_link', 'no_specific_number']);
+  assert.deepEqual(checkPlug({ text: 'try BoardKit free', destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['length_out_of_range:17', 'missing_offer_link', 'no_specific_number', 'not_relevant_to_post']);
   const vague = `jumping between boards all day? BoardKit makes it quick, simple and painless for your whole team. try it free today: ${DESTINATION}`;
-  assert.deepEqual(checkPlug({ text: vague, destination: DESTINATION, proof: PROOF }).reasons, ['no_specific_number']);
+  assert.deepEqual(checkPlug({ text: vague, destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['no_specific_number']);
   const invented = GOOD_PLUG.replace('2,013+', '5,000+');
-  assert.deepEqual(checkPlug({ text: invented, destination: DESTINATION, proof: PROOF }).reasons, ['number_without_proof:5000']);
+  assert.deepEqual(checkPlug({ text: invented, destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['number_without_proof:5000']);
   const quoteMismatch = [{ number: '2,013', quote: 'lots of creators', from: 'https://app.example.com/' }, PROOF[1], PROOF[2]];
-  assert.deepEqual(checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: quoteMismatch }).reasons, ['number_without_proof:2013']);
+  assert.deepEqual(checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: quoteMismatch, ...CONTEXT }).reasons, ['number_without_proof:2013']);
   const otherLink = GOOD_PLUG.replace(DESTINATION, 'https://elsewhere.example.com');
-  assert.deepEqual(checkPlug({ text: otherLink, destination: DESTINATION, proof: PROOF }).reasons, ['link_not_offer_destination']);
-  assert.deepEqual(checkPlug({ text: GOOD_PLUG.replace(' - ', ' — '), destination: DESTINATION, proof: PROOF }).reasons, ['em_dash']);
+  assert.deepEqual(checkPlug({ text: otherLink, destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['link_not_offer_destination']);
+  assert.deepEqual(checkPlug({ text: GOOD_PLUG.replace(' - ', ' — '), destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['em_dash']);
 });
 
 function plan(overrides = {}) {
@@ -144,8 +146,9 @@ test('review fixes: a stated template gap, agent-written plugs and a required of
   assert.equal(plugCard.status, 'ready');
   assert.match(plugCard.card, /Auto Plug, 50 min after \(written by your agent at your request \(not Threadify\), plug check PASS\)/);
   const noLink = GOOD_PLUG.replace(`: ${DESTINATION}`, ' today.');
-  assert.deepEqual(checkPlug({ text: noLink, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
-  assert.deepEqual(checkPlug({ text: `${GOOD_PLUG} ${DESTINATION}`, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_link']);
+  assert.deepEqual(checkPlug({ text: noLink, destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['missing_offer_link']);
+  assert.deepEqual(checkPlug({ text: GOOD_PLUG, destination: DESTINATION, proof: PROOF }).reasons, ['missing_offer_names', 'missing_post_text'], 'the plug context is required');
+  assert.deepEqual(checkPlug({ text: `${GOOD_PLUG} ${DESTINATION}`, destination: DESTINATION, proof: PROOF, ...CONTEXT }).reasons, ['missing_offer_link']);
 });
 
 test('review fixes 2: agent copy schedules by its saved draft, and a plug names the offer and stays on its post', () => {
