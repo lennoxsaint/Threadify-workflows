@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.32.0",
+  "release_version": "0.32.1",
   "skill_version": "0.12.1",
-  "plugin_version": "0.32.0",
+  "plugin_version": "0.32.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Add Reverse Engineer My App: built something good and nobody knows it exists? REA maps what your app (or the page for anything you sell) really does, with proof, after a yes that you own it, and Threadify writes a week of posts in your voice, one real feature a day, each with a tracked Auto Plug, scheduled only after one exact yes"
+  "summary": "Reverse Engineer My App: posts can no longer call a feature new, just shipped or available now (the map has no dates), and spelled-out numbers like three tabs are fact-checked like digits"
 }

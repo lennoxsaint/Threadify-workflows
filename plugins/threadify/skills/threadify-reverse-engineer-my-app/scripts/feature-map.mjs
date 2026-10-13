@@ -213,10 +213,32 @@ function mapText(map) {
   ]);
 }
 
+// Spelled-out numbers count as numbers too ("three tabs" is a claim). "one" is
+// left out: it is ordinary English ("one tab", "one yes") far more often than a count.
+const NUMBER_WORDS = {
+  two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
+  thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
+  thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90, dozen: 12,
+  hundred: 100, thousand: 1000, million: 1000000, billion: 1000000000,
+};
+const NUMBER_WORD = new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join('|')})s?\\b`, 'gi');
+
 /** Every number written in the map: the only numbers a post may state. */
 export function numbersIn(text) {
-  return Array.from(String(text ?? '').matchAll(/\d[\d,]*(?:\.\d+)?/g), (match) => match[0].replace(/,/g, '').replace(/\.0+$/, ''));
+  const value = String(text ?? '');
+  const digits = Array.from(value.matchAll(/\d[\d,]*(?:\.\d+)?/g), (match) => match[0].replace(/,/g, '').replace(/\.0+$/, ''));
+  const words = Array.from(value.matchAll(NUMBER_WORD), (match) => String(NUMBER_WORDS[match[1].toLowerCase()]));
+  return [...digits, ...words];
 }
+
+// The map has no dates, so a post can't call a feature new or recent.
+const RECENCY_CLAIM = new RegExp([
+  String.raw`\b(?:brand[- ]new|newly|new in|new feature|new update)\b`,
+  String.raw`\bjust (?:shipped|launched|added|released|dropped|built|rolled out)\b`,
+  String.raw`\b(?:shipped|launched|released|added|dropped|rolled out) (?:today|yesterday|this week|last week)\b`,
+  String.raw`\bnow\s*[.!?,:;]`,
+  String.raw`\b(?:has|have|lets|supports|includes|comes with|got|gets) [^.!?\n]{0,40}\bnow\b`,
+].join('|'), 'i');
 
 export function buildBriefs({ map, picks, owner = {} } = {}) {
   const problems = [];
@@ -241,6 +263,7 @@ export function buildBriefs({ map, picks, owner = {} } = {}) {
       `feature: ${feature.name}. what it does: ${feature.what}.${evidence}`,
       'use only these facts. do not mention any other feature, number, customer, result or price.',
       'do not say anything happens on a server or in a database.',
+      'do not call any feature new, recent or "now" available: the map has no dates. write no numbers, in digits or words, that are not given above.',
       'no links, no offer, no hashtags. no em dashes. all lowercase except names.',
     ].join('\n');
     const allowed = [...new Set([...numbersIn(mapText(map)), ...numbersIn(safeOwner.why), ...numbersIn(safeOwner.user_win)])];
@@ -271,6 +294,8 @@ export function checkPost({ map, brief, text, claims } = {}) {
     if (brief?.feature_id && !claims.some((claim) => claim?.feature_id === brief.feature_id)) reasons.push(`missing_brief_feature:${brief.feature_id}`);
   }
   if (SERVER_CLAIM.test(text)) reasons.push('server_claim');
+  const recency = text.match(RECENCY_CLAIM);
+  if (recency) reasons.push(`recency_not_in_map:${recency[0].trim()}`);
   if (EM_DASH.test(text)) reasons.push('em_dash');
   if (/https?:\/\/|www\./i.test(text)) reasons.push('link_in_post');
   if (redactText(text).count > 0) reasons.push('sensitive_text');

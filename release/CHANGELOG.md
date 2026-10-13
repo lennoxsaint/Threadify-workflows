@@ -1,3 +1,7 @@
+# 0.32.1
+
+- Reverse Engineer My App: posts can no longer call a feature new, just shipped or available now (the map has no dates), and spelled-out numbers like three tabs are fact-checked like digits
+
 # 0.32.0
 
 - Add Reverse Engineer My App: built something good and nobody knows it exists? REA maps what your app (or the page for anything you sell) really does, with proof, after a yes that you own it, and Threadify writes a week of posts in your voice, one real feature a day, each with a tracked Auto Plug, scheduled only after one exact yes

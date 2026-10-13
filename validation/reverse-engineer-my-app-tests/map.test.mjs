@@ -71,3 +71,16 @@ test('the fact check rejects a feature or a number that is not in the map', () =
   assert.deepEqual(style.reasons, ['server_claim', 'em_dash', 'link_in_post']);
   assert.equal(checkPost({ map, brief, text: 'shortcuts.', claims: [] }).status, 'FAIL', 'claims are required');
 });
+
+test('the fact check rejects newness the map cannot prove and spelled-out numbers', () => {
+  const { map } = buildMap(reaMap());
+  const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
+  assert.match(brief.input_text, /do not call any feature new, recent or "now" available/);
+  const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
+  assert.deepEqual(checkPost({ map, brief, text: 'new in the app: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new in']);
+  assert.deepEqual(checkPost({ map, brief, text: 'the app has 12 shortcuts now.', claims }).reasons, ['recency_not_in_map:has 12 shortcuts now']);
+  assert.deepEqual(checkPost({ map, brief, text: 'we just shipped 12 shortcuts.', claims }).reasons, ['recency_not_in_map:just shipped']);
+  assert.deepEqual(checkPost({ map, brief, text: 'with three boards open, 12 shortcuts do it.', claims }).reasons, ['number_not_in_map:3']);
+  assert.deepEqual(checkPost({ map, brief, text: 'twelve shortcuts. one tap each.', claims }).reasons, [], 'a spelled number from the map is fine; "one" is ordinary English');
+  assert.deepEqual(checkPost({ map, brief, text: 'right now 12 shortcuts do it.', claims }).reasons, [], '"now" as plain timing is not a recency claim');
+});
