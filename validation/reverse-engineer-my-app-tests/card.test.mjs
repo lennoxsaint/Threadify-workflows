@@ -127,6 +127,13 @@ test('every row is read back, and the receipt holds no post text', () => {
   assert.equal(mismatch.status, 'MISMATCH');
   assert.deepEqual(mismatch.rows[2].differences, ['text', 'time', 'auto_plug_missing']);
   assert.equal(checkReadback({ plan: current, statuses: statuses.slice(0, 6) }).status, 'MISMATCH', 'a missing readback is not a match');
+  for (const state of ['failed', 'cancelled', undefined]) {
+    const echoed = statuses.map((status) => ({ ...status }));
+    echoed[4] = { ...echoed[4], status: state };
+    const result = checkReadback({ plan: current, statuses: echoed });
+    assert.equal(result.status, 'MISMATCH', `a ${state ?? 'missing'} provider state is not a match even when the text echoes`);
+    assert.deepEqual(result.rows[4].differences, [`provider_status:${state ?? 'missing'}`]);
+  }
   const receipt = buildReceipt({ plan: current, card_sha256: buildCard(current).card_sha256, reply: 'yes', scheduled_post_ids: current.posts.map((_, index) => `sched-${index + 1}`), readback: match });
   assert.equal(receipt.approval, 'yes');
   assert.equal(receipt.ownership, 'owner_confirmed');

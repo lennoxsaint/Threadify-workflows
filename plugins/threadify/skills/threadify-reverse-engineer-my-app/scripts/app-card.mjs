@@ -138,6 +138,8 @@ export function scheduleArgs({ plan, card_sha256: cardHash, reply } = {}) {
   return { status: 'approved', schedule_post: calls };
 }
 
+const SCHEDULED_STATES = new Set(['scheduled', 'pending', 'queued']);
+
 /** Compare each get_schedule_status readback with its approved row. */
 export function checkReadback({ plan, statuses } = {}) {
   const rows = (plan?.posts ?? []).map((post, index) => {
@@ -151,7 +153,10 @@ export function checkReadback({ plan, statuses } = {}) {
     const echoed = status?.auto_plug?.content ?? null;
     if (plug && echoed !== plug.final) differences.push(echoed === null ? 'auto_plug_missing' : 'auto_plug_text');
     if (plug && status?.auto_plug && Number(status.auto_plug.delay_minutes) !== PLUG_DELAY_MINUTES) differences.push('auto_plug_delay');
-    return { day: index + 1, status: differences.length ? 'MISMATCH' : 'MATCH', differences, provider_status: status?.status ?? status?.state ?? null };
+    const providerStatus = status?.status ?? status?.state ?? null;
+    // A failed or cancelled record can still echo the approved text and time; only a live schedule counts.
+    if (!SCHEDULED_STATES.has(String(providerStatus ?? '').toLowerCase())) differences.push(`provider_status:${providerStatus ?? 'missing'}`);
+    return { day: index + 1, status: differences.length ? 'MISMATCH' : 'MATCH', differences, provider_status: providerStatus };
   });
   const allMatch = rows.length === POSTS && rows.every((row) => row.status === 'MATCH');
   return { status: allMatch ? 'MATCH' : 'MISMATCH', rows };
