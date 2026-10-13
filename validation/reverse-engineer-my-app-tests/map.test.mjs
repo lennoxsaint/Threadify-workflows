@@ -84,3 +84,15 @@ test('the fact check rejects newness the map cannot prove and spelled-out number
   assert.deepEqual(checkPost({ map, brief, text: 'twelve shortcuts. one tap each.', claims }).reasons, [], 'a spelled number from the map is fine; "one" is ordinary English');
   assert.deepEqual(checkPost({ map, brief, text: 'right now 12 shortcuts do it.', claims }).reasons, [], '"now" as plain timing is not a recency claim');
 });
+
+test('plain recency words fail, audience "new" passes, and compound number words are one quantity', async () => {
+  const { numbersIn } = await import('../../plugins/threadify/skills/threadify-reverse-engineer-my-app/scripts/feature-map.mjs');
+  const { map } = buildMap(reaMap());
+  const brief = buildBriefs({ map, picks: PICKS }).briefs[2];
+  const claims = [{ text: '12 shortcuts', feature_id: 'F3' }];
+  assert.deepEqual(checkPost({ map, brief, text: 'meet our new 12 shortcuts.', claims }).reasons, ['recency_not_in_map:new']);
+  assert.deepEqual(checkPost({ map, brief, text: 'we recently added 12 shortcuts.', claims }).reasons, ['recency_not_in_map:recently']);
+  assert.deepEqual(checkPost({ map, brief, text: 'the latest: 12 shortcuts.', claims }).reasons, ['recency_not_in_map:latest']);
+  assert.deepEqual(checkPost({ map, brief, text: 'new users get 12 shortcuts.', claims }).reasons, [], 'new users is an audience, not a date');
+  assert.deepEqual(numbersIn('twenty five templates, two hundred users, three-thousand views'), ['25', '200', '3000']);
+});

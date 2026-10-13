@@ -215,30 +215,57 @@ function mapText(map) {
 
 // Spelled-out numbers count as numbers too ("three tabs" is a claim). "one" is
 // left out: it is ordinary English ("one tab", "one yes") far more often than a count.
-const NUMBER_WORDS = {
+// A run of number words is one quantity: "twenty five" is 25, "two hundred" is 200.
+const SMALL = {
   two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
   thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20,
   thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90, dozen: 12,
-  hundred: 100, thousand: 1000, million: 1000000, billion: 1000000000,
 };
-const NUMBER_WORD = new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join('|')})s?\\b`, 'gi');
+const SCALE = { hundred: 100, thousand: 1000, million: 1000000, billion: 1000000000 };
+const WORD = Object.keys({ ...SMALL, ...SCALE }).join('|');
+const NUMBER_RUN = new RegExp(`\\b(?:${WORD})s?(?:(?:[\\s-]+|\\s+and\\s+)(?:${WORD})s?)*\\b`, 'gi');
+
+function wordsToNumber(run) {
+  let total = 0;
+  let current = 0;
+  for (const raw of run.toLowerCase().split(/[\s-]+/)) {
+    const word = raw.replace(/s$/, '') in SCALE || raw.replace(/s$/, '') in SMALL ? raw.replace(/s$/, '') : raw;
+    if (word === 'and') continue;
+    if (word in SMALL) current += SMALL[word];
+    else if (word === 'hundred') current = (current || 1) * 100;
+    else if (word in SCALE) { total += (current || 1) * SCALE[word]; current = 0; }
+  }
+  return total + current;
+}
 
 /** Every number written in the map: the only numbers a post may state. */
 export function numbersIn(text) {
   const value = String(text ?? '');
   const digits = Array.from(value.matchAll(/\d[\d,]*(?:\.\d+)?/g), (match) => match[0].replace(/,/g, '').replace(/\.0+$/, ''));
-  const words = Array.from(value.matchAll(NUMBER_WORD), (match) => String(NUMBER_WORDS[match[1].toLowerCase()]));
+  const words = Array.from(value.matchAll(NUMBER_RUN), (match) => String(wordsToNumber(match[0])));
   return [...digits, ...words];
 }
 
-// The map has no dates, so a post can't call a feature new or recent.
+// The map has no dates, so a post can't call a feature new or recent. "new" that
+// names an audience ("new users") is not a date claim, and wording the map itself
+// uses is allowed.
 const RECENCY_CLAIM = new RegExp([
-  String.raw`\b(?:brand[- ]new|newly|new in|new feature|new update)\b`,
+  String.raw`\bbrand[- ]new\b`,
+  String.raw`\bnew(?!\s+(?:users?|accounts?|members?|visitors?|people|customers?|followers?|creators?|signups?)\b)\b`,
+  String.raw`\bnewly\b`,
+  String.raw`\brecent(?:ly)?\b`,
+  String.raw`\blatest\b`,
   String.raw`\bjust (?:shipped|launched|added|released|dropped|built|rolled out)\b`,
   String.raw`\b(?:shipped|launched|released|added|dropped|rolled out) (?:today|yesterday|this week|last week)\b`,
   String.raw`\bnow\s*[.!?,:;]`,
   String.raw`\b(?:has|have|lets|supports|includes|comes with|got|gets) [^.!?\n]{0,40}\bnow\b`,
-].join('|'), 'i');
+].join('|'), 'gi');
+
+function recencyClaims(text, map) {
+  const allowed = mapText(map ?? {}).toLowerCase();
+  return Array.from(String(text).matchAll(RECENCY_CLAIM), (match) => match[0].trim())
+    .filter((phrase) => !(phrase.includes(' ') && allowed.includes(phrase.toLowerCase())));
+}
 
 export function buildBriefs({ map, picks, owner = {} } = {}) {
   const problems = [];
@@ -294,8 +321,7 @@ export function checkPost({ map, brief, text, claims } = {}) {
     if (brief?.feature_id && !claims.some((claim) => claim?.feature_id === brief.feature_id)) reasons.push(`missing_brief_feature:${brief.feature_id}`);
   }
   if (SERVER_CLAIM.test(text)) reasons.push('server_claim');
-  const recency = text.match(RECENCY_CLAIM);
-  if (recency) reasons.push(`recency_not_in_map:${recency[0].trim()}`);
+  for (const phrase of recencyClaims(text, map)) reasons.push(`recency_not_in_map:${phrase}`);
   if (EM_DASH.test(text)) reasons.push('em_dash');
   if (/https?:\/\/|www\./i.test(text)) reasons.push('link_in_post');
   if (redactText(text).count > 0) reasons.push('sensitive_text');
