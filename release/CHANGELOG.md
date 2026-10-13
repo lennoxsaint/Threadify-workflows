@@ -1,3 +1,7 @@
+# 0.32.0
+
+- Add Reverse Engineer My App: after a yes that you own the app (or have written permission), point REA at it logged out, or use your product page or a pasted feature list, get a redacted plain-English feature map with evidence, and have Threadify write a week of build-in-public posts with tracked Auto Plugs, scheduled one a day only after one exact yes
+
 # 0.31.3
 
 - Watch Any Creator: first-time ScrapeCreators setup in plain words - sign up, paste the key once into a hidden prompt (saved only on your computer, never printed), and see your live credit balance next to every estimate
