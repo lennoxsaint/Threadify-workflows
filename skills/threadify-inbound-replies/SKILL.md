@@ -16,3 +16,7 @@ Use native editable Writing blocks only after verifying create, stable item bind
 Every reply belongs to an exact native source ID. A text edit revokes approval. Approval stays local. Send only after an explicit chat instruction naming the unambiguous approved set; the page cannot send. Respect this workflow's reviewed send route even if broader account settings permit automation.
 
 After an advertised delivery action, independently verify the exact published text, record feedback and retry feedback failures without resending replies. If no current delivery action is advertised, stop with the exact approved local set and manual next step. Finish with honest coverage, verified/queued/uncertain states and pending work. Public receipt bodies must not contain raw inbound or reply text.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "What's Working"
+  short_description: "Find the posts Threads kills and the kind it still pushes, then schedule 3"
+  default_prompt: "Use $threadify-whats-working to check every Threads post I published this year against my median, show me what Threads is killing and what it still pushes, and prepare three posts in the winning pattern for my approval."

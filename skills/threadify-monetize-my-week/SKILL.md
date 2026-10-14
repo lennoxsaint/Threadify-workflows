@@ -87,3 +87,7 @@ Without connected draft, offer, Calendar or attribution reads, accept an owner-a
 ## Private receipt
 
 Retain the source snapshot, account, offer/destination, exclusions, seven exact rows, approval revision, validation results, idempotency keys, returned schedule references, automation readback, attribution window and fallback state in the owner's private workspace. Keep private post bodies, account IDs and provider references out of public fixtures.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

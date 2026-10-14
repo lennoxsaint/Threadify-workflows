@@ -14,3 +14,7 @@ Use the installed exact-release CLI at `node ~/.threadify-workflows/current/cli/
 Before a host delivery tool or manual handoff, re-open the source and record the fresh inspection. Persist `attempt_pending` through `begin-attempt` before the host acts. Record `succeeded`, `confirmed_not_sent` or `unknown` only from the real result. Never infer approval from silence or replay an uncertain action.
 
 If the tool is unsupported, provide the manual next-step artifact and keep delivery unverified until the owner supplies evidence. A native reminder can prompt review only after explicit opt-in; it cannot approve or send.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

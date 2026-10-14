@@ -55,3 +55,7 @@ Never expose credentials, private customer data, exact draft bodies in status re
 - `pause` and `resume` require `--state` and the current `--revision`.
 
 Use `threadify-workflows growth-loop ...` from the package or `node scripts/growth-loop-cli.mjs ...` inside the installed skill.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

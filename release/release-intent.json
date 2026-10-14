@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.33.0",
+  "release_version": "0.34.0",
   "skill_version": "0.12.1",
-  "plugin_version": "0.33.0",
+  "plugin_version": "0.34.0",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Reverse Engineer My App: every post is built on an outlier template from the Viral library, Vault or greatest hits, opens a story loop, runs 100-350 characters and ends on a bold \"so what\"; every Auto Plug is 100-250 characters, passes the RSS test and states only numbers proven by a quote (new check-plug); an owner can ask the agent to write the copy and the card says so; REA installs and scans in the same run, no restart"
+  "summary": "Add What's Working: is Threads dead? It checks every post you published this year against your own median views, labels each dead, stuck or alive, answers month by month, names what Threads is killing and the one kind of post it still pushes hardest with your real posts as proof, charts it on a local report page, then Threadify writes three posts in that pattern, each with a tracked Auto Plug, scheduled only after one exact yes Every workflow now follows shared demo feedback rules (ask once, keep going between approved steps, phone-readable output, real numbers only, Threadify's copy untouched) and reads the owner's private ~/.threadify/owner-overlay.md when present, without ever publishing it"
 }

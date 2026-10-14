@@ -22,3 +22,7 @@ Use: “Audit my approved creator context and propose one missing Brain repair. 
 ## Local fallback and receipt
 
 If tools, scopes, approved sources or readback are unavailable, produce a proposed repair ledger and a clearly labelled local comparison using only approved inputs. Record provider updates as not attempted or unverified, not successful. Return before/after artifacts, fixed prompt, drafting method, approved records, actual writes/readback, differences, uncertainty and next step. No post scheduling or publishing belongs to this skill.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

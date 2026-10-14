@@ -41,6 +41,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Watch Any Creator (`watch-any-creator`) | skill | `threadify-watch-any-creator` | advanced | watch any creator; watch every video from this creator; what are this creator's rules; turn a creator's whole archive into posts |
 | Weekly Buyer Outcomes (`weekly-buyer-outcomes`) | skill | `threadify-weekly-buyer-outcomes` | conversation | review my buyer outcomes for the past seven days; show this week's provider-observed and owner-reported buyer results |
 | Weekly Winner Replication (`weekly-winner-replication`) | skill | `threadify-weekly-winner-replication` | advanced | replicate this week's winners; prepare transformed drafts from recent winning posts |
+| What's Working (`whats-working`) | skill | `threadify-whats-working` | advanced | what's working; is threads dead; what's actually working on threads; why did my threads views drop; which of my posts does threads push; find my 100x post |
 | X Article From Daily Post (`x-article-from-daily-post`) | skill | `threadify-x-article-from-daily-post` | advanced | turn my daily post into an X Article; prepare a draft-only X Article packet |
 | YouTube Edit (Eddy) (`youtube-edit`) | skill | `threadify-youtube-edit` | advanced | edit my YouTube video; prepare an edit plan and Threadify promo posts |
 | YouTube Synthesizer (`youtube-synthesizer`) | skill | `threadify-youtube-synthesizer` | advanced | run YouTube Synthesizer; turn this YouTube video into a Threads thread; synthesize this video in my voice |

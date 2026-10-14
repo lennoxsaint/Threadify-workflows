@@ -74,3 +74,7 @@ Keep a local receipt: account, real window, script output, every gate attempt an
 ## When something is missing
 
 Without generation access, stop and say exactly what is missing and the manual next step. Never write posts yourself instead.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

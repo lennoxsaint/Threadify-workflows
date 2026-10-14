@@ -22,3 +22,7 @@ Before scheduling, fresh-read `get_connection_defaults`, connector capabilities,
 Obtain explicit hash-bound approval for the exact ordered files before `upload_media`. After confirmed upload, show the exact caption, ordered media hashes and provider refs, account, time, timezone, best-time evidence, and `schedule_post`; obtain a separate final approval. Persist intent before either request and invoke each request at most once. After a crash or unknown result, read both schedule status and calendar before deciding state. Ambiguity blocks retries and duplicates.
 
 Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

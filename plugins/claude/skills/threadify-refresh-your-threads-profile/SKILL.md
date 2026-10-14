@@ -20,3 +20,7 @@ Create a clearer Threads profile without treating a template or visual change as
 11. After save, read the profile back. Mark success only when both requested fields match. If partial, mismatched, or ambiguous, stop, set retry to false, preserve the baseline, and ask the owner to reconcile. Never repeat an ambiguous profile mutation.
 
 Resolve every path relative to this installed skill. Keep raw context and source images in user-selected private storage.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

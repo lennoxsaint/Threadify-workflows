@@ -152,3 +152,7 @@ Some questions are about judgment that only comes from posting and talking to ot
 - No write to the learner's account without exact approval of the exact thing shown.
 
 Resolve all paths relative to this installed skill directory. Keep the learner's posts, numbers and mission in their private workspace.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

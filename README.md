@@ -166,3 +166,5 @@ Publish Everywhere takes one video, says which of YouTube, Threads and X can tak
 Watch Any Creator reads every video a YouTube creator has published, ranks the rules their numbers support, and has Threadify write them in your voice: a ten-post thread saved as a draft and one post scheduled only after one exact yes. See [the workflow](workflows/watch-any-creator/README.md).
 
 Reverse Engineer My App is for when you built something good and nobody knows it exists: REA maps what your app (or the page for anything you sell) really does, with proof, and Threadify writes a week of posts in your voice, one real feature a day, each with a tracked link to your offer, scheduled after one yes. See [the workflow](workflows/reverse-engineer-my-app/README.md).
+
+What's Working is for when your Threads views feel dead: it checks every post you published this year against your own median, shows which kinds Threads is killing and the one kind it still pushes hardest, with your real posts as proof, then Threadify writes three in that pattern, each with a tracked link to your offer, scheduled after one yes. See [the workflow](workflows/whats-working/README.md).

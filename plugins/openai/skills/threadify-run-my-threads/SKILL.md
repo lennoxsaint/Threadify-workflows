@@ -78,3 +78,7 @@ Reply "yes" to schedule all exactly as shown, "skip 2" to drop post 2, or "no" t
 ## When something is missing
 
 Without a Threadify connection, generation entitlement or an available model, do not write posts yourself instead. Report the exact blocker and the manual next step. With no eligible greatest hit (or no `greatest_hits` on the plan), hold that slot and say why. If the host has no durable scheduler, say so and offer to run the workflow when the owner asks each morning.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

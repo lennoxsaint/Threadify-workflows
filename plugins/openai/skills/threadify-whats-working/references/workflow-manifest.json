@@ -1,0 +1,122 @@
+{
+  "workflow_id": "whats-working",
+  "version": "0.1.0",
+  "title": "What's Working",
+  "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-whats-working",
+    "source": "plugins/threadify/skills/threadify-whats-working/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/whats-working/README.md"
+    ]
+  },
+  "triggers": [
+    "what's working",
+    "is threads dead",
+    "what's actually working on threads",
+    "why did my threads views drop",
+    "which of my posts does threads push",
+    "find my 100x post"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "connected account, this year's post performance, saved offer",
+        "schema_ref": "inline:whats-working-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "alive/dead diagnosis against your median, #1 pattern, local report page, approval packet and schedule receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_post_performance",
+    "generate_content",
+    "list_offers",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "get_post_thread",
+    "save_draft"
+  ],
+  "free_capabilities": [
+    "deterministic diagnosis script that labels every post dead, stuck or alive against the account's own median",
+    "month-by-month median views and alive share",
+    "pattern ranking by median multiple from the agent's labels, small samples flagged",
+    "self-contained local report page charting every post against the median",
+    "local casing guard that proves lower(original) == lower(final) for every post and plug",
+    "local review checker for owner edit authorization, packet hashes and exact readback"
+  ],
+  "paid_capability_stubs": [
+    "post performance history depends on the plan's analytics window",
+    "Threadify post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "three exact posts",
+      "three exact Auto Plugs and destination",
+      "three local dates and times",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "diagnosis-only-without-substitute-copy",
+    "instructions": [
+      "Never write posts or plugs yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
+      "When the read does not start on 1 January, say the real window instead of this year.",
+      "When the casing guard fails, present Threadify's original text unchanged.",
+      "When a number is not returned, show it as unknown, never 0.",
+      "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",
+      "When the host has no reminder or scheduler, give a dated note for the 7-day re-run."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "read window and post coverage",
+      "median, labels and thresholds",
+      "pattern labels and #1 pattern with examples",
+      "models requested and reported",
+      "casing guard results",
+      "approval reply",
+      "scheduled posts, slots and Auto Plug echo",
+      "schedule readback",
+      "7-day re-run reminder or dated note",
+      "fallback state",
+      "original and final copy with editing mode and owner request",
+      "source and destination review findings",
+      "final post and plug hashes and exact approval revision"
+    ]
+  }
+}

@@ -37,3 +37,7 @@ node scripts/post-this-next-cli.mjs review --input INPUT --output-dir OUTPUT
 The installed bundle keeps the decision engine beside that script. Present one recommendation only when the validator returns `recommended` or `only_candidate`. For `abstained` or `manual_shortlist`, show the top two and ask the creator to choose. Re-read the displayed draft ID and content hash before the final handoff.
 
 Stop after the advisory result. Do not edit, save, schedule, publish, reply, delete or claim future performance.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

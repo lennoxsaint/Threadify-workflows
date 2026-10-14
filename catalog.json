@@ -2109,6 +2109,58 @@
       ]
     },
     {
+      "workflow_id": "whats-working",
+      "version": "0.1.0",
+      "title": "What's Working",
+      "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+      "kind": "skill",
+      "skill_name": "threadify-whats-working",
+      "entrypoint": "skills/threadify-whats-working/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-whats-working/SKILL.md",
+      "source_manifest": "workflows/whats-working/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/whats-working/README.md"
+        ]
+      },
+      "triggers": [
+        "what's working",
+        "is threads dead",
+        "what's actually working on threads",
+        "why did my threads views drop",
+        "which of my posts does threads push",
+        "find my 100x post"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "connected account, this year's post performance, saved offer",
+            "schema_ref": "inline:whats-working-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "alive/dead diagnosis against your median, #1 pattern, local report page, approval packet and schedule receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "x-article-from-daily-post",
       "version": "0.1.0",
       "title": "X Article From Daily Post",
