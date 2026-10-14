@@ -1,3 +1,8 @@
+# 0.35.0
+
+- Add editable post review with a Done editing handoff and exact owner edit comparisons.
+- Make Auto Plugs optional and off by default; strengthen concise source-grounded drafting and post-only approval checks.
+
 # 0.34.3
 
 - What's Working: the report chart spans your real lowest to highest views and always shows the median and alive lines, labels no longer overlap, medians are whole numbers, the report opens over 127.0.0.1 (some hosts block file:// pages), and analysis caveats stay out of the posts

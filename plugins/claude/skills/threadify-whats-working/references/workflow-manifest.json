@@ -1,8 +1,8 @@
 {
   "workflow_id": "whats-working",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "What's Working",
-  "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+  "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with editable review and optional Auto Plugs and schedule them only after one exact approval.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-whats-working",
@@ -29,7 +29,7 @@
   "io": {
     "inputs": [
       {
-        "name": "connected account, this year's post performance, saved offer",
+        "name": "connected account, this year's post performance, owner edits and optional saved offer",
         "schema_ref": "inline:whats-working-input"
       }
     ],
@@ -53,7 +53,6 @@
     "get_connection_defaults",
     "search_posts",
     "generate_content",
-    "list_offers",
     "list_scheduled_posts",
     "best_time_to_post",
     "validate_post",
@@ -63,7 +62,8 @@
   "optional_mcp_tools": [
     "read_post_performance",
     "get_post_thread",
-    "save_draft"
+    "save_draft",
+    "list_offers"
   ],
   "free_capabilities": [
     "deterministic diagnosis script that labels every post dead, stuck or alive against the account's own median",
@@ -71,7 +71,9 @@
     "pattern ranking by median multiple from the agent's labels, small samples flagged",
     "self-contained local report page charting every post against the median",
     "local casing guard that proves lower(original) == lower(final) for every post and plug",
-    "local review checker for owner edit authorization, packet hashes and exact readback"
+    "local review checker for owner edit authorization, packet hashes and exact readback",
+    "three local editable post blocks, optional Auto Plug choice and a Done editing receipt that never approves scheduling",
+    "preserved original and owner-final copies with local change comparisons"
   ],
   "paid_capability_stubs": [
     "post performance history depends on the plan's analytics window",
@@ -85,7 +87,7 @@
     "must_show": [
       "account and timezone",
       "three exact posts",
-      "three exact Auto Plugs and destination",
+      "Auto Plugs off or three exact enabled plugs and destination",
       "three local dates and times",
       "action"
     ]
@@ -98,7 +100,9 @@
       "When the casing guard fails, present Threadify's original text unchanged.",
       "When a number is not returned, show it as unknown, never 0.",
       "When Auto Plug is not on the plan, say so and ask whether to schedule without plugs or stop.",
-      "When the host has no reminder or scheduler, give a dated note for the 7-day re-run."
+      "When the host has no reminder or scheduler, give a dated note for the 7-day re-run.",
+      "Use supported native editable blocks with a real Done editing event; otherwise open the bundled loopback editor and wait for its command to finish.",
+      "Auto Plugs are off by default and optional; never call offer or plug tools after an explicit skip request."
     ]
   },
   "receipt": {
@@ -111,13 +115,15 @@
       "models requested and reported",
       "casing guard results",
       "approval reply",
-      "scheduled posts, slots and Auto Plug echo",
+      "scheduled posts, slots and enabled Auto Plug echo or verified off state",
       "schedule readback",
       "7-day re-run reminder or dated note",
       "fallback state",
       "original and final copy with editing mode and owner request",
-      "source and destination review findings",
-      "final post and plug hashes and exact approval revision"
+      "source review findings and destination review only when Auto Plugs are enabled",
+      "final post hashes, enabled plug hashes and exact approval revision",
+      "Done editing completion separate from scheduling approval",
+      "owner edit comparisons and task-specific wording observations"
     ]
   }
 }
