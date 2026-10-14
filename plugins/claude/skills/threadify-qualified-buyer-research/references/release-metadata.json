@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.34.1",
+  "release_version": "0.34.2",
   "skill_version": "0.12.1",
-  "plugin_version": "0.34.1",
+  "plugin_version": "0.34.2",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "What's Working reads the year through search_posts one month at a time (read_post_performance fails on long windows with artifact-write-failed)"
+  "summary": "What's Working: month slices end on the first day of the next month (search_posts treats to as exclusive), so no month loses its last day"
 }

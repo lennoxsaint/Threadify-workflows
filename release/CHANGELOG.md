@@ -1,3 +1,7 @@
+# 0.34.2
+
+- What's Working: month slices end on the first day of the next month (search_posts treats to as exclusive), so no month loses its last day
+
 # 0.34.1
 
 - What's Working reads the year through search_posts one month at a time (read_post_performance fails on long windows with artifact-write-failed)
