@@ -51,7 +51,7 @@
   ],
   "required_mcp_tools": [
     "get_connection_defaults",
-    "read_post_performance",
+    "search_posts",
     "generate_content",
     "list_offers",
     "list_scheduled_posts",
@@ -61,6 +61,7 @@
     "get_schedule_status"
   ],
   "optional_mcp_tools": [
+    "read_post_performance",
     "get_post_thread",
     "save_draft"
   ],

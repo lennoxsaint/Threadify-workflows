@@ -1,3 +1,7 @@
+# 0.34.1
+
+- What's Working reads the year through search_posts one month at a time (read_post_performance fails on long windows with artifact-write-failed)
+
 # 0.34.0
 
 - Add What's Working: is Threads dead? It checks every post you published this year against your own median views, labels each dead, stuck or alive, answers month by month, names what Threads is killing and the one kind of post it still pushes hardest with your real posts as proof, charts it on a local report page, then Threadify writes three posts in that pattern, each with a tracked Auto Plug, scheduled only after one exact yes
