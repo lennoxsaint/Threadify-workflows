@@ -8,6 +8,8 @@ const registry = loadWorkflowRegistry({ root });
 const workflows = listWorkflows(registry, { kind: 'skill' })
   .filter((workflow) => workflow.bundle.kind !== 'creator');
 const expected = new Map();
+// Every workflow follows the shared demo feedback rules (and the owner's private overlay when present).
+const DEMO_RULES_SECTION = '## Demo feedback rules\n\nBefore the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.\n';
 function collectSourceFiles(directory, relative = '') {
   const files = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -48,6 +50,10 @@ for (const workflow of workflows) {
   expected.set(`${name}/references/workflow-manifest.json`, fs.readFileSync(path.join(root, workflow.source_manifest)));
   expected.set(`${name}/references/workflow-readme.md`, fs.readFileSync(path.join(root, 'workflows', workflow.workflow_id, 'README.md')));
   expected.set(`${name}/references/threadify-001.md`, fs.readFileSync(path.join(root, 'docs/threadify-001.md')));
+  expected.set(`${name}/references/demo-feedback-rules.md`, fs.readFileSync(path.join(root, 'docs/demo-feedback-rules.md')));
+  if (!skill.includes('references/demo-feedback-rules.md')) {
+    expected.set(`${name}/SKILL.md`, Buffer.from(`${skill.trimEnd()}\n\n${DEMO_RULES_SECTION}`));
+  }
 }
 const failures = [];
 function audit(directory, relative) {

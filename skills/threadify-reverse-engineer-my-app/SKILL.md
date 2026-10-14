@@ -81,3 +81,7 @@ Reply "yes" to schedule all 7, or "no" to schedule nothing.
 ## When something is missing
 
 No "yes" to the ownership question: stop, nothing scanned. No REA and no install approval: use the product page or a pasted list. Without a Threadify connection, stop after step 5 with the map and the briefs and say: "Connect Threadify at threadify.app to have the posts written in your voice." Without generation access (HTTP 402 or no quota left), stop and say what ran out. Never write the posts yourself instead. A scheduled post is not a published post, and a click is not a sale.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

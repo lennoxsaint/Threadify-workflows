@@ -113,3 +113,7 @@ thread. Load `scripts/youtube-synthesizer-delivery.mjs`; do not change the
    conceal global Auto Repost, change account preferences, or cross-post. If the
    connector is unavailable, return the private manual handoff and claim zero
    provider writes.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

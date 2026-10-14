@@ -16,3 +16,7 @@ Do not infer leads, calls, offers, payments or sales from likes, follows, views,
 Propose a next action only when the recorded evidence supports it. If proposed, use the same one-action review, exact hash, `approve` or `reject` decision, source reinspection and pending-attempt controls as Your Next Moves.
 
 Connect only when a current readback would close a specific evidence gap. If unavailable, retain the local evidence class and state the manual check needed.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

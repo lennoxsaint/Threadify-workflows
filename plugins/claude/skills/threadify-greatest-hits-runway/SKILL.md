@@ -26,3 +26,7 @@ Without a working connector or entitled planner, ask for an approved export of p
 ## Receipt
 
 Save the source snapshot time, account, timezone, selected window/volume, duplicate exclusions, factual edits, exact approved rows, validation results, idempotency keys, returned IDs, the readback result and the fallback reason in the owner's private workspace. Keep these details out of public examples. No recurring automation or immediate publishing is created by this skill.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

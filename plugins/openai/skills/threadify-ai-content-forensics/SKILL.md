@@ -82,3 +82,7 @@ Show the complete case file and exact thread for owner review. Say “prepared
 locally,” not saved or published. Any later provider draft, schedule, publication,
 or feedback share requires its own current capability, exact approval, and
 authoritative readback outside this workflow.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

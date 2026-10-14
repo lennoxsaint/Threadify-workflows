@@ -41,3 +41,7 @@ Read setup status and stop if paused. Acquire a persisted `begin-run` with fresh
 Report connected, Brain ready, first week prepared, number scheduled, review still needed, and recurring routine verified separately. Display next run and how to pause. Logged host observations are not an independent provider check. Run fresh readbacks before a live completion claim. Changing the confirmed summary invalidates dependent readiness and standing permission.
 
 Finish with one compact **Threadify operator proof** card that a customer can understand without opening setup files. Show the verified installed version and execution runtime; verified account handle; Brain, retrieval and voice state; actual first-week draft and scheduled counts; exact items still awaiting review; routine state, next run and pause control; and any honest blocker. Never fill an unverified field from intent or simulated evidence. A filmmaker may show this card early only after capturing the matching live readbacks.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

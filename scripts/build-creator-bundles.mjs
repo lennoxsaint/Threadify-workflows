@@ -9,7 +9,7 @@ const names = listWorkflows(registry, { kind: 'skill', bundle: 'creator' })
   .map((workflow) => workflow.skill_name);
 const engine = fs.readdirSync(path.join(root, 'lib/creator')).filter((f) => f.endsWith('.mjs')).sort();
 const expected = new Map(engine.map((name) => [`scripts/engine/${name}`, fs.readFileSync(path.join(root, 'lib/creator', name))]));
-for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md', 'creator-browser-review.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
+for (const name of ['creator-system.md', 'creator-engine.md', 'threadify-001.md', 'creator-browser-review.md', 'demo-feedback-rules.md']) expected.set(`references/${name}`, fs.readFileSync(path.join(root, 'docs', name)));
 for (const name of ['index.html', 'review.css', 'review.js']) expected.set(`scripts/engine/browser/${name}`, fs.readFileSync(path.join(root, 'lib/creator/browser', name)));
 expected.set('references/creator-browser.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-browser.v1.json')));
 expected.set('references/creator-records.v1.json', fs.readFileSync(path.join(root, 'schemas/creator-records.v1.json')));

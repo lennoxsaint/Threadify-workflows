@@ -22,3 +22,7 @@ Treat the bundled synthetic fixture only as a mechanics test. Label it synthetic
 Use `decide` with `approve` or `reject` only after the owner responds to that exact display. Approval is not delivery. Before an external action, re-open the source and provide fresh inspection evidence; if the action changed after inspection, prepare and review a new bound action. For private contact, require both recipient interest and permission for the proposed channel. Persist with `begin-attempt` before the host acts, then reconcile with `receipt`. Never replay `attempt_pending`, `unknown` or `succeeded` actions.
 
 If a host tool is unsupported, provide the manual artifact in the workflow README. Optional reminders are review-only candidates, require explicit host-native opt-in and send nothing.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

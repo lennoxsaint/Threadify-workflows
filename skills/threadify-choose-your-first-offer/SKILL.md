@@ -18,3 +18,7 @@ Choose a validation hypothesis, not a guaranteed winner.
 9. If evidence coverage is incomplete, label the result `constraint_led_hypothesis`; otherwise label it `evidence_informed_hypothesis`. Either state still requires real validation.
 
 Resolve every path relative to this installed skill. Keep raw posts, comments, replies, account identifiers, and private customer material outside generated artifacts.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

@@ -41,6 +41,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Watch Any Creator | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Buyer Outcomes | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Winner Replication | yes | yes | yes | yes | yes | yes | yes |
+| What's Working | yes | yes | yes | yes | yes | yes | yes |
 | X Article From Daily Post | yes | yes | yes | yes | yes | yes | yes |
 | YouTube Edit (Eddy) | yes | yes | yes | yes | yes | yes | yes |
 | YouTube Synthesizer | yes | yes | yes | yes | yes | yes | yes |

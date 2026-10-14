@@ -95,3 +95,7 @@ authoritative reconciliation.
 Return a body-free receipt even when no candidate is ready, Treg is unavailable,
 or every action remains draft-only. Say `prepared privately`, not generated leads,
 sent, replied, booked, or sold.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

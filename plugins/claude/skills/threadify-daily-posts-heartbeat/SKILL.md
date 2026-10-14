@@ -40,3 +40,7 @@ Do not create new public copy, silently rewrite approved text, publish now, or
 schedule without explicit final approval.
 
 Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

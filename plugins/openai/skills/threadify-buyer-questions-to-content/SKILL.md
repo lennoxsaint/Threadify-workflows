@@ -16,3 +16,7 @@ Remove names, handles, direct links and unnecessary identifying details before d
 Show the evidence label, distinct source count, uncertainty, exact draft and private source map. Run `save-content` only after approval of that local candidate. Any provider save, schedule or publication needs its own exact display, approval and authoritative readback.
 
 Connect only when the owner requests a useful hosted capability. If it is missing, return the local draft and manual next step without inventing a provider result.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

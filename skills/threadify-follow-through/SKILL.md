@@ -16,3 +16,7 @@ Use `commit` with the exact state revision. For any proposed follow-up, show one
 Close a commitment only with `outcome` and one of `fulfilled`, `declined`, `withdrawn` or `uncertain`. Preserve whether the evidence is `owner_reported` or `provider_observed`; call it verified only when authoritative readback supports the claim. Never turn no reply, a like or elapsed time into fulfilment or permission.
 
 Run `reminder` only on request. It returns a host-native opt-in candidate with `created:false` and `automatic:false`. Do not create a reminder silently, and never let a reminder send or approve a follow-up. When the engine or host capability is unavailable, use the private manual list in the workflow README.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.

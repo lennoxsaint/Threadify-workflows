@@ -49,3 +49,7 @@ Connected approval is not scheduling by itself. After `vault30-decide`, refresh 
 An unavailable or ambiguous result stays `approved_unscheduled`, queues no retry and blocks the next card. Inspect provider state before doing anything else. Disconnected cards may use `vault30-complete-local` after exact approval; say “reviewed locally,” not “scheduled.”
 
 After six decisions, show only a compact state rollup. Day 30 ends new packet generation. Preserve private state for recovery and keep source bodies, facts, drafts, IDs and receipts out of public artifacts.
+
+## Demo feedback rules
+
+Before the first step, read [demo feedback rules](references/demo-feedback-rules.md) and follow them for the whole run. If `~/.threadify/owner-overlay.md` exists, follow it too; it is private, so never quote, publish or upload it.
