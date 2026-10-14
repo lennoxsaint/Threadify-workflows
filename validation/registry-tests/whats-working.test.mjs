@@ -30,6 +30,7 @@ test("What's Working is honest about the window, unknowns and approval", () => {
   assert.match(skill, /Schedule only on an explicit "yes"/);
   assert.match(skill, /references\/demo-feedback-rules\.md/);
   assert.match(skill, /`search_posts` with `query: "\*"`/);
+  assert.match(skill, /`to` is exclusive/);
   assert.match(skill, /owner-overlay\.md/);
   assert.doesNotMatch(skill, /`publish_now`/);
   assert.equal(manifest.approval_gate.required, true);
