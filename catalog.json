@@ -2110,9 +2110,9 @@
     },
     {
       "workflow_id": "whats-working",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "What's Working",
-      "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with tracked Auto Plugs and schedule them only after one exact approval.",
+      "summary": "Check every Threads post you published this year against your own median views, show which kinds Threads is killing and the one kind it still pushes hardest, then have Threadify write three posts in that pattern with editable review and optional Auto Plugs and schedule them only after one exact approval.",
       "kind": "skill",
       "skill_name": "threadify-whats-working",
       "entrypoint": "skills/threadify-whats-working/SKILL.md",
@@ -2139,7 +2139,7 @@
       "io": {
         "inputs": [
           {
-            "name": "connected account, this year's post performance, saved offer",
+            "name": "connected account, this year's post performance, owner edits and optional saved offer",
             "schema_ref": "inline:whats-working-input"
           }
         ],
