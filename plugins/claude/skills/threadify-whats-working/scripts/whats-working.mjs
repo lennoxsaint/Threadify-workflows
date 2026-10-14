@@ -93,7 +93,8 @@ export function analyse(input) {
   const tooNewIds = new Set(tooNew.map((post) => post.post_id));
   const unknownViews = all.filter((post) => post.views === null && !tooNewIds.has(post.post_id));
   const counted = all.filter((post) => post.views !== null && !tooNewIds.has(post.post_id));
-  const medianViews = median(counted.map((post) => post.views));
+  const exactMedian = median(counted.map((post) => post.views));
+  const medianViews = exactMedian === null ? null : Math.round(exactMedian);
 
   const labelled = counted.map((post) => {
     const multiple = medianViews ? round1(post.views / medianViews) : null;
@@ -112,7 +113,7 @@ export function analyse(input) {
   const monthly = [...months.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([month, posts]) => ({
     month,
     posts: posts.length,
-    median_views: median(posts.map((post) => post.views)),
+    median_views: Math.round(median(posts.map((post) => post.views))),
     alive_share: round1((posts.filter((post) => post.label === 'alive').length / posts.length) * 100),
   }));
 
@@ -175,7 +176,7 @@ export function analyse(input) {
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-const fmt = (value) => (value === null || value === undefined ? 'unknown' : Number(value).toLocaleString('en-US'));
+const fmt = (value) => (value === null || value === undefined ? 'unknown' : Math.round(Number(value)).toLocaleString('en-US'));
 
 /** A self-contained local report page: one chart of every post against your median, months, patterns. */
 export function renderHtml(result, { handle = '', posts = [] } = {}) {
@@ -183,13 +184,17 @@ export function renderHtml(result, { handle = '', posts = [] } = {}) {
   const width = 1600; const height = 520; const pad = 60;
   const times = dots.map((post) => Date.parse(post.published_at)).filter(Number.isFinite);
   const minT = Math.min(...times); const maxT = Math.max(...times);
-  const maxV = Math.max(...dots.map((post) => post.views), 1);
-  const y = (views) => height - pad - (Math.log10(Math.max(views, 1)) / Math.log10(maxV)) * (height - 2 * pad);
+  // The domain always includes the median and the alive line, so both guides stay on the chart.
+  const guideMedian = result.median_views ?? 1;
+  const maxV = Math.max(...dots.map((post) => post.views), guideMedian * ALIVE_MULTIPLE * 1.2, 1);
+  const minV = Math.max(1, Math.min(...dots.map((post) => post.views), guideMedian / 2));
+  const span = Math.log10(maxV) - Math.log10(minV) || 1;
+  const y = (views) => height - pad - ((Math.log10(Math.max(views, minV)) - Math.log10(minV)) / span) * (height - 2 * pad);
   const x = (time) => pad + (maxT > minT ? ((time - minT) / (maxT - minT)) : 0.5) * (width - 2 * pad);
   const colour = { alive: '#4ecdc4', stuck: '#8a8a8a', dead: '#ff6b4a' };
   const circles = dots.filter((post) => Number.isFinite(Date.parse(post.published_at))).map((post) =>
     `<circle cx="${x(Date.parse(post.published_at)).toFixed(1)}" cy="${y(post.views).toFixed(1)}" r="${post.label === 'alive' ? 7 : 4}" fill="${colour[post.label]}" opacity="0.85"><title>${escapeHtml(post.first_line)} · ${fmt(post.views)} views</title></circle>`).join('');
-  const line = (views, label, stroke) => `<line x1="${pad}" x2="${width - pad}" y1="${y(views)}" y2="${y(views)}" stroke="${stroke}" stroke-width="3" stroke-dasharray="10 8"/><text x="${width - pad}" y="${y(views) - 10}" text-anchor="end" fill="${stroke}" font-size="26">${label}</text>`;
+  const line = (views, label, stroke, below = false) => `<line x1="${pad}" x2="${width - pad}" y1="${y(views)}" y2="${y(views)}" stroke="${stroke}" stroke-width="3" stroke-dasharray="10 8"/><text x="${width - pad}" y="${below ? y(views) + 34 : y(views) - 12}" text-anchor="end" fill="${stroke}" font-size="28" font-weight="700" paint-order="stroke" stroke="#1a1a1a" stroke-width="6">${label}</text>`;
   const median = result.median_views ?? 1;
   const top = result.top_posts?.[0];
   const monthsRows = result.monthly.map((month) => `<tr><td>${month.month}</td><td>${fmt(month.posts)}</td><td>${fmt(month.median_views)}</td><td>${month.alive_share}%</td></tr>`).join('');
@@ -216,7 +221,7 @@ table{border-collapse:collapse;width:100%;background:var(--bg2);border-radius:12
 <div class="stat alive"><span>alive (${ALIVE_MULTIPLE}x+)</span><b>${result.shares_percent.alive ?? 'unknown'}%</b></div>
 </section>
 <section><h2>Every post against your median</h2>
-<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="views per post over time">${circles}${line(median, `median ${fmt(median)}`, '#ffffff')}${line(median * ALIVE_MULTIPLE, `alive ${ALIVE_MULTIPLE}x`, '#4ecdc4')}</svg></section>
+<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="views per post over time">${circles}${line(median, `median ${fmt(median)}`, '#ffffff', true)}${line(median * ALIVE_MULTIPLE, `alive ${ALIVE_MULTIPLE}x`, '#4ecdc4')}</svg></section>
 ${result.number_one ? `<section><h2>#1: what Threads still pushes</h2><div class="cards">${patternCard(result.number_one, 'one')}</div></section>` : ''}
 ${result.most_alive?.length ? `<section><h2>Most alive</h2><div class="cards">${result.most_alive.map((p) => patternCard(p, '')).join('')}</div></section>` : ''}
 ${result.most_dead?.length ? `<section><h2>What Threads killed</h2><div class="cards">${result.most_dead.map((p) => patternCard(p, 'deadc')).join('')}</div></section>` : ''}

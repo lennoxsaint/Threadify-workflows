@@ -27,6 +27,7 @@ test('coverage leaves out posts outside the window, too-new posts and unknown vi
   assert.equal(result.coverage.posts_counted, 4);
   assert.equal(result.coverage.first_post, '2026-01-05T10:00:00Z');
   assert.equal(result.median_views, 650);
+  assert.ok(Number.isInteger(result.median_views));
   assert.equal(result.top_multiple, 107.7);
   assert.deepEqual(result.shares_percent, { dead: 50, stuck: 25, alive: 25 });
   assert.equal(result.never_broke_out_percent, 75);
@@ -58,4 +59,12 @@ test('the report page is self-contained and escapes post text', () => {
 test('bad input fails loudly', () => {
   assert.throws(() => analyse(null));
   assert.throws(() => analyse({ performance: { nope: true } }));
+});
+
+test('the median and alive guides stay inside the chart when nothing breaks out', () => {
+  const data = input([post('a', '01-05', 100), post('b', '02-05', 200), post('c', '03-05', 300)]);
+  const html = renderHtml(analyse(data), { posts: labelledPosts(data) });
+  const ys = [...html.matchAll(/<line [^>]*y1="([-\d.]+)"/g)].map((match) => Number(match[1]));
+  assert.equal(ys.length, 2);
+  for (const y of ys) assert.ok(y >= 0 && y <= 520, `guide at y=${y} is off the chart`);
 });

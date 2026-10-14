@@ -1,3 +1,7 @@
+# 0.34.3
+
+- What's Working: the report chart spans your real lowest to highest views and always shows the median and alive lines, labels no longer overlap, medians are whole numbers, the report opens over 127.0.0.1 (some hosts block file:// pages), and analysis caveats stay out of the posts
+
 # 0.34.2
 
 - What's Working: month slices end on the first day of the next month (search_posts treats to as exclusive), so no month loses its last day
