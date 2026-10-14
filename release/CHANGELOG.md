@@ -1,6 +1,6 @@
 # 0.34.3
 
-- What's Working: the report chart spans your real lowest to highest views, labels no longer overlap, and medians are whole numbers
+- What's Working: the report chart spans your real lowest to highest views and always shows the median and alive lines, labels no longer overlap, medians are whole numbers, the report opens over 127.0.0.1 (some hosts block file:// pages), and analysis caveats stay out of the posts
 
 # 0.34.2
 

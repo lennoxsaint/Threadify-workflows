@@ -27,6 +27,7 @@ test('coverage leaves out posts outside the window, too-new posts and unknown vi
   assert.equal(result.coverage.posts_counted, 4);
   assert.equal(result.coverage.first_post, '2026-01-05T10:00:00Z');
   assert.equal(result.median_views, 650);
+  assert.ok(Number.isInteger(result.median_views));
   assert.equal(result.top_multiple, 107.7);
   assert.deepEqual(result.shares_percent, { dead: 50, stuck: 25, alive: 25 });
   assert.equal(result.never_broke_out_percent, 75);

@@ -93,7 +93,8 @@ export function analyse(input) {
   const tooNewIds = new Set(tooNew.map((post) => post.post_id));
   const unknownViews = all.filter((post) => post.views === null && !tooNewIds.has(post.post_id));
   const counted = all.filter((post) => post.views !== null && !tooNewIds.has(post.post_id));
-  const medianViews = median(counted.map((post) => post.views));
+  const exactMedian = median(counted.map((post) => post.views));
+  const medianViews = exactMedian === null ? null : Math.round(exactMedian);
 
   const labelled = counted.map((post) => {
     const multiple = medianViews ? round1(post.views / medianViews) : null;
@@ -112,7 +113,7 @@ export function analyse(input) {
   const monthly = [...months.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([month, posts]) => ({
     month,
     posts: posts.length,
-    median_views: median(posts.map((post) => post.views)),
+    median_views: Math.round(median(posts.map((post) => post.views))),
     alive_share: round1((posts.filter((post) => post.label === 'alive').length / posts.length) * 100),
   }));
 
