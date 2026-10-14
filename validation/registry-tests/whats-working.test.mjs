@@ -13,7 +13,7 @@ test("What's Working registers read, generate and schedule tools and never publi
   const workflow = describeWorkflow(loadWorkflowRegistry({ root }), 'whats-working');
   assert.equal(workflow.skill_name, 'threadify-whats-working');
   assert.equal(workflow.title, "What's Working");
-  for (const tool of ['read_post_performance', 'generate_content', 'schedule_post', 'get_schedule_status']) {
+  for (const tool of ['search_posts', 'generate_content', 'schedule_post', 'get_schedule_status']) {
     assert.ok(workflow.required_mcp_tools.includes(tool), `needs ${tool}`);
   }
   for (const tool of ['publish_now', 'edit_draft', 'reschedule_post', 'cancel_schedule']) {
@@ -29,6 +29,7 @@ test("What's Working is honest about the window, unknowns and approval", () => {
   assert.match(skill, /Never schedule without the owner's "yes" to the exact packet/);
   assert.match(skill, /Schedule only on an explicit "yes"/);
   assert.match(skill, /references\/demo-feedback-rules\.md/);
+  assert.match(skill, /`search_posts` with `query: "\*"`/);
   assert.match(skill, /owner-overlay\.md/);
   assert.doesNotMatch(skill, /`publish_now`/);
   assert.equal(manifest.approval_gate.required, true);
