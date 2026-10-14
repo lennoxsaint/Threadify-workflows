@@ -59,3 +59,11 @@ test('bad input fails loudly', () => {
   assert.throws(() => analyse(null));
   assert.throws(() => analyse({ performance: { nope: true } }));
 });
+
+test('the median and alive guides stay inside the chart when nothing breaks out', () => {
+  const data = input([post('a', '01-05', 100), post('b', '02-05', 200), post('c', '03-05', 300)]);
+  const html = renderHtml(analyse(data), { posts: labelledPosts(data) });
+  const ys = [...html.matchAll(/<line [^>]*y1="([-\d.]+)"/g)].map((match) => Number(match[1]));
+  assert.equal(ys.length, 2);
+  for (const y of ys) assert.ok(y >= 0 && y <= 520, `guide at y=${y} is off the chart`);
+});

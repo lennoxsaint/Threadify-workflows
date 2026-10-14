@@ -183,8 +183,10 @@ export function renderHtml(result, { handle = '', posts = [] } = {}) {
   const width = 1600; const height = 520; const pad = 60;
   const times = dots.map((post) => Date.parse(post.published_at)).filter(Number.isFinite);
   const minT = Math.min(...times); const maxT = Math.max(...times);
-  const maxV = Math.max(...dots.map((post) => post.views), 1);
-  const minV = Math.max(1, Math.min(...dots.map((post) => post.views)));
+  // The domain always includes the median and the alive line, so both guides stay on the chart.
+  const guideMedian = result.median_views ?? 1;
+  const maxV = Math.max(...dots.map((post) => post.views), guideMedian * ALIVE_MULTIPLE * 1.2, 1);
+  const minV = Math.max(1, Math.min(...dots.map((post) => post.views), guideMedian / 2));
   const span = Math.log10(maxV) - Math.log10(minV) || 1;
   const y = (views) => height - pad - ((Math.log10(Math.max(views, minV)) - Math.log10(minV)) / span) * (height - 2 * pad);
   const x = (time) => pad + (maxT > minT ? ((time - minT) / (maxT - minT)) : 0.5) * (width - 2 * pad);
