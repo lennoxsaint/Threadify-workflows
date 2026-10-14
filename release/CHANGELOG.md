@@ -1,3 +1,7 @@
+# 0.34.3
+
+- What's Working: the report chart spans your real lowest to highest views, labels no longer overlap, and medians are whole numbers
+
 # 0.34.2
 
 - What's Working: month slices end on the first day of the next month (search_posts treats to as exclusive), so no month loses its last day
