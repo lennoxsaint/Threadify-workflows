@@ -34,11 +34,15 @@ Core workflows do not call `publish_now`, `send_reply` or
 `enable_auto_reply`. QBR stages only. X artifacts are not X delivery proof.
 Never bypass entitlements, credentials, security prompts or owner release gates.
 
-First Followers drafts welcomes, comments and replies for the owner to send by
-hand. It never follows, likes, comments, replies, posts or DMs from the browser,
-caps welcomes at 20 a day, puts no links in comments, repeats no comment text,
+First Followers stages comments one at a time for the owner to publish. After
+one batch approval the agent may type a drafted comment into a reply composer
+and click Follow at the planned step; it never clicks Post or presses Enter, and
+never unfollows, likes, reposts or DMs. It caps runs at 10 people and days at 20
+people and 40 comments, puts no links in comments, repeats no comment text,
 skips anyone who looks under 18, private, distressed, a brand or a bot, avoids
-sensitive posts, never claims follow-back rates and keeps receipts counts-only.
+sensitive posts, stops on any Threads warning or captcha, saves voice rules to
+the Brain only on yes, never claims follow-back rates and keeps receipts
+counts-only.
 
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves

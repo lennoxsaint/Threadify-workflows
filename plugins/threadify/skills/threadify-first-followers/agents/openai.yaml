@@ -1,4 +1,4 @@
 interface:
   display_name: "First Followers"
-  short_description: "Get your first Threads followers from zero, every send by your hand"
-  default_prompt: "Use $threadify-first-followers to get my first Threads followers: find today's newcomers, creators and big posts in my niche, draft every welcome and reply for me to send by hand, write my first three posts for my approval, and track day one."
+  short_description: "Get your first Threads followers, one person at a time; you just press Post"
+  default_prompt: "Use $threadify-first-followers to get my first Threads followers: find 10 newcomers and creators in my niche, stage each comment in my voice one at a time for me to publish, follow at the right step, and learn from my edits."
