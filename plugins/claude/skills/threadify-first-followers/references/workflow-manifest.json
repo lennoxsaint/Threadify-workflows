@@ -1,0 +1,117 @@
+{
+  "workflow_id": "first-followers",
+  "version": "0.1.0",
+  "title": "First Followers",
+  "summary": "Get your first Threads followers from zero: find today's newcomers, creators and early big posts in your niche, draft every welcome and reply for you to send by hand, write your first three posts, and track day one - works with no post history.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-first-followers",
+    "source": "plugins/threadify/skills/threadify-first-followers/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/first-followers/README.md"
+    ]
+  },
+  "triggers": [
+    "first followers",
+    "get my first threads followers",
+    "i have zero followers on threads",
+    "grow a new threads account",
+    "start threads from zero",
+    "how do i get followers on threads with no posts"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "connected account, signed-in visible browser, niche from the Brain or three short answers",
+        "schema_ref": "inline:first-followers-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "welcome, creator and reply cards drafted for hand-sending, three first posts with approval packet and schedule receipt, local day-one scoreboard",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "generate_content",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "get_brain_overview",
+    "query_brain",
+    "get_growth_signal",
+    "search_posts",
+    "save_draft",
+    "get_draft"
+  ],
+  "free_capabilities": [
+    "visible-browser Threads search for today's newcomers, active niche creators and early big posts (read only)",
+    "welcome, follow-and-comment and reply-up cards drafted for the owner to send by hand",
+    "local draft checker for the daily welcome cap, links, duplicates, flattery templates, DMs and specific references",
+    "local casing guard that proves lower(original) == lower(final) for every post",
+    "self-contained local day-one scoreboard served on 127.0.0.1, counts only"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post generation counts toward the plan's AI generations",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "three exact posts",
+      "three local dates and times",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "draft-only-human-sends",
+    "instructions": [
+      "Never follow, like, comment, reply, post or DM from the browser; the owner does every follow and send by hand.",
+      "When the visible browser is signed in to a different Threads account than Threadify, stop before any search and ask the owner to switch.",
+      "When Threads search returns no fitting newcomers, creators or early posts, say so and show fewer cards; never pad with weak or off-niche picks.",
+      "Never write the three posts yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
+      "When best_time_to_post has no history for the account, say the times are general, not measured.",
+      "When a follower or post count is not readable, show it as unknown, never 0."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account match between Threadify and the visible browser",
+      "starting follower and post counts with timestamp",
+      "niche source (Brain or owner answers)",
+      "card counts per move and draft checker result",
+      "models requested and reported",
+      "casing guard results",
+      "approval reply",
+      "scheduled posts and slots",
+      "schedule readback",
+      "day-one re-check counts and change since start",
+      "fallback state"
+    ]
+  }
+}
