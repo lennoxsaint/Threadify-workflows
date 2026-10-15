@@ -1,3 +1,7 @@
+# 0.35.1
+
+- First Followers: Move 1 now works down a ladder of newcomer searches (first thread, hello threads, new to threads, new here, just joined, introduce myself, niche + new here) and scrolls each one, because Threads search is fuzzy and loads a few posts at a time; it never pads the list with people who are not new.
+
 # 0.35.0
 
 - Add First Followers: get your first Threads followers from zero, with no post history. Your agent finds today's newcomers, creators who posted today and the day's early big posts in your niche, and drafts every welcome ("welcome to threads, <name>! just followed you." plus one real line), creator comment and reply for you to send by hand; it never follows, likes, comments, posts or DMs for you, caps welcomes at 20 a day, and uses no links, repeats or copy-paste praise. Threadify writes your first three posts (intro, proof, opinion), scheduled only after one exact yes, and a local day-one scoreboard shows followers since you started, counts only
