@@ -18,7 +18,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Daily Greatest Hits (`daily-greatest-hits`) | recipe | [recipe](../workflows/daily-greatest-hits/README.md) | recipe | use my greatest hits for today's posts; prepare daily candidates from a greatest-hits source pack |
 | Daily Posts Heartbeat (`daily-posts-heartbeat`) | skill | `threadify-daily-posts-heartbeat` | advanced | schedule my approved daily posts; run my daily posts heartbeat |
 | Find Your Niche (`find-your-niche`) | skill | `threadify-find-your-niche` | advanced | find my niche from my Threads data; use my best Threads posts and comments to find my niche |
-| First Followers (`first-followers`) | skill | `threadify-first-followers` | advanced | first followers; get my first threads followers; i have zero followers on threads; grow a new threads account; start threads from zero; how do i get followers on threads with no posts |
+| First Followers (`first-followers`) | skill | `threadify-first-followers` | advanced | first followers; get my first threads followers; i have zero followers on threads; grow a new threads account; start threads from zero; how do i get followers on threads with no posts; stage comments for me on threads; welcome new people on threads for me |
 | Follow Through (`follow-through`) | skill | `threadify-follow-through` | conversation | show what I promised buyers; follow through on dated buyer commitments |
 | Get Set Up (`get-set-up`) | skill | `threadify-get-set-up` | advanced | set up Threadify; get me started with Threadify; resume my Threadify setup |
 | Greatest Hits Runway (`greatest-hits-runway`) | skill | `threadify-greatest-hits-runway` | advanced | prepare my greatest hits runway; review a seven-day runway of proven posts |

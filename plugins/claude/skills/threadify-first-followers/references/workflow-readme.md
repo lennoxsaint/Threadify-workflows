@@ -4,13 +4,16 @@
 
 Use the complete [installable skill](../../skills/threadify-first-followers/SKILL.md).
 
-You have few or zero followers and nothing posted yet. First Followers runs Lennox Saint's own playbook from when he started Threads with 17 followers in July 2023, and it needs no post history:
+You have few or zero followers and nothing posted yet. First Followers runs Lennox Saint's own playbook from when he started Threads with 17 followers in July 2023, one person at a time, and it needs no post history:
 
-- **Welcome to Threads**: finds people who posted their first thread in the last day, near your niche, and drafts a short welcome for each that mentions something real from their bio or post (up to 10 a run, 20 a day).
-- **Follow + 3 comments**: picks 3 creators in your lane who posted today and drafts one comment on each of their 3 latest posts; the third ends with "followed!".
-- **Reply up**: finds up to 5 of today's biggest niche posts while they're still early and drafts one useful reply each.
-- **Post 3x a day**: Threadify writes your first three posts (intro, proof, opinion) in your voice. You see one approval packet with the exact posts and times; nothing is scheduled until you say "yes", and nothing is published immediately.
+1. **Find 10.** Your agent searches Threads for today's newcomers ("first thread", "new here", "just joined") and small creators posting in your niche, and skips anyone you engaged in the last 30 days.
+2. **One yes.** You see the list (name, short bio, post count, plan) and say yes once.
+3. **One person at a time.** People with 1-2 posts get one thoughtful comment ending "welcome to threads! just followed you"; your agent follows them right before staging it. Creators with 3+ posts get a comment on their newest post, one on the next, then your agent follows them, then a final comment on the third ("just followed you!", or the welcome line only if they're actually new). Your agent types each comment into the reply box. **You press Post.** You can change the text first, say "skip", or say "edit".
+4. **It learns your voice.** Comments are written from your Threadify Brain. At the end it compares what it staged with what you published ("You shortened 6 of 10, cut emojis") and suggests up to 3 voice rules, saved to your Brain only when you say yes (or "always").
+5. **Scoreboard and re-check.** A local page shows your follower count since you started. Tomorrow, say "re-check" and it counts who followed back.
 
-Your agent only searches, reads and drafts in your signed-in browser. **You** do every follow and every send, by hand: it never follows, likes, comments, replies, posts or DMs for you. Drafts have no links, no copy-paste praise and no repeats, and the agent skips anyone who looks under 18, private, distressed, a brand or a bot, and anything sensitive.
+Optional extras: Threadify writes your next three posts, scheduled only after one exact yes, and your agent can run this on a schedule after you pick the time.
 
-A local day-one scoreboard shows your starting follower count and how many actions you took (counts only, nobody else's details). Re-check later and it shows the change since you started. It never promises follow-backs or credits a follower to one action.
+Your agent never clicks Post, never presses Enter in a reply box, and never unfollows, likes, reposts or DMs. At most 10 people a run and 20 people / 40 comments a day, no links, no repeats, no copy-paste praise, and it skips anyone who looks under 18, private, distressed, a brand or a bot, and anything sensitive. It stops at any Threads warning or captcha. No browser control? Copy mode shows each comment with its post link for you to paste.
+
+A private ledger on your computer keeps hashed handles, counts and your own comments, never published. It never promises follow-backs or credits a follower to one comment.

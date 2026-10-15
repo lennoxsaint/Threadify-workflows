@@ -1,8 +1,8 @@
 {
   "workflow_id": "first-followers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "First Followers",
-  "summary": "Get your first Threads followers from zero: find today's newcomers, creators and early big posts in your niche, draft every welcome and reply for you to send by hand, write your first three posts, and track day one - works with no post history.",
+  "summary": "Get your first Threads followers from zero, one person at a time: find 10 newcomers and small creators in your niche, and your agent stages each comment in your voice and follows at the right step while you just press Post; it learns from your edits and tracks progress - works with no post history, with copy mode when there is no browser control.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-first-followers",
@@ -24,18 +24,20 @@
     "i have zero followers on threads",
     "grow a new threads account",
     "start threads from zero",
-    "how do i get followers on threads with no posts"
+    "how do i get followers on threads with no posts",
+    "stage comments for me on threads",
+    "welcome new people on threads for me"
   ],
   "io": {
     "inputs": [
       {
-        "name": "connected account, signed-in visible browser, niche from the Brain or three short answers",
+        "name": "connected account, a browser or computer-use tool signed in to the same Threads account (or copy mode), voice from the Threadify Brain or three short answers",
         "schema_ref": "inline:first-followers-input"
       }
     ],
     "outputs": [
       {
-        "name": "welcome, creator and reply cards drafted for hand-sending, three first posts with approval packet and schedule receipt, local day-one scoreboard",
+        "name": "10-person batch with one approval, comments staged one at a time for the owner to publish, follows at the planned step, staged-vs-published learning summary, voice rules saved to the Brain only on yes, private local ledger, counts-only scoreboard, optional three scheduled posts",
         "schema_ref": "schemas/workflow-receipt.v1.json"
       }
     ]
@@ -61,56 +63,67 @@
   "optional_mcp_tools": [
     "get_brain_overview",
     "query_brain",
+    "remember",
     "get_growth_signal",
     "search_posts",
     "save_draft",
     "get_draft"
   ],
   "free_capabilities": [
-    "visible-browser Threads search for today's newcomers, active niche creators and early big posts (read only)",
-    "welcome, follow-and-comment and reply-up cards drafted for the owner to send by hand",
-    "local draft checker for the daily welcome cap, links, duplicates, flattery templates, DMs and specific references",
-    "local casing guard that proves lower(original) == lower(final) for every post",
-    "self-contained local day-one scoreboard served on 127.0.0.1, counts only"
+    "visible-browser Threads search for newcomers (1-2 posts) and small active creators in your niche",
+    "comments staged one at a time in the Threads reply box for the owner to publish, with follows at the planned step after one batch approval",
+    "copy mode when no browser control is available: the owner pastes, posts and follows",
+    "local draft checker for plan shapes, endings, daily caps, links, duplicates, flattery templates, DMs, line breaks and specific references",
+    "local staged-vs-published diff for the learning summary (length, emoji, casing, phrases)",
+    "private local ledger with hashed handles and counts, used for 30-day dedupe, daily caps and the follow-back re-check",
+    "local casing guard that proves lower(original) == lower(final) for every optional post",
+    "self-contained local scoreboard served on 127.0.0.1, counts only"
   ],
   "paid_capability_stubs": [
-    "Threadify post generation counts toward the plan's AI generations",
-    "connected scheduling and readback"
+    "optional Threadify post generation counts toward the plan's AI generations",
+    "optional connected scheduling and readback"
   ],
   "approval_gate": {
     "required": true,
     "type": "explicit-final-approval",
     "must_show": [
       "account and timezone",
-      "three exact posts",
-      "three local dates and times",
-      "action"
+      "the people in the batch with post count and plan (1 comment or 3, follow step)",
+      "action: stage comments one at a time for the owner to publish and follow at the step shown",
+      "exact voice rules before any Brain save",
+      "for optional posts: three exact posts, three local dates and times, and the schedule action"
     ]
   },
   "fallback": {
-    "mode": "draft-only-human-sends",
+    "mode": "staged-human-publishes",
     "instructions": [
-      "Never follow, like, comment, reply, post or DM from the browser; the owner does every follow and send by hand.",
-      "When the visible browser is signed in to a different Threads account than Threadify, stop before any search and ask the owner to switch.",
-      "When Threads search returns no fitting newcomers, creators or early posts, say so and show fewer cards; never pad with weak or off-niche picks.",
-      "Never write the three posts yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
-      "When best_time_to_post has no history for the account, say the times are general, not measured.",
+      "The agent may type into a reply composer and click Follow only within the batch approval; it never clicks Post, Publish or reply-send and never presses Enter in a composer; the owner publishes every comment.",
+      "Never unfollow, like, repost, quote or DM.",
+      "Without a browser or computer-use tool, use copy mode: show each comment with its post link and the owner pastes, posts and follows.",
+      "When the browser is signed in to a different Threads account than Threadify, stop before any search and ask the owner to switch.",
+      "Stop at once on any Threads warning, action block, rate limit or captcha.",
+      "When a staged comment is not found published after one re-read, mark it skipped and never retype or resend it.",
+      "When Threads search finds fewer than 10 fitting people, say so and continue with fewer; never pad the list.",
+      "Never save voice rules to the Brain without the owner's yes, or their saved 'always' preference.",
+      "Never create a recurring run before the owner says yes and picks the time.",
+      "Never write the optional posts yourself when Threadify generation is unavailable; report the exact blocker and manual next step.",
       "When a follower or post count is not readable, show it as unknown, never 0."
     ]
   },
   "receipt": {
     "schema": "workflow-receipt.v1",
     "must_prove": [
-      "account match between Threadify and the visible browser",
+      "account match between Threadify and the visible browser, or copy mode",
       "starting follower and post counts with timestamp",
-      "niche source (Brain or owner answers)",
-      "card counts per move and draft checker result",
-      "models requested and reported",
-      "casing guard results",
-      "approval reply",
-      "scheduled posts and slots",
-      "schedule readback",
-      "day-one re-check counts and change since start",
+      "voice source (Brain, reply settings, owner samples or low-confidence default)",
+      "batch size, plans and draft checker result",
+      "batch approval reply",
+      "comments staged, published, edited and skipped, and follows, as counts",
+      "staged-vs-published learning summary and any voice rules saved with Brain readback",
+      "ledger recorded (counts only in the receipt)",
+      "follower count at wrap-up and the re-check counts since start",
+      "optional posts: models, casing guard, approval reply, scheduled slots and readback",
+      "schedule offer outcome and readback when created",
       "fallback state"
     ]
   }

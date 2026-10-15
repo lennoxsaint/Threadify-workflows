@@ -768,9 +768,9 @@
     },
     {
       "workflow_id": "first-followers",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "First Followers",
-      "summary": "Get your first Threads followers from zero: find today's newcomers, creators and early big posts in your niche, draft every welcome and reply for you to send by hand, write your first three posts, and track day one - works with no post history.",
+      "summary": "Get your first Threads followers from zero, one person at a time: find 10 newcomers and small creators in your niche, and your agent stages each comment in your voice and follows at the right step while you just press Post; it learns from your edits and tracks progress - works with no post history, with copy mode when there is no browser control.",
       "kind": "skill",
       "skill_name": "threadify-first-followers",
       "entrypoint": "skills/threadify-first-followers/SKILL.md",
@@ -792,18 +792,20 @@
         "i have zero followers on threads",
         "grow a new threads account",
         "start threads from zero",
-        "how do i get followers on threads with no posts"
+        "how do i get followers on threads with no posts",
+        "stage comments for me on threads",
+        "welcome new people on threads for me"
       ],
       "io": {
         "inputs": [
           {
-            "name": "connected account, signed-in visible browser, niche from the Brain or three short answers",
+            "name": "connected account, a browser or computer-use tool signed in to the same Threads account (or copy mode), voice from the Threadify Brain or three short answers",
             "schema_ref": "inline:first-followers-input"
           }
         ],
         "outputs": [
           {
-            "name": "welcome, creator and reply cards drafted for hand-sending, three first posts with approval packet and schedule receipt, local day-one scoreboard",
+            "name": "10-person batch with one approval, comments staged one at a time for the owner to publish, follows at the planned step, staged-vs-published learning summary, voice rules saved to the Brain only on yes, private local ledger, counts-only scoreboard, optional three scheduled posts",
             "schema_ref": "schemas/workflow-receipt.v1.json"
           }
         ]
