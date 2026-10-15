@@ -1,3 +1,7 @@
+# 0.36.0
+
+- First Followers now runs one person at a time: your agent finds 10 newcomers and small creators in your niche, stages each comment in your voice in the Threads reply box and follows at the right step after one batch yes, and you just press Post. Newcomers (1-2 posts) get one comment ending "welcome to threads! just followed you"; creators get two comments, a follow, then a final comment. It compares staged and published text to learn your voice, saves up to 3 voice rules to your Threadify Brain only on yes (or "always"), keeps a private local ledger (hashed handles, counts, your own comments), caps days at 20 people and 40 comments, offers to run on a schedule after you pick the time, and re-checks follow-backs the next day. Copy mode works without browser control; writing your next three posts is now optional.
+
 # 0.35.1
 
 - First Followers: Move 1 now works down a ladder of newcomer searches (first thread, hello threads, new to threads, new here, just joined, introduce myself, niche + new here) and scrolls each one, because Threads search is fuzzy and loads a few posts at a time; it never pads the list with people who are not new.
