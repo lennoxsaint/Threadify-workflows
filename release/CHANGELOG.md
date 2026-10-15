@@ -1,3 +1,7 @@
+# 0.35.0
+
+- Add First Followers: get your first Threads followers from zero, with no post history. Your agent finds today's newcomers, creators who posted today and the day's early big posts in your niche, and drafts every welcome ("welcome to threads, <name>! just followed you." plus one real line), creator comment and reply for you to send by hand; it never follows, likes, comments, posts or DMs for you, caps welcomes at 20 a day, and uses no links, repeats or copy-paste praise. Threadify writes your first three posts (intro, proof, opinion), scheduled only after one exact yes, and a local day-one scoreboard shows followers since you started, counts only
+
 # 0.34.3
 
 - What's Working: the report chart spans your real lowest to highest views and always shows the median and alive lines, labels no longer overlap, medians are whole numbers, the report opens over 127.0.0.1 (some hosts block file:// pages), and analysis caveats stay out of the posts
