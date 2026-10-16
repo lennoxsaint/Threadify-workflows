@@ -1,3 +1,7 @@
+# 0.37.1
+
+- Director Mode: schedule with the exact text and the video, never draft_id with a video (a draft-linked schedule dropped the video in rehearsal).
+
 # 0.37.0
 
 - Add Director Mode: stop editing, start directing. Give your agent one raw talking-head video and it makes four better versions in a director/ folder (your original is never touched), with a one-line scoreboard after each: Speed cuts dead air over 0.3 s down to about 0.1 s and removes retakes, keeping your last clean take without clipping a word; Altitude moves your strongest proof line to second 1 and cuts what doesn't serve the viewer; Depth has a fresh outside judge score your first 3 seconds out of 10, fixes the top fault and shows both scores; Range adds up to 4 free public-domain Openverse sounds about 15 LU under your voice and never on a word, burned word-highlight captions (lowercase, 3 words at a time) and a title card, in a 1920x1080 MP4 under 95 MB checked by re-transcription. Threadify then writes the post in your voice and schedules it with the video only after one exact yes. Free and local with ffmpeg and whisper.cpp
