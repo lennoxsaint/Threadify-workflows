@@ -44,6 +44,12 @@ sensitive posts, stops on any Threads warning or captcha, saves voice rules to
 the Brain only on yes, never claims follow-back rates and keeps receipts
 counts-only.
 
+Director Mode never writes to the original video, keeps raw video, audio and
+transcripts on the owner's computer, gives the outside judge only still frames
+and words, uses only CC0 or public-domain sounds (CC BY on opt-in with a credit
+line, never NC, ND or SA), uploads only the finished video, never publishes now
+and schedules only after the owner's exact yes to the post card.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

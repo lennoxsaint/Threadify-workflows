@@ -703,6 +703,58 @@
       ]
     },
     {
+      "workflow_id": "director-mode",
+      "version": "0.1.0",
+      "title": "Director Mode",
+      "summary": "Stop editing, start directing: turn one raw talking-head video into a finished post in four levels - cut dead air and retakes, move your strongest proof line to second 1, let an outside judge score the first 3 seconds and fix the top fault, then add free sound effects, word-highlight captions and a title card - with a one-line scoreboard after each; Threadify writes the post and schedules it with the video only after one exact yes. Free, local, and your original is never touched.",
+      "kind": "skill",
+      "skill_name": "threadify-director-mode",
+      "entrypoint": "skills/threadify-director-mode/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-director-mode/SKILL.md",
+      "source_manifest": "workflows/director-mode/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/director-mode/README.md"
+        ]
+      },
+      "triggers": [
+        "director mode",
+        "stop editing start directing",
+        "edit my raw video for me",
+        "turn my talking head video into a post",
+        "cut the dead air and retakes from my video",
+        "make my video something people finish"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "one raw talking-head video file on this computer (60-90 seconds typical), ffmpeg, whisper.cpp with a speech model, optional Threadify connection for the post",
+            "schema_ref": "inline:director-mode-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "director/ folder beside the original with v1 (speed), v2 (altitude), v3 (depth) and final.mp4 (range, 1920x1080, at most 95 MB), a scoreboard line per level, two outside-judge scores, credits.json for sounds, verify result, and optionally one scheduled post with the video and its readback",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "find-your-niche",
       "version": "0.1.0",
       "title": "Find Your Niche",
