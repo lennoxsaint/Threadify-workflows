@@ -1,6 +1,6 @@
 {
   "workflow_id": "choose-your-first-offer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Choose Your First Offer",
   "summary": "Compare an intensive, lab, and kit with one evidence-bound scorecard and choose the fastest truthful offer hypothesis to validate.",
   "kind": "skill",
@@ -21,7 +21,7 @@
   "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
   "required_mcp_tools": [],
   "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools", "call_agent_action"],
-  "free_capabilities": ["three-model comparison", "fixed weighted scorecard", "Proof Loop Map", "inactive local validation page"],
+  "free_capabilities": ["three-model comparison", "fixed weighted scorecard", "Proof Loop Map", "inactive local validation page", "lesson-first Threads evidence fallback", "optional ChatGPT Sites validation handoff; provider access may be required"],
   "paid_capability_stubs": ["connected owned-evidence reads depend on current Threadify scopes and entitlement"],
   "approval_gate": {
     "required": true,
