@@ -1,0 +1,4 @@
+interface:
+  display_name: "Director Mode"
+  short_description: "Stop editing, start directing: four levels from raw take to finished post"
+  default_prompt: "Use $threadify-director-mode on my raw video: cut the dead air and retakes, move my strongest proof line to second 1, get an outside judge on the first 3 seconds, add sound, captions and a title card, then have Threadify write the post and schedule it only after my yes."

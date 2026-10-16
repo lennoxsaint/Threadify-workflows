@@ -17,6 +17,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Cross-post To X After Threads | yes | yes | yes | yes | yes | yes | yes |
 | Daily Greatest Hits | yes | yes | yes | yes | yes | yes | yes |
 | Daily Posts Heartbeat | yes | yes | yes | yes | yes | yes | yes |
+| Director Mode | yes | yes | yes | yes | yes | yes | yes |
 | Find Your Niche | yes | yes | yes | yes | yes | yes | yes |
 | First Followers | yes | yes | yes | yes | yes | yes | yes |
 | Follow Through | yes | yes | yes | yes | yes | yes | yes |
