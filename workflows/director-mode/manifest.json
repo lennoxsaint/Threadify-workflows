@@ -1,0 +1,126 @@
+{
+  "workflow_id": "director-mode",
+  "version": "0.1.0",
+  "title": "Director Mode",
+  "summary": "Stop editing, start directing: turn one raw talking-head video into a finished post in four levels - cut dead air and retakes, move your strongest proof line to second 1, let an outside judge score the first 3 seconds and fix the top fault, then add free sound effects, word-highlight captions and a title card - with a one-line scoreboard after each; Threadify writes the post and schedules it with the video only after one exact yes. Free, local, and your original is never touched.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-director-mode",
+    "source": "plugins/threadify/skills/threadify-director-mode/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/director-mode/README.md"
+    ]
+  },
+  "triggers": [
+    "director mode",
+    "stop editing start directing",
+    "edit my raw video for me",
+    "turn my talking head video into a post",
+    "cut the dead air and retakes from my video",
+    "make my video something people finish"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "one raw talking-head video file on this computer (60-90 seconds typical), ffmpeg, whisper.cpp with a speech model, optional Threadify connection for the post",
+        "schema_ref": "inline:director-mode-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "director/ folder beside the original with v1 (speed), v2 (altitude), v3 (depth) and final.mp4 (range, 1920x1080, at most 95 MB), a scoreboard line per level, two outside-judge scores, credits.json for sounds, verify result, and optionally one scheduled post with the video and its readback",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "generate_content",
+    "create_media_upload",
+    "list_scheduled_posts",
+    "best_time_to_post",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "upload_media",
+    "get_brain_overview",
+    "query_brain",
+    "save_draft",
+    "get_draft"
+  ],
+  "free_capabilities": [
+    "local word-timed transcription with whisper.cpp, one speech stretch at a time",
+    "dead-air cuts (over 0.3 s down to about 0.1 s) and retake removal that keeps the last clean take, with room tone kept at every join",
+    "reorder render: proof line to second 1 and cut lines, from a plan the agent writes",
+    "outside-judge packet (contact sheet, first-3-seconds frames and words, rubric) for a fresh subagent or external CLI",
+    "Openverse sound effects with a CC0/public-domain licence filter, rate-limit pacing, a local cache and credits.json",
+    "loudness-matched mix about 15 LU under the voice with cues kept off word onsets",
+    "burned word-highlight captions (lowercase, at most 3 words) and a title card (drawtext or a HyperFrames overlay)",
+    "final 1920x1080 30 fps MP4 under 95 MB, verified by full decode, format checks, re-transcription and cut-edge sound checks",
+    "local casing guard that proves lower(original) == lower(final) for the post"
+  ],
+  "paid_capability_stubs": [
+    "optional Threadify post generation counts toward the plan's AI generations",
+    "optional connected video upload, scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "the exact final post text and any sound credit line",
+      "the final video and its length",
+      "the local date and time",
+      "action: schedule this post with the video; nothing publishes now"
+    ]
+  },
+  "fallback": {
+    "mode": "local-render-owner-posts",
+    "instructions": [
+      "Never write to the original video; every output goes to the director/ folder beside it.",
+      "Never upload the raw video, audio or transcript; only director/final.mp4 is uploaded, and only for the post.",
+      "When whisper-cli, a speech model or ffmpeg is missing, report the exact fix from the check command and run it with the owner's knowledge.",
+      "When ffmpeg lacks libass, finish without burned captions and say so.",
+      "When Openverse is down or over its limit, use cached sounds or none and say so; never use NC, ND or SA sounds, and CC BY only on opt-in with its credit line.",
+      "When no fresh subagent or external CLI is available, say the outside judge is unavailable and skip to Level 4; never judge your own edit as the outside judge.",
+      "When the judge's second score is not higher, say so plainly and keep the better version.",
+      "When verify finds a word missing at a cut that ran through sound, fix the cut before showing the final.",
+      "Never write the post yourself when Threadify generation is unavailable; report the blocker and the manual next step.",
+      "Never call publish_now; schedule only after the owner's exact yes to the post card, and read the schedule back.",
+      "When an upload or schedule outcome is unclear, read back before retrying and retry only with the same idempotency key."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "dependency check result and speech model used",
+      "original file untouched (outputs only in director/)",
+      "scoreboard line for each level",
+      "retakes cut and any vetoed",
+      "altitude order and reason",
+      "both outside-judge scores and the fault fixed",
+      "sound credits, licences and the measured LU under speech",
+      "verify result: plays, 1920x1080, 30 fps, size, words and cut edges",
+      "optional post: model, casing guard, upload, approval reply, scheduled slot and readback",
+      "fallback state"
+    ]
+  }
+}

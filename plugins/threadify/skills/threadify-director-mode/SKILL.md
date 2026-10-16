@@ -1,0 +1,44 @@
+---
+name: threadify-director-mode
+description: Stop editing. Start directing. Turn one raw talking-head video into a finished post in four levels - Speed (cut dead air and retakes), Altitude (move the strongest proof line to second 1), Depth (an outside judge scores the first 3 seconds, the agent fixes the top fault) and Range (sound effects, word-highlight captions and a title card) - with a one-line scoreboard after each, then Threadify writes the post in your voice and schedules it with the video only after one exact yes. Free and local; your original file is never touched. Use when someone has a raw clip, wants it edited for them, says "director mode", or asks to turn a talking-head take into a post.
+---
+
+# Director Mode
+
+Stop editing. Start directing. You give the agent one raw talking-head video (60-90 seconds is typical). The agent makes four better versions, one level at a time, and tells you after each what changed in one line. You make the calls; the agent does the cutting.
+
+It is free. Everything runs on this computer with free tools (ffmpeg, whisper.cpp and free sound effects from Openverse). Only the optional last step uses Threadify: writing the post and scheduling it.
+
+Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before the first connected call. A connection never authorizes uploading or scheduling. Only the owner's exact "yes" to the post card does.
+
+Resolve `scripts/` and `references/` paths against the directory containing this SKILL.md. The script is `node scripts/director-mode.mjs` (Node 18+, no npm packages); every command prints JSON.
+
+## Rules
+
+- Follow [demo feedback rules](references/demo-feedback-rules.md) for the whole run. If `~/.threadify/owner-overlay.md` exists, read it too and follow it; it is private, so never quote it into posts, files you publish or receipts.
+- **Never touch the original.** Every version goes into a `director/` folder next to it (`v1.mp4`, `v2.mp4`, `v3.mp4`, `final.mp4`). The script refuses to write over its source.
+- **Raw media stays on this computer.** Never upload the raw video, the audio or the transcript anywhere. The outside judge gets only a small folder of still frames and words. Only the finished video is uploaded, and only to Threadify for the post.
+- **The agent directs, the script cuts.** Judgement (what is the proof, what to cut, what order) is yours; timings, joins and loudness come from the script. Never hand-edit timestamps.
+- **No clipped words.** Every cut keeps room tone around speech (about 0.1 s at each join). If `verify` reports a word missing at a cut that ran through sound, fix it before showing the final.
+- **Sounds.** At most 4 short sounds. CC0 or public domain by default. CC BY only when the owner opts in, and then its credit line goes in the post. Never NC, ND or SA. Sounds sit about 15 LU under the voice (never less than 12) and their loud start never lands on a word onset.
+- **Openverse limits.** No key; at most 20 requests a minute and 200 a day; page size 20. The script waits between calls and caches every search and sound; reuse the cache.
+- **Posting.** Threadify writes the post. The agent may only lowercase it, keeping proper nouns, and proves `lower(original) == lower(final)` with `scripts/casing-guard.mjs`. Never publish now. Schedule only after the owner's exact "yes" to the post card, then read it back.
+- After every level, print the scoreboard line from the script's `scoreboard` field: `L1 Speed | cut 7 gaps, 5 retakes | 19.0s | director/v1.mp4`.
+
+## Steps
+
+1. **Check.** Run `node scripts/director-mode.mjs check`. It finds ffmpeg, ffprobe, whisper-cli, the ffmpeg filters it needs and a speech model. If `ok` is false, follow its `fixes` yourself and say what you're doing. A missing model is a free 148 MB download it prints, for example `mkdir -p ~/.threadify/director-mode/models && curl -L -o ~/.threadify/director-mode/models/ggml-base.en.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin` (`ggml-small.en.bin`, 488 MB, is more accurate). Pass `--model <path>` to use another file. Tell the owner in one line: "Four levels: speed, altitude, depth, range. Your original stays untouched."
+2. **Level 1 · Speed.** `transcribe <video>` (word timings from whisper.cpp; each stretch of speech is transcribed on its own so words land in the right place), then `cut-plan <video> --words director/<name>.words.json`. The plan shrinks dead air over 0.3 s to about 0.1 s, drops clicks and filler-only bits, and cuts retakes: when a line is restarted, the last clean take stays. Read its `retakes`; if one is not a real restart, re-run with `--keep-retake r2`. Then `render --plan director/plan.json --out director/v1.mp4 --level 1 --label Speed`. Print the scoreboard.
+3. **Level 2 · Altitude.** The goal is a video people finish. Read the plan's `lines`. Pick the strongest proof line (a number, a result, something the viewer can check) and move it to second 1 when that doesn't break the meaning. Cut every line that doesn't serve the viewer (preamble, "so", repeats, half-thoughts). Trim inside a line with `{"id": "L4", "start_word": 2}` or `"end_word"`. Write `director/altitude.json` as `{"order": ["L8", "L2", ...], "why": "<one line>"}` and `render --plan director/plan.json --order director/altitude.json --out director/v2.mp4 --level 2 --label Altitude --changed "<what you changed>"`. Print the scoreboard.
+4. **Level 3 · Depth.** Get an outside opinion on the first 3 seconds. Run `transcribe director/v2.mp4` and `contact-sheet director/v2.mp4 --words director/v2.words.json --out director/judge-1`. That folder holds `rubric.md`, a 1-frame-per-second contact sheet, 6 frames of the first 3 seconds and the words. Start a **fresh** judge that has never seen this conversation, the script or the plan: a new host subagent (default), or an external model CLI the owner has, given only this prompt: "Read <folder>/rubric.md and follow it exactly. Use only the files in that folder. Reply with the JSON only." It scores the opening out of 10 on: 12 words or fewer, proof on screen, curiosity, specificity, viewer relevance, no preamble, one breath. Fix its `top_fault` (reorder, trim, or plan the proof for the title card), render `director/v3.mp4` with `--level 3 --label Depth`, build `director/judge-2` and ask a **new** cold judge. Print both scores: "Judge: 4/10 -> 7/10". If the score did not go up, say so plainly and continue with the better version.
+5. **Level 4 · Range.** Bring in the crew on the chosen version (`vN`):
+   - Run `transcribe director/vN.mp4` so cues and captions use its own timing.
+   - **Sound designer.** `sfx search "whoosh" --max-seconds 2` and `sfx search "pop" --max-seconds 1.5` (add `--allow-by` only on the owner's opt-in), pick at most 4, `sfx fetch <id> --dir director` for each (it writes `director/credits.json`: title, creator, licence, url). Write `director/cues.json` as `{"cues": [{"file": "sfx/<id>.wav", "at": <seconds>, "why": "whoosh on the cut"}]}` (whoosh on a cut from `director/vN.mp4.edl.json` `joins`, pop on a key word) and run `mix director/vN.mp4 --cues director/cues.json --words director/vN.words.json --out director/mix.wav`. It moves any cue off a word onset and must report `pass: true` with `sfx_under_speech_lu` of 12 or more.
+   - **Captions.** `captions --words director/vN.words.json --out director/captions.ass`: burned word-highlight captions, lowercase, at most 3 words at a time.
+   - **Motion.** One title card that puts the proof on screen in a few words. With HyperFrames available (`npx hyperframes@0.8.77`), render a transparent 1920x1080 overlay and pass `--overlay title.mov`; otherwise pass `--title "<text>"` and ffmpeg draws it.
+   - `finalize director/vN.mp4 --audio director/mix.wav --captions director/captions.ass --title "<text>" --out director/final.mp4` (1920x1080, 30 fps, at most 95 MB). Then `verify --final director/final.mp4 --ref director/vN.mp4.edl.json --edl director/vN.mp4.edl.json`: it decodes the whole file, checks the format and size, re-transcribes the final and checks every cut edge for sound. Fix anything that fails, then print the scoreboard and open `director/final.mp4` for the owner.
+6. **Post it with Threadify (optional).** Offer once: "Want Threadify to write the post and schedule it with this video?" Only on yes, follow [the post step](references/post.md).
+
+## When something is missing
+
+No whisper-cli or model: say exactly what is missing and run the fix from `check`. No libass in ffmpeg: captions can't be burned; say so and finish without them. Openverse down or over its limit: use cached sounds or none, and say so. No subagent and no external CLI: say the judge is unavailable and skip to Level 4; never judge your own work as the outside judge. No Threadify connection: stop after the final video. A rendered video is not a posted one, and a scheduled post is not a published post.
