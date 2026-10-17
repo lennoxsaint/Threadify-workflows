@@ -50,4 +50,12 @@ test('Research Army keeps the race fair, the label honest and scheduling behind 
   assert.match(post, /Done editing/);
   assert.match(post, /`get_schedule_status`/);
   assert.match(post, /winner's backed findings/);
+  assert.match(post, /check-post/);
+  assert.match(post, /delay_minutes: 50/);
+  assert.match(post, /name contains "Research Army"/);
+  assert.match(post, /"auto_plugs": <true with an offer/);
+  assert.match(post, /stored Auto Plug content, trigger and delay/);
+  assert.match(post, /tier-blocked/);
+  assert.match(post, /open -a "Google Chrome"/);
+  assert.match(skill, /open -a "Google Chrome"/);
 });

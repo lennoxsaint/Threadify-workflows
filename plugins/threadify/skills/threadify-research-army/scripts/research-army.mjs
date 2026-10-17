@@ -13,6 +13,7 @@
 //   node research-army.mjs watch --dir <run> [--once]                 two-lane live view from race/status.json
 //   node research-army.mjs check --dir <run>                          re-check findings, rebuild check.json + scoreboard.html
 //   node research-army.mjs facts --dir <run>                          the winner's backed findings as post facts
+//   node research-army.mjs check-post --dir <run> --file post.txt [--plug plug.txt --link <offer url>]
 //
 // ScrapeCreators calls go through curl with the header file saved by
 // scrapecreators-key.mjs; nothing secret is printed, logged or copied.
@@ -657,16 +658,74 @@ ${table('army', 'Army')}${table('opus', 'Opus')}
 // ---------------------------------------------------------------------------
 // Post facts: only the winner's backed findings, numbers from the recount.
 // ---------------------------------------------------------------------------
+const labelNumbers = (board) => {
+  const searches = board.searches ?? Number((String(board.label).match(/from (\d+) keyword searches/) || [])[1]) ?? null;
+  const days = board.window_days ?? Number((String(board.label).match(/last (\d+) days/) || [])[1]) ?? 30;
+  return { total: board.total_posts, searches: Number.isFinite(searches) ? searches : null, days: Number.isFinite(days) ? days : 30 };
+};
+
+/** How the post may name its source. Threadify copy dropped "from K keyword searches" twice in rehearsal. */
+export function sourceWordingRule({ total, searches }) {
+  return `Name the source exactly as "the ${total} most-liked posts from ${searches} keyword searches" (or "${total} most-liked posts I pulled from ${searches} searches"). Never write "top posts", "top on Threads", "most viewed", or "the most-liked Threads posts" without the keyword searches.`;
+}
+
 export function postFacts(board) {
   const side = board.winner.winner === 'opus' ? 'opus' : 'army';
   const rows = board[side].check.rows.filter((r) => r.backed);
+  const nums = labelNumbers(board);
   return {
     from: side,
     label: board.label,
+    total_posts: nums.total,
+    searches: nums.searches,
+    window_days: nums.days,
     facts: rows.map((r) => `${r.recount} of ${board.total_posts} ${r.phrase}`),
+    numbers: [...new Set(rows.map((r) => r.recount))],
     input_text: [`Research post. Source: ${board.label}.`, 'Checked findings (every number was recounted by a script; use only these numbers):',
-      ...rows.map((r) => `- ${r.recount} of ${board.total_posts} posts ${r.phrase}.`)].join('\n'),
+      ...rows.map((r) => `- ${r.recount} of ${board.total_posts} posts ${r.phrase}.`),
+      `Wording rule: ${sourceWordingRule(nums)}`].join('\n'),
   };
+}
+
+// Phrases that misdescribe a keyword-search sample.
+export const BANNED_SOURCE_PHRASES = [
+  { re: /\btop\s+(?:\d+\s+|[a-z]+\s+){0,3}posts?\b/i, why: '"top posts" (it is a keyword-search sample, not a ranking)' },
+  { re: /\b\d+\s+top\b/i, why: '"N top ..." (not a ranking)' },
+  { re: /\btop\s+(?:posts?\s+)?on\s+threads\b/i, why: '"top on Threads"' },
+  { re: /\bmost[\s-]+viewed\b/i, why: '"most viewed" (there are no view counts)' },
+  { re: /\bviral(?:est)?\s+(?:\d+\s+)?(?:threads\s+)?posts\b/i, why: '"viral posts" (likes only)' },
+];
+const SPELLED = { two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
+
+/**
+ * Deterministic copy check for the generated post: banned source wording,
+ * "most-liked" without the keyword searches, and any number that is not a
+ * checker fact. N (posts), K (searches) and the window length are allowed.
+ * "one" counts only as "one in/of/out of" (otherwise it is usually a pronoun).
+ */
+export function checkPostText(text, facts) {
+  const body = String(text ?? '').replace(/https?:\/\/\S+|www\.\S+/gi, ' ');
+  const problems = [];
+  for (const { re, why } of BANNED_SOURCE_PHRASES) if (re.test(body)) problems.push(`banned source wording: ${why}`);
+  if (/most[\s-]+liked/i.test(body) && !/\bsearch(?:es)?\b/i.test(body)) problems.push('says "most-liked" without naming the keyword searches');
+  const allowed = new Set([...(facts.numbers ?? []), facts.total_posts, facts.searches, facts.window_days].filter((n) => n !== null && n !== undefined).map(Number));
+  const found = [];
+  for (const m of body.matchAll(/(?<![\d.,])\d[\d,]*(?:\.\d+)?/g)) found.push({ value: Number(m[0].replace(/,/g, '')), as: m[0] });
+  for (const m of body.matchAll(/\b(two|three|four|five|six|seven|eight|nine)\b/gi)) found.push({ value: SPELLED[m[1].toLowerCase()], as: m[1] });
+  for (const m of body.matchAll(/\bone\s+(?:in|of|out\s+of)\b/gi)) found.push({ value: 1, as: m[0] });
+  const stray = found.filter((f) => !allowed.has(f.value));
+  for (const f of stray) problems.push(`number not in the checked facts: ${f.as}`);
+  return { status: problems.length ? 'FAIL' : 'PASS', problems, numbers_found: found.map((f) => f.as), allowed: [...allowed].sort((a, b) => a - b) };
+}
+
+/** The Auto Plug must carry the offer's exact link and no banned source wording. */
+export function checkPlugText(text, link) {
+  const problems = [];
+  if (!link) problems.push('no offer link given');
+  else if (!String(text ?? '').includes(link)) problems.push('the plug does not contain the offer\'s exact link');
+  const body = String(text ?? '').replace(/https?:\/\/\S+|www\.\S+/gi, ' ');
+  for (const { re, why } of BANNED_SOURCE_PHRASES) if (re.test(body)) problems.push(`banned source wording: ${why}`);
+  return { status: problems.length ? 'FAIL' : 'PASS', problems };
 }
 
 // ---------------------------------------------------------------------------
@@ -827,7 +886,7 @@ export function buildBoard(dir) {
   };
   const army = side('army');
   const opus = side('opus');
-  const board = { label: corpus.meta.label, total_posts: corpus.posts.length, army_size: record.army_size, brief_sha256: record.brief_sha256, run_at: record.run_at, army, opus, winner: decideWinner(army, opus) };
+  const board = { label: corpus.meta.label, total_posts: corpus.posts.length, searches: corpus.meta.searches ?? null, window_days: corpus.meta.window_days ?? 30, army_size: record.army_size, brief_sha256: record.brief_sha256, run_at: record.run_at, army, opus, winner: decideWinner(army, opus) };
   fs.writeFileSync(path.join(dir, 'check.json'), JSON.stringify({ label: board.label, total_posts: board.total_posts, winner: board.winner, army: army.check, opus: opus.check }, null, 1));
   fs.writeFileSync(path.join(dir, 'scoreboard.html'), renderScoreboardHtml(board));
   return board;
@@ -887,8 +946,16 @@ async function main(argv) {
     }
     case 'facts':
       return postFacts(buildBoard(dir));
+    case 'check-post': {
+      const facts = postFacts(buildBoard(dir));
+      const post = checkPostText(fs.readFileSync(path.resolve(argValue(args, '--file')), 'utf8').trim(), facts);
+      const plugFile = argValue(args, '--plug');
+      const plug = plugFile ? checkPlugText(fs.readFileSync(path.resolve(plugFile), 'utf8').trim(), argValue(args, '--link')) : null;
+      const ok = post.status === 'PASS' && (!plug || plug.status === 'PASS');
+      return { status: ok ? 'PASS' : 'FAIL', post, plug };
+    }
     default:
-      return { status: 'usage', usage: 'research-army.mjs catalog|estimate|balance|corpus|normalize|race|watch|check|facts (see the header of this file)' };
+      return { status: 'usage', usage: 'research-army.mjs catalog|estimate|balance|corpus|normalize|race|watch|check|facts|check-post (see the header of this file)' };
   }
 }
 
@@ -896,7 +963,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(realpathSync(process.ar
   try {
     const result = await main(process.argv.slice(2));
     if (result) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
-    process.exitCode = result && ['usage', 'fix'].includes(result.status) ? 1 : 0;
+    process.exitCode = result && ['usage', 'fix', 'FAIL'].includes(result.status) ? 1 : 0;
   } catch (error) {
     process.stdout.write(`${JSON.stringify({ status: 'failed', error: error.message }, null, 2)}\n`);
     process.exitCode = 1;

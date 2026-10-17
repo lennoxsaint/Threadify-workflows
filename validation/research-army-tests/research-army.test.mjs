@@ -9,6 +9,8 @@ import {
   PICKS,
   buildBrief,
   checkFindings,
+  checkPlugText,
+  checkPostText,
   claudeArgs,
   codeToolAudit,
   commanderPrompt,
@@ -25,6 +27,7 @@ import {
   runTest,
   scoutReplies,
   scoutTracker,
+  sourceWordingRule,
   validateKeywords,
 } from '../../plugins/threadify/skills/threadify-research-army/scripts/research-army.mjs';
 import { checkPost, lowercaseExceptProperNouns } from '../../plugins/threadify/skills/threadify-research-army/scripts/casing-guard.mjs';
@@ -251,4 +254,43 @@ test('Research Army ships its agent file, editor and copied setup scripts', () =
   for (const file of ['scripts/research-army.mjs', 'scripts/casing-guard.mjs', 'scripts/scrapecreators-key.mjs', 'scripts/post-editor.mjs', 'references/post.md', 'references/generation-models.json', 'references/agents/research-army-scout.md']) {
     assert.ok(fs.existsSync(path.join(skillDir, file)), file);
   }
+});
+
+const factsFor = { numbers: [66, 23, 4, 5, 3], total_posts: 100, searches: 28, window_days: 30 };
+
+test('facts carry the honest wording rule with N and K', () => {
+  const board = {
+    label: 'the 4 most-liked recent Threads posts from 2 keyword searches (last 30 days)', total_posts: 4, searches: 2, window_days: 30,
+    winner: { winner: 'army' }, army: { check: checkFindings(corpus, { claims: [{ test: 'first_person_i', count: 2 }] }) }, opus: { check: { rows: [] } },
+  };
+  const facts = postFacts(board);
+  assert.equal(facts.searches, 2);
+  assert.deepEqual(facts.numbers, [2]);
+  assert.match(facts.input_text, /Wording rule: Name the source exactly as "the 4 most-liked posts from 2 keyword searches"/);
+  assert.match(facts.input_text, /Never write "top posts", "top on Threads", "most viewed"/);
+  assert.match(sourceWordingRule({ total: 100, searches: 28 }), /100 most-liked posts I pulled from 28 searches/);
+});
+
+test('check-post: fails dishonest source wording and numbers outside the facts; passes honest copy', () => {
+  const honest = 'only 3 of the 100 most-liked posts from 28 keyword searches open with a number.\n\n66 use line breaks. 23 ask a question. only four end on one.\n\nlast 30 days. break your lines.';
+  assert.equal(checkPostText(honest, factsFor).status, 'PASS');
+  const rehearsal = 'i pulled the 100 most-liked Threads posts on growth and AI agents from the last 30 days.\n66 use line breaks.';
+  assert.match(checkPostText(rehearsal, factsFor).problems.join(), /without naming the keyword searches/);
+  for (const bad of ['100 top posts in my niche', 'the top 100 posts on threads', 'what the top posts do', 'top on Threads right now', 'the most viewed posts', 'the most-viewed posts']) {
+    assert.equal(checkPostText(`${bad} from 28 searches`, factsFor).status, 'FAIL', bad);
+  }
+  const strayDigit = checkPostText('66 of the 100 most-liked posts from 28 searches use line breaks; 12 use emoji.', factsFor);
+  assert.deepEqual(strayDigit.problems, ['number not in the checked facts: 12']);
+  assert.equal(checkPostText('seven of the 100 most-liked posts from 28 searches', factsFor).status, 'FAIL');
+  assert.equal(checkPostText('one in 100 most-liked posts from 28 searches', factsFor).status, 'FAIL');
+  assert.equal(checkPostText('the one thing: 66 of the 100 most-liked posts from 28 searches', factsFor).status, 'PASS', '"one" as a pronoun is not a number');
+  assert.equal(checkPostText('66 of 100. see https://x.co/a?n=12345', factsFor).status, 'PASS', 'numbers inside links are ignored');
+});
+
+test('plug check: the Auto Plug must carry the offer exact link', () => {
+  const link = 'https://www.threadify.app/home?utm_source=threads&video_slug=research-army';
+  assert.equal(checkPlugText(`want the post written for your niche? 7-day free trial, $0 today: ${link}`, link).status, 'PASS');
+  assert.equal(checkPlugText('try it: https://www.threadify.app/home', link).status, 'FAIL');
+  assert.equal(checkPlugText(`the top posts say so: ${link}`, link).status, 'FAIL');
+  assert.equal(checkPlugText(`no link given ${link}`, '').status, 'FAIL');
 });

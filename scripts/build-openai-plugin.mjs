@@ -90,7 +90,7 @@ const REWRITES = [
     to: '"summary": "Go from an existing Threadify account to a personalized Brain, first week and verified agent routine."',
   },
   {
-    files: 1,
+    files: 2,
     from: 'state the returned current tier, required tier, allowed alternative and upgrade URL.',
     to: 'state the returned current tier, required tier and allowed alternative.',
   },
