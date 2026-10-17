@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Army"
+  short_description: "Haiku army vs Opus: a checked research post on your niche"
+  default_prompt: "Use $threadify-research-army on my niche: pull the most-liked recent Threads posts, race an army of Haiku agents against one Opus, check every claim with the script, then have Threadify write the research post from the winner and schedule it only after my yes."

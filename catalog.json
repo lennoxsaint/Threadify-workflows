@@ -1549,6 +1549,58 @@
       ]
     },
     {
+      "workflow_id": "research-army",
+      "version": "0.1.0",
+      "title": "Research Army",
+      "summary": "Get a research post on your niche: an army of Haiku 5.5 agents and one Opus 5.5 race to research the most-liked recent Threads posts in your niche with the same brief and Read-only tools; a script checks every claim; Threadify writes the post from the winner's backed findings and schedules it after one yes. Free; the corpus uses your own ScrapeCreators credits.",
+      "kind": "skill",
+      "skill_name": "threadify-research-army",
+      "entrypoint": "skills/threadify-research-army/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-research-army/SKILL.md",
+      "source_manifest": "workflows/research-army/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/research-army/README.md"
+        ]
+      },
+      "triggers": [
+        "research army",
+        "get a research post on my niche",
+        "write a research post about my niche",
+        "what do the most liked threads posts in my niche have in common",
+        "race haiku agents against opus",
+        "haiku army vs opus"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the owner's niche (from the Threadify Brain, confirmed in one line), the owner's own ScrapeCreators API key, the claude command line (Claude Code) on this computer, optional Threadify connection and offer for the post",
+            "schema_ref": "inline:research-army-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "research-army/<date>/ folder with keywords.json, raw searches, corpus.json (honestly labelled), the race brief and run logs, findings-army.json, findings-opus.json, check.json, a local scoreboard.html and post.md, and optionally one scheduled post with its readback",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "reverse-engineer-my-app",
       "version": "0.1.0",
       "title": "Reverse Engineer My App",

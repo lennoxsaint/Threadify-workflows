@@ -1,0 +1,52 @@
+---
+name: threadify-research-army
+description: Get a research post on your niche. An army of Haiku 5.5 agents and one Opus 5.5 race to research the most-liked recent Threads posts in your niche; a script checks every claim; Threadify writes the post from the winner and schedules it after one yes. Use when someone says "research army", wants a research post about their niche, asks what the most-liked Threads posts in their niche have in common, or wants to race cheap agents against a big model.
+---
+
+# Research Army
+
+Get a research post on your niche. An army of Haiku 5.5 agents and one Opus 5.5 race to research the most-liked recent Threads posts in your niche; a script checks every claim; Threadify writes the post from the winner and schedules it after one yes.
+
+It is free: the race runs in Claude Code on this computer (it uses your Claude plan's usage, a few cents to about a dollar of model time). Two things need your own accounts: the corpus comes from ScrapeCreators (about 25-30 credits; new accounts get free credits) and the post step runs on Threadify.
+
+Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before the first connected call. A connection never authorizes scheduling. Only the owner's exact "yes" to the post card does.
+
+Resolve `scripts/` and `references/` paths against the directory containing this SKILL.md. The script is `node scripts/research-army.mjs` (Node 18+, no npm packages); every command prints JSON. The race needs the `claude` command line (Claude Code) on this computer.
+
+## Rules
+
+- Follow [demo feedback rules](references/demo-feedback-rules.md) for the whole run. If `~/.threadify/owner-overlay.md` exists, read it too and follow it; it is private, so never quote it into posts, files you publish or receipts.
+- **Honest label, everywhere.** Say exactly what the corpus is, from the script's `label`: "the N most-liked recent Threads posts from K keyword searches (last 30 days)". Never say "most viewed" (there are no view counts) and never "the top posts on Threads" (keyword search is a sample, not a ranking).
+- **A fair race.** Both sides get the same brief (the script writes it once and prints its sha256), the same posts and Read-only tools. Neither side gets Bash or any code tool: the script runs both with `--tools`, `--disallowedTools Bash`, `--permission-mode dontAsk` and `--restricted` when the installed Claude Code has it, and then proves it from each run's own log (`bash_offered: false`, `bash_uses: 0`). Never change the brief, the prompts or the catalog to favour either side.
+- **The checker owns the tests.** Each side picks 8 tests from the script's fixed catalog and reports a count and 2 example quotes for each; the script recounts every one over all posts. A claim is backed only when the recount equals the claim. Winner: most backed claims, then lower cost, then faster.
+- **Numbers in the post come from the recount**, and only from the winner's backed claims. Never quote other creators' posts or handles in the post.
+- **The ScrapeCreators API key is never printed**, repeated, put in a command line or written anywhere but the owner-only header file from `scripts/scrapecreators-key.mjs save`.
+- **Posting.** Threadify writes the post with `generate_content`. Show it in full. The agent may only change casing (lowercase, proper nouns kept) and proves `lower(original) == lower(final)` with `scripts/casing-guard.mjs`; edits are the owner's, made in the editable block. Never publish now. Schedule only after the owner's exact "yes", then read it back.
+
+## Steps
+
+1. **Account and niche.** Call `get_connection_defaults` first. Say only "@handle · timezone" and the plan's quota if it's shown. Read the niche from the Threadify Brain (`get_brain_overview`, or `query_brain` "what is my niche") and confirm it in one line: "Niche: <niche>. Say a different one, or I'll go with this." Tell the owner in one line: "20 Haiku agents and one Opus race to research the most-liked Threads posts in your niche this month; a script checks every claim; Threadify writes the post."
+2. **Set up ScrapeCreators once.** Run `node scripts/scrapecreators-key.mjs status`. When it says `missing` and the SCRAPECREATORS_API_KEY environment variable is already set on this computer, save it without showing it: `printenv SCRAPECREATORS_API_KEY | node scripts/scrapecreators-key.mjs save`. Otherwise send the owner one message in plain words:
+   "Research Army reads Threads posts through ScrapeCreators, a data service you pay for yourself. One-time setup, about two minutes:
+   1. Sign up at https://app.scrapecreators.com. New accounts get free credits.
+   2. Copy your API key from the ScrapeCreators dashboard.
+   3. Open Terminal (Mac) or PowerShell (Windows), paste this line, press Enter, then paste your API key when it asks. It stays hidden and is saved only on this computer:
+      `node "<absolute path to scripts/scrapecreators-key.mjs>" save`
+   Tell me when it says saved."
+   Fill in the real absolute path. If the owner pastes the API key into the chat instead, pipe it to `node scripts/scrapecreators-key.mjs save` through stdin (a heredoc, never a command-line argument), never repeat it, and say once that it is now in this chat's history. Then run `node scripts/research-army.mjs balance` (free) and say "ScrapeCreators connected · <credits_remaining> credits left". On `scrapecreators_rejected`, ask the owner to copy the API key again and run save again. Never guess a balance.
+3. **Pull the corpus.** Make a run folder `./research-army/<YYYY-MM-DD>/`. Write `keywords.json` as `{"keywords": [...]}` with 25-30 short search phrases a creator in this niche would actually post about (the niche itself, its main topics, tools, outcomes and problems; 1-3 words each; no near-duplicates). Run `node scripts/research-army.mjs estimate --keywords <run>/keywords.json` and say "<searches> searches, <credits> credits, you have <balance>." Then `node scripts/research-army.mjs corpus --keywords <run>/keywords.json --dir <run> --niche "<niche>"` (searches only the last 30 days, at most 40 credits; reuses saved searches). Say the label and the counts from its output: posts pulled, duplicates, older than 30 days and non-English removed, posts kept, the likes range and the dates, and the credits before and after. Fewer than 40 posts kept: add keyword variants and pull again (new searches only) before racing.
+4. **The race.** Show the live view: open a new terminal window in the run folder running `node "<absolute path to scripts/research-army.mjs>" watch --dir .` when this computer can (macOS: `open -a Terminal` or the owner's terminal app with that command), then start the race: `node scripts/research-army.mjs race --dir <run> --army 20` (`--army N` for another size, 2-30). Run it in the foreground when your host streams command output; otherwise run it in the background and print `watch --dir <run> --once` lanes every 15 seconds until it finishes. What happens, in one line each as it goes:
+   - The script writes `race/brief.md` once (same text for both sides), splits the posts into 20 batches for the army and gives Opus all of them.
+   - **Army:** a Haiku commander starts 20 Haiku scouts (`references/agents/research-army-scout.md`, `model: haiku`, `tools: Read`). Round 1: every scout reads its batch and nominates patterns from the catalog; the commander picks 8. Round 2: every scout counts those 8 in its batch; the commander adds the counts up, so no batch's count is lost.
+   - **Opus:** one Opus reads all the posts alone, picks 8 from the catalog and counts them.
+   - Each side has 5 minutes of silence and 12 minutes in total before it's stopped.
+   It ends with the scoreboard: backed claims (exact, and within ±1), cost (`total_cost_usd`), wall time and the models read back from each run's `modelUsage`, plus the Bash proof and the winner.
+5. **Check every claim.** Say the scoreboard in a few lines, then each side's claims as "<pattern>: claimed X, recount Y, backed/unbacked". If `bash_blocked` is not true, or a side's `models` are not the expected Haiku/Opus models, say so plainly and do not call the race fair. If a side failed or was stopped, say so; its claims count as unbacked. Open the report: serve the run folder on this computer only (for example `python3 -m http.server 8050 --bind 127.0.0.1 --directory <run>` in the background) and open `http://127.0.0.1:8050/scoreboard.html`, because some browsers refuse `file://` pages. Stop the server when the run ends. `node scripts/research-army.mjs check --dir <run>` rebuilds `check.json` and `scoreboard.html` from the saved findings without re-racing.
+6. **Threadify writes the post.** Run `node scripts/research-army.mjs facts --dir <run>` for the winner's backed findings, then follow [the post step](references/post.md): one `generate_content` call, the full post in chat, the editable block with **Done editing**, and the casing guard.
+7. **One yes, then schedule.** Follow [the post step](references/post.md): one post card at the best time tomorrow, `schedule_post` only after the owner's exact "yes", then the readback.
+
+Outputs stay in `./research-army/<date>/`: `keywords.json`, `raw/`, `corpus.json`, `race/` (brief, batches, run logs, `race.json`), `findings-army.json`, `findings-opus.json`, `check.json`, `scoreboard.html` and `post.md`.
+
+## When something is missing
+
+No `claude` command line: say the race needs Claude Code on this computer and stop after the corpus. No ScrapeCreators access: give the step 2 setup message and wait. Out of credits: say how many are missing and that the owner buys credit packs at https://app.scrapecreators.com (never buy for them). No Threadify connection or no generation access: stop after the scoreboard and say "Connect Threadify at threadify.app to have the post written in your voice and scheduled." Never write the post yourself instead. A scoreboard is not a post, and a scheduled post is not a published post.
