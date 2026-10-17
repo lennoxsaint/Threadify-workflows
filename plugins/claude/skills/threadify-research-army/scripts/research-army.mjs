@@ -14,6 +14,7 @@
 //   node research-army.mjs check --dir <run>                          re-check findings, rebuild check.json + scoreboard.html
 //   node research-army.mjs facts --dir <run>                          the winner's backed findings as post facts
 //   node research-army.mjs check-post --dir <run> --file post.txt [--plug plug.txt --link <offer url>]
+//   node research-army.mjs clean-link --link <offer url>               the offer link without tracking tags (Threadify tracks links)
 //
 // ScrapeCreators calls go through curl with the header file saved by
 // scrapecreators-key.mjs; nothing secret is printed, logged or copied.
@@ -695,6 +696,8 @@ export const BANNED_SOURCE_PHRASES = [
   { re: /\bmost[\s-]+viewed\b/i, why: '"most viewed" (there are no view counts)' },
   { re: /\bviral(?:est)?\s+(?:\d+\s+)?(?:threads\s+)?posts\b/i, why: '"viral posts" (likes only)' },
 ];
+// A compact research post reads in one glance; longer posts get a warning, not a failure.
+export const COMPACT_POST_CHARS = 300;
 const SPELLED = { two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9 };
 
 /**
@@ -715,14 +718,30 @@ export function checkPostText(text, facts) {
   for (const m of body.matchAll(/\bone\s+(?:in|of|out\s+of)\b/gi)) found.push({ value: 1, as: m[0] });
   const stray = found.filter((f) => !allowed.has(f.value));
   for (const f of stray) problems.push(`number not in the checked facts: ${f.as}`);
-  return { status: problems.length ? 'FAIL' : 'PASS', problems, numbers_found: found.map((f) => f.as), allowed: [...allowed].sort((a, b) => a - b) };
+  const characters = [...String(text ?? '').trim()].length;
+  const warnings = characters > COMPACT_POST_CHARS ? [`${characters} characters; aim for ${COMPACT_POST_CHARS} or fewer`] : [];
+  return { status: problems.length ? 'FAIL' : 'PASS', problems, warnings, characters, numbers_found: found.map((f) => f.as), allowed: [...allowed].sort((a, b) => a - b) };
 }
 
-/** The Auto Plug must carry the offer's exact link and no banned source wording. */
+// Tracking tags an offer link may carry. Threadify already tracks every link it
+// posts, so the plug uses the plain link (owner, live demo 17 Oct 2026).
+const TRACKING_PARAM = /^(?:utm_.+|fbclid|gclid|mc_cid|mc_eid|video_slug|cta_slot|entry_angle|lp_variant)$/i;
+
+/** The offer link with tracking tags removed; other query parameters are kept. */
+export function cleanLink(url) {
+  let parsed;
+  try { parsed = new URL(String(url ?? '').trim()); } catch { return String(url ?? '').trim(); }
+  for (const param of [...parsed.searchParams.keys()]) if (TRACKING_PARAM.test(param)) parsed.searchParams.delete(param);
+  return parsed.toString().replace(/\?$/, '');
+}
+
+/** The Auto Plug must carry the offer's plain link (no tracking tags) and no banned source wording. */
 export function checkPlugText(text, link) {
   const problems = [];
+  const plain = link ? cleanLink(link) : '';
   if (!link) problems.push('no offer link given');
-  else if (!String(text ?? '').includes(link)) problems.push('the plug does not contain the offer\'s exact link');
+  else if (!String(text ?? '').includes(plain)) problems.push(`the plug does not contain the offer's plain link: ${plain}`);
+  if (/[?&](?:utm_|fbclid|gclid)/i.test(String(text ?? ''))) problems.push('the plug link carries tracking tags; Threadify tracks links, so use the plain link');
   const body = String(text ?? '').replace(/https?:\/\/\S+|www\.\S+/gi, ' ');
   for (const { re, why } of BANNED_SOURCE_PHRASES) if (re.test(body)) problems.push(`banned source wording: ${why}`);
   return { status: problems.length ? 'FAIL' : 'PASS', problems };
@@ -954,8 +973,13 @@ async function main(argv) {
       const ok = post.status === 'PASS' && (!plug || plug.status === 'PASS');
       return { status: ok ? 'PASS' : 'FAIL', post, plug };
     }
+    case 'clean-link': {
+      const link = argValue(args, '--link');
+      if (!link) return { status: 'usage', usage: 'research-army.mjs clean-link --link <offer url>' };
+      return { status: 'ok', link: cleanLink(link) };
+    }
     default:
-      return { status: 'usage', usage: 'research-army.mjs catalog|estimate|balance|corpus|normalize|race|watch|check|facts|check-post (see the header of this file)' };
+      return { status: 'usage', usage: 'research-army.mjs catalog|estimate|balance|corpus|normalize|race|watch|check|facts|check-post|clean-link (see the header of this file)' };
   }
 }
 

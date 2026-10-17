@@ -1,3 +1,7 @@
+# 0.39.2
+
+- Research Army: the post step now picks one proven hook template (your own best-performing shapes from Greatest Hits and your Vault first, otherwise one of ten shipped templates) and asks Threadify for a compact post (about 300 characters, one fact per line) that ends on an encouraging so-what for the reader. The Auto Plug uses your offer's plain link: a new clean-link step removes utm and other tracking tags because Threadify already tracks every link it posts, and the plug check fails a plug that still carries them. Wording changes you ask for in chat are made exactly and re-checked. From the live THREADIFY-050 demo.
+
 # 0.39.1
 
 - Research Army: the tracked link now reaches the post. When you have an offer (an offer named Research Army is used without asking), your agent writes one Auto Plug from the post's own findings and the offer's approved facts with the offer's exact link; it appears in the editable block and on the post card, is scheduled 50 minutes after the post and is read back (a tier-blocked plug is reported, never retried). The post's source line is now always honest: the facts tell Threadify to say "the N most-liked posts from K keyword searches", and a new check-post step fails any post that says top posts, top on Threads, most viewed or most-liked without the searches, or uses a number the checker didn't count, asking Threadify once for a replacement. Pages open with Google Chrome when no browser tool is connected.
