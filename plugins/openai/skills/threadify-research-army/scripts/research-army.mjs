@@ -629,11 +629,11 @@ export function renderScoreboardHtml(board) {
 <div class="big">${s.backed}<small>/${PICKS} backed</small></div>
 <dl><dt>within ±1</dt><dd>${s.backed_within_1}/${PICKS}</dd><dt>cost</dt><dd>$${(s.cost_usd ?? 0).toFixed(3)}</dd><dt>wall time</dt><dd>${((s.duration_ms ?? 0) / 1000).toFixed(1)} s</dd><dt>models</dt><dd>${esc(s.models.join(', ') || 'unknown')}</dd><dt>Bash</dt><dd>${s.audit.bash_offered ? 'offered' : 'not offered'} · ${s.audit.bash_uses} uses</dd></dl></section>`;
   };
-  const table = (lane, name) => `<h3>${esc(name)}: every claim</h3><table><thead><tr><th>pattern</th><th>claimed</th><th>recount</th><th></th></tr></thead><tbody>${board[lane].check.rows.map((r) => `<tr class="${r.backed ? 'ok' : 'no'}"><td>${esc(r.phrase)}<br><code>${esc(r.test)}</code></td><td>${esc(r.claimed)}</td><td>${esc(r.recount ?? '-')}</td><td>${r.backed ? 'backed' : r.backed_within_1 ? 'off by 1' : 'unbacked'}</td></tr>`).join('')}</tbody></table>`;
+  const table = (lane, name) => `<h3>${esc(name)}: every claim</h3><table><thead><tr><th>pattern</th><th>claim</th><th>recount</th><th>verdict</th></tr></thead><tbody>${board[lane].check.rows.map((r) => `<tr class="${r.backed ? 'ok' : 'no'}"><td>${esc(r.phrase)}<br><code>${esc(r.test)}</code></td><td>${esc(r.claimed)}</td><td>${esc(r.recount ?? '-')}</td><td>${r.backed ? 'backed' : r.backed_within_1 ? 'off by 1' : 'unbacked'}</td></tr>`).join('')}</tbody></table>`;
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Research Army scoreboard</title><style>
 :root{--bg:#0d0d0d;--panel:#1a1a1a;--line:#333;--text:#fff;--muted:rgba(255,255,255,.7);--accent:#ff6b4a;--ok:#4ecdc4;--no:#ff6b4a}
-@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--bg:#fafafa;--panel:#fff;--line:#ddd;--text:#111;--muted:#555}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:17px/1.45 system-ui,-apple-system,sans-serif}
+:root[data-theme="light"]{--bg:#fafafa;--panel:#fff;--line:#ddd;--text:#111;--muted:#555}
+*{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{margin:0;background:var(--bg);color:var(--text);font:17px/1.45 system-ui,-apple-system,sans-serif;overflow-wrap:anywhere}
 main{max-width:900px;margin:auto;padding:24px 16px 48px}h1{font-size:28px;margin:0 0 4px}.label{color:var(--muted);margin:0 0 18px}
 .winner{background:var(--panel);border:2px solid var(--accent);border-radius:12px;padding:14px 16px;font-size:22px;font-weight:700;margin-bottom:16px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:620px){.grid{grid-template-columns:1fr}}
@@ -641,7 +641,7 @@ main{max-width:900px;margin:auto;padding:24px 16px 48px}h1{font-size:28px;margin
 .card h2{margin:0;font-size:22px}.sub{color:var(--muted);margin:2px 0 8px;font-size:15px}.badge{background:var(--ok);color:#000;border-radius:999px;padding:2px 10px;font-size:13px;vertical-align:middle}
 .big{font-size:56px;font-weight:800;line-height:1}.big small{font-size:18px;font-weight:600;color:var(--muted)}
 dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:12px 0 0;font-size:15px}dt{color:var(--muted)}dd{margin:0}
-h3{margin:26px 0 8px}table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+h3{margin:26px 0 8px}table{width:100%;border-collapse:collapse;font-size:15px;table-layout:fixed}th:nth-child(2),th:nth-child(3),td:nth-child(2),td:nth-child(3){width:4.2em}th:nth-child(4),td:nth-child(4){width:5.6em}td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 tr.ok td:last-child{color:var(--ok);font-weight:700}tr.no td:last-child{color:var(--no);font-weight:700}code{color:var(--muted);font-size:12px}
 .foot{color:var(--muted);font-size:14px;margin-top:22px}
 </style></head><body><main>
