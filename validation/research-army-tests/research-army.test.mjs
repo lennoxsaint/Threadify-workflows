@@ -9,9 +9,11 @@ import {
   PICKS,
   buildBrief,
   checkFindings,
+  COMPACT_POST_CHARS,
   checkPlugText,
   checkPostText,
   claudeArgs,
+  cleanLink,
   codeToolAudit,
   commanderPrompt,
   corpusLabel,
@@ -287,10 +289,38 @@ test('check-post: fails dishonest source wording and numbers outside the facts; 
   assert.equal(checkPostText('66 of 100. see https://x.co/a?n=12345', factsFor).status, 'PASS', 'numbers inside links are ignored');
 });
 
-test('plug check: the Auto Plug must carry the offer exact link', () => {
+test('plug check: the Auto Plug carries the offer link without tracking tags (Threadify tracks links)', () => {
   const link = 'https://www.threadify.app/home?utm_source=threads&video_slug=research-army';
-  assert.equal(checkPlugText(`want the post written for your niche? 7-day free trial, $0 today: ${link}`, link).status, 'PASS');
-  assert.equal(checkPlugText('try it: https://www.threadify.app/home', link).status, 'FAIL');
-  assert.equal(checkPlugText(`the top posts say so: ${link}`, link).status, 'FAIL');
+  assert.equal(checkPlugText('want the post written for your niche? 7-day free trial, $0 today: https://www.threadify.app/home', link).status, 'PASS');
+  assert.match(checkPlugText(`want it for your niche? ${link}`, link).problems.join(), /tracking tags/);
+  assert.equal(checkPlugText('try it: https://example.com/other', link).status, 'FAIL');
+  assert.equal(checkPlugText('the top posts say so: https://www.threadify.app/home', link).status, 'FAIL');
   assert.equal(checkPlugText(`no link given ${link}`, '').status, 'FAIL');
+});
+
+test('clean-link: removes utm and attribution tags, keeps other query parameters', () => {
+  assert.equal(cleanLink('https://www.threadify.app/home?utm_source=threads&utm_medium=social&cta_slot=post&entry_angle=haiku_army'), 'https://www.threadify.app/home');
+  assert.equal(cleanLink('https://shop.example.com/offer?ref=abc&utm_campaign=x&fbclid=1'), 'https://shop.example.com/offer?ref=abc');
+  assert.equal(cleanLink('https://www.threadify.app/home'), 'https://www.threadify.app/home');
+  assert.equal(cleanLink('not a url'), 'not a url');
+});
+
+test('check-post: a long post passes with a compact warning', () => {
+  const long = `66 of the 100 most-liked posts from 28 keyword searches use line breaks. ${'keep it short. '.repeat(20)}`;
+  const result = checkPostText(long, factsFor);
+  assert.equal(result.status, 'PASS');
+  assert.equal(result.warnings.length, 1);
+  assert.ok(result.characters > COMPACT_POST_CHARS);
+  assert.deepEqual(checkPostText('66 of the 100 most-liked posts from 28 searches use line breaks. go tell yours.', factsFor).warnings, []);
+});
+
+test('post step: viral templates ship with the skill and the post step uses them', () => {
+
+  const templates = fs.readFileSync(path.join(skillDir, 'references/viral-templates.md'), 'utf8');
+  assert.equal((templates.match(/^\d+\. \*\*/gm) ?? []).length, 10, 'ten templates');
+  assert.doesNotMatch(templates, /@\w/, 'no handles');
+  const post = fs.readFileSync(path.join(skillDir, 'references/post.md'), 'utf8');
+  assert.match(post, /viral-templates\.md/);
+  assert.match(post, /encouraging so-what/);
+  assert.match(post, /clean-link/);
 });

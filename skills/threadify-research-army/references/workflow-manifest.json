@@ -71,7 +71,7 @@
     "a fair race of headless Claude Code runs: same brief, Read-only tools, Bash not offered and denied, and a Bash audit from each run's own log",
     "a two-round Haiku army (scouts nominate, commander picks 8, every scout counts, commander sums) against one Opus, with a live two-lane terminal view",
     "a deterministic claim checker with a fixed catalog of machine-checkable tests, exact and within-1 verdicts and example-quote checks",
-    "a deterministic post check (check-post) that fails on dishonest source wording and on any number outside the checked facts, and a plug check for the offer's exact link",
+    "a deterministic post check (check-post) that fails on dishonest source wording and on any number outside the checked facts, and a plug check for the offer's plain link without tracking tags",
     "winner rule (backed claims, then cost, then time), a terminal scoreboard and a local HTML scoreboard",
     "local editable post block with a Done editing button",
     "local casing guard that proves lower(original) == lower(final) for the post"
@@ -104,7 +104,7 @@
       "Never change the brief, prompts or catalog to favour either side.",
       "When a side fails or is stopped, count its claims as unbacked and say so.",
       "Run check-post on every post; on a second FAIL stop and say why.",
-      "Put the offer's exact link only in one Auto Plug (+50 minutes); never pass offer_id expecting a link in the body. If Auto Plug is tier-blocked, state the tier details and do not retry.",
+      "Pick one proven hook template (the owner's own winning shapes first) for a compact post that ends on an encouraging so-what for the reader. Put the offer's plain link (clean-link: no tracking tags, Threadify tracks links) only in one Auto Plug (+50 minutes); never pass offer_id expecting a link in the body. If Auto Plug is tier-blocked, state the tier details and do not retry.",
       "Use only the winner's backed findings and the checker's numbers in the post.",
       "Never write the post yourself when Threadify generation is unavailable; stop after the scoreboard.",
       "Never call publish_now; schedule only after the owner's exact yes to the post card, and read the schedule back.",
