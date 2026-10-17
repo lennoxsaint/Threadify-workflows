@@ -50,6 +50,14 @@ and words, uses only CC0 or public-domain sounds (CC BY on opt-in with a credit
 line, never NC, ND or SA), uploads only the finished video, never publishes now
 and schedules only after the owner's exact yes to the post card.
 
+Research Army never prints or passes the ScrapeCreators API key on a command
+line, shows the credit estimate before the corpus pull and stops at 40 credits,
+labels the corpus as the most-liked posts from its keyword searches (never most
+viewed), gives both racing sides the same brief and Read-only tools with Bash
+denied and audited from each run's log, uses only the winner's checker-backed
+numbers in the post, never publishes now and schedules only after the owner's
+exact yes to the post card.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

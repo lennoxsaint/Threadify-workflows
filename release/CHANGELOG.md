@@ -1,3 +1,7 @@
+# 0.39.0
+
+- Add Research Army: get a research post on your niche. An army of Haiku 5.5 agents and one Opus 5.5 race to research the most-liked recent Threads posts in your niche (ScrapeCreators keyword searches over the last 30 days, deduped, English, top 100 by likes, honestly labelled; one-time key setup that never shows the key). The race is fair: the same brief, the same posts and Read-only tools for both sides, with Bash not offered, denied and audited from each run's own log. Each side picks 8 patterns from a fixed catalog the checker owns and counts them; the army works in two rounds (20 scouts nominate, the commander picks 8, every scout counts and the commander adds them up) while Opus works alone, with a live two-lane terminal view. A script recounts every claim and the scoreboard shows backed claims (exact and within 1), cost, wall time and the models each side really used, plus a local HTML report; the winner has the most backed claims, then the lower cost, then the faster time. Threadify then writes one research post in your voice from the winner's backed findings only, with an editable block and Done editing, and schedules it at the best time tomorrow only after one exact yes.
+
 # 0.37.1
 
 - Director Mode: schedule with the exact text and the video, never draft_id with a video (a draft-linked schedule dropped the video in rehearsal).
