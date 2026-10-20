@@ -58,6 +58,14 @@ denied and audited from each run's log, uses only the winner's checker-backed
 numbers in the post, never publishes now and schedules only after the owner's
 exact yes to the post card.
 
+Go Make Money reads aggregates only (never signup names or emails), keeps
+unknown numbers UNKNOWN, does every funnel number with a script from raw rows,
+sends only the diagnosis and the raw funnel table to the outside judge with a
+hard time limit, promises no revenue or customers, shows the exact change and
+asks one exact yes before updating an offer, scheduling a post or opening a
+landing-page pull request, never publishes now and never merges the pull
+request.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

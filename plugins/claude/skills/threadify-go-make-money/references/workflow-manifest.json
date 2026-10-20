@@ -1,0 +1,128 @@
+{
+  "workflow_id": "go-make-money",
+  "version": "0.1.0",
+  "title": "Go Make Money",
+  "summary": "Give Claude your real money goal, not a task: it reads your raw Threadify rows, finds the biggest funnel leak with receipts, tests your belief about why, has a different model judge the diagnosis, lists the 3 claims a skeptical buyer would doubt, argues three decisions and ships fix #1 after one exact yes, then saves a goal ledger that grades the fix next run.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-go-make-money",
+    "source": "plugins/threadify/skills/threadify-go-make-money/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/go-make-money/README.md"
+    ]
+  },
+  "triggers": [
+    "go make money",
+    "get me to paying customers",
+    "get me to paying members",
+    "where does my funnel leak",
+    "why don't my clicks turn into signups",
+    "find my money leak"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the owner's goal (N paying customers or members by a date), current baseline or UNKNOWN, connected Threadify account (posts, tracked links, signups, offers, conversion setup), the public landing page, optional data/ files such as YouTube analytics",
+        "schema_ref": "inline:go-make-money-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "go-make-money/<date>/ folder with goal.json, raw/ reads, funnel.json, beliefs.json, judge.json, short-seller.json, decisions.json, fix.json and a local report.html, plus the goal ledger at ~/.threadify/go-make-money/ledger.json",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_post_performance",
+    "read_link_attribution",
+    "get_growth_signal",
+    "list_offers",
+    "generate_content",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "read_conversion_setup",
+    "check_conversion_tracking",
+    "update_offer",
+    "create_offer",
+    "save_draft",
+    "get_post_thread",
+    "setup_conversion_tracking"
+  ],
+  "free_capabilities": [
+    "deterministic goal and pace math: required_net_new_per_week = ceil((goal - current) / weeks_left), unknown baseline labelled needs real baseline",
+    "deterministic funnel from raw per-link and per-post rows: views, clicks, signups, paid, per-step rates and the biggest drop",
+    "belief tests: promise vs landing page words, and CTA reach from retention data",
+    "outside judge on a different model (codex exec read-only, else a fresh Claude) with a hard time limit",
+    "short-seller quote check, decision ranking, public copy guard and casing guard",
+    "goal ledger that grades the last fix on the same numbers",
+    "local phone-width HTML report"
+  ],
+  "paid_capability_stubs": [
+    "link attribution and post performance history depend on the plan's analytics window",
+    "Threadify post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected offer changes, scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "the exact change: offer fields before and after, the exact post and Auto Plug, or the exact diff",
+      "local date and time for a scheduled post",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "diagnosis-only-without-substitute-copy",
+    "instructions": [
+      "Without a Threadify connection, stop after the goal and say what to connect.",
+      "When a number is not returned, show it as UNKNOWN, never 0; an unknown baseline is labelled needs real baseline.",
+      "When conversion tracking is not measurable, signups and paid are UNKNOWN.",
+      "When neither codex nor the claude command line is installed, say the outside judge could not run; never invent a verdict.",
+      "Never write posts yourself when Threadify generation is unavailable; report the blocker.",
+      "When Auto Plug is not on the plan, state the tier and offer the post without a plug.",
+      "Never merge a landing-page pull request; open it and print its URL only."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "goal, baseline and pace",
+      "raw read windows and destination filter",
+      "funnel counts and the leak with receipts",
+      "belief verdicts with evidence",
+      "judge label, model and verdict",
+      "short-seller quote check",
+      "three ranked decisions",
+      "approval reply",
+      "fix readbacks",
+      "ledger entry and last-fix grade",
+      "fallback state"
+    ]
+  }
+}
