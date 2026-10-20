@@ -47,6 +47,11 @@ const round = (value, places = 2) => (value === null ? null : Math.round(value *
 const pct = (rate) => (rate === null ? null : round(rate * 100, 2));
 const show = (value) => (value === null || value === undefined ? UNKNOWN : value);
 const EMAIL = /[\w.+-]+@[\w-]+\.[\w.]+/;
+/** The word for a count: plural(1, 'signup') is 'signup', plural(2, 'signup') and plural(UNKNOWN, 'signup') are 'signups'. */
+export const plural = (count, one, many = `${one}s`) => (count === 1 ? one : many);
+// Stage ids as a counted noun: "1 signup", "2 signups".
+const STAGE_ONE = { views: 'view', clicks: 'click', signups: 'signup', paid: 'paid' };
+const stageWord = (count, id) => (count === 1 ? STAGE_ONE[id] ?? id : id);
 
 // ---------------------------------------------------------------------------
 // 1. Goal and pace (altitude).
@@ -109,14 +114,14 @@ export function pace({ goal, current, deadline, today }) {
   const base = { goal, deadline, today, days_left: days, weeks_left: weeksLeft };
   if (!isNum(current)) {
     return { ...base, current: UNKNOWN, remaining: UNKNOWN, required_net_new_per_week: UNKNOWN, label: NEEDS_BASELINE,
-      line: `Goal ${goal} by ${deadline}: ${weeksLeft} weeks left. Current is UNKNOWN (${NEEDS_BASELINE}), so the weekly pace is UNKNOWN.` };
+      line: `Goal ${goal} by ${deadline}: ${weeksLeft} ${plural(weeksLeft, 'week')} left. Current is UNKNOWN (${NEEDS_BASELINE}), so the weekly pace is UNKNOWN.` };
   }
   const remaining = goal - current;
   if (remaining <= 0) return { ...base, current, remaining, required_net_new_per_week: 0, label: 'goal reached', line: `Goal ${goal} reached: current is ${current}.` };
   if (days <= 0) return { ...base, current, remaining, required_net_new_per_week: UNKNOWN, label: 'deadline passed', line: `The deadline ${deadline} has passed with ${remaining} to go.` };
   const perWeek = Math.ceil(remaining / (days / 7));
   return { ...base, current, remaining, required_net_new_per_week: perWeek, label: 'measured baseline',
-    line: `${current} now, ${goal} by ${deadline}: ${remaining} to go in ${weeksLeft} weeks = ${perWeek} net new per week.` };
+    line: `${current} now, ${goal} by ${deadline}: ${remaining} to go in ${weeksLeft} ${plural(weeksLeft, 'week')} = ${perWeek} net new per week.` };
 }
 
 // ---------------------------------------------------------------------------
@@ -188,10 +193,15 @@ export function buildFunnel({ attribution, performance = null, match = null, des
   const linkedPosts = new Set(links.map((l) => String(l.root_threads_post_id ?? l.final_threads_post_id ?? '')).filter(Boolean)).size;
   if (performance && viewedPosts === 0) { views = null; clicksOnViewed = null; }
   const counts = { views, clicks, signups, paid };
+  // views -> clicks compares like with like: only clicks on posts whose views were read.
+  // When that is not every click, say so, so the two click numbers never look like a mismatch.
+  const clicksNote = clicksOnViewed !== null && (clicksOnViewed !== clicks || viewedPosts !== linkedPosts)
+    ? `${clicksOnViewed} of ${show(clicks)} ${plural(clicks, 'click')} ${clicksOnViewed === 1 ? 'is' : 'are'} on the ${viewedPosts} of ${linkedPosts} linked ${plural(linkedPosts, 'post')} with views`
+    : null;
   const steps = [
-    { id: 'views->clicks', from: 'views', to: 'clicks', upstream: views, downstream: clicksOnViewed },
-    { id: 'clicks->signups', from: 'clicks', to: 'signups', upstream: clicks, downstream: signups },
-    { id: 'signups->paid', from: 'signups', to: 'paid', upstream: signups, downstream: paid },
+    { id: 'views->clicks', from: 'views', to: 'clicks', upstream: views, downstream: clicksOnViewed, note: clicksNote },
+    { id: 'clicks->signups', from: 'clicks', to: 'signups', upstream: clicks, downstream: signups, note: null },
+    { id: 'signups->paid', from: 'signups', to: 'paid', upstream: signups, downstream: paid, note: null },
   ].map((step) => {
     const rate = step.upstream === null || step.downstream === null || step.upstream === 0 ? null : step.downstream / step.upstream;
     const yardstick = yardsticks[step.id] ?? null;
@@ -228,7 +238,8 @@ export function pickLeak(steps) {
   return {
     step: best.id, from: best.from, to: best.to, upstream: best.upstream, downstream: best.downstream, rate_pct: best.rate_pct, lost: best.lost,
     small_sample: best.small_sample,
-    line: `${best.from} -> ${best.to}: ${best.downstream} of ${best.upstream} (${best.rate_pct}%), ${share}% of the ${round(best.yardstick * 100, 2)}% yardstick${best.small_sample ? ' (small sample)' : ''}.`,
+    line: `${best.from} -> ${best.to}: ${best.downstream} of ${best.upstream} (${best.rate_pct}%), ${share}% of the ${round(best.yardstick * 100, 2)}% yardstick${best.small_sample ? ' (small sample)' : ''}.${best.note ? ` Note: ${best.note}.` : ''}`,
+    note: best.note ?? null,
   };
 }
 
@@ -245,14 +256,27 @@ export function leakReceipts(funnel, limit = 5) {
 // ---------------------------------------------------------------------------
 // 3. Landing page text (public page only, no cookies).
 // ---------------------------------------------------------------------------
+const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
+
+/** Decode numeric (&#39; &#x27;) and common named (&amp; &lt; &gt; &quot; &apos; &nbsp;) entities in one pass, so &amp;lt; stays &lt;. */
+export function decodeEntities(text) {
+  return String(text ?? '').replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (whole, body) => {
+    if (body[0] === '#') {
+      const code = body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : Number(body.slice(1));
+      const valid = Number.isInteger(code) && code > 0 && code <= 0x10ffff && (code < 0xd800 || code > 0xdfff);
+      return valid ? String.fromCodePoint(code) : whole;
+    }
+    return NAMED_ENTITIES[body.toLowerCase()] ?? whole;
+  });
+}
+
 export function htmlToText(html) {
   return String(html ?? '')
     .replace(/<(script|style|noscript|svg|template)[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<(br|\/p|\/div|\/h\d|\/li|\/section|\/a|\/button)\b[^>]*>/gi, '\n')
     .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&[#a-z0-9]+;/gi, (entity) => decodeEntities(entity))
     .split('\n').map((line) => line.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n');
 }
 
@@ -282,15 +306,15 @@ export function testPageMismatch(promise, page) {
   const terms = keyTerms(promise);
   const pageText = String(page ?? '').trim();
   if (!pageText) return { kind: 'page-mismatch', verdict: 'unknown', reason: 'no landing page text was read', terms, found: [], missing: [] };
-  if (terms.length < PAGE_MISMATCH.min_terms) return { kind: 'page-mismatch', verdict: 'unknown', reason: `the promise has only ${terms.length} key words, too few to test`, terms, found: [], missing: [] };
+  if (terms.length < PAGE_MISMATCH.min_terms) return { kind: 'page-mismatch', verdict: 'unknown', reason: `the promise has only ${terms.length} ${plural(terms.length, 'key word')}, too few to test`, terms, found: [], missing: [] };
   const pageWords = new Set((pageText.match(WORDS) ?? []).map(stem));
   const found = terms.filter((t) => pageWords.has(t));
   const missing = terms.filter((t) => !pageWords.has(t));
   const score = round(found.length / terms.length, 2);
   const verdict = score < PAGE_MISMATCH.supported_below ? 'supported' : score >= PAGE_MISMATCH.not_supported_from ? 'not supported' : 'unknown';
   const reason = verdict === 'unknown'
-    ? `mixed: the page uses ${found.length} of the promise's ${terms.length} key words (${Math.round(score * 100)}%)`
-    : `the page uses ${found.length} of the promise's ${terms.length} key words (${Math.round(score * 100)}%)`;
+    ? `mixed: the page uses ${found.length} of the promise's ${terms.length} ${plural(terms.length, 'key word')} (${Math.round(score * 100)}%)`
+    : `the page uses ${found.length} of the promise's ${terms.length} ${plural(terms.length, 'key word')} (${Math.round(score * 100)}%)`;
   return { kind: 'page-mismatch', verdict, score, reason, terms, found, missing: missing.slice(0, 15) };
 }
 
@@ -347,17 +371,21 @@ export function testCtaReach(videos, ctaSeconds = null) {
   const known = per.filter((p) => p.verdict !== 'unknown');
   const supported = known.filter((p) => p.verdict === 'supported').length;
   const verdict = !known.length ? 'unknown' : supported * 2 >= known.length ? 'supported' : 'not supported';
-  const reason = !known.length ? 'no video has both a CTA timestamp and retention data' : `${supported} of ${known.length} videos with data lose most viewers before the CTA`;
+  const reason = !known.length ? 'no video has both a CTA timestamp and retention data' : `${supported} of ${known.length} ${plural(known.length, 'video')} with data ${supported === 1 ? 'loses' : 'lose'} most viewers before the CTA`;
   return { kind: 'cta-reach', verdict, reason, videos: per };
 }
 
 // ---------------------------------------------------------------------------
 // 5. Outside judge: a different model sees the diagnosis and the raw table, not the chat.
 // ---------------------------------------------------------------------------
+/** "Note on views -> clicks: 247 of 257 clicks are on the 41 of 44 linked posts with views." for every step that carries a note. */
+export const stepNotes = (funnel, arrow = '->') => (funnel?.steps ?? []).filter((s) => s.note).map((s) => `Note on ${s.from} ${arrow} ${s.to}: ${s.note}.`);
+
 export function funnelTable(funnel) {
   const lines = ['| stage | count |', '|---|---|', ...funnel.stages.map((s) => `| ${s.label} | ${show(s.count)} |`), '',
     '| step | in | out | rate | yardstick | small sample |', '|---|---|---|---|---|---|',
-    ...funnel.steps.map((s) => `| ${s.from} -> ${s.to} | ${show(s.upstream)} | ${show(s.downstream)} | ${s.rate_pct === null ? UNKNOWN : `${s.rate_pct}%`} | ${s.yardstick === null ? '-' : `${round(s.yardstick * 100, 2)}%`} | ${s.small_sample ? 'yes' : 'no'} |`)];
+    ...funnel.steps.map((s) => `| ${s.from} -> ${s.to} | ${show(s.upstream)} | ${show(s.downstream)} | ${s.rate_pct === null ? UNKNOWN : `${s.rate_pct}%`} | ${s.yardstick === null ? '-' : `${round(s.yardstick * 100, 2)}%`} | ${s.small_sample ? 'yes' : 'no'} |`),
+    ...stepNotes(funnel).flatMap((line) => ['', line])];
   const dests = funnel.by_destination.slice(0, 8).map((d) => `| ${d.destination} | ${d.links} | ${show(d.clicks)} | ${show(d.signups)} | ${show(d.paid)} |`);
   return [...lines, '', '| destination | links | unique clicks | signups | paid |', '|---|---|---|---|---|', ...dests].join('\n');
 }
@@ -381,8 +409,9 @@ export function judgePrompt({ goal, funnel, beliefs = [], diagnosis = '' }) {
   ].join('\n');
 }
 
-export function judgeCommand(kind, prompt) {
-  if (kind === 'codex') return { bin: 'codex', args: ['exec', '-s', 'read-only', '--skip-git-repo-check', prompt], label: 'Codex (codex exec, read-only sandbox), a different model' };
+export function judgeCommand(kind, prompt, { lastMessageFile = null } = {}) {
+  // -o (--output-last-message) writes only the judge's final message, so log lines never reach raw_reply.
+  if (kind === 'codex') return { bin: 'codex', args: ['exec', '-s', 'read-only', '--skip-git-repo-check', ...(lastMessageFile ? ['-o', lastMessageFile] : []), prompt], label: 'Codex (codex exec, read-only sandbox), a different model' };
   return { bin: 'claude', args: ['-p', prompt, '--tools', '', '--strict-mcp-config', '--no-session-persistence', '--output-format', 'json'], label: 'a fresh Claude instance with no prior context (Codex is not installed)' };
 }
 
@@ -410,6 +439,20 @@ export function extractVerdict(text) {
   }
   if (!found) return null;
   return { verdict: found.verdict, reasons: Array.isArray(found.reasons) ? found.reasons.map(String) : [], biggest_risk: found.biggest_risk ? String(found.biggest_risk) : null };
+}
+
+const stripAnsi = (text) => String(text ?? '').replace(/\x1b\[[0-9;?]*[A-Za-z]/g, '').replace(/\r/g, '');
+
+/** The model codex exec names in its header ("model: gpt-..."), on stdout or stderr, with or without colour codes. */
+export function codexModel(...outputs) {
+  return (stripAnsi(outputs.join('\n')).match(/^\s*model:\s*(\S+)/m) ?? [])[1] ?? null;
+}
+
+const LOG_LINE = /^\s*(?:\d{4}-\d\d-\d\dT\S+\s+(?:ERROR|WARN|INFO|DEBUG|TRACE)\b|hook: |(?:ERROR|WARN|warning):)/;
+
+/** Fallback when no last-message file was written: drop colour codes and log lines, keep the reply. */
+export function cleanJudgeOutput(text) {
+  return stripAnsi(text).split('\n').filter((line) => !LOG_LINE.test(line)).join('\n').trim();
 }
 
 function commandExists(bin) {
@@ -446,16 +489,21 @@ async function judge(args) {
   fs.writeFileSync(path.join(dir, 'judge-prompt.txt'), prompt);
   const wanted = argValue(args, '--judge', 'auto');
   const kind = wanted === 'auto' ? (commandExists('codex') ? 'codex' : 'claude') : wanted;
-  const command = judgeCommand(kind, prompt);
+  const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'gmm-judge-'));
+  const lastMessageFile = path.join(scratch, 'last-message.txt');
+  const command = judgeCommand(kind, prompt, { lastMessageFile });
   const timeoutMs = Number(argValue(args, '--timeout-sec', 240)) * 1000;
   const run = await runJudge({ ...command, cwd: dir, timeoutMs, silenceMs: Math.min(timeoutMs, 150_000) });
-  let text = run.stdout;
+  let text = cleanJudgeOutput(run.stdout);
   let model = null;
   if (kind === 'claude') {
-    try { const parsed = JSON.parse(run.stdout); text = parsed.result ?? ''; model = Object.keys(parsed.modelUsage ?? {})[0] ?? null; } catch { /* plain text */ }
+    try { const parsed = JSON.parse(run.stdout); text = String(parsed.result ?? ''); model = parsed.model ?? Object.keys(parsed.modelUsage ?? {})[0] ?? null; } catch { /* plain text */ }
   } else {
-    model = (run.stderr.match(/^model:\s*(\S+)/m) ?? [])[1] ?? null;
+    model = codexModel(run.stderr, run.stdout);
+    const last = fs.existsSync(lastMessageFile) ? fs.readFileSync(lastMessageFile, 'utf8').trim() : '';
+    if (last) text = last;
   }
+  fs.rmSync(scratch, { recursive: true, force: true });
   const verdict = extractVerdict(text);
   const result = {
     judge: kind, judge_label: command.label, model: model ?? UNKNOWN, seconds: round(run.ms / 1000, 1),
@@ -471,7 +519,7 @@ async function judge(args) {
 // ---------------------------------------------------------------------------
 // 6. Short seller and 7. three decisions (checked, not written, by the script).
 // ---------------------------------------------------------------------------
-const squash = (text) => String(text ?? '').toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+const squash = (text) => decodeEntities(text).toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
 
 /** Exactly 3 claims; each quotes the page word for word and says what would make a buyer doubt it. */
 export function checkShortSeller(data, pageText) {
@@ -606,7 +654,7 @@ export function renderReport(run) {
     const isLeak = step && step.id === leak?.step;
     return `<tr class="${isLeak ? 'leakrow' : ''}"><td>${esc(s.label)}</td><td class="n">${esc(fmt(s.count))}</td><td class="n">${step ? (step.rate_pct === null ? UNKNOWN : `${step.rate_pct}%`) : ''}</td></tr>`;
   }).join('') : '';
-  const receipts = funnel ? leakReceipts(funnel, 4).map((r) => `<li>${esc(r.post_first_line ?? r.tracked ?? 'link')} <span class="muted">→ ${esc(r.destination)}</span>: ${esc(fmt(r.clicks))} clicks, ${esc(fmt(r.signups))} signups</li>`).join('') : '';
+  const receipts = funnel ? leakReceipts(funnel, 4).map((r) => `<li>${esc(r.post_first_line ?? r.tracked ?? 'link')} <span class="muted">→ ${esc(r.destination)}</span>: ${esc(fmt(r.clicks))} ${plural(r.clicks, 'click')}, ${esc(fmt(r.signups))} ${plural(r.signups, 'signup')}</li>`).join('') : '';
   const beliefCards = (beliefs ?? []).map((b) => `<div class="pill ${VERDICT_CLASS[b.verdict] ?? 'unk'}">${esc(b.kind === 'page-mismatch' ? 'Page matches the promise?' : 'People reach the CTA?')}<b>${esc(b.verdict === 'supported' ? 'your belief: supported' : b.verdict === 'not supported' ? 'your belief: not supported' : 'unknown')}</b><span>${esc(b.reason)}</span>${b.missing?.length ? `<small>missing on the page: ${esc(b.missing.slice(0, 8).join(', '))}</small>` : ''}</div>`).join('');
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Go Make Money report</title><style>
 :root{--bg:#0d0d0d;--panel:#1a1a1a;--line:#333;--text:#fff;--muted:rgba(255,255,255,.7);--accent:#ff6b4a;--ok:#4ecdc4;--no:#ff6b4a;--unk:#c9c9c9}
@@ -629,9 +677,9 @@ ol.cards{padding:0;list-style:none;display:grid;gap:10px}ol.cards li{background:
 </style></head><body><main>
 <h1>Go Make Money</h1>
 <div class="goal">${goal ? esc(goal.pace?.line ?? '') : 'Goal not set.'}${goal?.pace?.label === NEEDS_BASELINE ? ` <b style="color:var(--accent)">(${NEEDS_BASELINE})</b>` : ''}</div>
-${leak?.step ? `<section class="leak"><div class="tag">The leak</div><div class="big">${esc(fmt(leakStep.upstream))} ${esc(leak.from)} → ${esc(fmt(leakStep.downstream))} ${esc(leak.to)}<small>${esc(leakStep.rate_pct === null ? UNKNOWN : `${leakStep.rate_pct}%`)} make it through${leak.small_sample ? ' (small sample)' : ''}</small></div><div class="line">${esc(leak.line)}</div>${receipts ? `<ul>${receipts}</ul>` : ''}</section>` : '<section class="leak"><div class="tag">The leak</div><div class="line">Not enough data to name a leak yet.</div></section>'}
+${leak?.step ? `<section class="leak"><div class="tag">The leak</div><div class="big">${esc(fmt(leakStep.upstream))} ${esc(stageWord(leakStep.upstream, leak.from))} → ${esc(fmt(leakStep.downstream))} ${esc(stageWord(leakStep.downstream, leak.to))}<small>${esc(leakStep.rate_pct === null ? UNKNOWN : `${leakStep.rate_pct}%`)} make it through${leak.small_sample ? ' (small sample)' : ''}</small></div><div class="line">${esc(leak.line)}</div>${receipts ? `<ul>${receipts}</ul>` : ''}</section>` : '<section class="leak"><div class="tag">The leak</div><div class="line">Not enough data to name a leak yet.</div></section>'}
 <h2>Funnel (raw rows${funnel?.window_days ? `, ${esc(funnel.window_days)} days` : ''})</h2>
-${funnel ? `<table><thead><tr><th>stage</th><th class="n">count</th><th class="n">from the step above</th></tr></thead><tbody>${stageRows}</tbody></table>` : notYet}
+${funnel ? `<table><thead><tr><th>stage</th><th class="n">count</th><th class="n">from the step above</th></tr></thead><tbody>${stageRows}</tbody></table>${stepNotes(funnel, '→').map((line) => `<p class="muted">${esc(line)}</p>`).join('')}` : notYet}
 <h2>Your belief, tested</h2>${beliefCards ? `<div class="grid">${beliefCards}</div>` : notYet}
 <h2>Outside judge</h2>${verdict ? `<div class="pill ${VERDICT_CLASS[verdict.verdict] ?? 'unk'}"><span class="muted">${esc(verdict.judge_label)} · ${esc(verdict.model)}</span><b>${esc(verdict.verdict ?? 'no verdict')}</b>${(verdict.reasons ?? []).map((r) => `<span>${esc(r)}</span>`).join('')}${verdict.note ? `<small>${esc(verdict.note)}</small>` : ''}</div>` : notYet}
 <h2>The short seller: 3 claims a buyer would doubt</h2>${shortSeller?.claims?.length ? `<ol class="cards">${shortSeller.claims.map((c) => `<li><q>${esc(c.quote)}</q><br>${esc(c.doubt)}<br><span class="muted">${esc(c.evidence)}</span></li>`).join('')}</ol>` : notYet}
@@ -678,7 +726,7 @@ async function main(argv) {
       const funnel = buildFunnel({ attribution, performance, match: argValue(args, '--match', null), dest: argValue(args, '--dest', null) });
       funnel.window_days ??= Number(argValue(args, '--days', NaN)) || null;
       write(dir, 'funnel.json', funnel);
-      return { status: 'ok', funnel: path.join(dir, 'funnel.json'), stages: funnel.stages, steps: funnel.steps.map(({ id, upstream, downstream, rate_pct, small_sample }) => ({ id, in: show(upstream), out: show(downstream), rate_pct: show(rate_pct), small_sample })),
+      return { status: 'ok', funnel: path.join(dir, 'funnel.json'), stages: funnel.stages, steps: funnel.steps.map(({ id, upstream, downstream, rate_pct, small_sample, note }) => ({ id, in: show(upstream), out: show(downstream), rate_pct: show(rate_pct), small_sample, ...(note ? { note } : {}) })),
         leak: funnel.leak, receipts: leakReceipts(funnel), by_destination: funnel.by_destination.slice(0, 6), summary_check: funnel.summary_check, views_coverage: funnel.views_coverage, table: funnelTable(funnel) };
     }
     case 'page-text': {

@@ -11,7 +11,11 @@ import {
   buildFunnel,
   checkCopy,
   checkShortSeller,
+  cleanJudgeOutput,
+  codexModel,
+  decodeEntities,
   extractVerdict,
+  htmlToText,
   gradeLast,
   judgeCommand,
   judgePrompt,
@@ -22,6 +26,7 @@ import {
   parseDeadline,
   parseGoal,
   pickLeak,
+  plural,
   rankDecisions,
   reachAt,
   readLedger,
@@ -261,7 +266,7 @@ test('report: big leak card, funnel table, verdicts, phone width, dark default, 
     beliefs: [testPageMismatch('viral github repo reverse engineers apps', 'Threadify grow on threads')], judge: { judge_label: 'Codex', model: 'gpt', verdict: 'dispute', reasons: ['too few signups'] } });
   assert.match(html, /<meta name="viewport" content="width=device-width,initial-scale=1">/);
   assert.match(html, /class="leak"/);
-  assert.match(html, /246 clicks → 1 signups/);
+  assert.match(html, /246 clicks → 1 signup</);
   assert.match(html, /needs real baseline/);
   assert.match(html, /your belief: supported/);
   assert.match(html, /dispute/);
@@ -286,4 +291,110 @@ test('CLI end to end on saved rows: goal, funnel, belief, decisions, report', ()
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'beliefs.json'), 'utf8')).tests.length, 2);
   assert.equal(run('report', '--dir', dir).status, 'ok');
   assert.match(fs.readFileSync(path.join(dir, 'report.html'), 'utf8'), /The leak/);
+});
+
+// v0.40.1 fixes.
+test('counts read right: 1 signup, 2 signups, everywhere a count is printed', () => {
+  assert.equal(plural(1, 'signup'), 'signup');
+  assert.equal(plural(0, 'signup'), 'signups');
+  assert.equal(plural(UNKNOWN, 'click'), 'clicks');
+  const funnel = buildFunnel({ attribution, performance, dest: 'threadify.app' });
+  const html = renderReport({ funnel });
+  assert.match(html, /246 clicks → 1 signup</);
+  assert.match(html, /: 120 clicks, 1 signup</);
+  assert.match(html, /: 80 clicks, 0 signups</);
+  assert.doesNotMatch(html, /\b1 (signups|clicks|views|posts|videos)\b/);
+  const one = buildFunnel({ attribution: { links: [link('z', 'p1', 'https://www.threadify.app/home', 1, 1)] }, performance });
+  assert.match(renderReport({ funnel: one }), /: 1 click, 1 signup</);
+  assert.match(pace({ goal: 10, current: 5, deadline: '2026-10-27', today: '2026-10-20' }).line, /in 1 week =/);
+  assert.match(testPageMismatch('alpha beta gamma', 'alpha').reason, /3 key words/);
+  assert.match(testCtaReach(loadVideos([{ video_id: 'v', duration_s: 100, cta_seconds: 50, average_view_duration: 20 }])).reason, /^1 of 1 video with data loses most viewers/);
+});
+
+test('views -> clicks names its click basis when some linked posts have no views', () => {
+  const partial = { posts: performance.posts.slice(0, 2) }; // p3 (46 clicks) has no views row
+  const funnel = buildFunnel({ attribution, performance: partial, dest: 'threadify.app' });
+  const [views, clicks] = funnel.steps;
+  assert.equal(views.downstream, 200);
+  assert.equal(clicks.upstream, 246);
+  assert.equal(views.note, '200 of 246 clicks are on the 2 of 3 linked posts with views');
+  assert.equal(clicks.note, null);
+  assert.match(judgePrompt({ funnel, diagnosis: 'd' }), /Note on views -> clicks: 200 of 246 clicks are on the 2 of 3 linked posts with views\./);
+  assert.match(renderReport({ funnel }), /Note on views → clicks: 200 of 246 clicks are on the 2 of 3 linked posts with views\./);
+  // Every click is on a viewed post: no note, nothing to explain.
+  assert.equal(buildFunnel({ attribution, performance, dest: 'threadify.app' }).steps[0].note, null);
+  // The CLI step line and table carry it too.
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'a.json'), JSON.stringify(attribution));
+  fs.writeFileSync(path.join(dir, 'p.json'), JSON.stringify(partial));
+  const out = JSON.parse(spawnSync(process.execPath, [script, 'funnel', '--dir', dir, '--attribution', path.join(dir, 'a.json'), '--performance', path.join(dir, 'p.json'), '--dest', 'threadify.app'], { encoding: 'utf8' }).stdout);
+  assert.equal(out.steps[0].note, '200 of 246 clicks are on the 2 of 3 linked posts with views');
+  assert.match(out.table, /Note on views -> clicks: 200 of 246 clicks/);
+});
+
+test('judge CLI: the codex model is named and raw_reply is only the final message, no log noise', () => {
+  const dir = tmp();
+  const bin = tmp();
+  fs.writeFileSync(path.join(dir, 'funnel.json'), JSON.stringify(buildFunnel({ attribution, performance })));
+  const reply = '{"verdict":"agree","reasons":["1 of 246 clicks became a signup"],"biggest_risk":"small sample"}';
+  fs.writeFileSync(path.join(bin, 'codex'), `#!/bin/sh
+out=""
+while [ $# -gt 0 ]; do if [ "$1" = "-o" ]; then out="$2"; shift; fi; shift; done
+printf 'OpenAI Codex v0.162.1\\r\\n\\033[1mmodel:\\033[0m gpt-test-judge\\r\\n'
+echo '2026-10-20T03:41:41.023892Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed' >&2
+echo '2026-10-20T03:41:41.023892Z ERROR rmcp::transport::worker: worker quit with fatal'
+echo 'hook: SessionStart'
+echo '${reply}'
+echo 'hook: Stop Completed'
+printf '%s' '${reply}' > "$out"
+`, { mode: 0o755 });
+  const run = spawnSync(process.execPath, [script, 'judge', '--dir', dir, '--judge', 'codex', '--timeout-sec', '20'], { encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}` } });
+  const result = JSON.parse(run.stdout);
+  assert.equal(result.status, 'ok');
+  assert.equal(result.model, 'gpt-test-judge');
+  assert.equal(result.verdict, 'agree');
+  assert.equal(result.raw_reply, reply);
+  assert.doesNotMatch(JSON.stringify(result), /ERROR|rmcp|hook:/);
+  const html = renderReport({ judge: result });
+  assert.doesNotMatch(html, /ERROR|rmcp/);
+  assert.match(html, /gpt-test-judge/);
+});
+
+test('judge helpers: model from a coloured header on either stream; logs stripped when no last-message file', () => {
+  assert.equal(codexModel('', 'OpenAI Codex\r\n\x1b[1mmodel:\x1b[0m gpt-6-astra\r\nprovider: openai'), 'gpt-6-astra');
+  assert.equal(codexModel('model: o4-mini\n', ''), 'o4-mini');
+  assert.equal(codexModel('no header', ''), null);
+  const noisy = '2026-10-20T03:41:41.0Z ERROR rmcp::transport::worker: worker quit\r\nhook: SessionStart\r\n\x1b[1mcodex\x1b[0m\r\n{"verdict":"dispute","reasons":["r"],"biggest_risk":"b"}\r\nhook: Stop Failed\r\n';
+  const clean = cleanJudgeOutput(noisy);
+  assert.doesNotMatch(clean, /ERROR|hook:|\x1b|\r/);
+  assert.equal(extractVerdict(clean).verdict, 'dispute');
+  assert.equal(judgeCommand('codex', 'P', { lastMessageFile: '/tmp/x' }).args.join(' '), 'exec -s read-only --skip-git-repo-check -o /tmp/x P');
+});
+
+test('judge CLI: the fresh-claude fallback records the claude model when it is reported', () => {
+  const dir = tmp();
+  const bin = tmp();
+  fs.writeFileSync(path.join(dir, 'funnel.json'), JSON.stringify(buildFunnel({ attribution, performance })));
+  const body = JSON.stringify({ result: '{"verdict":"agree","reasons":["r"],"biggest_risk":"b"}', modelUsage: { 'claude-test-model': { inputTokens: 1 } } });
+  fs.writeFileSync(path.join(bin, 'claude'), `#!/bin/sh\necho '${body}'\n`, { mode: 0o755 });
+  const result = JSON.parse(spawnSync(process.execPath, [script, 'judge', '--dir', dir, '--judge', 'claude', '--timeout-sec', '20'], { encoding: 'utf8', env: { ...process.env, PATH: `${bin}:${process.env.PATH}` } }).stdout);
+  assert.equal(result.model, 'claude-test-model');
+  assert.equal(result.verdict, 'agree');
+});
+
+test('page text decodes numeric and named entities; the short seller still matches exact quotes', () => {
+  assert.equal(decodeEntities('Can&#x27;t &#39;x&#39; &#X27; &amp; &lt;b&gt; &quot;q&quot; &apos; a&nbsp;b &#8217; &amp;lt;'), 'Can\'t \'x\' \' & <b> "q" \' a b ’ &lt;');
+  const html = '<html><body><p>Can&#x27;t freaking wait to tell the Threads community about it!</p><p>See what&#39;s working. Repeat it.</p><p>Tom &amp; Jerry &lt;3 &quot;fast&quot; &#169;</p></body></html>';
+  const text = htmlToText(html);
+  assert.doesNotMatch(text, /&#x?[0-9a-f]+;|&(amp|lt|gt|quot|apos|nbsp);/i);
+  assert.match(text, /Can't freaking wait/);
+  assert.match(text, /Tom & Jerry <3 "fast" ©/);
+  const claims = { claims: [
+    { quote: "Can't freaking wait to tell the Threads community about it!", doubt: 'd', evidence: 'e' },
+    { quote: "See what's working. Repeat it.", doubt: 'd', evidence: 'e' },
+    { quote: 'Tom & Jerry', doubt: 'd', evidence: 'e' },
+  ] };
+  assert.equal(checkShortSeller(claims, text).status, 'PASS');
+  // An older page.txt saved with entities still matches the decoded quote.
+  assert.equal(checkShortSeller(claims, 'Can&#x27;t freaking wait to tell the Threads community about it! See what&#39;s working. Repeat it. Tom &amp; Jerry').status, 'PASS');
 });

@@ -25,7 +25,7 @@ It's free: it runs in your agent on your computer, and the reads, the offer and 
 Copy this into your terminal (Claude Code and Codex; it installs every Threadify workflow, Go Make Money included):
 
 ```sh
-npx --yes github:lennoxsaint/Threadify-workflows#v0.40.0 install --version 0.40.0 --workflows all --targets claude,codex --disable-auto-update
+npx --yes github:lennoxsaint/Threadify-workflows#v0.40.1 install --version 0.40.1 --workflows all --targets claude,codex --disable-auto-update
 ```
 
 The installer takes `--workflows all` only; choosing a single workflow such as `--workflows go-make-money` is not supported. Then say "go make money: get me to <N> paying <customers/members> by <date>".
