@@ -1,3 +1,9 @@
+# 0.41.0
+
+- Go Make Money rebuilt: confirms what makes you money, suggests missing connectors, agrees a no-code action plan with you, builds the post from a proven full structure and the Auto Plug from your best-clicking plugs, schedules on one yes, then celebrates on a Threadify page with an optional Claude check-in.
+- Never create a new offer per run: Go Make Money, Research Army and Monetize My Week reuse the existing offer.
+- Shared feedback rules: one approval packet, reprint everything after a correction, surgical edits, look it up before asking, claim strength, listicle shape, channel casing, and never route around a host gate.
+
 # 0.40.1
 
 - Go Make Money: counts read right ("1 signup", not "1 signups") everywhere a count is printed. The views -> clicks step now says which clicks it compares ("247 of 257 clicks are on the 41 of 44 linked posts with views") in the funnel table, the step line, the report page and the outside judge prompt, so the two click numbers never look like a mismatch. The outside judge records the model it actually used and keeps only its final reply (codex exec -o), so no log lines reach the report. Landing page text decodes HTML entities (&#x27;, &amp; and the rest), and the short seller quote check still matches word for word.

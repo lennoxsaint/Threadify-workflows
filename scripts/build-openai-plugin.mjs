@@ -96,7 +96,7 @@ const REWRITES = [
   },
   {
     files: 1,
-    from: ' If Threadify itself is the offer, require the current canonical plans destination with campaign attribution parameters; do not reuse an old episode URL or invent plan claims.',
+    from: ' If Threadify itself is the offer, reuse the existing Threadify offer and its saved destination; never create, rename or duplicate an offer per run, and never invent plan claims.',
     to: '',
   },
   {

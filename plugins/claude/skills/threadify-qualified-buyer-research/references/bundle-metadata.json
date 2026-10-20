@@ -55,7 +55,7 @@
     {
       "source": "release/release-intent.json",
       "target": "release-metadata.json",
-      "sha256": "9fa825f1594de468733c1679a38650952bfd2bf76905aa42bf22cd1a7a65431f"
+      "sha256": "9fdd72790db12a433f431a71d111fc953b40bde31d56838cea5634df5d8ad1d5"
     },
     {
       "source": "scripts/qualified-buyer-update-on-use.mjs",
