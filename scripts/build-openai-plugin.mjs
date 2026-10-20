@@ -55,12 +55,12 @@ const OPENAI_ADDRESS = 'https://www.threadify.app/api/mcp/openai';
 // a reworded source fails the build instead of shipping the old sentence.
 const REWRITES = [
   {
-    files: 43,
+    files: 44,
     from: 'For Threadify setup and the current offer, open the fully attributed [Threadify plans page](https://www.threadify.app/plans?utm_source=threadify-workflows&utm_medium=github&utm_campaign=buyer-workflows&utm_content=onboarding__buyer_workflows__default&video_slug=threadify-001&cta_slot=onboarding&entry_angle=buyer_next_moves&lp_variant=plans). The [first-loop video',
     to: 'For Threadify setup, the [first-loop video',
   },
   {
-    files: 43,
+    files: 44,
     from: 'The user completes signup, plan choices, login, OAuth and security steps in the provider interface.',
     to: 'The user completes login, OAuth and security steps in the provider interface.',
   },
@@ -90,7 +90,7 @@ const REWRITES = [
     to: '"summary": "Go from an existing Threadify account to a personalized Brain, first week and verified agent routine."',
   },
   {
-    files: 2,
+    files: 3,
     from: 'state the returned current tier, required tier, allowed alternative and upgrade URL.',
     to: 'state the returned current tier, required tier and allowed alternative.',
   },

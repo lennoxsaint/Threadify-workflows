@@ -22,6 +22,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | First Followers | yes | yes | yes | yes | yes | yes | yes |
 | Follow Through | yes | yes | yes | yes | yes | yes | yes |
 | Get Set Up | yes | yes | yes | yes | yes | yes | yes |
+| Go Make Money | yes | yes | yes | yes | yes | yes | yes |
 | Greatest Hits Runway | yes | yes | yes | yes | yes | yes | yes |
 | Market to Pipeline | yes | yes | yes | yes | yes | yes | yes |
 | Monetize My Week | yes | yes | yes | yes | yes | yes | yes |

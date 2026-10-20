@@ -989,6 +989,58 @@
       ]
     },
     {
+      "workflow_id": "go-make-money",
+      "version": "0.1.0",
+      "title": "Go Make Money",
+      "summary": "Give Claude your real money goal, not a task: it reads your raw Threadify rows, finds the biggest funnel leak with receipts, tests your belief about why, has a different model judge the diagnosis, lists the 3 claims a skeptical buyer would doubt, argues three decisions and ships fix #1 after one exact yes, then saves a goal ledger that grades the fix next run.",
+      "kind": "skill",
+      "skill_name": "threadify-go-make-money",
+      "entrypoint": "skills/threadify-go-make-money/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-go-make-money/SKILL.md",
+      "source_manifest": "workflows/go-make-money/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/go-make-money/README.md"
+        ]
+      },
+      "triggers": [
+        "go make money",
+        "get me to paying customers",
+        "get me to paying members",
+        "where does my funnel leak",
+        "why don't my clicks turn into signups",
+        "find my money leak"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the owner's goal (N paying customers or members by a date), current baseline or UNKNOWN, connected Threadify account (posts, tracked links, signups, offers, conversion setup), the public landing page, optional data/ files such as YouTube analytics",
+            "schema_ref": "inline:go-make-money-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "go-make-money/<date>/ folder with goal.json, raw/ reads, funnel.json, beliefs.json, judge.json, short-seller.json, decisions.json, fix.json and a local report.html, plus the goal ledger at ~/.threadify/go-make-money/ledger.json",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "greatest-hits-runway",
       "version": "0.1.0",
       "title": "Greatest Hits Runway",
