@@ -1,0 +1,4 @@
+interface:
+  display_name: "Go Make Money"
+  short_description: "Find where your money leaks and ship fix #1"
+  default_prompt: "Use $threadify-go-make-money. go make money: get me to 1,000 paying members by Dec 31."
