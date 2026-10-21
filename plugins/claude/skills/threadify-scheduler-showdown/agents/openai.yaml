@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scheduler Showdown"
+  short_description: "Blind test: which scheduler knows you"
+  default_prompt: "Use $threadify-scheduler-showdown. Run the scheduler showdown on the tools I connect."

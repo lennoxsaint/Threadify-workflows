@@ -1,0 +1,133 @@
+{
+  "workflow_id": "scheduler-showdown",
+  "version": "0.1.0",
+  "title": "Scheduler Showdown",
+  "summary": "A fair, blind test of which social media scheduler your AI agent actually knows you through (your numbers, your voice, your sales), on the tools you connect: five fixed prompts locked and hashed before the run, sent word for word through each tool's own MCP, anonymised to Tool A to F and graded by an outside model, with price, free plan and networks always shown, then one real post with the winner after one yes.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-scheduler-showdown",
+    "source": "plugins/threadify/skills/threadify-scheduler-showdown/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/scheduler-showdown/README.md"
+    ]
+  },
+  "triggers": [
+    "scheduler showdown",
+    "which scheduler knows me best",
+    "which scheduler does my AI know me through",
+    "compare my schedulers fairly",
+    "test my scheduler AI connections",
+    "threadify vs buffer",
+    "blind test my social media schedulers"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the schedulers the owner pays for and their connected MCP servers (Threadify, Buffer, Metricool, Typefully, Eden, BlackTwist, Hootsuite, Publer), each tool's public pricing page, the owner's existing offer for the real post",
+        "schema_ref": "inline:scheduler-showdown-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "showdown/<date>/ folder with tools.json, rules.json (sha256 and lock time), raw/<tool>/T#.json, anon/Tool-X/T#.json, key.json and seal.json (key sha256), judge/prompt.txt, grades.json, scorecard.md, scorecard.html, unblind.json, lowercase-guard.json, cleanup.json and report.html",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_post_performance",
+    "generate_content",
+    "best_time_to_post",
+    "list_offers",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status",
+    "cancel_schedule",
+    "read_link_attribution"
+  ],
+  "optional_mcp_tools": [
+    "greatest_hits",
+    "get_post_thread",
+    "validate_post",
+    "query_brain",
+    "get_brain_overview"
+  ],
+  "free_capabilities": [
+    "public rules with the five fixed prompts and pass criteria, copied into each run with a sha256 and timestamp before the first tool call",
+    "raw reply recording per tool and test, appended with timestamps, refusing a reworded prompt",
+    "anonymiser that maps tools to Tool A to F by a seeded shuffle, removes every tool name, handle and link, and seals the key with a printed sha256",
+    "exact outside-judge prompt (codex exec read-only first, else a fresh Claude) and grade parsing with one evidence line per cell",
+    "scorecard with price, free plan and networks rows always shown, the leader by letter after each test, and a tie-honest verdict",
+    "unblinding that verifies the key hash and refuses on a mismatch",
+    "lowercase guard proving lower(original) == lower(final)",
+    "Threadify-branded report page with the disclosure, rules hash, judge model, what each tool did, cleanup readbacks, run-it-yourself steps and a GitHub star CTA"
+  ],
+  "paid_capability_stubs": [
+    "each scheduler's test uses that tool's own plan and AI connector",
+    "Threadify post generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected scheduling, cancellation and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "the locked rules sha256 and the sealed key sha256",
+      "the exact post and Auto Plug in full in chat",
+      "local date and time for the scheduled post",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "scorecard-only-without-invented-grades",
+    "instructions": [
+      "Lock the rules and print their sha256 before the first tool call; never change them during a run.",
+      "Send every prompt word for word through each tool's own MCP; never reword per tool and never fill a gap for a tool.",
+      "When a tool has no AI connector, score it no AI connection connected and name the connector URL to add.",
+      "When a tool's MCP lacks a capability, score fail with the reason quoted from its own tool list.",
+      "When neither codex nor the claude command line is installed, say the outside judge could not run; never invent grades.",
+      "When a pricing page cannot be read, show UNKNOWN; never hide the price, free plan or networks rows.",
+      "Never create, rename or duplicate an offer; the Auto Plug uses the existing offer and ends with its plain link.",
+      "When the host holds an approved call, say where to approve it, poll read-only and resume; never route around it.",
+      "Schedule every test post 60 days out and remove it in cleanup with a not-found readback; never publish now."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "disclosure line shown first",
+      "rules sha256 and lock time before the first tool call",
+      "raw replies per tool and test",
+      "key sha256 sealed before judging",
+      "judge label and model",
+      "grades with evidence lines",
+      "scorecard with price, free plan and networks rows",
+      "unblind key verification and verdict",
+      "approval reply",
+      "lowercase guard",
+      "schedule readback",
+      "cleanup readbacks",
+      "report page",
+      "fallback state"
+    ]
+  }
+}
