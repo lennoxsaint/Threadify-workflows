@@ -1,3 +1,7 @@
+# 0.42.0
+
+- Add Scheduler Showdown: every scheduler has an AI connection now, and this is a fair, blind test of which one your AI agent actually knows you through (your numbers, your voice, your sales), on the tools you connect. It opens with the disclosure that Threadify Workflows are made by Threadify's founder, locks five public test prompts with a sha256 before the first tool call, sends them word for word through each tool's own MCP (a missing capability scores fail with the reason quoted from the tool's own list; a tool with no connector is scored no AI connection connected and the connector URL is named), anonymises the raw replies to Tool A to F with a sealed key whose hash is printed before judging, and has an outside model grade them (codex exec read-only first, else a fresh Claude, labelled). The scorecard always shows price, free plan and networks read live from each pricing page, unblinding refuses if the key hash changed, the verdict is honest about ties, and the winner does one real post after one yes. Test posts are scheduled 60 days out and deleted with a not-found readback, and a Threadify report page ends with how to run it on your own tools.
+
 # 0.41.0
 
 - Go Make Money rebuilt: confirms what makes you money, suggests missing connectors, agrees a no-code action plan with you, builds the post from a proven full structure and the Auto Plug from your best-clicking plugs, schedules on one yes, then celebrates on a Threadify page with an optional Claude check-in.

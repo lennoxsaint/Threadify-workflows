@@ -66,6 +66,15 @@ asks one exact yes before updating an offer, scheduling a post or opening a
 landing-page pull request, never publishes now and never merges the pull
 request.
 
+Scheduler Showdown discloses first that Threadify's founder makes the
+workflows, locks and hashes its public rules before the first tool call, sends
+every prompt word for word through each tool's own MCP, gives the outside judge
+only the rules and replies with every tool name, handle and link removed,
+refuses to unblind if the sealed key changed, always shows the price, free plan
+and networks rows, never creates, renames or duplicates an offer, schedules
+test posts 60 days out and deletes them with a not-found readback, never
+publishes now and schedules the one real post only after the owner's yes.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

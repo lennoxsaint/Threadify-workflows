@@ -1758,6 +1758,59 @@
       ]
     },
     {
+      "workflow_id": "scheduler-showdown",
+      "version": "0.1.0",
+      "title": "Scheduler Showdown",
+      "summary": "A fair, blind test of which social media scheduler your AI agent actually knows you through (your numbers, your voice, your sales), on the tools you connect: five fixed prompts locked and hashed before the run, sent word for word through each tool's own MCP, anonymised to Tool A to F and graded by an outside model, with price, free plan and networks always shown, then one real post with the winner after one yes.",
+      "kind": "skill",
+      "skill_name": "threadify-scheduler-showdown",
+      "entrypoint": "skills/threadify-scheduler-showdown/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-scheduler-showdown/SKILL.md",
+      "source_manifest": "workflows/scheduler-showdown/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/scheduler-showdown/README.md"
+        ]
+      },
+      "triggers": [
+        "scheduler showdown",
+        "which scheduler knows me best",
+        "which scheduler does my AI know me through",
+        "compare my schedulers fairly",
+        "test my scheduler AI connections",
+        "threadify vs buffer",
+        "blind test my social media schedulers"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the schedulers the owner pays for and their connected MCP servers (Threadify, Buffer, Metricool, Typefully, Eden, BlackTwist, Hootsuite, Publer), each tool's public pricing page, the owner's existing offer for the real post",
+            "schema_ref": "inline:scheduler-showdown-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "showdown/<date>/ folder with tools.json, rules.json (sha256 and lock time), raw/<tool>/T#.json, anon/Tool-X/T#.json, key.json and seal.json (key sha256), judge/prompt.txt, grades.json, scorecard.md, scorecard.html, unblind.json, lowercase-guard.json, cleanup.json and report.html",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "growth-loop",
       "version": "0.1.0",
       "title": "Threadify Growth Loop",
