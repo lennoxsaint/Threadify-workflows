@@ -47,7 +47,17 @@ test('Go Make Money keeps numbers raw, unknowns unknown, the judge outside and t
   assert.match(skill, /Never merge a pull request/);
   assert.match(skill, /signup names or emails/);
   assert.match(skill, /open -a "Google Chrome"/);
+  assert.match(skill, /Never create a new offer per run/);
+  assert.match(skill, /Here's what I'll do, in this order, and why\. OK\?/);
+  assert.match(skill, /Never route around it/);
+  assert.match(skill, /Print every post and Auto Plug in full/);
+  assert.match(skill, /turn the WHOLE post into a template/);
+  assert.match(skill, /`celebrate --dir <run>`/);
+  assert.match(skill, /`create_scheduled_task` with `fireAt`/);
+  assert.match(skill, /Star|star for Threadify Workflows on GitHub/);
   assert.doesNotMatch(skill, /`publish_now`/);
+  assert.match(fix, /Never create a new offer per run/);
+  assert.match(fix, /--channel site/);
   assert.match(fix, /Never call `publish_now`/);
   assert.match(fix, /Never merge a pull request/);
   assert.match(fix, /lower\(original\) == lower\(final\)/);

@@ -7,10 +7,13 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
   NEEDS_BASELINE,
+  REPO_URL,
   UNKNOWN,
   buildFunnel,
+  buildLibrary,
   checkCopy,
   checkShortSeller,
+  checkinIcs,
   cleanJudgeOutput,
   codexModel,
   decodeEntities,
@@ -22,6 +25,7 @@ import {
   keyTerms,
   leakReceipts,
   loadVideos,
+  moneyActivity,
   pace,
   parseDeadline,
   parseGoal,
@@ -31,9 +35,11 @@ import {
   reachAt,
   readLedger,
   renderReport,
+  renderReward,
   saveEntry,
   testCtaReach,
   testPageMismatch,
+  upside,
   validateEntry,
 } from '../../plugins/threadify/skills/threadify-go-make-money/scripts/go-make-money.mjs';
 import { checkPost, lowercaseExceptProperNouns } from '../../plugins/threadify/skills/threadify-go-make-money/scripts/casing-guard.mjs';
@@ -397,4 +403,138 @@ test('page text decodes numeric and named entities; the short seller still match
   assert.equal(checkShortSeller(claims, text).status, 'PASS');
   // An older page.txt saved with entities still matches the decoded quote.
   assert.equal(checkShortSeller(claims, 'Can&#x27;t freaking wait to tell the Threads community about it! See what&#39;s working. Repeat it. Tom &amp; Jerry').status, 'PASS');
+});
+
+test('money activity: where the clicks, signups and paid go, matched to the saved offer', () => {
+  const money = moneyActivity({ attribution, offers: { offers: [{ name: 'Threadify', destination_url: 'https://www.threadify.app/home' }] } });
+  assert.equal(money.total_clicks, 276);
+  assert.equal(money.places[0].destination, 'threadify.app/home');
+  assert.equal(money.places[0].clicks, 200);
+  assert.equal(money.places[0].auto_plug_clicks, 200);
+  assert.equal(money.places[0].offer.name, 'Threadify');
+  assert.match(money.line, /the "Threadify" offer at threadify\.app\/home, with 200 of 276 tracked clicks \(72\.5%\), 1 signup and 0 paid\./);
+  // A place that took money outranks a place with more clicks.
+  const paid = moneyActivity({ attribution: { links: [...attribution.links, link('e', 'p5', 'https://shop.example.com/buy', 5, 2, 1)] } });
+  assert.equal(paid.places[0].destination, 'shop.example.com/buy');
+  assert.match(moneyActivity({ attribution: { links: [] } }).line, /ask the owner what they sell/);
+  // Unmeasured conversions stay unknown, never 0.
+  const unmeasured = moneyActivity({ attribution: { ...attribution, conversion_tracking: { measurable: false } } });
+  assert.equal(unmeasured.places[0].signups, null);
+  assert.match(unmeasured.line, /signups unknown and paid unknown\.$/);
+  const absent = moneyActivity({ attribution: { links: [{ destination_url: 'https://x.example.com/a', unique_clicks: 4 }] } });
+  assert.match(absent.line, /signups unknown and paid unknown\.$/);
+});
+
+test('template and CTA library: posts ranked by tracked clicks, plugs to read for the CTA library', () => {
+  const library = buildLibrary({ attribution, limit: 2 });
+  assert.deepEqual(library.posts_by_clicks.map((p) => [p.root_post_id, p.clicks]), [['p1', 120], ['p2', 80]]);
+  assert.equal(library.plugs_to_read[0].plug_post_id, 'p1-plug');
+  assert.match(library.rule, /WHOLE post/);
+  // Each plug is ranked by its own clicks, not by its root post's clicks.
+  const plugRow = (root, plug, clicks) => ({ root_threads_post_id: root, final_threads_post_id: plug, source_kind: plug === root ? 'post' : 'auto_plug', unique_clicks: clicks, destination_url: 'https://www.threadify.app/home' });
+  const mixed = buildLibrary({ attribution: { links: [plugRow('big', 'big', 1000), plugRow('big', 'big-plug', 1), plugRow('small', 'small-plug', 50)] } });
+  assert.deepEqual(mixed.plugs_to_read.map((p) => [p.plug_post_id, p.plug_clicks]), [['small-plug', 50], ['big-plug', 1]]);
+});
+
+test('upside: the leak at its rule-of-thumb yardstick, labelled a yardstick, never a promise', () => {
+  const funnel = buildFunnel({ attribution, performance, dest: 'threadify.app' });
+  const gain = upside(funnel);
+  assert.equal(gain.step, 'clicks->signups');
+  assert.equal(gain.at_yardstick, 12);
+  assert.match(gain.line, /^The same 246 clicks at the 5% rule of thumb would be 12 signups, not 1\. A yardstick, not a promise\.$/);
+  assert.equal(upside(null), null);
+});
+
+test('copy guard: Threads is lowercase, the site keeps its casing, weak counts warn', () => {
+  const weak = checkCopy('my page got 1 signup and 0 paid. here is the fix.');
+  assert.equal(weak.status, 'PASS');
+  assert.equal(weak.warnings.length, 2);
+  assert.equal(checkCopy('Free workflow, then a 7-day trial.', [], { channel: 'site' }).status, 'PASS');
+  assert.equal(checkCopy('Free workflow, then a 7-day trial.').status, 'FAIL');
+  assert.equal(checkCopy('Free — trial', [], { channel: 'site' }).status, 'FAIL');
+  for (const fine of ['no sales calls needed', 'only 1000 customers love it', 'we hit 10.1 subscribers per post', 'someone paid it forward', 'no paid ads at all']) {
+    assert.deepEqual(checkCopy(fine).warnings, [], fine);
+  }
+  assert.equal(checkCopy('only 3 customers so far').warnings.length, 1);
+  assert.equal(checkCopy('see https://example.com/?contact=me@example.com').status, 'FAIL');
+});
+
+test('check-in: a calendar reminder with the stand-alone check-in prompt', () => {
+  const ics = checkinIcs({ at: '2026-10-31T09:00', tz: 'Australia/Perth', prompt: 'Use $threadify-go-make-money. Check-in: read the ledger first, then grade.' });
+  assert.match(ics, /DTSTART;TZID=Australia\/Perth:20261031T090000/);
+  assert.match(ics, /read the ledger first\\, then grade/);
+  assert.match(ics, /BEGIN:VALARM/);
+  assert.throws(() => checkinIcs({ at: 'next week', prompt: 'x' }), /--at must be/);
+  assert.throws(() => checkinIcs({ at: '2026-99-99T99:99', prompt: 'x' }), /real local date-time/);
+  assert.throws(() => checkinIcs({ at: '2026-02-30T09:00', prompt: 'x' }), /real local date-time/);
+  assert.throws(() => checkinIcs({ at: '2026-10-31T09:00+08:00', prompt: 'x' }), /--at must be/);
+  assert.throws(() => checkinIcs({ at: '2026-10-31T09:00', tz: 'Not/AZone', prompt: 'x' }), /--tz must be/);
+  // Unique per event, stable when reused, and every content line folded to 75 octets.
+  const uidLine = (text) => text.match(/^UID:.*$/m)[0];
+  assert.notEqual(uidLine(checkinIcs({ at: '2026-10-31T09:00', prompt: 'x' })), uidLine(checkinIcs({ at: '2026-10-31T09:00', prompt: 'x' })));
+  assert.match(checkinIcs({ at: '2026-10-31T09:00', prompt: 'x', uid: 'gmm-checkin-fixed' }), /^UID:gmm-checkin-fixed@threadify-workflows\r$/m);
+  const long = checkinIcs({ at: '2026-10-31T09:00', prompt: 'é'.repeat(120) });
+  for (const line of long.split('\r\n')) assert.ok(Buffer.byteLength(line) <= 75, line);
+  assert.ok(long.endsWith('END:VCALENDAR\r\n'));
+});
+
+test('reward page: branded, fun, phone width, the star CTA, achievements and no emails or weak counts in the share', () => {
+  const funnel = buildFunnel({ attribution, performance, dest: 'threadify.app' });
+  const base = { goal: { pace: pace({ goal: 1000, current: 40, deadline: '2026-12-31', today: '2026-10-20' }) }, funnel,
+    beliefs: [{ kind: 'page-mismatch', verdict: 'supported' }], judge: { verdict: 'agree' }, shortSeller: { claims: [1, 2, 3] },
+    reward: { why: 'plugs promised a free workflow; the page never said workflow', what: ['post scheduled: Sat 24 Oct, 10:30 am'], next: 'grade it next week',
+      post: { text: 'i found my leak', plug: 'the workflow is free: https://www.threadify.app/home', when: 'Sat 24 Oct, 10:30 am', plug_delay: '50 min later' } } };
+  const html = renderReward(base);
+  assert.match(html, /name="viewport"/);
+  assert.match(html, /overflow-x:hidden/);
+  assert.match(html, /--red:#ff0000/);
+  assert.ok(html.includes(REPO_URL));
+  assert.match(html, /Star Threadify Workflows on GitHub/);
+  assert.match(html, /utm_source=threadify-workflows/);
+  assert.match(html, /5\/6 unlocked/);
+  assert.match(html, /🔒/);
+  assert.match(html, /No check-in booked yet/);
+  assert.match(html, /i found my leak/);
+  assert.match(html, /Auto Plug, 50 min later/);
+  assert.match(html, /would be 12 signups, not 1/);
+  assert.match(html, /prefers-reduced-motion/);
+  const share = html.match(/<p id="sh">([^<]*)<\/p>/)[1];
+  assert.doesNotMatch(share, /\b[01] (signup|paid)/);
+  // A calendar file alone is a reminder: no booked badge, no promise that Claude will check in.
+  const reminder = renderReward({ ...base, checkin: { at: '2026-10-31T09:00', when: 'Sat 31 Oct, 9:00 am', scheduled: false }, has_ics: true });
+  assert.match(reminder, /5\/6 unlocked/);
+  assert.match(reminder, /reminder is ready for Sat 31 Oct, 9:00 am/);
+  assert.doesNotMatch(reminder, /Claude checks in/);
+  const booked = renderReward({ ...base, checkin: { at: '2026-10-31T09:00', when: 'Sat 31 Oct, 9:00 am', how: 'Claude scheduled task', scheduled: true }, has_ics: true, has_report: true });
+  assert.match(booked, /6\/6 unlocked/);
+  assert.match(booked, /Claude checks in Sat 31 Oct, 9:00 am/);
+  assert.match(booked, /href="checkin\.ics" download/);
+  assert.match(booked, /href="report\.html"/);
+  assert.doesNotMatch(booked, /[\w.+-]+@[\w-]+\.[\w.]+/);
+});
+
+test('CLI: money, library, checkin and celebrate on saved rows; an email blocks the page', () => {
+  const dir = tmp();
+  fs.writeFileSync(path.join(dir, 'attr.json'), JSON.stringify(attribution));
+  fs.writeFileSync(path.join(dir, 'perf.json'), JSON.stringify(performance));
+  const run = (...args) => JSON.parse(spawnSync(process.execPath, [script, ...args], { encoding: 'utf8' }).stdout);
+  assert.equal(run('money', '--dir', dir, '--attribution', path.join(dir, 'attr.json')).status, 'ok');
+  assert.equal(run('library', '--dir', dir, '--attribution', path.join(dir, 'attr.json')).status, 'ok');
+  assert.match(run('funnel', '--dir', dir, '--attribution', path.join(dir, 'attr.json'), '--performance', path.join(dir, 'perf.json'), '--dest', 'threadify.app').upside, /yardstick, not a promise/);
+  const checkin = run('checkin', '--dir', dir, '--at', '2026-10-31T09:00', '--tz', 'Australia/Perth', '--when', 'Sat 31 Oct, 9:00 am', '--how', 'calendar reminder');
+  assert.equal(checkin.status, 'ok');
+  assert.ok(fs.existsSync(path.join(dir, 'checkin.ics')));
+  fs.writeFileSync(path.join(dir, 'reward-input.json'), JSON.stringify({ why: 'the page never said workflow', what: ['post scheduled'], next: 'grade it' }));
+  assert.equal(run('celebrate', '--dir', dir).status, 'ok');
+  assert.match(fs.readFileSync(path.join(dir, 'reward.html'), 'utf8'), /reminder is ready for Sat 31 Oct, 9:00 am/);
+  const firstUid = JSON.parse(fs.readFileSync(path.join(dir, 'checkin.json'), 'utf8')).uid;
+  const booked = run('checkin', '--dir', dir, '--at', '2026-10-31T09:00', '--tz', 'Australia/Perth', '--when', 'Sat 31 Oct, 9:00 am', '--how', 'Claude scheduled task', '--scheduled');
+  assert.equal(booked.scheduled, true);
+  assert.equal(booked.uid, firstUid);
+  assert.equal(run('checkin', '--dir', dir, '--at', '2026-13-01T09:00').status, 'usage');
+  assert.equal(run('celebrate', '--dir', dir).status, 'ok');
+  const html = fs.readFileSync(path.join(dir, 'reward.html'), 'utf8');
+  assert.match(html, /Claude checks in Sat 31 Oct, 9:00 am/);
+  fs.writeFileSync(path.join(dir, 'reward-input.json'), JSON.stringify({ why: 'ask me@example.com' }));
+  assert.equal(run('celebrate', '--dir', dir).status, 'FAIL');
 });

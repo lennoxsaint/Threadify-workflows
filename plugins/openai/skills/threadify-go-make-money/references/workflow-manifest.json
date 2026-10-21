@@ -1,8 +1,8 @@
 {
   "workflow_id": "go-make-money",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Go Make Money",
-  "summary": "Give Claude your real money goal, not a task: it reads your raw Threadify rows, finds the biggest funnel leak with receipts, tests your belief about why, has a different model judge the diagnosis, lists the 3 claims a skeptical buyer would doubt, argues three decisions and ships fix #1 after one exact yes, then saves a goal ledger that grades the fix next run.",
+  "summary": "Give Claude your real money goal, not a task: it finds and confirms what makes you money, reads your raw Threadify rows, finds the biggest funnel leak with receipts, tests your belief, has a different model judge it, agrees an action plan for your setup with you, writes one post from a proven viral structure with an Auto Plug built from your best CTAs, schedules it after one yes, then celebrates with a reward page and an optional Claude check-in that grades the fix on the same numbers.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-go-make-money",
@@ -24,18 +24,20 @@
     "get me to paying members",
     "where does my funnel leak",
     "why don't my clicks turn into signups",
-    "find my money leak"
+    "find my money leak",
+    "what makes me money",
+    "help me get more paying customers"
   ],
   "io": {
     "inputs": [
       {
-        "name": "the owner's goal (N paying customers or members by a date), current baseline or UNKNOWN, connected Threadify account (posts, tracked links, signups, offers, conversion setup), the public landing page, optional data/ files such as YouTube analytics",
+        "name": "the owner's goal (N paying customers or members by a date), current baseline or UNKNOWN, the confirmed money activity, connected Threadify account (posts, tracked links, signups, offers, conversion setup, greatest hits, vault), the public landing page, optional data/ files such as YouTube analytics",
         "schema_ref": "inline:go-make-money-input"
       }
     ],
     "outputs": [
       {
-        "name": "go-make-money/<date>/ folder with goal.json, raw/ reads, funnel.json, beliefs.json, judge.json, short-seller.json, decisions.json, fix.json and a local report.html, plus the goal ledger at ~/.threadify/go-make-money/ledger.json",
+        "name": "go-make-money/<date>/ folder with goal.json, money.json, raw/ reads, funnel.json, beliefs.json, judge.json, short-seller.json, decisions.json, library.json, fix.json, report.html, reward.html and an optional checkin.json/checkin.ics, plus the goal ledger at ~/.threadify/go-make-money/ledger.json",
         "schema_ref": "schemas/workflow-receipt.v1.json"
       }
     ]
@@ -69,16 +71,24 @@
     "create_offer",
     "save_draft",
     "get_post_thread",
-    "setup_conversion_tracking"
+    "setup_conversion_tracking",
+    "greatest_hits",
+    "list_vault_items",
+    "get_vault_item",
+    "list_viral_items",
+    "get_viral_item"
   ],
   "free_capabilities": [
+    "money activity from raw tracked links: where clicks, signups and paid go, matched to saved offers, confirmed with the owner",
     "deterministic goal and pace math: required_net_new_per_week = ceil((goal - current) / weeks_left), unknown baseline labelled needs real baseline",
-    "deterministic funnel from raw per-link and per-post rows: views, clicks, signups, paid, per-step rates and the biggest drop",
+    "deterministic funnel from raw per-link and per-post rows: views, clicks, signups, paid, per-step rates, the biggest drop and its upside at a rule-of-thumb rate",
     "belief tests: promise vs landing page words, and CTA reach from retention data",
     "outside judge on a different model (codex exec read-only, else a fresh Claude) with a hard time limit",
-    "short-seller quote check, decision ranking, public copy guard and casing guard",
+    "short-seller quote check, action ranking, channel-aware copy guard with a weak social proof warning, and casing guard",
+    "template and CTA library from the owner's own click-driving posts and Auto Plugs",
     "goal ledger that grades the last fix on the same numbers",
-    "local phone-width HTML report"
+    "local phone-width report and a Threadify-branded celebration page with confetti, achievements and a GitHub star CTA",
+    "Claude check-in through the host's scheduler, or a calendar reminder file"
   ],
   "paid_capability_stubs": [
     "link attribution and post performance history depend on the plan's analytics window",
@@ -91,7 +101,8 @@
     "type": "explicit-final-approval",
     "must_show": [
       "account and timezone",
-      "the exact change: offer fields before and after, the exact post and Auto Plug, or the exact diff",
+      "the agreed action plan, in order, with why",
+      "the exact change: offer fields before and after, the exact post and Auto Plug in full in chat, the exact page copy, or the exact diff",
       "local date and time for a scheduled post",
       "action"
     ]
@@ -105,6 +116,9 @@
       "When neither codex nor the claude command line is installed, say the outside judge could not run; never invent a verdict.",
       "Never write posts yourself when Threadify generation is unavailable; report the blocker.",
       "When Auto Plug is not on the plan, state the tier and offer the post without a plug.",
+      "Never create, rename or duplicate an offer per run; create_offer only when the account has no offer at all, with its own yes.",
+      "When the host holds an approved call (an approval queue, hook or gate), say where to approve it and wait; never route around it.",
+      "When no scheduler is available for the check-in, write a calendar reminder file instead.",
       "Never merge a landing-page pull request; open it and print its URL only."
     ]
   },
@@ -112,6 +126,7 @@
     "schema": "workflow-receipt.v1",
     "must_prove": [
       "account",
+      "confirmed money activity",
       "goal, baseline and pace",
       "raw read windows and destination filter",
       "funnel counts and the leak with receipts",
@@ -119,9 +134,12 @@
       "judge label, model and verdict",
       "short-seller quote check",
       "three ranked decisions",
+      "agreed action plan",
       "approval reply",
       "fix readbacks",
+      "post template source and CTA source",
       "ledger entry and last-fix grade",
+      "reward page and check-in state",
       "fallback state"
     ]
   }

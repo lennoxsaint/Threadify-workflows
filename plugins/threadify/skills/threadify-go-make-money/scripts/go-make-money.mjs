@@ -2,6 +2,7 @@
 // Go Make Money: the deterministic parts. The agent reads the raw rows through
 // Threadify; this script does every number so the model never does sums in its head.
 //
+//   node go-make-money.mjs money    --dir run --attribution <read_link_attribution.json> [--offers <list_offers.json>]
 //   node go-make-money.mjs goal     --text "go make money: get me to 1,000 paying members by Dec 31" [--current N] [--today YYYY-MM-DD] [--dir run]
 //   node go-make-money.mjs funnel   --dir run --attribution <read_link_attribution.json> [--performance <read_post_performance.json>] [--dest your-site.com] [--match text]
 //   node go-make-money.mjs page-text --url <public landing page> --out run/page.txt
@@ -10,9 +11,12 @@
 //   node go-make-money.mjs judge    --dir run [--judge auto|codex|claude] [--timeout-sec 240]
 //   node go-make-money.mjs short-seller --dir run --file short-seller.json --page page.txt
 //   node go-make-money.mjs rank-decisions --dir run --file decisions.json
-//   node go-make-money.mjs check-copy --file post.txt [--keep "Claude,Threadify"]
+//   node go-make-money.mjs check-copy --file post.txt [--keep "Claude,Threadify"] [--channel threads|site]
 //   node go-make-money.mjs ledger read|save|grade [--ledger file] [--entry entry.json] [--dir run]
+//   node go-make-money.mjs library  --dir run --attribution <read_link_attribution.json> [--limit 5]
 //   node go-make-money.mjs report   --dir run
+//   node go-make-money.mjs checkin  --dir run --at 2026-10-31T09:00 [--tz Australia/Perth] [--how "Claude scheduled task"] [--prompt text]
+//   node go-make-money.mjs celebrate --dir run   (reads reward-input.json, writes reward.html)
 //
 // Unknown stays unknown: a number the tools did not return is null and shows as
 // UNKNOWN, never 0. No customer names or emails are read or written: only
@@ -23,6 +27,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { realpathSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { pathToFileURL } from 'node:url';
 
 export const UNKNOWN = 'UNKNOWN';
@@ -552,7 +557,7 @@ export function rankDecisions(data) {
     if ([impact, speed, reversibility].includes(null)) problems.push(`decision ${i + 1}: impact, speed and reversibility must each be 1, 2 or 3`);
     if (!Array.isArray(d.for) || !d.for.length) problems.push(`decision ${i + 1}: needs an argument for`);
     if (!Array.isArray(d.against) || !d.against.length) problems.push(`decision ${i + 1}: needs an argument against`);
-    if (!['offer', 'post', 'landing-page-pr', 'other'].includes(d.fix_kind)) problems.push(`decision ${i + 1}: fix_kind must be offer, post, landing-page-pr or other`);
+    if (!['offer', 'post', 'page-copy', 'landing-page-pr', 'other'].includes(d.fix_kind)) problems.push(`decision ${i + 1}: fix_kind must be offer, post, page-copy, landing-page-pr or other`);
     return { order: i, title: d.title, fix_kind: d.fix_kind, for: d.for ?? [], against: d.against ?? [], impact, speed, reversibility,
       score: impact && speed && reversibility ? impact * speed * reversibility : 0 };
   }).sort((a, b) => b.score - a.score || (b.impact ?? 0) - (a.impact ?? 0) || a.order - b.order)
@@ -570,20 +575,28 @@ export const GUARANTEES = [
 ];
 
 /** Public copy: no em dashes, lowercase (proper nouns kept), no revenue or customer guarantees, no emails, one CTA link at most. */
-export function checkCopy(text, keep = []) {
+// Outcome counts this small, said in public, tell readers nobody buys. A warning,
+// not a FAIL: the agent reframes the line as a discovery or a win instead.
+const WEAK_PROOF = /(?<![\w.,])(?:0|1|zero|one|no|only [1-9]\d?)\s+(?:paid|sales?|sign-?ups?|customers?|buyers?|members?|subscribers?|conversions?)\b(?![\s-]+(?:ads?|calls?|pages?|pitch(?:es)?|teams?|tax|funnels?|skills?|experience|emails?|scripts?|copy|decks?|forms?|plans?|tiers?|traffic|media|needed|required)\b)/gi;
+
+// channel "threads" (posts and Auto Plugs) is lowercase with proper nouns kept;
+// channel "site" (page and offer copy) keeps the site's own casing.
+export function checkCopy(text, keep = [], { channel = 'threads' } = {}) {
   const body = String(text ?? '');
   const problems = [];
+  const warnings = [];
   if (/[—]/.test(body)) problems.push('has an em dash (—); use a comma, colon or full stop');
   if (/\s–\s/.test(body)) problems.push('has a spaced en dash ( – ); use a comma, colon or full stop');
   const kept = new Set(keep.map(String));
   const unprotected = body.replace(PROTECTED, ' ');
   const capitals = [...new Set((unprotected.match(/[\p{L}\p{N}'’]+/gu) ?? []).filter((w) => w !== w.toLowerCase() && !kept.has(w)))];
-  if (capitals.length) problems.push(`not lowercase: ${capitals.slice(0, 8).join(', ')} (add real proper nouns to --keep)`);
+  if (channel !== 'site' && capitals.length) problems.push(`not lowercase: ${capitals.slice(0, 8).join(', ')} (add real proper nouns to --keep)`);
+  if (channel !== 'site') for (const hit of new Set(body.match(WEAK_PROOF) ?? [])) warnings.push(`"${hit}" kills social proof in public; frame it as the discovery or the win`);
   for (const re of GUARANTEES) if (re.test(body)) problems.push(`sounds like a revenue or customer guarantee: "${body.match(re)[0]}"`);
-  if (EMAIL.test(body.replace(/https?:\/\/\S+/g, ' '))) problems.push('contains an email address');
+  if (EMAIL.test(body)) problems.push('contains an email address');
   const links = body.match(/https?:\/\/\S+|www\.\S+/gi) ?? [];
   if (links.length > 1) problems.push(`has ${links.length} links; one CTA only`);
-  return { status: problems.length ? 'FAIL' : 'PASS', problems, links: links.length, characters: [...body.trim()].length };
+  return { status: problems.length ? 'FAIL' : 'PASS', channel, problems, warnings, links: links.length, characters: [...body.trim()].length };
 }
 
 // ---------------------------------------------------------------------------
@@ -604,7 +617,7 @@ export function validateEntry(entry) {
   if (entry?.pace === undefined) problems.push('pace is missing (a number or UNKNOWN)');
   if (!entry?.leak?.step) problems.push('leak.step is missing');
   if (!entry?.decision) problems.push('decision is missing');
-  if (!entry?.fix?.kind) problems.push('fix.kind is missing (offer, post, landing-page-pr or none)');
+  if (!entry?.fix?.kind) problems.push('fix.kind is missing (offer, post, page-copy, landing-page-pr or none)');
   if (!entry?.date) problems.push('date is missing');
   if (EMAIL.test(JSON.stringify(entry ?? {}))) problems.push('the entry contains an email address; store aggregates only');
   return problems;
@@ -638,9 +651,133 @@ export function gradeLast(ledger, funnel) {
 }
 
 // ---------------------------------------------------------------------------
+// 1. The money activity: where the owner's money clicks already go.
+// ---------------------------------------------------------------------------
+const offerUrl = (offer) => offer?.destination_url ?? offer?.url ?? offer?.link ?? offer?.cta_url ?? offer?.landing_page_url ?? null;
+const urlKey = (url) => { try { const u = new URL(url); return `${u.host.replace(/^www\./, '')}${u.pathname.replace(/\/$/, '') || '/'}`; } catch { return null; } };
+
+/** Rank where tracked clicks and signups go, and match each place to an existing offer. The agent confirms it with the owner. */
+export function moneyActivity({ attribution, offers = null }) {
+  if (!Array.isArray(attribution?.links)) throw new Error('attribution must be a read_link_attribution result with a links array');
+  const list = Array.isArray(offers) ? offers : offers?.offers ?? [];
+  const measurable = attribution.conversion_tracking ? attribution.conversion_tracking.measurable !== false : true;
+  const places = new Map();
+  let total = 0;
+  for (const link of attribution.links) {
+    const where = urlKey(link.destination_url ?? link.original_url ?? '') ?? UNKNOWN;
+    const unique = num(link.unique_clicks) ?? num(link.clicks) ?? 0;
+    total += unique;
+    const place = places.get(where) ?? { destination: where, clicks: 0, signups: null, paid: null, links: 0, auto_plug_clicks: 0 };
+    const conversions = measurable ? num(link.conversions) : null;
+    const sales = measurable ? num(link.sales) : null;
+    place.clicks += unique; place.links += 1;
+    if (conversions !== null) place.signups = (place.signups ?? 0) + conversions;
+    if (sales !== null) place.paid = (place.paid ?? 0) + sales;
+    if (link.source_kind === 'auto_plug') place.auto_plug_clicks += unique;
+    places.set(where, place);
+  }
+  const ranked = [...places.values()].sort((a, b) => (b.paid ?? 0) - (a.paid ?? 0) || b.clicks - a.clicks || (b.signups ?? 0) - (a.signups ?? 0)).map((place) => {
+    const host = place.destination.split('/')[0];
+    const offer = list.find((o) => urlKey(offerUrl(o) ?? '') === place.destination) ?? list.find((o) => (urlKey(offerUrl(o) ?? '') ?? '').split('/')[0] === host) ?? null;
+    return { ...place, share_pct: total ? round((place.clicks / total) * 100, 1) : null, offer: offer ? { name: offer.name ?? offer.title ?? null, destination: offerUrl(offer) } : null };
+  });
+  const top = ranked[0] ?? null;
+  return {
+    total_clicks: total, places: ranked.slice(0, 6), offers: list.map((o) => ({ name: o.name ?? o.title ?? null, destination: offerUrl(o) })),
+    line: top ? `Your money activity looks like: ${top.offer?.name ? `the "${top.offer.name}" offer at ` : ''}${top.destination}, with ${top.clicks} of ${total} tracked ${plural(total, 'click')} (${top.share_pct}%), ${top.signups === null ? 'signups unknown' : `${top.signups} ${plural(top.signups, 'signup')}`} and ${top.paid === null ? 'paid unknown' : `${top.paid} paid`}.` : 'No tracked clicks yet: ask the owner what they sell and where.',
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 9. Libraries: the owner's own proven posts and plugs, ranked by clicks.
+// ---------------------------------------------------------------------------
+/** Root posts ranked by the tracked clicks they earned, plus the plug replies to read (get_post_thread) for the CTA library. */
+export function buildLibrary({ attribution, limit = 5 }) {
+  if (!Array.isArray(attribution?.links)) throw new Error('attribution must be a read_link_attribution result with a links array');
+  const roots = new Map();
+  const plugs = new Map();
+  for (const link of attribution.links) {
+    const id = String(link.root_threads_post_id ?? link.final_threads_post_id ?? '');
+    if (!id) continue;
+    const root = roots.get(id) ?? { root_post_id: id, text: link.root_post_text ?? null, clicks: 0, signups: 0, destinations: [] };
+    const clicks = num(link.unique_clicks) ?? num(link.clicks) ?? 0;
+    const signups = num(link.conversions) ?? 0;
+    root.clicks += clicks;
+    root.signups += signups;
+    if (link.source_kind === 'auto_plug' && link.final_threads_post_id) {
+      const plugId = String(link.final_threads_post_id);
+      const plug = plugs.get(plugId) ?? { plug_post_id: plugId, root_post_id: id, clicks: 0, signups: 0 };
+      plug.clicks += clicks;
+      plug.signups += signups;
+      plugs.set(plugId, plug);
+    }
+    const place = urlKey(link.destination_url ?? link.original_url ?? '');
+    if (place && !root.destinations.includes(place)) root.destinations.push(place);
+    roots.set(id, root);
+  }
+  const ranked = [...roots.values()].sort((a, b) => b.clicks - a.clicks || b.signups - a.signups);
+  return {
+    posts_by_clicks: ranked.slice(0, limit).map((r) => ({ root_post_id: r.root_post_id, clicks: r.clicks, signups: r.signups, text: r.text, destinations: r.destinations })),
+    plugs_to_read: [...plugs.values()].sort((a, b) => b.clicks - a.clicks || b.signups - a.signups).slice(0, limit)
+      .map((plug) => ({ plug_post_id: plug.plug_post_id, root_post_id: plug.root_post_id, plug_clicks: plug.clicks, plug_signups: plug.signups, root_first_line: firstLine(roots.get(plug.root_post_id)?.text) })),
+    rule: 'templateize the WHOLE post (every line\'s job), not just the hook; the plug library ranks each Auto Plug by the clicks it earned itself',
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 11. Why it is a big deal: the leak at its rule-of-thumb yardstick. Not a promise.
+// ---------------------------------------------------------------------------
+export function upside(funnel) {
+  const leak = funnel?.leak;
+  const step = leak?.step ? funnel.steps.find((s) => s.id === leak.step) : null;
+  if (!step || !isNum(step.upstream) || !isNum(step.downstream) || !step.yardstick) return null;
+  const atYardstick = Math.floor(step.upstream * step.yardstick);
+  if (atYardstick <= step.downstream) return null;
+  return { step: step.id, upstream: step.upstream, now: step.downstream, at_yardstick: atYardstick, yardstick_pct: round(step.yardstick * 100, 2), from: step.from, to: step.to,
+    line: `The same ${step.upstream} ${stageWord(step.upstream, step.from)} at the ${round(step.yardstick * 100, 2)}% rule of thumb would be ${atYardstick} ${stageWord(atYardstick, step.to)}, not ${step.downstream}. A yardstick, not a promise.` };
+}
+
+// ---------------------------------------------------------------------------
+// 12. The check-in: a calendar reminder any host can open (the fallback when the
+// host has no native scheduler). Nothing is sent anywhere.
+// ---------------------------------------------------------------------------
+const icsText = (text) => String(text).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+// RFC 5545 content lines are at most 75 octets; longer ones continue on a line that starts with a space.
+const icsFold = (line) => {
+  const parts = [];
+  let current = '';
+  let octets = 0;
+  for (const ch of line) {
+    const size = Buffer.byteLength(ch);
+    if (octets + size > (parts.length ? 74 : 75)) { parts.push(current); current = ''; octets = 0; }
+    current += ch;
+    octets += size;
+  }
+  parts.push(current);
+  return parts.join('\r\n ');
+};
+
+export function checkinIcs({ at, prompt, tz = null, uid = null, title = 'Go Make Money check-in with Claude' }) {
+  const match = String(at ?? '').match(/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)(?::(\d\d))?$/);
+  if (!match) throw new Error('--at must be a local date-time like 2026-10-31T09:00');
+  const [y, mo, d, h, mi, sec = '00'] = match.slice(1);
+  const probe = new Date(Date.UTC(+y, +mo - 1, +d, +h, +mi));
+  if (probe.getUTCFullYear() !== +y || probe.getUTCMonth() !== +mo - 1 || probe.getUTCDate() !== +d || probe.getUTCHours() !== +h || probe.getUTCMinutes() !== +mi || +sec > 59) {
+    throw new Error('--at must be a real local date-time like 2026-10-31T09:00');
+  }
+  if (tz) { try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); } catch { throw new Error('--tz must be a timezone name like Australia/Perth'); } }
+  const start = `${y}${mo}${d}T${h}${mi}${sec}`;
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const dt = tz ? `DTSTART;TZID=${tz}:${start}` : `DTSTART:${start}`;
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Threadify Workflows//Go Make Money//EN', 'BEGIN:VEVENT', `UID:${uid ?? `gmm-checkin-${randomUUID()}`}@threadify-workflows`, `DTSTAMP:${stamp}`, dt,
+    'DURATION:PT15M', `SUMMARY:${icsText(title)}`, `DESCRIPTION:${icsText(`Open Claude and paste:\n${prompt}`)}`, 'BEGIN:VALARM', 'TRIGGER:PT0M', 'ACTION:DISPLAY', `DESCRIPTION:${icsText(title)}`, 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR']
+    .map(icsFold).join('\r\n') + '\r\n';
+}
+
+// ---------------------------------------------------------------------------
 // Local HTML report (what goes on camera). Phone-width friendly, big leak card.
 // ---------------------------------------------------------------------------
-const esc = (text) => String(text ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const esc =(text) => String(text ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const fmt = (value) => (value === null || value === undefined || value === UNKNOWN ? UNKNOWN : isNum(value) ? value.toLocaleString('en-US') : String(value));
 const VERDICT_CLASS = { supported: 'no', 'not supported': 'ok', unknown: 'unk', agree: 'ok', dispute: 'no' };
 
@@ -692,6 +829,98 @@ ${grade?.status === 'graded' ? `<h2>Last fix, graded</h2><div class="goal">${esc
 }
 
 // ---------------------------------------------------------------------------
+// The reward page: the celebration at the end of a run. Threadify-branded, fun,
+// and useful: what was done, why, why it is a big deal, the next step, the value,
+// the check-in and a star for the repo. Every number comes from the run files.
+// ---------------------------------------------------------------------------
+export const REPO_URL = 'https://github.com/lennoxsaint/Threadify-workflows';
+export const THREADIFY_URL = 'https://www.threadify.app/home?utm_source=threadify-workflows&utm_medium=reward-page&utm_campaign=go-make-money&utm_content=reward__go_make_money__open_threadify';
+
+export function renderReward(run) {
+  const { goal, funnel, beliefs = [], judge: verdict, shortSeller, fix, checkin, reward = {}, grade } = run;
+  const leak = funnel?.leak?.step ? funnel.steps.find((s) => s.id === funnel.leak.step) : null;
+  const gain = upside(funnel);
+  const p = goal?.pace ?? null;
+  const progress = p && isNum(p.current) && isNum(p.goal) && p.goal > 0 ? Math.min(100, round((p.current / p.goal) * 100, 1)) : null;
+  const shipped = (reward.what?.length ? reward.what : (fix?.readbacks ?? []).map((r) => `${r.what}: ${r.readback}`)).filter(Boolean);
+  const badges = [
+    ['🔎', 'Leak found', Boolean(funnel?.leak?.step)],
+    ['🧪', 'Belief tested', beliefs.length > 0],
+    ['⚖️', 'Second opinion', Boolean(verdict?.verdict)],
+    ['🛡️', 'Short seller survived', Boolean(shortSeller?.claims?.length)],
+    ['🚀', 'Fix shipped', shipped.length > 0],
+    ['📅', 'Check-in booked', Boolean(checkin?.at && checkin?.scheduled)],
+  ];
+  const unlocked = badges.filter((b) => b[2]).length;
+  const value = [
+    funnel ? [fmt(funnel.links), `tracked ${plural(funnel.links, 'link')} read row by row`] : null,
+    funnel?.linked_posts ? [fmt(funnel.linked_posts), `linked ${plural(funnel.linked_posts, 'post')} matched to their views`] : null,
+    beliefs.length ? [String(beliefs.length), `${plural(beliefs.length, 'belief')} checked against your own numbers`] : null,
+    verdict?.verdict ? ['1', `second model checked the diagnosis (${verdict.verdict})`] : null,
+    shortSeller?.claims?.length ? [String(shortSeller.claims.length), 'doubts a skeptical buyer would have, found before they cost you'] : null,
+    shipped.length ? [String(shipped.length), `${plural(shipped.length, 'change')} shipped after one yes`] : null,
+  ].filter(Boolean);
+  const share = reward.share ?? (leak ? `i gave Claude my real money goal and my real Threadify numbers. it found the exact step where my ${stageWord(2, leak.from)} leak, tested my theory, and shipped the fix after one yes.` : 'i gave Claude my real money goal and my real Threadify numbers, and it shipped one fix after one yes.');
+  const stamp = run.run_at ? new Date(run.run_at).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short', ...((reward.tz ?? checkin?.tz) ? { timeZone: reward.tz ?? checkin.tz } : {}) }) : '';
+  const post = reward.post?.text ? `<div class="thread"><div class="av">T</div><div><p class="who">You${reward.post.when ? ` <span>· scheduled ${esc(reward.post.when)}</span>` : ''}</p><p class="ptxt">${esc(reward.post.text)}</p>${reward.post.plug ? `<div class="reply"><p class="who">You <span>· Auto Plug${reward.post.plug_delay ? `, ${esc(reward.post.plug_delay)}` : ''}</span></p><p class="ptxt">${esc(reward.post.plug)}</p></div>` : ''}</div></div>` : '';
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>You shipped it</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet"><style>
+:root{--bg:#0a0a0a;--panel:#151515;--line:#2a2a2a;--text:#fff;--muted:rgba(255,255,255,.66);--red:#ff0000;--soft:rgba(255,0,0,.12)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fafafa;--panel:#fff;--line:#e6e6e6;--text:#0a0a0a;--muted:#5a5a5a;--soft:rgba(255,0,0,.08)}}
+*{box-sizing:border-box}html,body{max-width:100%;overflow-x:hidden}body{margin:0;background:var(--bg);color:var(--text);font:18px/1.5 Inter,system-ui,-apple-system,sans-serif;overflow-wrap:anywhere}
+main{max-width:860px;margin:auto;padding:28px 16px 64px}canvas#c{position:fixed;inset:0;pointer-events:none;z-index:5}
+.mono{font-family:'Space Mono',ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;font-size:13px;color:var(--red)}
+h1{font-size:clamp(34px,6.4vw,68px);line-height:1.02;margin:8px 0 10px;font-weight:900;letter-spacing:-.02em}h1 em{font-style:normal;color:var(--red)}
+h2{font-size:clamp(20px,2.6vw,28px);margin:38px 0 12px;font-weight:800}.muted{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 18px}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 4px}.bar i{display:block;height:100%;background:var(--red);border-radius:99px;width:0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}@media(max-width:620px){.badges{grid-template-columns:repeat(2,1fr)}}
+.badge{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center;font-weight:700;font-size:15px;opacity:.4}
+.badge b{display:block;font-size:30px;margin-bottom:4px}.badge.on{opacity:1;border-color:var(--red);box-shadow:0 0 0 3px var(--soft);animation:pop .6s cubic-bezier(.2,1.6,.4,1) both}@keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+.leak{border:3px solid var(--red)}.big{font-size:clamp(40px,8vw,92px);font-weight:900;line-height:1;margin:6px 0}.big small{display:block;font-size:.3em;color:var(--muted);font-weight:700;margin-top:8px}
+ul.done{list-style:none;padding:0;margin:0;display:grid;gap:8px}ul.done li{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 14px 12px 44px;position:relative}ul.done li:before{content:'✓';position:absolute;left:14px;top:11px;color:var(--red);font-weight:900}
+.vals{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:620px){.vals{grid-template-columns:1fr}}.vals .card b{display:block;font-size:34px;font-weight:900;color:var(--red)}
+.thread{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}.av{flex:none;width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:900}
+.who{margin:0;font-weight:700}.who span{color:var(--muted);font-weight:400;font-size:15px}.ptxt{white-space:pre-wrap;margin:6px 0 0}.reply{border-left:2px solid var(--line);margin-top:14px;padding-left:12px}
+.next{background:var(--red);color:#fff;border-radius:18px;padding:20px}.next .mono{color:#fff;opacity:.85}.next p{margin:6px 0 0;font-size:clamp(20px,2.6vw,26px);font-weight:800}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.btn{display:inline-flex;gap:8px;align-items:center;padding:16px 22px;border-radius:999px;font-weight:800;text-decoration:none;border:0;cursor:pointer;font-size:18px}
+.btn.star{background:var(--text);color:var(--bg)}.btn.ghost{background:transparent;color:var(--text);border:2px solid var(--line)}.btn:active{transform:scale(.97)}
+.share{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}.share p{flex:1 1 280px;margin:0}
+.foot{color:var(--muted);font-size:14px;margin-top:34px}
+@media (prefers-reduced-motion:reduce){.badge.on{animation:none}.bar i{transition:none}}
+</style></head><body><canvas id="c"></canvas><main>
+<div class="mono">Threadify · Go Make Money · ${unlocked}/${badges.length} unlocked</div>
+<h1>${esc(reward.headline ?? 'You found the leak.')} <em>${esc(reward.headline_2 ?? 'You shipped the fix.')}</em></h1>
+<p class="muted">${esc(p?.line ?? 'Goal not set.')}</p>
+${progress !== null ? `<div class="bar" aria-label="progress to goal"><i data-w="${progress}"></i></div><p class="muted">${esc(fmt(p.current))} of ${esc(fmt(p.goal))} (${progress}%)</p>` : ''}
+<h2>Achievements</h2><div class="badges">${badges.map(([icon, label, on], i) => `<div class="badge${on ? ' on' : ''}" style="animation-delay:${300 + i * 140}ms"><b>${on ? icon : '🔒'}</b>${esc(label)}</div>`).join('')}</div>
+${leak ? `<h2>Why: the leak</h2><div class="card leak"><div class="mono">The biggest drop in your funnel</div><div class="big">${esc(fmt(leak.upstream))} ${esc(stageWord(leak.upstream, leak.from))} → ${esc(fmt(leak.downstream))} ${esc(stageWord(leak.downstream, leak.to))}<small>${esc(leak.rate_pct === null ? UNKNOWN : `${leak.rate_pct}%`)} make it through${leak.small_sample ? ' (small sample)' : ''}</small></div>${reward.why ? `<p>${esc(reward.why)}</p>` : ''}</div>` : ''}
+<h2>Why it's a big deal</h2><div class="card">${gain ? `<p style="font-size:clamp(20px,2.4vw,26px);font-weight:800;margin:0">${esc(gain.line)}</p>` : '<p style="margin:0">The leak is named with receipts, so the next run can grade the fix on the same numbers.</p>'}${p?.required_net_new_per_week !== undefined && p?.required_net_new_per_week !== UNKNOWN && p?.label === 'measured baseline' ? `<p class="muted" style="margin:10px 0 0">Your pace: ${esc(fmt(p.required_net_new_per_week))} net new per week. Closing the leak is the cheapest way to get there, because the clicks are already coming.</p>` : ''}</div>
+<h2>What we did</h2>${shipped.length ? `<ul class="done">${shipped.map((line) => `<li>${esc(line)}</li>`).join('')}</ul>` : '<p class="muted">Nothing was changed this run.</p>'}
+${post ? `<h2>Your post</h2>${post}` : ''}
+<h2>The value</h2><div class="vals">${value.map(([n, label]) => `<div class="card"><b>${esc(n)}</b>${esc(label)}</div>`).join('')}</div>
+${grade?.status === 'graded' ? `<h2>Last fix, graded</h2><div class="card">${esc(grade.line)}</div>` : ''}
+<h2>Next step</h2><div class="next"><div class="mono">Do this next</div><p>${esc(reward.next ?? 'Run Go Make Money again after the post goes out, so it can grade this fix on the same numbers.')}</p></div>
+<h2>Check-in</h2><div class="card">${checkin?.at ? `${checkin.scheduled ? `<p style="margin:0;font-weight:800;font-size:22px">📅 Claude checks in ${esc(checkin.when ?? checkin.at)}</p><p class="muted" style="margin:6px 0 0">${esc(checkin.how ?? 'scheduled task')}: it reads your numbers again and grades this fix before anything else.</p>` : `<p style="margin:0;font-weight:800;font-size:22px">📅 Your check-in reminder is ready for ${esc(checkin.when ?? checkin.at)}</p><p class="muted" style="margin:6px 0 0">Add it to your calendar. When it goes off, open Claude and paste the prompt inside: it reads your numbers again and grades this fix.</p>`}${run.has_ics ? '<div class="cta" style="margin-top:12px"><a class="btn ghost" href="checkin.ics" download>📅 Add to calendar</a></div>' : ''}` : '<p style="margin:0">No check-in booked yet. Say "check in on me next week" and Claude will book one, then grade this fix on the same numbers.</p>'}</div>
+<h2>Share the win</h2><div class="card share"><p id="sh">${esc(share)}</p><button class="btn ghost" id="cp" type="button">Copy</button></div>
+<h2>Help the next creator find this</h2><div class="card"><p style="margin:0 0 12px">Go Make Money is free and open source. A star helps other creators find it.</p><div class="cta"><a class="btn star" href="${REPO_URL}" target="_blank" rel="noopener">⭐ Star Threadify Workflows on GitHub</a><button class="btn ghost" id="again" type="button">🎉 Celebrate again</button><a class="btn ghost" href="${esc(THREADIFY_URL)}" target="_blank" rel="noopener">Open Threadify</a></div></div>
+${run.has_report ? '<p class="muted" style="margin-top:28px"><a href="report.html" style="color:inherit">See the full diagnosis: funnel, verdicts, judge, short seller and all three decisions →</a></p>' : ''}
+<p class="foot">Every number on this page comes from your raw Threadify rows, counted by a script. Clicks and signups are attributed, not caused. Nothing here promises revenue or customers. ${esc(stamp)}</p>
+</main><script>
+(()=>{const still=matchMedia('(prefers-reduced-motion: reduce)').matches;const c=document.getElementById('c'),x=c.getContext('2d');let W,H,parts=[];
+const size=()=>{W=c.width=innerWidth;H=c.height=innerHeight};size();addEventListener('resize',size);
+const cols=['#ff0000','#ffffff','#ff5a5a','#9a9a9a','#0a0a0a'];
+function burst(n){if(still)return;for(let i=0;i<n;i++)parts.push({x:W/2+(Math.random()-.5)*W*.5,y:H*.28,vx:(Math.random()-.5)*14,vy:-Math.random()*15-4,r:Math.random()*7+4,c:cols[i%cols.length],a:Math.random()*6,s:(Math.random()-.5)*.3,l:160+Math.random()*80});tick()}
+let on=false;function tick(){if(on)return;on=true;(function f(){x.clearRect(0,0,W,H);parts=parts.filter(p=>p.l-->0&&p.y<H+20);for(const p of parts){p.vy+=.38;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.s;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()}if(parts.length)requestAnimationFrame(f);else{on=false;x.clearRect(0,0,W,H)}})()}
+function chime(){try{const a=new (window.AudioContext||window.webkitAudioContext)();[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(0,a.currentTime+i*.09);g.gain.linearRampToValueAtTime(.18,a.currentTime+i*.09+.02);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.09+.5);o.connect(g).connect(a.destination);o.start(a.currentTime+i*.09);o.stop(a.currentTime+i*.09+.55)})}catch(e){}}
+addEventListener('load',()=>{burst(180);document.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%')});
+document.getElementById('again').onclick=()=>{burst(220);chime()};
+document.getElementById('cp').onclick=async(e)=>{try{await navigator.clipboard.writeText(document.getElementById('sh').textContent);e.target.textContent='Copied'}catch(_){e.target.textContent='Select and copy'}};})();
+</script></body></html>
+`;
+}
+
+// ---------------------------------------------------------------------------
 // CLI.
 // ---------------------------------------------------------------------------
 function argValue(args, name, fallback = undefined) {
@@ -727,7 +956,7 @@ async function main(argv) {
       funnel.window_days ??= Number(argValue(args, '--days', NaN)) || null;
       write(dir, 'funnel.json', funnel);
       return { status: 'ok', funnel: path.join(dir, 'funnel.json'), stages: funnel.stages, steps: funnel.steps.map(({ id, upstream, downstream, rate_pct, small_sample, note }) => ({ id, in: show(upstream), out: show(downstream), rate_pct: show(rate_pct), small_sample, ...(note ? { note } : {}) })),
-        leak: funnel.leak, receipts: leakReceipts(funnel), by_destination: funnel.by_destination.slice(0, 6), summary_check: funnel.summary_check, views_coverage: funnel.views_coverage, table: funnelTable(funnel) };
+        leak: funnel.leak, receipts: leakReceipts(funnel), upside: upside(funnel)?.line ?? null, by_destination: funnel.by_destination.slice(0, 6), summary_check: funnel.summary_check, views_coverage: funnel.views_coverage, table: funnelTable(funnel) };
     }
     case 'page-text': {
       const url = argValue(args, '--url');
@@ -770,7 +999,7 @@ async function main(argv) {
     }
     case 'check-copy': {
       const keep = String(argValue(args, '--keep', '')).split(',').map((s) => s.trim()).filter(Boolean);
-      return checkCopy(fs.readFileSync(path.resolve(argValue(args, '--file')), 'utf8').trim(), keep);
+      return checkCopy(fs.readFileSync(path.resolve(argValue(args, '--file')), 'utf8').trim(), keep, { channel: argValue(args, '--channel', 'threads') });
     }
     case 'ledger': {
       const [action] = args;
@@ -788,8 +1017,46 @@ async function main(argv) {
       };
       return { status: 'ok', report: write(dir, 'report.html', renderReport(run)) };
     }
+    case 'money': {
+      const offersFile = argValue(args, '--offers');
+      const result = moneyActivity({ attribution: unwrap(readJson(path.resolve(argValue(args, '--attribution')))), offers: offersFile ? unwrap(readJson(path.resolve(offersFile))) : null });
+      write(dir, 'money.json', result);
+      return { status: 'ok', ...result };
+    }
+    case 'library': {
+      const result = buildLibrary({ attribution: unwrap(readJson(path.resolve(argValue(args, '--attribution')))), limit: Number(argValue(args, '--limit', 5)) || 5 });
+      write(dir, 'library.json', result);
+      return { status: 'ok', ...result };
+    }
+    case 'checkin': {
+      const at = argValue(args, '--at');
+      const tz = argValue(args, '--tz', null);
+      const prompt = argValue(args, '--prompt', 'Use $threadify-go-make-money. Check-in: read the ledger first and grade my last fix on the same numbers.');
+      // One check-in per run: re-running it (a new time, or the host booking it) updates the same calendar event.
+      const uid = readJsonIf(path.join(dir, 'checkin.json'))?.uid ?? `gmm-checkin-${randomUUID()}`;
+      let ics;
+      try { ics = checkinIcs({ at, prompt, tz, uid }); } catch (error) { return { status: 'usage', usage: error.message }; }
+      const when = argValue(args, '--when', at.replace('T', ' '));
+      // --scheduled only after the host's own scheduler confirmed the task; a calendar file alone is a reminder, not a booking.
+      const scheduled = args.includes('--scheduled');
+      const record = { at, tz, when, scheduled, how: argValue(args, '--how', scheduled ? 'scheduled task' : 'calendar reminder'), prompt, uid, ics: write(dir, 'checkin.ics', ics) };
+      write(dir, 'checkin.json', record);
+      return { status: 'ok', ...record };
+    }
+    case 'celebrate': {
+      const reward = readJsonIf(path.join(dir, 'reward-input.json')) ?? {};
+      const run = {
+        goal: readJsonIf(path.join(dir, 'goal.json')), funnel: readJsonIf(path.join(dir, 'funnel.json')), beliefs: readJsonIf(path.join(dir, 'beliefs.json'))?.tests ?? [],
+        judge: readJsonIf(path.join(dir, 'judge.json')), shortSeller: readJsonIf(path.join(dir, 'short-seller.json')), fix: readJsonIf(path.join(dir, 'fix.json')),
+        checkin: readJsonIf(path.join(dir, 'checkin.json')), grade: readJsonIf(path.join(dir, 'grade.json')), reward, run_at: new Date().toISOString(),
+        has_report: fs.existsSync(path.join(dir, 'report.html')), has_ics: fs.existsSync(path.join(dir, 'checkin.ics')),
+      };
+      const html = renderReward(run);
+      if (EMAIL.test(html)) return { status: 'FAIL', problems: ['the reward page would show an email address; remove it from reward-input.json'] };
+      return { status: 'ok', reward: write(dir, 'reward.html', html), upside: upside(run.funnel)?.line ?? null };
+    }
     default:
-      return { status: 'usage', usage: 'go-make-money.mjs goal|funnel|page-text|belief|judge|short-seller|rank-decisions|check-copy|ledger|report (see the header of this file)' };
+      return { status: 'usage', usage: 'go-make-money.mjs money|goal|funnel|page-text|belief|judge|short-seller|rank-decisions|check-copy|library|ledger|report|checkin|celebrate (see the header of this file)' };
   }
 }
 
