@@ -123,6 +123,7 @@ const CORPORATE = [
   'holistic', 'bandwidth', 'actionable insights', 'key takeaways', 'lessons learned', "here's what i learned",
   'let that sink in', 'read that again', 'this is your sign', 'repost if', 'follow me for more',
   'my journey', 'on this journey', 'drill down', 'mission is to',
+  'competitive advantage', 'differentiator', 'secret weapon', 'superpower',
 ];
 
 const AI_TELLS = [
@@ -138,6 +139,7 @@ const AI_TELLS = [
   'what most people get wrong', "here's what nobody tells you", 'nobody talks about', 'the part everyone misses',
   'plot twist', 'what if i told you', 'think about it:', 'the uncomfortable truth', 'let me be clear',
   "i'll be honest", 'furthermore', 'moreover', 'additionally',
+  'in a world', "let's talk about", 'nobody wants to admit', 'unpopular opinion', "isn't just a",
 ];
 
 const AI_TELL_SHAPES = [
