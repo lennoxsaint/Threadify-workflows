@@ -36,6 +36,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Reverse Engineer My App | yes | yes | yes | yes | yes | yes | yes |
 | Run My Threads | yes | yes | yes | yes | yes | yes | yes |
 | Scheduler Showdown | yes | yes | yes | yes | yes | yes | yes |
+| Slop Score | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Growth Loop | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Inbound Replies | yes | yes | yes | yes | yes | yes | yes |
 | Threadify Offer Builder | yes | yes | yes | yes | yes | yes | yes |

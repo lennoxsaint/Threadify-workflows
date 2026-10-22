@@ -1,0 +1,122 @@
+{
+  "workflow_id": "slop-score",
+  "version": "0.1.0",
+  "title": "Slop Score",
+  "summary": "A blind human-or-slop test on your own Threads posts: five of your posts from the last 30 days and five plain-AI twins on the same topics, shuffled with a stored seed and swiped one at a time, then a hit rate and a 0-100 Slop Score for every card with the exact flagged words from Unslop's four tells, a Threadify rewrite of the worst twin's topic from your Brain re-scored the same way, and one post scheduled with an Auto Plug from your existing offer after one yes.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-slop-score",
+    "source": "plugins/threadify/skills/threadify-slop-score/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/slop-score/README.md"
+    ]
+  },
+  "triggers": [
+    "slop score",
+    "give me my slop score",
+    "can i tell my posts from ai",
+    "human or slop",
+    "do my posts sound like ai",
+    "blind test my posts against ai"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the connected Threadify account: the owner's own Threads posts from the last 30 days, the Threadify Brain for generation and the owner's existing offer for the Auto Plug",
+        "schema_ref": "inline:slop-score-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "slop-score/<date>/ folder with candidates.json, cards.json, deck.json (seed and deck sha256), reveal.json, fix.json (casing guard and slop before and after) and the scored card in chat, plus one scheduled post with its Auto Plug after the owner's yes",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults",
+    "read_post_performance",
+    "generate_content",
+    "list_offers",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "optional_mcp_tools": [
+    "cancel_schedule"
+  ],
+  "free_capabilities": [
+    "candidate filter that keeps the owner's own posts from the last 30 days and drops reposts",
+    "deal that checks five own posts on five different topics, one plain-AI twin per topic and no reused hook, then shuffles the ten cards with a stored seed",
+    "reveal with the hit rate, a 0-100 Slop Score per card from Unslop's scorer with the exact flagged words, and the average for your posts against the AI twins",
+    "fix that runs the casing guard (lower(original) == lower(final)) and re-scores Threadify's post with the same scorer",
+    "Auto Plug check: 100 to 250 characters, ending with the offer's plain link, no tracking tags, no hedges",
+    "scored card rendered as plain, phone-readable chat text"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post and Auto Plug generation counts toward the plan's AI generations",
+    "Auto Plug replies need a plan that includes Auto Plug",
+    "connected scheduling and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "the exact post and Auto Plug in full in chat",
+      "the slop score and casing guard result",
+      "the existing offer and its link",
+      "local date and time for the scheduled post",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "scored-card-without-scheduling",
+    "instructions": [
+      "Read only the owner's own posts; never use, quote or score anyone else's posts.",
+      "With fewer than five own posts on five different topics in 30 days, say the real count and ask whether to use 90 days; never pad the deck.",
+      "Never reveal which card is which until all ten answers are in.",
+      "Show every Slop Score and flagged word exactly as the script returns them; never invent a metric.",
+      "Threadify writes the post and the Auto Plug; the only allowed change is lowercasing, and a failed casing guard shows the original.",
+      "Without generation access, show the scored card and stop; never write the post yourself.",
+      "Never create, rename or duplicate an offer; the Auto Plug uses the existing offer and ends with its plain link.",
+      "When the host holds an approved call, say where to approve it, poll read-only and resume; never route around it.",
+      "Schedule only after the owner's yes, never publish now, and print how to undo with cancel_schedule."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "own posts from the last 30 days",
+      "shuffle seed and deck sha256",
+      "the ten blind answers",
+      "hit rate and slop score per card",
+      "casing guard",
+      "slop before and after the fix",
+      "auto plug check",
+      "existing offer used",
+      "approval reply",
+      "schedule readback",
+      "fallback state"
+    ]
+  }
+}

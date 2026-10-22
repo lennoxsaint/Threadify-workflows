@@ -1811,6 +1811,58 @@
       ]
     },
     {
+      "workflow_id": "slop-score",
+      "version": "0.1.0",
+      "title": "Slop Score",
+      "summary": "A blind human-or-slop test on your own Threads posts: five of your posts from the last 30 days and five plain-AI twins on the same topics, shuffled with a stored seed and swiped one at a time, then a hit rate and a 0-100 Slop Score for every card with the exact flagged words from Unslop's four tells, a Threadify rewrite of the worst twin's topic from your Brain re-scored the same way, and one post scheduled with an Auto Plug from your existing offer after one yes.",
+      "kind": "skill",
+      "skill_name": "threadify-slop-score",
+      "entrypoint": "skills/threadify-slop-score/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-slop-score/SKILL.md",
+      "source_manifest": "workflows/slop-score/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/slop-score/README.md"
+        ]
+      },
+      "triggers": [
+        "slop score",
+        "give me my slop score",
+        "can i tell my posts from ai",
+        "human or slop",
+        "do my posts sound like ai",
+        "blind test my posts against ai"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the connected Threadify account: the owner's own Threads posts from the last 30 days, the Threadify Brain for generation and the owner's existing offer for the Auto Plug",
+            "schema_ref": "inline:slop-score-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "slop-score/<date>/ folder with candidates.json, cards.json, deck.json (seed and deck sha256), reveal.json, fix.json (casing guard and slop before and after) and the scored card in chat, plus one scheduled post with its Auto Plug after the owner's yes",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "growth-loop",
       "version": "0.1.0",
       "title": "Threadify Growth Loop",

@@ -75,6 +75,13 @@ and networks rows, never creates, renames or duplicates an offer, schedules
 test posts 60 days out and deletes them with a not-found readback, never
 publishes now and schedules the one real post only after the owner's yes.
 
+Slop Score reads only the owner's own posts, keeps the swipe blind until all
+ten answers are in, scores every card with Unslop's unchanged scorer, has
+Threadify write the only real post and its Auto Plug (lowercasing alone, proven
+by the casing guard), never creates, renames or duplicates an offer, never
+publishes now and schedules the one post only after the owner's yes, with a
+readback and how to undo it.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

@@ -1,6 +1,6 @@
 {
   "name": "threadify-workflows",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "Local-first buyer-conversation workflows, agent discovery, and optional approved Threadify services.",
   "license": "MIT",
   "type": "module",
@@ -15,7 +15,7 @@
     "test:installer": "node --test validation/installer-tests/installer.test.mjs validation/installer-tests/catalog.test.mjs",
     "validate": "node validation/schema-checks/validate.mjs && npm run bundle:check",
     "test:creator": "node --test validation/creator-tests/*.test.mjs",
-    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:offer-decision && npm run test:registry && npm run test:conversations && npm run test:lead-desk && npm run test:niche && npm run test:profile && npm run test:post-this-next && npm run test:growth-loop && npm run test:forensics && npm run test:market-pipeline && npm run test:synthesizer && npm run test:setup && npm run test:run-my-threads && npm run test:money-posts && npm run test:watch-any-creator && npm run test:reverse-engineer-my-app && npm run test:whats-working && npm run test:first-followers && npm run test:director-mode && npm run test:research-army && npm run test:go-make-money && npm run test:scheduler-showdown",
+    "test": "npm run validate && npm run test:installer && npm run test:creator && npm run test:offer-builder && npm run test:offer-decision && npm run test:registry && npm run test:conversations && npm run test:lead-desk && npm run test:niche && npm run test:profile && npm run test:post-this-next && npm run test:growth-loop && npm run test:forensics && npm run test:market-pipeline && npm run test:synthesizer && npm run test:setup && npm run test:run-my-threads && npm run test:money-posts && npm run test:watch-any-creator && npm run test:reverse-engineer-my-app && npm run test:whats-working && npm run test:first-followers && npm run test:director-mode && npm run test:research-army && npm run test:go-make-money && npm run test:scheduler-showdown && npm run test:slop-score",
     "test:offer-builder": "node --test validation/offer-builder-tests/*.test.mjs",
     "test:offer-decision": "node --test validation/offer-decision-tests/*.test.mjs",
     "test:registry": "node --test validation/registry-tests/*.test.mjs",
@@ -38,7 +38,8 @@
     "test:director-mode": "node --test validation/director-mode-tests/*.test.mjs",
     "test:research-army": "node --test validation/research-army-tests/*.test.mjs",
     "test:go-make-money": "node --test validation/go-make-money-tests/*.test.mjs",
-    "test:scheduler-showdown": "node --test validation/scheduler-showdown-tests/*.test.mjs"
+    "test:scheduler-showdown": "node --test validation/scheduler-showdown-tests/*.test.mjs",
+    "test:slop-score": "node --test validation/slop-score-tests/*.test.mjs"
   },
   "engines": {
     "node": ">=18"
