@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slop Score"
+  short_description: "Blind test: your posts vs AI slop"
+  default_prompt: "Use $threadify-slop-score. Run the slop score on my last 30 days of posts."
