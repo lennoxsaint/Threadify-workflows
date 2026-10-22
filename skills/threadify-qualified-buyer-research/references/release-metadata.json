@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.43.0",
+  "release_version": "0.43.1",
   "skill_version": "0.12.1",
-  "plugin_version": "0.43.0",
+  "plugin_version": "0.43.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Add Slop Score: can you tell your own Threads posts from AI slop? Five of your posts from the last 30 days meet five plain-AI twins on the same topics (each labelled AI twin · plain Claude, no context), shuffled with a stored seed and swiped blind one at a time, human or slop. The reveal shows your hit rate and a Slop Score from 0 to 100 for every card with the exact flagged words, using Unslop's unchanged scorer and its four tells (hedging, AI phrases, corporate voice, over-formatting), and the average for your posts against the AI twins. Threadify then writes the worst twin's topic from your Brain with the same prompt, only lowercased under a casing guard and re-scored the same way (slop NN -> NN), and schedules it with an Auto Plug from your existing offer (100 to 250 characters, ending with its plain link) after one yes, with a readback and how to undo it."
+  "summary": "Slop Score and Unslop now flag nine more default-AI phrases (in a world, competitive advantage, differentiator, superpower, unpopular opinion and more), found when a plain-AI twin scored 0 in the THREADIFY-053 rehearsal. None of the owner's 191 posts from the last 30 days is newly flagged."
 }

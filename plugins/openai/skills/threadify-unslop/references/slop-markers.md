@@ -63,6 +63,7 @@ Copy that sounds like a press release or a LinkedIn humblebrag. Threads readers 
 - Office jargon: `leverage`, `synergy`, `stakeholders`, `deliverables`, `circle back`, `touch base`, `move the needle`, `low-hanging fruit`, `bandwidth`, `drill down`.
 - Brochure adjectives: `game changer`, `best-in-class`, `cutting-edge`, `innovative`, `seamless`, `robust`, `scalable`, `transformative`, `revolutionary`, `holistic`, `next level`, `unlock your potential`, `empower`.
 - LinkedIn bait: `let that sink in`, `read that again`, `this is your sign`, `here's what i learned`, `lessons learned`, `key takeaways`, `repost if`, `follow me for more`, `my journey`.
+- Pitch-deck nouns: `competitive advantage`, `differentiator`, `secret weapon`, `superpower`.
 
 Write what happened, with the number, in the words you would use out loud.
 
@@ -76,6 +77,7 @@ Patterns that mark text as default model output. The Wikipedia guide below docum
 - Fancy stand-ins for "is": `serves as`, `stands as`, `plays a vital role`.
 - Contrast templates: `not only ... but also`, `it's not about X, it's about Y`, `not just X, but Y`.
 - Stiff connectors: `furthermore`, `moreover`, `additionally`.
+- Default-chat openers: `in a world`, `let's talk about`, `nobody wants to admit`, `unpopular opinion`, `isn't just a`.
 - Chatbot leftovers: `great question`, `i hope this helps`, `here's a breakdown`.
 
 ## 4. Over-formatting (weight 1)

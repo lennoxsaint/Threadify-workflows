@@ -181,6 +181,19 @@ test('the marker scan flags the other three families', () => {
   assert.equal(scored.score, 4, 'one hedge weighs 3, one marker weighs 1');
 });
 
+test('the default-AI phrases a plain Claude twin used in the 053 rehearsal are flagged', () => {
+  const twin = gate("In a world flooded with AI content, authenticity is your competitive advantage. Be human. It's the ultimate differentiator.");
+  assert.deepEqual(twin.markers.map((hit) => hit.phrase).sort(), ['In a world', 'competitive advantage', 'differentiator']);
+  const reading = gate("Reading isn't just a hobby. It's a superpower.");
+  assert.deepEqual(reading.markers.map((hit) => hit.phrase).sort(), ["isn't just a", 'superpower']);
+  const founders = gate("Founders, let's talk about something nobody wants to admit.");
+  assert.deepEqual(founders.markers.map((hit) => hit.family), ['ai_tells', 'ai_tells']);
+  assert.ok(gate('Unpopular opinion: followers are overrated.').markers.some((hit) => hit.phrase === 'Unpopular opinion'));
+  for (const raw of ['popular opinion:\n\nThreads is the best app to grow a one-person AI business right now.', 'reading books is the ultimate cheat code for life.']) {
+    assert.equal(gate(raw).status, 'PASS', `his own phrasing stays clean: ${raw}`);
+  }
+});
+
 test('the gate CLI runs standalone and prints PASS or FAIL with the matched phrases', () => {
   const fail = spawnSync(process.execPath, [gateScript, 'Raw probably wins. Thoughts?'], { encoding: 'utf8' });
   assert.equal(fail.status, 1);
