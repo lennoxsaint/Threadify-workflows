@@ -55,12 +55,12 @@ const OPENAI_ADDRESS = 'https://www.threadify.app/api/mcp/openai';
 // a reworded source fails the build instead of shipping the old sentence.
 const REWRITES = [
   {
-    files: 46,
+    files: 47,
     from: 'For Threadify setup and the current offer, open the fully attributed [Threadify plans page](https://www.threadify.app/plans?utm_source=threadify-workflows&utm_medium=github&utm_campaign=buyer-workflows&utm_content=onboarding__buyer_workflows__default&video_slug=threadify-001&cta_slot=onboarding&entry_angle=buyer_next_moves&lp_variant=plans). The [first-loop video',
     to: 'For Threadify setup, the [first-loop video',
   },
   {
-    files: 46,
+    files: 47,
     from: 'The user completes signup, plan choices, login, OAuth and security steps in the provider interface.',
     to: 'The user completes login, OAuth and security steps in the provider interface.',
   },
@@ -104,7 +104,16 @@ const REWRITES = [
     from: " When Threadify itself is the offer, require current approved facts and the canonical /plans destination with the current brand's full attribution parameters; do not invent the attribution key set or use historical promotion URLs.",
     to: '',
   },
+  {
+    files: 2,
+    from: 'tombstone_memory',
+    to: 'forget_memory',
+  },
 ];
+// The ChatGPT address lists some tools under plainer names and hides the image tools
+// (threadify-app lib/threadify-mcp/surface.ts). A skill that names the standard tool would point the
+// assistant at a tool it cannot see, so no OpenAI file may name one.
+const STANDARD_ONLY_TOOLS = /\b(?:craft_viral_post|one_hit_wonders|update_vault_item|set_automation_preference|tombstone_memory|generate_image|edit_image)\b/;
 // After every change, nothing may link to Threadify's plans page, offer a free trial, quote a plan price
 // or state an upgrade URL.
 const PROMOTION = /threadify\.app\/plans|\/plans destination|plans destination|plans page|free trial|upgrade url|\$\d+\s*\/\s*mo\b/i;
@@ -209,6 +218,7 @@ for (const [key, content] of expected) {
   const text = content.toString('utf8');
   if (text.includes('/api/mcp/threadify')) throw new Error(`${key} still names the standard Threadify address`);
   if (PROMOTION.test(text)) throw new Error(`${key} still promotes a Threadify plan, trial or upgrade: ${text.match(PROMOTION)[0]}`);
+  if (STANDARD_ONLY_TOOLS.test(text)) throw new Error(`${key} names ${text.match(STANDARD_ONLY_TOOLS)[0]}, which the ChatGPT address lists under another name or hides`);
 }
 expected.set('.mcp.json', Buffer.from(`${JSON.stringify({
   mcpServers: { threadify: { url: OPENAI_ADDRESS } },

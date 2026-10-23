@@ -18,7 +18,7 @@
     "query_brain",
     "remember",
     "correct_memory",
-    "tombstone_memory",
+    "forget_memory",
     "audit_log"
   ],
   "optional_mcp_tools": ["record_feedback"],

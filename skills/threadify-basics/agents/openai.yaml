@@ -1,0 +1,4 @@
+interface:
+  display_name: "Threadify Basics"
+  short_description: "Write, check stats, reply, post on yes"
+  default_prompt: "Use $threadify-basics. Write a Threads post in my voice about why consistency beats intensity."

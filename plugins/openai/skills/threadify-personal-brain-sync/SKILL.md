@@ -30,7 +30,7 @@ and wants Threadify Brain updated safely.
    - `temporary_current_state_note`
 5. Show exact memory text, class, source note, and expiry/review date where relevant.
 6. Stop for explicit approval before `remember`, `correct_memory`, or
-   `tombstone_memory`.
+   `forget_memory`.
 7. Read back/query Brain after approved writes.
 8. Return a per-item memory update ledger.
 
