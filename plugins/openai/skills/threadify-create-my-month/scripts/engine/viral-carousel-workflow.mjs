@@ -47,18 +47,20 @@ export function createCarouselReview(manifest) {
   return { ...content, review_hash: digest(content), state: 'local_review', provider_writes: 0 };
 }
 
+// `connector` adapts the live Threadify tools. `carousel_capabilities` is the adapter's own summary of
+// which tools the connection lists (ordered media, upload_media, schedule_post); it is not a Threadify tool.
 export async function inspectSchedulingContext({ connector, account_id, timezone, scheduled_at, now }) {
-  for (const name of ['get_connection_defaults', 'get_capabilities', 'get_best_time', 'list_scheduled_posts']) {
+  for (const name of ['get_connection_defaults', 'carousel_capabilities', 'best_time_to_post', 'list_scheduled_posts']) {
     assert(typeof connector?.[name] === 'function', `Missing required connector read capability: ${name}.`);
   }
   assert(Number.isFinite(Date.parse(now)) && Number.isFinite(Date.parse(scheduled_at)), 'Valid evidence and schedule timestamps required.');
   const connection = await connector.get_connection_defaults();
   assert(connection?.account_id === account_id, 'Wrong or unknown exact account; scheduling stopped.');
   assert(connection?.timezone === timezone, 'Wrong or unknown account timezone; scheduling stopped.');
-  const capabilities = await connector.get_capabilities();
+  const capabilities = await connector.carousel_capabilities();
   assert(capabilities?.ordered_carousel_media === true && capabilities?.upload_media === true && capabilities?.schedule_post === true,
     'Required ordered-media, upload, or scheduling capability is absent.');
-  const best = await connector.get_best_time({ account_id, timezone });
+  const best = await connector.best_time_to_post({ account_id, timezone });
   assert(best?.account_id === account_id && best?.timezone === timezone && typeof best.evidence_id === 'string', 'Best-time evidence does not bind the exact account and timezone.');
   assert(Date.parse(best.checked_at) <= Date.parse(now) && Date.parse(best.valid_until) > Date.parse(now), 'Best-time evidence is stale or future-dated.');
   assert(best.recommended_at === scheduled_at, 'Scheduled time is not supported by the fresh best-time evidence.');

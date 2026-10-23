@@ -22,6 +22,8 @@ const allowedTools = new Set([
   'list_drafts',
   'get_draft',
   'best_time_to_post',
+  'get_threads_profile',
+  'list_social_inbox',
   'read_link_attribution',
   'read_conversion_setup',
   'check_conversion_tracking',
@@ -32,14 +34,10 @@ const allowedTools = new Set([
   'list_offers',
   'create_offer',
   'update_offer',
-  'get_capabilities',
-  'get_best_time',
   'list_accounts',
   'list_drafts',
   'read_post_performance',
   'get_audience_demographics',
-  'list_dispatcher_tools',
-  'call_agent_action',
   'query_brain',
   'get_brain_overview',
   'remember',
@@ -74,6 +72,9 @@ const allowedTools = new Set([
   'search_posts',
   'generate_replies',
   'send_reply',
+  'send_replies',
+  'list_comments',
+  'list_mentions',
   'enable_auto_reply',
   'get_auto_reply_status',
   'record_feedback',
@@ -497,6 +498,18 @@ function validateDurableRuleContracts() {
   const openaiServers = Object.keys(openaiMcp?.mcpServers ?? {});
   assert(openaiServers.length === 1 && openaiMcp.mcpServers.threadify?.url === 'https://www.threadify.app/api/mcp/openai',
     'OpenAI plugin must declare exactly one MCP server, threadify, at the OpenAI address');
+  // Every tool an OpenAI skill names must be one the OpenAI address lists (validation/mcp-tool-lists.json,
+  // read from the live addresses). A standard-only or retired name points the assistant at a tool it cannot see.
+  const toolLists = readJson(path.join(root, 'validation', 'mcp-tool-lists.json'));
+  const unlisted = [...(toolLists?.standard ?? []).filter((tool) => !toolLists.openai.includes(tool)), ...(toolLists?.retired ?? [])];
+  assert(toolLists?.openai?.length > 0 && unlisted.length > 0, 'validation/mcp-tool-lists.json must list the openai, standard and retired tools');
+  const unlistedPattern = new RegExp(`\\b(?:${unlisted.join('|')})\\b`, 'g');
+  for (const file of walk(path.join(root, 'plugins', 'openai'))) {
+    if (!/\.(md|json|mjs|js|ya?ml|txt)$/.test(file)) continue;
+    for (const tool of new Set(fs.readFileSync(file, 'utf8').match(unlistedPattern) ?? [])) {
+      failures.push(`${rel(file)} names ${tool}, which the OpenAI address does not list`);
+    }
+  }
   const mcp = readJson(path.join(root, '.mcp.json'));
   assert(mcp?.mcpServers?.threadify?.type === 'streamable-http', '.mcp.json threadify server must declare its transport type');
   const changelog = fs.readFileSync(path.join(root, 'release', 'CHANGELOG.md'), 'utf8').replace(/\r\n/g, '\n');

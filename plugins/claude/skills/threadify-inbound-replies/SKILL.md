@@ -7,7 +7,7 @@ description: Connect Threadify MCP, review a backlog of Threads comments and men
 
 Read `references/workflow-readme.md` and `references/inbound-contract.md` relative to this file. The private local helper is `scripts/cli.mjs`.
 
-Follow that workflow with the user's own connected account and Brain. Never assume the package author's identity, style, timezone or private filesystem. When connected, call Threadify `get_connection_defaults`, then `list_dispatcher_tools`. Use only the exact read, draft or delivery actions and schemas returned in that session, through `call_agent_action`. A tool name described in documentation is not current capability proof. Missing connection or missing dispatcher capability means guide setup or keep the work local, never invent inbound or publication.
+Follow that workflow with the user's own connected account and Brain. Never assume the package author's identity, style, timezone or private filesystem. When connected, call Threadify `get_connection_defaults`, then read with `list_comments` and `list_mentions`, draft with `generate_replies` and deliver with `send_replies` or `send_reply`, using the schemas listed in that session. Check a tool is listed before calling it. A missing connection or missing tool means guide setup or keep that step local, never invent inbound or publication.
 
 On first use, ask whether to remember five comments per round or all safe pending comments for the chosen period. Save the answer per account. Default the period to since the last completed scan plus unresolved/deferred items (24 hours on first use). Explicit periods override this.
 

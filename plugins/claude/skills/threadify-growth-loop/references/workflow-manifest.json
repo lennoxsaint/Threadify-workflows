@@ -52,7 +52,7 @@
     "get_vault_item",
     "read_post_performance",
     "get_audience_demographics",
-    "get_best_time",
+    "best_time_to_post",
     "save_draft",
     "list_drafts",
     "audit_log"

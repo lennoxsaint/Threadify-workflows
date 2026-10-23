@@ -14,7 +14,7 @@
   },
   "supported_adapters": ["generic-mcp", "hermes", "gemini", "codex", "claude", "openclaw", "cursor"],
   "required_mcp_tools": [],
-  "optional_mcp_tools": ["get_connection_defaults", "get_capabilities", "get_best_time", "list_scheduled_posts", "upload_media", "schedule_post", "get_schedule_status"],
+  "optional_mcp_tools": ["get_connection_defaults", "best_time_to_post", "list_scheduled_posts", "upload_media", "schedule_post", "get_schedule_status"],
   "free_capabilities": ["bundled local carousel runtime", "controlled-mutation creation", "local critic review", "ordered final-media manifest", "local contact sheet and caption review"],
   "paid_capability_stubs": ["hosted scheduling", "best-time evidence", "provider media upload"],
   "approval_gate": {
