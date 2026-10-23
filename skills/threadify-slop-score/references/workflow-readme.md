@@ -20,7 +20,7 @@ It's free: it runs in your agent on your computer, and the post is written and s
 Copy this into your terminal (Claude Code and Codex; it installs every Threadify workflow, Slop Score included):
 
 ```sh
-npx --yes github:lennoxsaint/Threadify-workflows#v0.44.0 install --version 0.44.0 --workflows all --targets claude,codex --disable-auto-update
+npx --yes github:lennoxsaint/Threadify-workflows#v0.44.1 install --version 0.44.1 --workflows all --targets claude,codex --disable-auto-update
 ```
 
 The installer takes `--workflows all` only; choosing a single workflow such as `--workflows slop-score` is not supported. Then say `/threadify-slop-score`.

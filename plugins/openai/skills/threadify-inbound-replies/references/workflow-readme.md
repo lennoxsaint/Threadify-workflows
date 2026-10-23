@@ -10,7 +10,7 @@ If Threadify tools are missing, guide the user to their client's MCP connector s
 
 Call `get_connection_defaults` first. Verify connected account and timezone, and check which of the Threadify tools this workflow uses are listed in the session: `list_comments` and `list_mentions` (read), `generate_replies` (draft), and `send_replies` or `send_reply` (delivery). Use each with the schema the session lists. Where a tool is missing, keep that step local. If multiple accounts make the user's intent ambiguous, ask. Use the chosen account explicitly on every call. Explain actual scope or entitlement errors and the connection settings needed; do not invent prices or widen permissions silently. An unavailable Brain blocks hosted generation, but not local context-grounded drafting.
 
-Ask once: **Would you like to default to five comments per round or all safe pending comments over the selected period?** Save the answer using `configure`. The user may override it later. Both modes include simple praise; exclude unsafe content, spam, unavailable sources and already-replied items. A private adapter may exclude a native ID currently being handled elsewhere.
+With no saved preference, start with five comments per round and draft them straight away; a plain "draft replies to my comments" must return drafts, not a question. Then ask once, alongside those drafts: **Would you like to default to five comments per round or all safe pending comments over the selected period?** Save the answer using `configure`. The user may override it later. Both modes include simple praise; exclude unsafe content, spam, unavailable sources and already-replied items. A private adapter may exclude a native ID currently being handled elsewhere.
 
 ## Collect and freeze
 

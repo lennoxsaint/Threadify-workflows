@@ -11,7 +11,7 @@ Some clients load MCP tools only when asked. Before you answer a Threads request
 
 | The user asks | Call | Then |
 | --- | --- | --- |
-| Write a post or thread in my voice | `generate_content` | Show the full draft. Threadify writes it from the user's Brain; do not write it yourself. Nothing is posted. |
+| Write a post or thread in my voice | `generate_content` | Show the full draft. Threadify writes it from the user's Brain. Show its text word for word: do not write, rewrite or polish it yourself, and call `edit_draft` only when the user asks for a change. Nothing is posted. |
 | How did my posts do, when should I post | `read_post_performance`, `best_time_to_post` | Report the numbers exactly as returned, in the account's timezone. |
 | Which posts drove link clicks | `read_link_attribution` | Rank by the returned click counts. |
 | Draft replies to my comments | `generate_replies` | Show every draft with its comment. Nothing is sent. |
