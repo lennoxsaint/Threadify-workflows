@@ -40,7 +40,7 @@ The agent should call:
 
 - `get_connection_defaults`
 - `list_accounts` when account choice is unclear
-- `list_dispatcher_tools` when tool availability is unclear
+- its tool search, when the client defers tools, to load the Threadify tools before calling them
 
 The agent must never print tokens, credentials, raw auth headers, or secret configuration.
 

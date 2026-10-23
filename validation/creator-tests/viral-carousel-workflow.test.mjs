@@ -20,8 +20,8 @@ function connector(overrides = {}) {
   const value = {
     calls,
     async get_connection_defaults() { calls.push('get_connection_defaults'); return { account_id: 'acct-1', handle: '@example', timezone: 'Australia/Perth' }; },
-    async get_capabilities() { calls.push('get_capabilities'); return { ordered_carousel_media: true, upload_media: true, schedule_post: true }; },
-    async get_best_time() { calls.push('get_best_time'); return { evidence_id: 'best-1', account_id: 'acct-1', timezone: 'Australia/Perth', checked_at: now, valid_until: '2026-09-09T01:00:00Z', recommended_at: '2026-09-09T00:30:00Z' }; },
+    async carousel_capabilities() { calls.push('carousel_capabilities'); return { ordered_carousel_media: true, upload_media: true, schedule_post: true }; },
+    async best_time_to_post() { calls.push('best_time_to_post'); return { evidence_id: 'best-1', account_id: 'acct-1', timezone: 'Australia/Perth', checked_at: now, valid_until: '2026-09-09T01:00:00Z', recommended_at: '2026-09-09T00:30:00Z' }; },
     async list_scheduled_posts() { calls.push('list_scheduled_posts'); return []; },
     async upload_media(request) { calls.push('upload_media'); return { status: 'uploaded', media_refs: request.ordered_media.map((item) => `media-${item.order}`) }; },
     async schedule_post() { calls.push('schedule_post'); return { status: 'scheduled', provider_ref: 'post-1' }; },
@@ -47,8 +47,8 @@ test('local review preserves exact ordered carousel media and performs no provid
 test('fresh preflight rejects wrong account, absent capabilities, stale evidence and occupied slots', async () => {
   const base = { account_id: 'acct-1', timezone: 'Australia/Perth', scheduled_at: '2026-09-09T00:30:00Z', now };
   await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async get_connection_defaults() { return { account_id: 'wrong', timezone: 'Australia/Perth' }; } }) }), /account/);
-  await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async get_capabilities() { return { ordered_carousel_media: true, upload_media: false, schedule_post: true }; } }) }), /capability/);
-  await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async get_best_time() { return { evidence_id: 'old', account_id: 'acct-1', timezone: 'Australia/Perth', checked_at: '2026-09-08T00:00:00Z', valid_until: '2026-09-08T01:00:00Z', recommended_at: base.scheduled_at }; } }) }), /stale/);
+  await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async carousel_capabilities() { return { ordered_carousel_media: true, upload_media: false, schedule_post: true }; } }) }), /capability/);
+  await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async best_time_to_post() { return { evidence_id: 'old', account_id: 'acct-1', timezone: 'Australia/Perth', checked_at: '2026-09-08T00:00:00Z', valid_until: '2026-09-08T01:00:00Z', recommended_at: base.scheduled_at }; } }) }), /stale/);
   await assert.rejects(inspectSchedulingContext({ ...base, connector: connector({ async list_scheduled_posts() { return [{ account_id: 'acct-1', scheduled_at: base.scheduled_at }]; } }) }), /occupied/);
 });
 

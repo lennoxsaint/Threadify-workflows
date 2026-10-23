@@ -35,7 +35,7 @@
   },
   "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
   "required_mcp_tools": [],
-  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools", "call_agent_action", "greatest_hits"],
+  "optional_mcp_tools": ["get_connection_defaults", "greatest_hits", "get_post_thread", "list_comments"],
   "free_capabilities": ["local evidence synthesis", "private HTML and Markdown report", "export fallback"],
   "paid_capability_stubs": ["connected account and analytics reads depend on current Threadify scopes and plan entitlement"],
   "approval_gate": {

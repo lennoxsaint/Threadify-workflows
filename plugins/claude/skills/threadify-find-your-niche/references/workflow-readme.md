@@ -6,7 +6,7 @@ Find Your Niche turns a creator's owned Threads evidence into one recommended ni
 
 Connect Threadify through the existing MCP setup. Read current schemas and verify the intended account before collecting anything. Start with a 90-day window. If fewer than 20 owned posts are available, expand backward only until 20 posts are found or 365 days is reached.
 
-Use `greatest_hits` when the current connection exposes provider-ranked owned posts. Use `list_dispatcher_tools` and `call_agent_action` only for currently advertised read actions that can return complete post threads, comments or creator replies with stable IDs, timestamps, pagination and metric freshness. Never invoke a historical action name that is not currently advertised.
+Use `greatest_hits` when the current connection exposes provider-ranked owned posts. Use `get_post_thread` and `list_comments` to read complete post threads, comments and creator replies with stable IDs, timestamps, pagination and metric freshness. Never invoke a historical action name that is not currently advertised.
 
 The workflow is read-only. It does not save drafts, alter a profile, reply, schedule or publish. A later profile or offer workflow is a separate action.
 

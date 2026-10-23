@@ -111,9 +111,11 @@ const REWRITES = [
   },
 ];
 // The ChatGPT address lists some tools under plainer names and hides the image tools
-// (threadify-app lib/threadify-mcp/surface.ts). A skill that names the standard tool would point the
-// assistant at a tool it cannot see, so no OpenAI file may name one.
-const STANDARD_ONLY_TOOLS = /\b(?:craft_viral_post|one_hit_wonders|update_vault_item|set_automation_preference|tombstone_memory|generate_image|edit_image)\b/;
+// (threadify-app lib/threadify-mcp/surface.ts), and no address serves the retired names. A skill that
+// names one would point the assistant at a tool it cannot see, so no OpenAI file may name one.
+// validation/mcp-tool-lists.json holds the live tool lists; validate.mjs runs the same check.
+const toolLists = JSON.parse(fs.readFileSync(path.join(root, 'validation', 'mcp-tool-lists.json'), 'utf8'));
+const UNLISTED_TOOLS = new RegExp(`\\b(?:${[...toolLists.standard.filter((tool) => !toolLists.openai.includes(tool)), ...toolLists.retired].join('|')})\\b`);
 // After every change, nothing may link to Threadify's plans page, offer a free trial, quote a plan price
 // or state an upgrade URL.
 const PROMOTION = /threadify\.app\/plans|\/plans destination|plans destination|plans page|free trial|upgrade url|\$\d+\s*\/\s*mo\b/i;
@@ -218,7 +220,7 @@ for (const [key, content] of expected) {
   const text = content.toString('utf8');
   if (text.includes('/api/mcp/threadify')) throw new Error(`${key} still names the standard Threadify address`);
   if (PROMOTION.test(text)) throw new Error(`${key} still promotes a Threadify plan, trial or upgrade: ${text.match(PROMOTION)[0]}`);
-  if (STANDARD_ONLY_TOOLS.test(text)) throw new Error(`${key} names ${text.match(STANDARD_ONLY_TOOLS)[0]}, which the ChatGPT address lists under another name or hides`);
+  if (UNLISTED_TOOLS.test(text)) throw new Error(`${key} names ${text.match(UNLISTED_TOOLS)[0]}, which the ChatGPT address does not list`);
 }
 expected.set('.mcp.json', Buffer.from(`${JSON.stringify({
   mcpServers: { threadify: { url: OPENAI_ADDRESS } },

@@ -3,6 +3,7 @@
 - Add Threadify Basics: the everyday write, check, reply and post-on-yes jobs, so plain requests find Threadify's tools
 - Inbound Replies uses Threadify's real comment, mention, draft and send tools instead of a dispatcher that does not exist
 - OpenAI package names forget_memory, the tool ChatGPT's address lists, and its build fails on any tool name that address renames or hides
+- Find Your Niche, Refresh Your Threads Profile, Choose Your First Offer, Anti-Spam Lead Desk and Market to Pipeline use Threadify's real read tools instead of the retired dispatcher; Growth Loop, 30-Day Viral Vault, Viral Carousel Maker and YouTube Synthesizer use best_time_to_post. The OpenAI build and validator now check every tool name against the live tool lists
 
 # 0.43.1
 

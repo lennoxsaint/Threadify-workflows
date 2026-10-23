@@ -41,12 +41,11 @@
   "required_mcp_tools": [],
   "optional_mcp_tools": [
     "get_connection_defaults",
-    "list_dispatcher_tools",
-    "call_agent_action",
     "greatest_hits",
     "query_brain",
     "generate_content",
-    "audit_log"
+    "audit_log",
+    "list_comments"
   ],
   "free_capabilities": [
     "local deterministic qualification and deduplication for at most 50 normalized signals and 10 selected prospects",

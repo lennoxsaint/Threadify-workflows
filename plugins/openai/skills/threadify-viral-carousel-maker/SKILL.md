@@ -17,7 +17,7 @@ Use the bundled Viral Carousel Maker v0.2.0 runtime and its exact controlled-mut
 
 Present the full local evidence: seven accepted parent/child edits, retained attempts, caption, alt text, contact sheet, and the ordered final-media manifest with SHA-256 hashes. Local review makes no Threadify call or provider write.
 
-Before scheduling, fresh-read `get_connection_defaults`, connector capabilities, exact account, timezone, best-time evidence, and `list_scheduled_posts`. Stop on wrong or unknown account, missing ordered-media/upload/schedule capability, stale evidence, or an occupied slot.
+Before scheduling, fresh-read `get_connection_defaults`, connector capabilities, exact account, timezone, best-time evidence from `best_time_to_post`, and `list_scheduled_posts`. Stop on wrong or unknown account, missing ordered-media/upload/schedule capability, stale evidence, or an occupied slot.
 
 Obtain explicit hash-bound approval for the exact ordered files before `upload_media`. After confirmed upload, show the exact caption, ordered media hashes and provider refs, account, time, timezone, best-time evidence, and `schedule_post`; obtain a separate final approval. Persist intent before either request and invoke each request at most once. After a crash or unknown result, read both schedule status and calendar before deciding state. Ambiguity blocks retries and duplicates.
 

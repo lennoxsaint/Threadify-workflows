@@ -31,7 +31,7 @@
   },
   "supported_adapters": ["generic-mcp", "codex", "claude", "hermes", "gemini", "openclaw", "cursor"],
   "required_mcp_tools": [],
-  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools"],
+  "optional_mcp_tools": ["get_connection_defaults", "list_comments", "list_mentions", "list_social_inbox"],
   "free_capabilities": ["bounded comment triage", "current-public-profile inspection", "cold-research handoff", "five-card three-lane HTML review", "private exact-text final readback", "one unsent action draft"],
   "paid_capability_stubs": [],
   "approval_gate": {
