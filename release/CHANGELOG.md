@@ -1,3 +1,7 @@
+# 0.44.2
+
+- Inbound Replies and Basics show Threadify's reply drafts exactly as returned and flag a concern under a draft instead of swapping in the client's own rewrite (found re-running the store cases on 0.44.1)
+
 # 0.44.1
 
 - Inbound Replies drafts the first five replies straight away and asks whether to remember five or all alongside them, so a plain "draft replies to my comments" returns drafts instead of a question (found end to end in Codex on staging)

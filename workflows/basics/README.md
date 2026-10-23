@@ -18,7 +18,7 @@ It only ever acts on accounts you have connected. It will not post as anyone els
 Copy this into your terminal (Claude Code and Codex; it installs every Threadify workflow, Threadify Basics included):
 
 ```sh
-npx --yes github:lennoxsaint/Threadify-workflows#v0.44.1 install --version 0.44.1 --workflows all --targets claude,codex --disable-auto-update
+npx --yes github:lennoxsaint/Threadify-workflows#v0.44.2 install --version 0.44.2 --workflows all --targets claude,codex --disable-auto-update
 ```
 
 The installer takes `--workflows all` only. Then say `/threadify-basics`.
