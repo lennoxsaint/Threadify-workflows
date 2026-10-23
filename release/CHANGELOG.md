@@ -1,3 +1,8 @@
+# 0.44.1
+
+- Inbound Replies drafts the first five replies straight away and asks whether to remember five or all alongside them, so a plain "draft replies to my comments" returns drafts instead of a question (found end to end in Codex on staging)
+- Threadify Basics shows Threadify's own draft word for word and calls edit_draft only when the user asks for a change, so the client no longer swaps in its own rewrite
+
 # 0.44.0
 
 - Add Threadify Basics: the everyday write, check, reply and post-on-yes jobs, so plain requests find Threadify's tools
