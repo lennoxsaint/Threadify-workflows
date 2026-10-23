@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.44.1",
+  "release_version": "0.44.2",
   "skill_version": "0.12.1",
-  "plugin_version": "0.44.1",
+  "plugin_version": "0.44.2",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Inbound Replies drafts the first five replies straight away and asks whether to remember five or all alongside them, so a plain \"draft replies to my comments\" returns drafts instead of a question (found end to end in Codex on staging) Threadify Basics shows Threadify's own draft word for word and calls edit_draft only when the user asks for a change, so the client no longer swaps in its own rewrite"
+  "summary": "Inbound Replies and Basics show Threadify's reply drafts exactly as returned and flag a concern under a draft instead of swapping in the client's own rewrite (found re-running the store cases on 0.44.1)"
 }
