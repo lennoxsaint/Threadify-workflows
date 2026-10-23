@@ -82,6 +82,12 @@ by the casing guard), never creates, renames or duplicates an offer, never
 publishes now and schedules the one post only after the owner's yes, with a
 readback and how to undo it.
 
+Threadify Basics acts only on the owner's own connected accounts and refuses to
+post as anyone else, has Threadify write every post and reply draft, and never
+schedules, publishes or sends in the same turn as the request: it shows the
+exact text, account and local time and waits for a clear yes, even when asked to
+skip that step, then reads the result back.
+
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves
 a provider operation, and directional observations do not prove caused growth.

@@ -38,7 +38,7 @@
   },
   "supported_adapters": ["generic-mcp", "codex", "claude", "cursor", "hermes", "gemini", "openclaw"],
   "required_mcp_tools": [],
-  "optional_mcp_tools": ["get_connection_defaults", "list_dispatcher_tools", "call_agent_action", "query_brain", "record_feedback"],
+  "optional_mcp_tools": ["get_connection_defaults", "list_comments", "list_mentions", "send_replies", "query_brain", "record_feedback"],
   "free_capabilities": ["private grouped review", "exact edit and revision tracking", "interrupted-batch recovery", "body-free receipts"],
   "paid_capability_stubs": ["current connected-account discovery, drafting and delivery actions when advertised by Threadify"],
   "approval_gate": {"required": true, "type": "explicit-final-approval", "must_show": ["account handle", "exact final reply", "native target", "action", "fallback state"]},

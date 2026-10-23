@@ -1,3 +1,9 @@
+# 0.44.0
+
+- Add Threadify Basics: the everyday write, check, reply and post-on-yes jobs, so plain requests find Threadify's tools
+- Inbound Replies uses Threadify's real comment, mention, draft and send tools instead of a dispatcher that does not exist
+- OpenAI package names forget_memory, the tool ChatGPT's address lists, and its build fails on any tool name that address renames or hides
+
 # 0.43.1
 
 - Slop Score and Unslop now flag nine more default-AI phrases (in a world, competitive advantage, differentiator, superpower, unpopular opinion and more), found when a plain-AI twin scored 0 in the THREADIFY-053 rehearsal. None of the owner's 191 posts from the last 30 days is newly flagged.

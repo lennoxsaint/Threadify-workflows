@@ -70,7 +70,7 @@ Examples are synthetic. `source_id` must be native in real runs. Ancestry is an 
 
 `prepare-send`: add `authorization:{explicit:true,reference:"user-message-reference"}` and `items:[{id,revision,source_id,author,final_hash,pending:true,safe:true,available:true,gates_passed:true,evidence_ref,checked_at}]`. Compute `final_hash` with SHA-256 of exact UTF-8 text (exported `hash` helper). `quote_target_kind` may be `comment` or `mention` only when the provider verifies that mapping. Proof fields describe actual reads, not invented assertions. This command must follow the user's chat send instruction; local approval alone is insufficient.
 
-Output contains the durable `attempt.key` and exact prepared reply payload. The agent must refresh `list_dispatcher_tools` and use only a compatible currently advertised delivery action through `call_agent_action`; no historical tool name grants capability. `record-send`: `{key,receipt,eta}`. Receipts are stable provider evidence references, not local success labels.
+Output contains the durable `attempt.key` and exact prepared reply payload. The agent must check that `send_replies` or `send_reply` is listed in the current session and call it with that payload; where the connection requires an approval, it comes from `review_reply` first. `record-send`: `{key,receipt,eta}`. Receipts are stable provider evidence references, not local success labels.
 
 `reconcile`: `{key,results:[{id,source_id,author,status,evidence_ref,checked_at,...}]}`. Status is:
 

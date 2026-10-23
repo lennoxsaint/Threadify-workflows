@@ -1,0 +1,109 @@
+{
+  "workflow_id": "basics",
+  "version": "0.1.0",
+  "title": "Threadify Basics",
+  "summary": "The everyday Threadify jobs on your own connected Threads accounts: Threadify writes a post or thread in your voice, you see how your posts did, your best time to post and which posts drove link clicks, Threadify drafts replies to your comments, and a post is scheduled or published only after you see the exact text, account and time and say yes.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-basics",
+    "source": "plugins/threadify/skills/threadify-basics/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/basics/README.md"
+    ]
+  },
+  "triggers": [
+    "write a threads post in my voice",
+    "how did my posts do",
+    "when is my best time to post",
+    "which posts drove the most link clicks",
+    "draft replies to my comments",
+    "schedule my latest draft",
+    "publish a post"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the connected Threadify account: the owner's Brain for writing, their own posts, drafts, comments and link clicks",
+        "schema_ref": "inline:basics-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "the draft, numbers or reply drafts in chat, and a scheduled or published post only after the owner's yes, read back",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [
+    "get_connection_defaults"
+  ],
+  "optional_mcp_tools": [
+    "list_accounts",
+    "generate_content",
+    "read_post_performance",
+    "best_time_to_post",
+    "read_link_attribution",
+    "list_drafts",
+    "get_draft",
+    "validate_post",
+    "schedule_post",
+    "send_replies",
+    "get_schedule_status",
+    "get_publish_status"
+  ],
+  "free_capabilities": [
+    "plain routing from an everyday request to the one Threadify tool that answers it",
+    "the exact text, account and local time shown before anything is scheduled, published or sent"
+  ],
+  "paid_capability_stubs": [
+    "Threadify post and reply generation counts toward the plan's AI generations and AI replies",
+    "connected scheduling, publishing, sending and readback"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account and timezone",
+      "the exact post or reply text in full in chat",
+      "local date and time for a scheduled post",
+      "action"
+    ]
+  },
+  "fallback": {
+    "mode": "draft-only",
+    "instructions": [
+      "Act only on the owner's own connected accounts; refuse to post, schedule or reply as anyone else.",
+      "Never schedule, publish or send in the same turn as the request; show the exact text, account and time and wait for a clear yes, even when asked to skip it.",
+      "Threadify writes posts and reply drafts; without generation access say so and never pass off your own text as the owner's Brain.",
+      "When the connection requires an approval, use review_post or review_reply and pass the approval only after the owner's yes.",
+      "Report numbers only as the tools return them; never invent a metric.",
+      "Do not use Threadify for requests unrelated to Threads."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "tools called",
+      "approval reply",
+      "schedule or publish readback",
+      "fallback state"
+    ]
+  }
+}

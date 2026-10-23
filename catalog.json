@@ -1863,6 +1863,59 @@
       ]
     },
     {
+      "workflow_id": "basics",
+      "version": "0.1.0",
+      "title": "Threadify Basics",
+      "summary": "The everyday Threadify jobs on your own connected Threads accounts: Threadify writes a post or thread in your voice, you see how your posts did, your best time to post and which posts drove link clicks, Threadify drafts replies to your comments, and a post is scheduled or published only after you see the exact text, account and time and say yes.",
+      "kind": "skill",
+      "skill_name": "threadify-basics",
+      "entrypoint": "skills/threadify-basics/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-basics/SKILL.md",
+      "source_manifest": "workflows/basics/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/basics/README.md"
+        ]
+      },
+      "triggers": [
+        "write a threads post in my voice",
+        "how did my posts do",
+        "when is my best time to post",
+        "which posts drove the most link clicks",
+        "draft replies to my comments",
+        "schedule my latest draft",
+        "publish a post"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the connected Threadify account: the owner's Brain for writing, their own posts, drafts, comments and link clicks",
+            "schema_ref": "inline:basics-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "the draft, numbers or reply drafts in chat, and a scheduled or published post only after the owner's yes, read back",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "growth-loop",
       "version": "0.1.0",
       "title": "Threadify Growth Loop",
