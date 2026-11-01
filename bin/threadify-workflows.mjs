@@ -57,6 +57,7 @@ Usage:
   threadify-workflows lead-desk serve --input /absolute/input.json --state /absolute/review.json
   threadify-workflows lead-desk status --state /absolute/review.json
   threadify-workflows post-this-next review --input /absolute/input.json --output-dir /absolute/private-directory
+  threadify-workflows greatest-hits review --input input.json --output-dir new-private-directory
   threadify-workflows growth-loop <setup|status|scan|prepare-day|begin-save|reconcile-save|configure-runner|pause|resume|display-hypotheses|display-run> --state /absolute/private-directory
   threadify-workflows market-to-pipeline build --input input.json --output-dir /absolute/private-directory
   threadify-workflows market-to-pipeline status --state /absolute/pipeline.private.json
@@ -74,6 +75,11 @@ async function resolveConsent(command, options) {
 }
 
 async function main() {
+  if (process.argv[2] === 'greatest-hits') {
+    const { greatestHitsMain } = await import('../lib/greatest-hits-runway-cli.mjs');
+    process.stdout.write(`${JSON.stringify(greatestHitsMain(process.argv.slice(3)), null, 2)}\n`);
+    return;
+  }
   if (process.argv[2] === 'setup') {
     const { setupMain } = await import('../lib/onboarding/cli.mjs');
     await setupMain(process.argv.slice(3));

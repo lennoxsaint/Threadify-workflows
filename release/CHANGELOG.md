@@ -1,3 +1,8 @@
+# 0.45.0
+
+- Greatest Hits Runway adds private portable review with slot-level calendar reconciliation, full-thread evidence gates and stable approval fingerprints.
+- Patch fast-uri to 3.1.9 to resolve the dependency audit advisories.
+
 # 0.44.2
 
 - Inbound Replies and Basics show Threadify's reply drafts exactly as returned and flag a concern under a draft instead of swapping in the client's own rewrite (found re-running the store cases on 0.44.1)

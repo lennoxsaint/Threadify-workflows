@@ -1044,9 +1044,9 @@
     },
     {
       "workflow_id": "greatest-hits-runway",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Greatest Hits Runway",
-      "summary": "Public orchestration for Greatest Hits Runway, with review, exact approval and readback.",
+      "summary": "Review a source-backed runway slot by slot, preserve existing posts and export a private portable plan with honest gaps.",
       "kind": "skill",
       "skill_name": "threadify-greatest-hits-runway",
       "entrypoint": "skills/threadify-greatest-hits-runway/SKILL.md",
@@ -1059,7 +1059,9 @@
       "dependencies": {
         "workflows": [],
         "files": [
-          "workflows/greatest-hits-runway/README.md"
+          "workflows/greatest-hits-runway/README.md",
+          "lib/greatest-hits-runway.mjs",
+          "lib/greatest-hits-runway-cli.mjs"
         ]
       },
       "triggers": [

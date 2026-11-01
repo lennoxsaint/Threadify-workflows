@@ -1,19 +1,42 @@
 {
   "workflow_id": "greatest-hits-runway",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Greatest Hits Runway",
-  "summary": "Public orchestration for Greatest Hits Runway, with review, exact approval and readback.",
+  "summary": "Review a source-backed runway slot by slot, preserve existing posts and export a private portable plan with honest gaps.",
   "kind": "skill",
   "entrypoint": {
     "skill_id": "threadify-greatest-hits-runway",
     "source": "plugins/threadify/skills/threadify-greatest-hits-runway/SKILL.md"
   },
-  "bundle": { "kind": "advanced", "standalone": false },
-  "dependencies": { "workflows": [], "files": ["workflows/greatest-hits-runway/README.md"] },
-  "triggers": ["prepare my greatest hits runway", "review a seven-day runway of proven posts"],
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/greatest-hits-runway/README.md",
+      "lib/greatest-hits-runway.mjs",
+      "lib/greatest-hits-runway-cli.mjs"
+    ]
+  },
+  "triggers": [
+    "prepare my greatest hits runway",
+    "review a seven-day runway of proven posts"
+  ],
   "io": {
-    "inputs": [{ "name": "greatest-hits selection", "schema_ref": "inline:greatest-hits-selection" }],
-    "outputs": [{ "name": "runway receipt", "schema_ref": "schemas/workflow-receipt.v1.json" }]
+    "inputs": [
+      {
+        "name": "greatest-hits selection",
+        "schema_ref": "inline:greatest-hits-selection"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "runway receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
   },
   "supported_adapters": [
     "generic-mcp",
@@ -47,7 +70,9 @@
       "exact payload",
       "action",
       "time or memory category",
-      "source and changed facts"
+      "source and changed facts",
+      "full thread chain and media",
+      "plan revision and row fingerprint"
     ]
   },
   "fallback": {
@@ -65,7 +90,10 @@
       "approved payload",
       "actual operation",
       "readback",
-      "fallback state"
+      "fallback state",
+      "complete live calendar coverage",
+      "per-row state and honest gaps",
+      "stable idempotency key and uncertainty reconciliation"
     ]
   }
 }
