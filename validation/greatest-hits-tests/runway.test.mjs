@@ -119,6 +119,16 @@ test('invalid identities, duplicated slots, calendar IDs and offset-free times f
   }
 });
 
+test('impossible dates and times cannot roll into another approved day', () => {
+  for (const at of ['2030-02-30T08:00:00Z', '2030-02-29T08:00:00Z', '2030-04-31T08:00:00Z',
+    '2030-01-03T24:00:00Z', '2030-01-03T04:60:00Z']) {
+    const input = fixture(); input.slots[1].at = at;
+    assert.throws(() => buildRunwayReview(input), /slot outside window/);
+  }
+  const input = fixture(); input.snapshotAt = '2030-02-30T08:00:00Z';
+  assert.throws(() => buildRunwayReview(input), /dated snapshot/);
+});
+
 test('portable page escapes all copy and assets, includes complete thread, no remote loads or approval controls', () => {
   const input = fixture(); input.sources[1].chain[1] = { text: '<script>alert("test")</script>', media: ['https://example.invalid/<img>'] };
   const html = renderRunwayReview(buildRunwayReview(input));
