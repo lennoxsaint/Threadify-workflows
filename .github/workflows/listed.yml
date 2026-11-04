@@ -1,0 +1,23 @@
+name: listed-edition
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  listed-edition:
+    name: listed-edition
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Committed package matches a fresh build
+        run: node editions/listed/build.mjs --check
+      - name: Preflight mirrors OpenAI's automated checks
+        run: node editions/listed/preflight.mjs editions/listed/package/threadify
+      - name: Listed edition tests
+        run: node --test editions/listed/tests/*.test.mjs
