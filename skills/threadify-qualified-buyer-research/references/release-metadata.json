@@ -1,10 +1,10 @@
 {
   "record_type": "StableReleaseIntentV1",
-  "release_version": "0.45.0",
+  "release_version": "0.45.1",
   "skill_version": "0.12.1",
-  "plugin_version": "0.45.0",
+  "plugin_version": "0.45.1",
   "rules_version": "0.4.0",
   "change_class": "skill_logic",
   "release": true,
-  "summary": "Greatest Hits Runway adds private portable review with slot-level calendar reconciliation, full-thread evidence gates and stable approval fingerprints. Patch fast-uri to 3.1.9 to resolve the dependency audit advisories."
+  "summary": "Enforce the Claude plugin directory's rules in the repo, and fix v0.45.0's findings (#92)"
 }

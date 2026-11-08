@@ -1,3 +1,7 @@
+# 0.45.1
+
+- Enforce the Claude plugin directory's rules in the repo, and fix v0.45.0's findings (#92)
+
 # 0.45.0
 
 - Greatest Hits Runway adds private portable review with slot-level calendar reconciliation, full-thread evidence gates and stable approval fingerprints.
