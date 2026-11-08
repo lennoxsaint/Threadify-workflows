@@ -67,6 +67,18 @@
         "files": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
       }
     },
+    "external_engines": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "description": "Separate engines the workflow drives that no plugin bundle ships (for example eddy). The Claude plugin excludes these workflows."
+    },
+    "external_credentials": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "description": "Third-party services whose own API key the owner must supply (for example scrapecreators). The Claude plugin excludes these workflows, because the plugin directory holds any skill that reads a key from the user's machine."
+    },
     "triggers": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1, "uniqueItems": true },
     "io": {
       "type": "object",

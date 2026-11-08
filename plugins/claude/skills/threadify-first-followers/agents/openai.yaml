@@ -1,4 +1,0 @@
-interface:
-  display_name: "First Followers"
-  short_description: "Get your first Threads followers, one person at a time; you just press Post"
-  default_prompt: "Use $threadify-first-followers to get my first Threads followers: find 10 newcomers and creators in my niche, stage each comment in my voice one at a time for me to publish, follow at the right step, and learn from my edits."

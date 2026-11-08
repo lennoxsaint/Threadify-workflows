@@ -23,6 +23,7 @@
 // aggregates. JSON on stdout. Exit 0 on success, 1 on usage, FAIL or bad input.
 // No dependencies: Node 18+ only (fetch is built in).
 import { spawn, spawnSync } from 'node:child_process';
+import { fetchPublicPage } from './page-fetch.mjs';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -961,12 +962,12 @@ async function main(argv) {
     case 'page-text': {
       const url = argValue(args, '--url');
       if (!url) return { status: 'usage', usage: 'go-make-money.mjs page-text --url <public page> --out <file>' };
-      const response = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (go-make-money; public page read)', accept: 'text/html' } });
-      const text = htmlToText(await response.text());
+      const page = await fetchPublicPage(url);
+      const text = htmlToText(page.html);
       const out = path.resolve(argValue(args, '--out', path.join(dir, 'page.txt')));
       fs.mkdirSync(path.dirname(out), { recursive: true });
       fs.writeFileSync(out, `${text}\n`);
-      return { status: response.ok ? 'ok' : 'fix', http: response.status, final_url: response.url, out, characters: text.length, first_lines: text.split('\n').slice(0, 8) };
+      return { status: page.ok ? 'ok' : 'fix', http: page.status, final_url: page.finalUrl, out, characters: text.length, first_lines: text.split('\n').slice(0, 8) };
     }
     case 'belief': {
       const kind = argValue(args, '--kind');

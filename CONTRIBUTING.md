@@ -55,7 +55,25 @@ repo only pins a specific Eddy **release tag**. The current pin is **v1.9.1**.
 
 ## Claude Code plugin folder
 
-`plugins/claude` is the Claude Code plugin root and the folder submitted to the Claude plugin directory. `scripts/build-claude-plugin.mjs` mirrors `skills/` and the threadify entry of `.mcp.json` into it; `npm run bundle:build` regenerates it and `npm run bundle:check` fails on drift. Edit skills at the root, never inside the mirror. `plugins/claude/.claude-plugin/plugin.json` and `icon.png` are source files: the manifest version moves with `npm run bump`, and the icon is the directory listing icon.
+`plugins/claude` is the Claude Code plugin root and the folder submitted to the Claude plugin directory. `scripts/build-claude-plugin.mjs` builds it from `skills/` and the threadify entry of `.mcp.json`; `npm run bundle:build` regenerates it and `npm run bundle:check` fails on drift. Edit skills at their source, never inside the mirror. `plugins/claude/.claude-plugin/plugin.json`, `icon.png` and `README.md` are source files: the manifest version moves with `npm run bump`, the icon is the directory listing icon, and the README is the listing text, so it must name every program the skills run and every destination they contact.
+
+### The directory's rules are enforced here
+
+Every build audits the whole folder against `lib/claude-plugin-policy.mjs`, which encodes each rule the directory's validator or scan has raised on this plugin. A version that breaks one is held for review or blocked, and a held version cannot auto-publish. The build refuses:
+
+- More than 512 files (the directory stops checking and blocks the version as not fully checked), any non-image file over 256 KiB, or a file type it cannot inspect.
+- Anything that looks like reading a credential: an environment variable named like a key or token, an `x-api-key` header, `process.env` beyond `PATH`, `PATHEXT` and `THREADIFY_WORKFLOWS_HOME`, storage items or variables named token or key, or prose where a credential word sits next to a read word ("Vault readback", "pass get_post_thread").
+- Download-and-run patterns: `curl` or `wget` in a script, a shell started with `-c`, a download piped into an interpreter or saved with `-o`, and a script that both talks to the network and starts processes. Put network calls in their own module that never starts processes (see `page-fetch.mjs`, `director-net.mjs`, `youtube-synthesizer-captions.mjs`).
+- The npx installer's self-updater, which is code from outside the plugin; the directory updates plugin installs itself.
+
+A skill that cannot meet these rules stays in the installer and the other plugins and leaves the Claude plugin by declaration in its workflow manifest, never by editing the build:
+
+- `external_engines`: it drives a separate engine no plugin ships (YouTube Edit drives Eddy).
+- `external_credentials`: it needs the owner's own API key for another service (Research Army and Watch Any Creator use ScrapeCreators). A skill script cannot receive a sensitive plugin `userConfig` value, so there is no compliant way to ship these in the Claude plugin.
+
+### Guards
+
+`npm install` runs `scripts/install-git-hooks.mjs`, which points this checkout's git hooks at `.githooks/`. The pre-commit and pre-push hooks run `scripts/guard-plugins.mjs`, which runs `npm run validate` and refuses the commit or push on any failure. Claude Code sessions in this repository get the same check from `.claude/settings.json`, which blocks `git commit`, `git push`, `gh pr create` and `gh pr merge` while validation fails. Run it by hand with `npm run guard`. Do not bypass the hooks with `--no-verify`; fix the source instead. `validation/registry-tests/claude-plugin-policy.test.mjs` keeps every rule tied to the finding it came from, so loosening a rule fails the tests.
 
 ## OpenAI plugin folder
 

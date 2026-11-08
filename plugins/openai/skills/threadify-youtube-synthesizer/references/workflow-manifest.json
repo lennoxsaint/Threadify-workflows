@@ -25,6 +25,10 @@
         "target": "scripts/youtube-synthesizer.mjs"
       },
       {
+        "source": "lib/youtube-synthesizer-captions.mjs",
+        "target": "scripts/youtube-synthesizer-captions.mjs"
+      },
+      {
         "source": "lib/youtube-synthesizer-delivery.mjs",
         "target": "scripts/youtube-synthesizer-delivery.mjs"
       },

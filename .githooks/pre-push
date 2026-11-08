@@ -1,0 +1,4 @@
+#!/bin/sh
+# Refuse the push when the plugins would fail the Claude plugin directory's
+# rules or have drifted from their sources. See scripts/guard-plugins.mjs.
+exec node "$(git rev-parse --show-toplevel)/scripts/guard-plugins.mjs"

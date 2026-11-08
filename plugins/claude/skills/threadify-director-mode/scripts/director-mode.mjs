@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Director Mode media mechanics. The agent directs; this script does the cutting.
-// Node 18+, no npm packages. Shells out to ffmpeg, ffprobe and whisper-cli.
+// Node 18+, no npm packages. Runs ffmpeg, ffprobe and whisper-cli; every network read lives in director-net.mjs.
 // The original video is never written to: every output goes to a sibling `director/` folder.
 //
 //   node director-mode.mjs check [--model <ggml.bin>]
+//   node director-mode.mjs model get [--name ggml-base.en.bin]
 //   node director-mode.mjs transcribe <video> [--out <words.json>] [--model <ggml.bin>]
 //   node director-mode.mjs cut-plan <video> --words <words.json> [--out plan.json] [--keep-retake r1,r2]
 //   node director-mode.mjs render --plan <plan.json> --out <vN.mp4> [--order <order.json>] [--level N --label Speed]
@@ -22,6 +23,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { DEFAULT_MODEL, OPENVERSE, downloadModel, openverseDownload, openverseJson } from './director-net.mjs';
 
 export const MAX_GAP = 0.3; // dead air longer than this is cut
 export const KEEP_GAP = 0.1; // ...down to this much
@@ -33,7 +35,6 @@ export const SFX_MIN_UNDER_LU = 12; // verification floor
 export const SFX_CACHE_LUFS = -20;
 export const SFX_ATTACK = 0.15; // the loud start of a sound may not cover a word onset
 export const MAX_FINAL_MB = 95;
-const OPENVERSE = 'https://api.openverse.org/v1/audio/';
 export const JUDGE_RUBRIC = `# Outside judge: the first 3 seconds
 
 You are judging the first 3 seconds of a short talking-head video. You have only this folder:
@@ -55,7 +56,6 @@ Reply with JSON only:
 `;
 // Models and the Openverse cache live here; `--home <dir>` moves them (for example for a rehearsal).
 let HOME_DIR = path.join(os.homedir(), '.threadify', 'director-mode');
-const MODEL_URL = 'https://huggingface.co/ggerganov/whisper.cpp/resolve/main/';
 
 // ---------- pure logic (unit tested) ----------
 
@@ -422,9 +422,19 @@ function run(cmd, args, opts = {}) {
   return r;
 }
 
+/** Find an executable on PATH without starting a shell. */
 const which = (bin) => {
-  const r = spawnSync('sh', ['-c', `command -v ${bin}`], { encoding: 'utf8' });
-  return r.status === 0 ? r.stdout.trim() : null;
+  const extensions = process.platform === 'win32' ? (process.env.PATHEXT || '.EXE;.CMD;.BAT').split(';') : [''];
+  for (const dir of (process.env.PATH || '').split(path.delimiter).filter(Boolean)) {
+    for (const extension of extensions) {
+      const candidate = path.join(dir, `${bin}${extension}`);
+      try {
+        fs.accessSync(candidate, fs.constants.X_OK);
+        if (fs.statSync(candidate).isFile()) return candidate;
+      } catch { /* not here */ }
+    }
+  }
+  return null;
 };
 
 export function probe(file) {
@@ -469,8 +479,8 @@ function findModel(explicit) {
   return pickModel(modelCandidates());
 }
 
-const downloadHint = (name = 'ggml-base.en.bin') =>
-  `mkdir -p "${path.join(HOME_DIR, 'models')}" && curl -L -o "${path.join(HOME_DIR, 'models', name)}" ${MODEL_URL}${name}`;
+const downloadHint = (name = DEFAULT_MODEL) =>
+  `run node scripts/director-mode.mjs model get${name === DEFAULT_MODEL ? '' : ` --name ${name}`} (saves it to ${path.join(HOME_DIR, 'models', name)})`;
 
 function cmdCheck(flags) {
   const bins = Object.fromEntries(['ffmpeg', 'ffprobe', 'whisper-cli'].map((b) => [b, which(b)]));
@@ -479,10 +489,10 @@ function cmdCheck(flags) {
   const filterState = Object.fromEntries(need.map((f) => [f, new RegExp(`\\s${f}\\s`).test(filters)]));
   const model = findModel(flags.model);
   const fixes = [];
-  if (!bins.ffmpeg || !bins.ffprobe) fixes.push('install ffmpeg (macOS: brew install ffmpeg)');
-  if (!bins['whisper-cli']) fixes.push('install whisper.cpp (macOS: brew install whisper-cpp)');
+  if (!bins.ffmpeg || !bins.ffprobe) fixes.push('install ffmpeg (on macOS, the Homebrew package ffmpeg)');
+  if (!bins['whisper-cli']) fixes.push('install whisper.cpp (on macOS, the Homebrew package whisper-cpp)');
   if (!model) fixes.push(`download a speech model (148 MB): ${downloadHint()}`);
-  if (!filterState.ass) fixes.push('ffmpeg lacks libass: captions need it (brew reinstall ffmpeg, or use a build with libass)');
+  if (!filterState.ass) fixes.push('ffmpeg lacks libass: captions need it (reinstall the Homebrew package ffmpeg, or use a build with libass)');
   if (!filterState.drawtext) fixes.push('ffmpeg lacks drawtext: the title card falls back to a HyperFrames overlay or is skipped');
   const nodeMajor = Number(process.versions.node.split('.')[0]);
   if (nodeMajor < 18) fixes.push('Node 18 or newer is required');
@@ -604,26 +614,6 @@ function cmdContactSheet(video, flags) {
 
 // --- Openverse (no key; anonymous limit 20/min and 200/day; page_size above 20 returns 401) ---
 
-function rateState() {
-  const file = path.join(HOME_DIR, 'openverse', 'rate.json');
-  let calls = [];
-  try { calls = JSON.parse(fs.readFileSync(file, 'utf8')); } catch { /* first call */ }
-  return { file, calls: calls.filter((t) => Date.now() - t < 86_400_000) };
-}
-
-async function openverseGet(url) {
-  const state = rateState();
-  if (state.calls.length >= 190) throw new Error('Openverse daily budget reached (200/day anonymous); use cached sounds or try tomorrow');
-  const wait = 3200 - (Date.now() - (state.calls[state.calls.length - 1] ?? 0));
-  if (wait > 0) await new Promise((r) => setTimeout(r, wait));
-  state.calls.push(Date.now());
-  fs.mkdirSync(path.dirname(state.file), { recursive: true });
-  fs.writeFileSync(state.file, JSON.stringify(state.calls));
-  const res = await fetch(url, { headers: { 'User-Agent': 'threadify-director-mode/1.0' } });
-  if (!res.ok) throw new Error(`Openverse ${res.status} for ${url}`);
-  return res;
-}
-
 async function cmdSfxSearch(query, flags) {
   const allowBy = Boolean(flags['allow-by']);
   const maxSeconds = Number(flags['max-seconds'] ?? 2);
@@ -633,7 +623,7 @@ async function cmdSfxSearch(query, flags) {
   let data;
   let cached = false;
   try { data = JSON.parse(fs.readFileSync(cacheFile, 'utf8')); cached = true; } catch {
-    data = await (await openverseGet(url)).json();
+    data = await openverseJson(HOME_DIR, url);
     fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
     fs.writeFileSync(cacheFile, JSON.stringify(data));
   }
@@ -656,14 +646,12 @@ async function cmdSfxFetch(id, flags) {
   fs.mkdirSync(sfxDir, { recursive: true });
   const itemFile = path.join(HOME_DIR, 'openverse', 'items', `${id}.json`);
   let item;
-  try { item = JSON.parse(fs.readFileSync(itemFile, 'utf8')); } catch { item = await (await openverseGet(`${OPENVERSE}${id}/`)).json(); }
+  try { item = JSON.parse(fs.readFileSync(itemFile, 'utf8')); } catch { item = await openverseJson(HOME_DIR, `${OPENVERSE}${id}/`); }
   if (!licenceAllowed(item, { allowBy: Boolean(flags['allow-by']) })) throw new Error(`refused: licence ${item.license} is not allowed (CC0/PDM, or CC BY with --allow-by)`);
   const cacheWav = path.join(HOME_DIR, 'openverse', 'wav', `${id}.wav`);
   if (!fs.existsSync(cacheWav)) {
     fs.mkdirSync(path.dirname(cacheWav), { recursive: true });
-    const res = await openverseGet(item.url);
-    const raw = `${cacheWav}.src`;
-    fs.writeFileSync(raw, Buffer.from(await res.arrayBuffer()));
+    const raw = await openverseDownload(HOME_DIR, item.url, `${cacheWav}.src`);
     run('ffmpeg', ['-v', 'error', '-y', '-i', raw, '-t', '2', '-af', `loudnorm=I=${SFX_CACHE_LUFS}:TP=-2:LRA=11`, '-ar', '48000', '-ac', '2', cacheWav]);
     fs.rmSync(raw, { force: true });
   }
@@ -847,6 +835,7 @@ async function main() {
   const need = (v, name) => { if (!v) throw new Error(`missing ${name}`); return v; };
   const commands = {
     check: () => cmdCheck(flags),
+    model: () => (a === 'get' ? downloadModel(HOME_DIR, typeof flags.name === 'string' ? flags.name : DEFAULT_MODEL).then((r) => ({ ok: true, ...r })) : Promise.reject(new Error('model get [--name ggml-<name>.bin]'))),
     transcribe: () => cmdTranscribe(need(a, '<video>'), flags),
     'cut-plan': () => cmdCutPlan(need(a, '<video>'), { ...flags, words: need(flags.words, '--words') }),
     render: () => cmdRender({ ...flags, plan: need(flags.plan, '--plan'), out: need(flags.out, '--out') }),

@@ -24,6 +24,7 @@
       "lib/ai-content-forensics.mjs"
     ]
   },
+  "external_credentials": ["scrapecreators"],
   "triggers": [
     "watch any creator",
     "watch every video from this creator",
