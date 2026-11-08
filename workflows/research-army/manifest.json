@@ -18,6 +18,7 @@
       "workflows/research-army/README.md"
     ]
   },
+  "external_credentials": ["scrapecreators"],
   "triggers": [
     "research army",
     "get a research post on my niche",

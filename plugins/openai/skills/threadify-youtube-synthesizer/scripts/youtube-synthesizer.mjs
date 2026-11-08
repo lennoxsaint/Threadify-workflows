@@ -2,11 +2,9 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { execFile } from 'node:child_process';
-import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
+import { runYtDlp } from './youtube-synthesizer-captions.mjs';
 
-const execFileAsync = promisify(execFile);
 const MODULE_ROOT = path.dirname(fileURLToPath(import.meta.url));
 function bundledPath(name) {
   const candidates = [
@@ -189,11 +187,7 @@ async function extractWithYtDlp(url, language, executable = 'yt-dlp') {
   try {
     const outputTemplate = path.join(tempRoot, '%(id)s.%(ext)s');
     const args = ytDlpCaptionArgs(url, language, outputTemplate);
-    await execFileAsync(executable, args, {
-      timeout: 120_000,
-      maxBuffer: 1_000_000,
-      windowsHide: true,
-    });
+    await runYtDlp(executable, args);
     const files = fs.readdirSync(tempRoot).filter((name) => name.toLowerCase().endsWith('.vtt'));
     if (!files.length) fail('yt_dlp_captions_not_found');
     files.sort();

@@ -1,7 +1,8 @@
-// Mirror the Claude plugin's skills into plugins/openai, the package submitted to OpenAI's plugin
-// directory (ChatGPT and Codex). Same ingredients as the Claude plugin: the skills are copied from
-// plugins/claude/skills, so both directories carry the same workflows, and only what the platform
-// needs differs. It is packaged in OpenAI's Codex format (developers.openai.com/plugins/deploy/submission,
+// Build plugins/openai, the package submitted to OpenAI's plugin directory (ChatGPT and Codex), from
+// the canonical skills/ catalog. Like the Claude plugin it leaves out workflows that declare
+// external_engines (a separate engine no plugin ships). It does not inherit the Claude plugin's other
+// exclusions (external_credentials) or packaging (inlined demo rules, no agents/ folder): those answer
+// the Claude directory's rules, and each directory's package follows its own. It is packaged in OpenAI's Codex format (developers.openai.com/plugins/deploy/submission,
 // "Codex format", read 2026-10-09): .codex-plugin/plugin.json, .mcp.json, skills/ and assets/, no apps or
 // hooks (a ZIP with either cannot be submitted). `--check` verifies parity without writing.
 // .codex-plugin/, README.md and assets/ are source files and are left untouched.
@@ -36,6 +37,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadWorkflowRegistry, listWorkflows } from '../lib/workflow-registry.mjs';
 import {
   sha256,
   validateIntegrityLock,
@@ -44,7 +46,10 @@ import {
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const check = process.argv.includes('--check');
-const claudeSkills = path.join(root, 'plugins', 'claude', 'skills');
+const canonicalSkills = path.join(root, 'skills');
+const ENGINE_SKILLS = new Set(listWorkflows(loadWorkflowRegistry({ root }), { kind: 'skill' })
+  .filter((workflow) => (workflow.external_engines ?? []).length > 0)
+  .map((workflow) => workflow.skill_name));
 const pluginRoot = path.join(root, 'plugins', 'openai');
 const SOURCE_ONLY = new Set(['.codex-plugin', 'README.md', 'assets']);
 const IGNORED = new Set(['.DS_Store']);
@@ -129,19 +134,19 @@ function collect(directory, relative = '') {
     if (IGNORED.has(entry.name)) continue;
     const child = relative ? `${relative}/${entry.name}` : entry.name;
     const full = path.join(directory, entry.name);
-    if (entry.isSymbolicLink()) throw new Error(`Symlink in Claude plugin skills: ${child}`);
+    if (entry.isSymbolicLink()) throw new Error(`Symlink in canonical skills: ${child}`);
     if (entry.isDirectory()) files.push(...collect(full, child));
     else if (entry.isFile()) files.push([child, fs.readFileSync(full)]);
-    else throw new Error(`Unsupported Claude plugin skill entry: ${child}`);
+    else throw new Error(`Unsupported canonical skill entry: ${child}`);
   }
   return files;
 }
 
-if (!fs.existsSync(claudeSkills)) throw new Error('plugins/claude/skills is missing; run scripts/build-claude-plugin.mjs first');
 const expected = new Map();
 const changed = new Map(REWRITES.map((rewrite) => [rewrite, 0]));
 let addressRewrites = 0;
-for (const [relative, original] of collect(claudeSkills)) {
+for (const [relative, original] of collect(canonicalSkills)) {
+  if (ENGINE_SKILLS.has(relative.split('/')[0])) continue;
   const key = `skills/${relative}`;
   let content = original;
   if (TEXT.test(relative)) {
