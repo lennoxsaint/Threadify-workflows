@@ -1,0 +1,65 @@
+# Listed edition
+
+This folder builds the package we submit to OpenAI's plugin directory (shared by ChatGPT and Codex). It is separate from the self-installed Threadify Workflows bundle: `lib/release-files.mjs` only ships an allow-list of top-level folders, and `editions/` is not on it.
+
+The listed edition is small on purpose. It ships one skill, Daily Posts Heartbeat, plus the Threadify MCP server, in the portable Agent Plugins format. Listed copy carries no plans links, prices, trials or local helper scripts.
+
+## What is here
+
+| Path | Role |
+| --- | --- |
+| `edition.json` | Source of truth: version, listing metadata, MCP server, assets and the selected skills. Each skill has a `description` override, `drop` globs, `add` files and anchored `replace` rules. |
+| `shared/connect.md` | Link-free connection guide that replaces the setup reference, which carries plans links. |
+| `assets/` | Source logo (1024 px) and composer icon (512 px). |
+| `build.mjs` | Generates `package/`. `--check` rebuilds in memory and fails on any difference. |
+| `package/threadify/` | The generated plugin: `plugin.json`, `mcp.json`, `assets/` and `skills/`. Committed so a PR diff shows exactly what ships. |
+| `package/.agents/plugins/marketplace.json` | Local marketplace for testing the plugin in Codex. It sits outside the plugin folder and is not submitted. |
+| `package.lock.json` | SHA-256 digests of every input (including upstream skill files that get dropped) and every output. |
+| `preflight.mjs` | Mirrors OpenAI's automated checks for a folder, plus our stricter policy lint. |
+| `tests/` | `node --test` suites and small fixture packages. |
+
+## How the build edits a skill
+
+For each selected skill, the build copies the generated `skills/<name>/` tree and then:
+
+1. Removes files matching `drop` globs. A glob that matches nothing fails the build.
+2. Rewrites the `description` line in the `SKILL.md` front matter.
+3. Applies each `replace` rule. The `find` text must appear exactly once, or the build fails. This catches upstream wording changes instead of shipping a stale edit.
+4. Adds files from `add`. It never overwrites a file that already exists.
+
+JSON output uses sorted keys and fixed formatting, so the same inputs always produce the same bytes.
+
+## Build, check and test
+
+From the repository root, using Node 18 or newer, with no install step:
+
+```sh
+node editions/listed/build.mjs            # regenerate package/ and package.lock.json
+node editions/listed/build.mjs --check    # fail if the committed package or lock is stale
+node editions/listed/preflight.mjs editions/listed/package/threadify          # human-readable
+node editions/listed/preflight.mjs editions/listed/package/threadify --json   # machine-readable
+node --test editions/listed/tests/*.test.mjs
+```
+
+When a source skill changes upstream, `--check` names the changed input. Review the change against the `replace` rules, run the build, and commit the regenerated package.
+
+Preflight findings use OpenAI's code names from [Plugin submission errors](https://developers.openai.com/plugins/deploy/submission-errors) where one exists. Codes starting with `listed_` are ours. Two of them guard real behavior: Codex quietly ignores an `mcp.json` server without the `$schema` field or without `type: "streamable-http"`. The `listed_policy_*` codes enforce our listing policy.
+
+The `listed-edition` GitHub workflow runs the check, the preflight and the tests on every pull request.
+
+## Test the plugin in Codex
+
+Use a scratch Codex home so your real `~/.codex` is never touched:
+
+```sh
+export CODEX_HOME="$(mktemp -d)" HOME="$(mktemp -d)"
+codex plugin marketplace add "$PWD/editions/listed/package"
+codex plugin add threadify@threadify-listed-local
+codex plugin list --json          # threadify@threadify-listed-local is installed and enabled
+codex mcp list                    # the threadify server appears
+codex debug prompt-input "hi"     # the skill threadify:threadify-daily-posts-heartbeat is listed
+codex plugin remove threadify@threadify-listed-local
+codex plugin marketplace remove threadify-listed-local
+```
+
+The marketplace path must be absolute or start with `./`. Signing in to the Threadify server (`codex mcp login`) is a separate step and is not needed for this install check.

@@ -1,0 +1,88 @@
+{
+  "edition": "listed",
+  "version": "1.0.0",
+  "plugin": {
+    "name": "threadify",
+    "description": "Schedule Threads posts you have already approved through your Threadify account, with a conflict check and readback.",
+    "author": {
+      "name": "Saints Coaching",
+      "url": "https://www.threadify.app"
+    }
+  },
+  "listing": {
+    "displayName": "Threadify",
+    "shortDescription": "Write and schedule Threads",
+    "longDescription": "Threadify helps creators run their Threads account. This version includes one skill, Daily Posts Heartbeat. It checks posts you have already approved, looks for calendar conflicts, and schedules each post only after you approve the exact text, account and time. Then it reads the result back. It does not write new posts, publish right away or set up a recurring routine. You need a Threadify account, connected through the official sign-in screen.",
+    "developerName": "Saints Coaching",
+    "category": "Productivity",
+    "capabilities": ["Interactive", "Read", "Write"],
+    "websiteURL": "https://www.threadify.app",
+    "supportURL": "https://www.threadify.app/support",
+    "privacyPolicyURL": "https://www.threadify.app/privacy",
+    "termsOfServiceURL": "https://www.threadify.app/terms",
+    "brandColor": "#0F172A",
+    "brandColorDark": "#E2E8F0",
+    "defaultPrompt": []
+  },
+  "assets": {
+    "logo": { "from": "assets/logo.png", "to": "assets/logo.png" },
+    "composerIcon": { "from": "assets/icon.png", "to": "assets/icon.png" }
+  },
+  "mcpServers": {
+    "threadify": {
+      "type": "streamable-http",
+      "url": "https://www.threadify.app/api/mcp/threadify"
+    }
+  },
+  "marketplace": {
+    "name": "threadify-listed-local",
+    "displayName": "Threadify listed edition (local test)"
+  },
+  "skills": [
+    {
+      "name": "threadify-daily-posts-heartbeat",
+      "source": "skills/threadify-daily-posts-heartbeat",
+      "description": "Validates and schedules Threads posts the person has already approved, through their Threadify account, with a calendar conflict check and readback. Use when the person asks to schedule approved Threads posts, queue a finished day of Threads posts, or check what is already scheduled on Threads.",
+      "drop": [
+        "references/workflow-manifest.json",
+        "references/workflow-readme.md",
+        "references/threadify-001.md"
+      ],
+      "add": {
+        "references/connect.md": "shared/connect.md"
+      },
+      "replace": [
+        {
+          "file": "SKILL.md",
+          "find": "Start locally from confirmed facts and supplied sources without a Threadify account. Honor an existing connection choice. Offer a connection only when an available hosted capability would help; explain the benefit and obtain approval for the exact provider action.",
+          "replace": "Scheduling needs a connected Threadify account. Without one, check the approved copy and prepare a manual schedule the person can use. Honor an existing connection choice. Offer the connection only when it would help; explain the benefit and get approval for the exact action."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Follow [Threadify-001: setup and first-loop video](references/threadify-001.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating signup. Setup never grants publishing or payment authority.",
+          "replace": "Follow [Connect Threadify](references/connect.md) before provider calls. Honor an explicit choice already given; on continuation, resume without repeating setup. A connection never grants scheduling or publishing authority."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "1. Read `references/workflow-manifest.json` from the workflow repo.",
+          "replace": "1. Confirm the approved posts, the target account and the requested times."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "3. Use only MCP tools listed in the manifest.",
+          "replace": "3. Use only these Threadify tools: `get_connection_defaults`, `validate_post`, `list_scheduled_posts`, `schedule_post` and `get_schedule_status`. Use `record_feedback` only after the person opts in to share that exact feedback."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "10. Return a receipt matching the manifest.",
+          "replace": "10. Return a short receipt: account handle, exact approved text, approval state, schedule status, timestamp, the tools used and any fallback."
+        },
+        {
+          "file": "SKILL.md",
+          "find": "Resolve references against this skill directory. For a new creator Day, Week or Month, use the primary creator skills instead.",
+          "replace": "Resolve references against this skill directory. This skill schedules approved copy only; write and approve new posts before you use it."
+        }
+      ]
+    }
+  ]
+}
