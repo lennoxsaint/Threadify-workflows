@@ -12,16 +12,37 @@
     "get_connection_defaults",
     "greatest_hits",
     "read_post_performance",
-    "search_posts",
-    "search_posts",
-    "search_posts",
-    "search_posts",
-    "search_posts",
-    "search_posts",
-    "search_posts",
-    "search_posts",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
     "get_post_thread",
     "list_viral_items",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "query_brain",
+    "query_brain",
     "query_brain",
     "generate_content",
     "generate_content",
@@ -48,22 +69,22 @@
       "skeleton": "i [did X] for [time]. here's what [result]:",
       "evidence": [
         {
-          "first_line": "redacted example hook one",
+          "first_line": "i walked daily for 90 days. here's what changed:",
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-one",
+          "fill": "walked daily / 90 days / changed",
           "part_count": 3,
           "plug_part_left_out": 3
         },
         {
-          "first_line": "redacted example hook two",
+          "first_line": "i quit sugar for a year. here's what happened:",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-two",
+          "fill": "quit sugar / a year / happened",
           "part_count": 2
         }
       ],
@@ -95,8 +116,8 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
         "verdict": "clear yes",
         "result": "pass",
-        "evidence_first_line": "redacted example hook one",
-        "after_tool_calls": 5
+        "evidence_first_line": "i walked daily for 90 days. here's what changed:",
+        "after_tool_calls": 31
       },
       "tired_check_queries": [
         "here's what",
@@ -104,9 +125,11 @@
       ],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t1-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "journaled every morning for 30 days",
+          "filled_hook": "i journaled every morning for 30 days. here's what changed:",
+          "filled_hook_chars": 59,
+          "limit": 80,
+          "after_tool_calls": 32
         }
       ]
     },
@@ -145,14 +168,16 @@
         "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "money is a tool.",
-        "after_tool_calls": 5
+        "after_tool_calls": 31
       },
       "tired_check_queries": [],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t2-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "patience is a paid skill.",
+          "filled_hook": "patience is a paid skill.",
+          "filled_hook_chars": 25,
+          "limit": 80,
+          "after_tool_calls": 33
         }
       ]
     },
@@ -225,7 +250,7 @@
         "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "redacted example hook six",
-        "after_tool_calls": 5
+        "after_tool_calls": 31
       },
       "tired_check_queries": [
         "things i stopped doing"
@@ -341,21 +366,21 @@
       "status": "used",
       "evidence": [
         {
-          "first_line": "redacted one-line hook t8 best",
+          "first_line": "the older i get the more i realize rest is the secret weapon of your best days.",
           "date": "2026-02-10",
           "views": 15000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t8-one",
+          "fill": "rest / the secret weapon of your best days",
           "part_count": 1
         },
         {
-          "first_line": "redacted one-line hook t8 second",
+          "first_line": "the older i get the more i realize silence is your answer.",
           "date": "2026-03-22",
           "views": 6000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t8-two",
+          "fill": "silence / your answer",
           "part_count": 1
         }
       ],
@@ -382,12 +407,12 @@
         "verdict": "not tired"
       },
       "fresh_reader_control": {
-        "evidence_first_line": "redacted one-line hook t8 best",
+        "evidence_first_line": "the older i get the more i realize rest is the secret weapon of your best days.",
         "reader": "fresh agent given only that post",
         "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
         "verdict": "borderline",
         "result": "fail",
-        "after_tool_calls": 5
+        "after_tool_calls": 31
       },
       "fresh_reader_waiver": {
         "template_id": "t8",
@@ -399,9 +424,11 @@
       ],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t8-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "sleep is a performance tool.",
+          "filled_hook": "the older i get the more i realize sleep is a performance tool.",
+          "filled_hook_chars": 63,
+          "limit": 80,
+          "after_tool_calls": 34
         }
       ]
     },
@@ -457,7 +484,7 @@
         "answer": "PROMISE: a new trend / KIND: complete claim / DELIVERS: no / WHY: it names a swap a stranger cannot place without the author",
         "verdict": "no",
         "result": "fail",
-        "after_tool_calls": 5
+        "after_tool_calls": 31
       },
       "label_reason": "its own most-viewed post failed the fresh-reader check and the creator did not waive it, so no draft was made",
       "tired_check_queries": [
@@ -466,24 +493,24 @@
     },
     {
       "template_id": "t10",
-      "skeleton": "the older i get the more i realize [thing] is [what it really is].",
+      "skeleton": "it took me years to learn that [lesson].",
       "evidence": [
         {
-          "first_line": "redacted one-line hook t10 best",
+          "first_line": "it took me years to learn that rest is part of the work.",
           "date": "2026-05-05",
           "views": 15000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t10-one",
+          "fill": "rest is part of the work",
           "part_count": 1
         },
         {
-          "first_line": "redacted one-line hook t10 second",
+          "first_line": "it took me years to learn that quiet people notice everything.",
           "date": "2026-05-12",
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t10-two",
+          "fill": "quiet people notice everything",
           "part_count": 1
         }
       ],
@@ -492,25 +519,37 @@
       "label_reason": "every Brain fact in its exact wording makes the hook longer than its limit, so no generate_content call was made",
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t10-a",
-          "filled_hook_chars": 96,
-          "limit": 81
+          "fact": "real confidence comes from keeping small promises to yourself every single day for years.",
+          "filled_hook": "it took me years to learn that real confidence comes from keeping small promises to yourself every single day for years.",
+          "filled_hook_chars": 120,
+          "limit": 80,
+          "after_tool_calls": 35
         },
         {
-          "fact": "redacted Brain fact t10-b",
-          "filled_hook_chars": 105,
-          "limit": 81
+          "fact": "the people who win long term were willing to look stupid in public first.",
+          "filled_hook": "it took me years to learn that the people who win long term were willing to look stupid in public first.",
+          "filled_hook_chars": 104,
+          "limit": 80,
+          "after_tool_calls": 35
         }
       ],
       "tired_check_queries": [
-        "the older i get the more i realize"
-      ]
+        "it took me years to learn that"
+      ],
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "it took me years to learn that rest is part of the work.",
+        "after_tool_calls": 31
+      }
     }
   ],
   "checks": [
     {
       "template_id": "t1",
-      "hook_characters": 52,
+      "hook_characters": 59,
       "validate_post": "valid",
       "skeleton_match": true,
       "energy_matches_evidence": true,
@@ -528,7 +567,7 @@
     },
     {
       "template_id": "t2",
-      "hook_characters": 41,
+      "hook_characters": 25,
       "validate_post": "valid",
       "skeleton_match": true,
       "energy_matches_evidence": true,
@@ -546,7 +585,7 @@
     },
     {
       "template_id": "t8",
-      "hook_characters": 25,
+      "hook_characters": 63,
       "hook_limit": 80,
       "validate_post": "valid",
       "skeleton_match": true,
@@ -689,32 +728,37 @@
       "draft_id": "redacted-draft-1",
       "marked": "proposed",
       "template_id": "t1",
-      "idempotency_key": "viral-posts-redacted-run-t1-a"
+      "idempotency_key": "viral-posts-redacted-run-t1-a",
+      "fact": "journaled every morning for 30 days"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
       "template_id": "t1",
-      "idempotency_key": "viral-posts-redacted-run-t1-b"
+      "idempotency_key": "viral-posts-redacted-run-t1-b",
+      "fact": "journaled every morning for 30 days"
     },
     {
       "draft_id": "redacted-draft-3",
       "marked": "excluded",
       "template_id": "t2",
       "idempotency_key": "viral-posts-redacted-run-t2-a",
-      "why": "blocked: repeats queued text"
+      "why": "blocked: repeats queued text",
+      "fact": "patience is a paid skill."
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
       "template_id": "t2",
-      "idempotency_key": "viral-posts-redacted-run-t2-b"
+      "idempotency_key": "viral-posts-redacted-run-t2-b",
+      "fact": "patience is a paid skill."
     },
     {
       "draft_id": "redacted-draft-7",
       "marked": "proposed",
       "template_id": "t8",
-      "idempotency_key": "viral-posts-redacted-run-t8-a"
+      "idempotency_key": "viral-posts-redacted-run-t8-a",
+      "fact": "sleep is a performance tool."
     }
   ]
 }

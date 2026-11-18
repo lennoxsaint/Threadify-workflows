@@ -111,7 +111,7 @@
       "templates with evidence posts: first line, date, views, media type, part count, fill and complete text",
       "plug parts left out per template",
       "label per template: used, eligible, unproven, tired, needs media, media unknown, shape unverified, control failed or no fitting fact, and any tired check incomplete flag",
-      "hook fit per template picked for drafting: each fact's filled hook length and the limit, counted before any generate_content call",
+      "hook fit per template picked for drafting: each fact, its filled hook, the length and the limit, with after_tool_calls at or before the first generate_content call; each saved draft names a fact that fits",
       "exact approved text of every part",
       "check results per post",
       "fresh reader per post: who read it, its answer word for word and its verdict (the DELIVERS word from that answer)",

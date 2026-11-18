@@ -12,8 +12,10 @@
     "get_connection_defaults",
     "greatest_hits",
     "read_post_performance",
+    "get_post_thread",
+    "get_post_thread",
     "search_posts",
-    "get_post_thread"
+    "search_posts"
   ],
   "fallback_used": false,
   "drafting_yes": false,
@@ -38,21 +40,21 @@
       "status": "eligible",
       "evidence": [
         {
-          "first_line": "redacted example hook one",
+          "first_line": "i walked daily for 90 days. here's what changed:",
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-one",
+          "fill": "walked daily / 90 days / changed",
           "part_count": 1
         },
         {
-          "first_line": "redacted example hook two",
+          "first_line": "i quit sugar for a year. here's what happened:",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-two",
+          "fill": "quit sugar / a year / happened",
           "part_count": 1
         }
       ],

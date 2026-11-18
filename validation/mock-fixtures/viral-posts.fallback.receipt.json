@@ -16,37 +16,49 @@
   "templates": [
     {
       "template_id": "t1",
-      "skeleton": "[number] things i stopped doing:",
+      "skeleton": "unpopular opinion: [claim].",
       "evidence": [
         {
-          "first_line": "redacted pasted hook one",
+          "first_line": "unpopular opinion: rest is a skill.",
           "date": "2026-04-11",
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-one",
+          "fill": "rest is a skill",
           "part_count": 1
         },
         {
-          "first_line": "redacted pasted hook two",
+          "first_line": "unpopular opinion: most advice is noise.",
           "date": "2026-05-02",
           "views": 7000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-two",
+          "fill": "most advice is noise",
           "part_count": 1
         }
       ],
       "top_10_percent_views": 4000,
       "status": "used",
       "fresh_reader_control": {
-        "evidence_first_line": "redacted pasted hook one",
+        "evidence_first_line": "unpopular opinion: rest is a skill.",
         "reader": "self-read (no fresh agent available)",
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: read by the writer",
         "verdict": "clear yes",
         "result": "unavailable",
         "after_tool_calls": 0
-      }
+      },
+      "tired_check_queries": [
+        "unpopular opinion"
+      ],
+      "hook_fit": [
+        {
+          "fact": "early nights beat late hustle.",
+          "filled_hook": "unpopular opinion: early nights beat late hustle.",
+          "filled_hook_chars": 49,
+          "limit": 80,
+          "after_tool_calls": 0
+        }
+      ]
     },
     {
       "template_id": "t2",
@@ -106,7 +118,7 @@
       "template_id": "t1",
       "validate_post": "not run (no connection); 500 characters per part checked by hand",
       "skeleton_match": true,
-      "hook_characters": 33,
+      "hook_characters": 49,
       "all_parts_shown": true,
       "facts_traced": true,
       "energy_matches_evidence": true,

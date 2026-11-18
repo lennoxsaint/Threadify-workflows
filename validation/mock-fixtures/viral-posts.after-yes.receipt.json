@@ -16,6 +16,40 @@
   "timezone": "America/New_York",
   "tool_path": [
     "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "list_viral_items",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "query_brain",
+    "query_brain",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "validate_post",
+    "validate_post",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
+    "get_connection_defaults",
     "list_scheduled_posts",
     "get_schedule_status",
     "get_schedule_status",
@@ -56,21 +90,21 @@
       "status": "used",
       "evidence": [
         {
-          "first_line": "redacted example hook one",
+          "first_line": "i walked daily for 90 days. here's what changed:",
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-one",
+          "fill": "walked daily / 90 days / changed",
           "part_count": 1
         },
         {
-          "first_line": "redacted example hook two",
+          "first_line": "i quit sugar for a year. here's what happened:",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-two",
+          "fill": "quit sugar / a year / happened",
           "part_count": 1
         }
       ],
@@ -80,8 +114,8 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: borderline / WHY: the list needs the author's context",
         "verdict": "borderline",
         "result": "fail",
-        "evidence_first_line": "redacted example hook one",
-        "after_tool_calls": 0
+        "evidence_first_line": "i walked daily for 90 days. here's what changed:",
+        "after_tool_calls": 19
       },
       "fresh_reader_waiver": {
         "template_id": "t1",
@@ -94,9 +128,11 @@
       ],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t1-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "journaled every morning for 30 days",
+          "filled_hook": "i journaled every morning for 30 days. here's what changed:",
+          "filled_hook_chars": 59,
+          "limit": 80,
+          "after_tool_calls": 20
         }
       ]
     },
@@ -135,31 +171,31 @@
         "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "money is a tool.",
-        "after_tool_calls": 0
+        "after_tool_calls": 19
       },
       "tired_check_queries": []
     },
     {
       "template_id": "t3",
-      "skeleton": "[number] things i stopped doing:",
+      "skeleton": "nobody warns you that [truth].",
       "status": "used",
       "evidence": [
         {
-          "first_line": "redacted example hook five",
+          "first_line": "nobody warns you that success feels quiet.",
           "date": "2026-03-01",
           "views": 10000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t3-one",
+          "fill": "success feels quiet",
           "part_count": 1
         },
         {
-          "first_line": "redacted example hook six",
+          "first_line": "nobody warns you that growth looks boring up close.",
           "date": "2026-05-12",
           "views": 7000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t3-two",
+          "fill": "growth looks boring up close",
           "part_count": 1
         }
       ],
@@ -169,17 +205,19 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
         "verdict": "clear yes",
         "result": "pass",
-        "evidence_first_line": "redacted example hook five",
-        "after_tool_calls": 0
+        "evidence_first_line": "nobody warns you that success feels quiet.",
+        "after_tool_calls": 19
       },
       "tired_check_queries": [
-        "things i stopped doing"
+        "nobody warns you that"
       ],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t3-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "the first 100 posts are practice.",
+          "filled_hook": "nobody warns you that the first 100 posts are practice.",
+          "filled_hook_chars": 55,
+          "limit": 80,
+          "after_tool_calls": 21
         }
       ]
     },
@@ -219,21 +257,21 @@
       "top_10_percent_views": 5000,
       "evidence": [
         {
-          "first_line": "redacted example hook nine",
+          "first_line": "the boring truth about getting fit:",
           "date": "2026-03-15",
           "views": 13000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t5-one",
+          "fill": "boring / getting fit",
           "part_count": 2
         },
         {
-          "first_line": "redacted example hook ten",
+          "first_line": "the ugly truth about going viral:",
           "date": "2026-05-05",
           "views": 8500,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t5-two",
+          "fill": "ugly / going viral",
           "part_count": 2
         }
       ],
@@ -242,17 +280,19 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
         "verdict": "clear yes",
         "result": "pass",
-        "evidence_first_line": "redacted example hook nine",
-        "after_tool_calls": 0
+        "evidence_first_line": "the boring truth about getting fit:",
+        "after_tool_calls": 19
       },
       "tired_check_queries": [
         "truth about"
       ],
       "hook_fit": [
         {
-          "fact": "redacted Brain fact t5-a",
-          "filled_hook_chars": 64,
-          "limit": 80
+          "fact": "growing from replies",
+          "filled_hook": "the honest truth about growing from replies:",
+          "filled_hook_chars": 44,
+          "limit": 80,
+          "after_tool_calls": 22
         }
       ]
     }
@@ -455,32 +495,74 @@
       "draft_id": "redacted-draft-1",
       "marked": "proposed",
       "template_id": "t1",
-      "idempotency_key": "viral-posts-redacted-run-t1-a"
+      "idempotency_key": "viral-posts-redacted-run-t1-a",
+      "fact": "journaled every morning for 30 days"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
       "template_id": "t1",
-      "idempotency_key": "viral-posts-redacted-run-t1-b"
+      "idempotency_key": "viral-posts-redacted-run-t1-b",
+      "fact": "journaled every morning for 30 days"
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
       "template_id": "t3",
-      "idempotency_key": "viral-posts-redacted-run-t3-a"
+      "idempotency_key": "viral-posts-redacted-run-t3-a",
+      "fact": "the first 100 posts are practice."
     },
     {
       "draft_id": "redacted-draft-5",
       "marked": "proposed",
       "template_id": "t3",
-      "idempotency_key": "viral-posts-redacted-run-t3-b"
+      "idempotency_key": "viral-posts-redacted-run-t3-b",
+      "fact": "the first 100 posts are practice."
     },
     {
       "draft_id": "redacted-draft-6",
       "marked": "proposed",
       "template_id": "t5",
-      "idempotency_key": "viral-posts-redacted-run-t5-a"
+      "idempotency_key": "viral-posts-redacted-run-t5-a",
+      "fact": "growing from replies"
     }
   ],
-  "note_on_controls": "controls ran in the earlier drafting run (see the awaiting-approval receipt); after_tool_calls counts that run's tool_path"
+  "schedule_proposal": {
+    "calendar_window": {
+      "start": "2026-06-02 00:00",
+      "end": "2026-06-09 00:00"
+    },
+    "calendar_listed": 4,
+    "calendar_total_in_window": 4,
+    "min_gap_hours": 2,
+    "slots": [
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757"
+      },
+      {
+        "template_id": "t3",
+        "local_time": "2026-06-05 09:00",
+        "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f"
+      },
+      {
+        "template_id": "t5",
+        "local_time": "2026-06-06 09:00",
+        "idempotency_key": "viral-posts:example_creator:t5:bb0b4eba02fa"
+      }
+    ]
+  },
+  "queue_text_check": {
+    "cut_off_or_multi_part": [
+      "redacted-queued-1",
+      "redacted-queued-2"
+    ],
+    "fetched_full_text": [
+      "redacted-queued-1",
+      "redacted-queued-2"
+    ],
+    "unresolved": [],
+    "collisions": []
+  }
 }
