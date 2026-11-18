@@ -88,6 +88,11 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /If `get_post_thread` fails for an evidence post, its text is not read in full: label the template "shape unverified". If it returns no `media_type`, label the template "media unknown"/);
   assert.match(skill, /A reposted copy counts as a use here, because the audience saw it again/);
   assert.match(skill, /ranked at a tenth of that total, rounded down/);
+  assert.match(skill, /or that differ only in a number such as an age or a year, are one fill/);
+  assert.match(skill, /Each check is pass or fail: "pass with a flag" or "the creator should confirm" is a fail/);
+  assert.match(skill, /changing who or what it is about makes a new claim, and that fails/);
+  assert.match(skill, /this holds even when more uses may be hidden/);
+  assert.match(skill, /recent posts with no text cannot show a use, so they count as missing/);
   const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
   assert.match(gate, /its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete/);
   assert.match(gate, /every draft saved so far, by id, each marked proposed, excluded or not picked/);
