@@ -10,6 +10,6 @@ Viral Posts is for when you want new posts that look like the ones that already 
 
 Writing the batch saves a few drafts in your Threadify account and uses generations, so it asks for a yes to drafting first. Nothing is scheduled until you say yes to the exact batch. The approval also shows your global auto-repost setting: if it is on, Threadify re-shares each post later under that setting, and this workflow never changes it. After that yes it rechecks your calendar, saves what it is about to schedule, schedules the exact approved text of each post with a stable idempotency key, then checks that each one shows as "scheduled". It never publishes now.
 
-Without a connection, paste your best posts with view counts, the full text of the posts to copy, your 10 most recent posts and the facts to use. You get the same templates and checks, except Threadify's validator (the 500-character rule is checked by hand), and tentative times, labelled as local work.
+Without a connection, paste your best posts with view counts, the full text of the posts to copy, your 10 most recent posts and the facts to use. You get the same templates and checks, except Threadify's validator (the 500-character rule is checked by hand) and the repeat check, which sees only the posts you paste and any matches you find when you search your own posts for its words, and tentative times, labelled as local work.
 
 Regression checks: `node --test validation/registry-tests/viral-posts.test.mjs`. No provider account or personal posts are needed.

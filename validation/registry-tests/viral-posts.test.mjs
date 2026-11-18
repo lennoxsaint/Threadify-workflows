@@ -15,7 +15,7 @@ const sameText = (text) => (text ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu
 // one fill: same text after case, punctuation and spacing, or differing only in a number (SKILL.md step 2)
 const sameFill = (text) => sameText(text).replace(/\p{N}+/gu, '#');
 // When more than one label applies, the first in this order shows and the rest are also_labels (SKILL.md step 2).
-const SMALL_WORDS = ['a', 'an', 'the', 'is', 'are', 'was', 'were', 'be', 'of', 'to', 'in', 'on', 'for', 'at', 'by', 'with', 'from', 'and', 'or', 'but', 'not', 'no', 'so', 'too', 'very', 'i', 'you', 'we', 'my', 'your', 'our', 'it', 'its', 'this', 'that', 'all', 'every'];
+const SMALL_WORDS = ['a', 'an', 'the', 'is', 'are', 'was', 'were', 'be', 'of', 'to', 'in', 'on', 'for', 'at', 'by', 'with', 'from', 'and', 'or', 'but', 'not', 'no', 'so', 'too', 'very', 'i', 'you', 'we', 'my', 'your', 'our', 'it', 'its', 'this', 'that', 'all', 'every', 'he', 'she', 'they', 'them', 'me', "i'm", "it's", 'do', "don't", 'does', 'has', 'have', 'can', 'will', 'just', 'more', 'most', 'than', 'what', 'about', 'how', 'when', 'if'];
 const LABEL_ORDER = ['shape_unverified', 'media_unknown', 'needs_media', 'unproven', 'tired', 'control_failed', 'no_fitting_fact'];
 const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
   .map((run) => run.replace(/[^\p{L}\p{N}'’"“”\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
@@ -115,6 +115,7 @@ test('Viral Posts registers only Threadify read, generate, validate and schedule
   assert.ok(manifest.approval_gate.must_show.includes('exact text of every part of every post'));
   assert.ok(manifest.approval_gate.must_show.includes('exact time and timezone for every post'));
   assert.ok(manifest.receipt.must_prove.includes('fallback state'));
+  assert.ok(manifest.receipt.must_prove.includes("fallback repeat check: per claim word, the pasted posts that have it, and the creator's own search (creator_search) or no answer"));
   assert.ok(manifest.receipt.must_prove.includes('readback status (scheduled, never published)'));
   assert.ok(manifest.triggers.includes('viral posts'));
 });
@@ -149,7 +150,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /`approved_text` is a list of every part of every approved post, in order: `\[\]` until the creator's yes at the gate, with `approved_text_sha256` set to `none-awaiting-approval`/);
   assert.match(skill, /Until they tell you the total, do the same, and say at the gate which labels would change if the line were higher/);
   assert.match(skill, /\(with no times given, propose none and ask for them\)/);
-  assert.match(skill, /or it is not what the placeholder names, such as a fact about AI in a slot for what successful people do/);
+  assert.match(skill, /or it is not what the placeholder names, such as a fact about sleep in a slot for a money lesson/);
   assert.match(skill, /a self-read of `borderline` or `no` is a fail, so only a post you read as a clear yes is shown as \"unavailable\"/);
   assert.match(skill, /no line after the hook is longer, in characters, than the longest version of that line among the template's evidence posts/);
   assert.match(skill, /These positions only find the skeleton: a new fill may have any number of words/);
@@ -162,7 +163,10 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /A word with more than 200 matches is too broad to read in full: read only the matches where that word starts a claim .*?, and read every match of at least one other claim word in full\./);
   assert.match(skill, /If you cannot get every match of a word, or the fact's only claim word is that broad, its repeat check is incomplete: leave the fact out, with `skipped` set to `repeat check incomplete`\./);
   assert.match(skill, /`searches`, in order, each with its `word`, `total` \(its `total_matched`\), `returned` \(the posts you got, after any paging\), `read` \(the ones you read for the claim\) and, when `read` is under `returned`, `narrowed_by`/);
-  assert.match(skill, /for a fact that passes, `closest`, the post that came nearest \(date, views, its line and `why_not`, why its claim differs\), or `none`\./);
+  assert.match(skill, /for a fact that passes, `closest`, the post that came nearest \(date, views, its line and `why_not`, why its claim differs\), or `none`\. You decide whether a post makes the claim; never leave that call to the creator\./);
+  assert.ok(skill.includes("(it is followed by is, isn't, are, aren't, was, will, won't, can, can't, do, don't, does, doesn't, has, have, should, makes or means)"), 'the narrowing verbs include are, do and have');
+  assert.ok(skill.includes('then ask the creator to search their own posts for each claim word of each fact you will use and paste every match, or say there is none'), 'the fallback asks for the creator\'s own search');
+  assert.match(skill, /record their answer as the row's `creator_search`, or `no answer`; with no answer, show "repeat check: pasted posts only" on that post at the gate/);
   assert.match(skill, /with the version's first line as `hook` so the label can be checked against it\./);
   assert.match(skill, /record each fact as one row of the template's `hook_fit` in the receipt, with its `fact`, `filled_hook`, `filled_hook_chars` \(the count\), `limit` and `after_tool_calls`/);
   assert.match(skill, /Record on that fact's `hook_fit` row its `repeat_check`: `searches`/);
@@ -275,7 +279,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   }
   const readme = fs.readFileSync(path.join(root, 'workflows/viral-posts/README.md'), 'utf8');
   assert.match(readme, /It writes text posts only: a template that went viral with a picture or video is shown but left out/);
-  assert.match(readme, /except Threadify's validator \(the 500-character rule is checked by hand\)/);
+  assert.match(readme, /except Threadify's validator \(the 500-character rule is checked by hand\) and the repeat check, which sees only the posts you paste/);
   assert.match(readme, /you see that post and the reader's answer/);
   assert.doesNotMatch(readme, /you see both/);
   assert.match(readme, /a check that its fact is not a claim one of your own posts already made/);
@@ -711,7 +715,7 @@ const fillSpan = (hook, fact) => {
   if (lower) body = body.split(' ').map((w) => (w.length > 1 && w === w.toUpperCase() ? w : w.toLowerCase())).join(' ');
   return hook.slice(0, hook.indexOf('[')) + body + hook.slice(hook.lastIndexOf(']') + 1);
 };
-// Claim words keep a hyphen ("9-5" is one word) and drop the template's fixed words and the skill's small words (SKILL.md step 3).
+// Claim words keep a hyphen ("5-minute" is one word) and drop the template's fixed words and the skill's small words (SKILL.md step 3).
 const claimWords = (fact, skeletonHook) => [...new Set((fact.toLowerCase().replace(/[‘’]/g, "'").match(/[\p{L}\p{N}'-]+/gu) ?? [])
   .filter((word) => !SMALL_WORDS.includes(word) && !fixedWords(skeletonHook).includes(word)))];
 // A version keeps its fact word for word when its first line holds the fact's words in order, letter case and the closing mark aside.
@@ -732,18 +736,19 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
   assert.deepEqual(anchoredShared(['nobody warns you that success feels quiet.', 'nobody warns you, that growth looks boring up close.']), words('nobody warns you that'), 'punctuation does not move a word');
   assert.deepEqual(anchoredShared(['i walked daily for 90 days. here’s what changed:', "i quit sugar for a year. here's what happened:"]), words("i for here's what"), 'a word between placeholders is fixed when it sits at the same count');
   // the limit is derived from the evidence, at the 80/81 boundary
-  assert.deepEqual(claimWords('Life is too short for 9-5 slavery', 'the older i get the more i realize [thing] is [what it really is].'), ['life', 'short', '9-5', 'slavery']);
+  assert.deepEqual(claimWords('Weekends are too short for 5-minute habits', 'nobody warns you that [truth].'), ['weekends', 'short', '5-minute', 'habits']);
+  assert.deepEqual(claimWords("they don't skip the boring reps", "i [did X] for [time]. here's what [result]:"), ['skip', 'boring', 'reps'], 'pronouns and common verbs are small words');
   assert.deepEqual(claimWords('comfort is a slow leak.', '[thing] is [what it really is].'), ['comfort', 'slow', 'leak']);
-  assert.ok(keepsFact('the older i get the more i realize AI tinkering is the new degree.', 'AI tinkering is the new degree.'));
+  assert.ok(keepsFact('nobody warns you that AI drafts are the new homework.', 'AI drafts are the new homework.'));
   assert.ok(keepsFact('Comfort Is A Slow Leak!', 'comfort is a slow leak.'), 'letter case and closing mark aside');
-  assert.ok(!keepsFact('the older i get the more i realize tinkering is the new degree.', 'AI tinkering is the new degree.'), 'a dropped word is not word for word');
+  assert.ok(!keepsFact('nobody warns you that drafts are the new homework.', 'AI drafts are the new homework.'), 'a dropped word is not word for word');
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(80), views: 2 }, { first_line: 'short', views: 1 }] }), 80);
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(81), views: 2 }, { first_line: 'short', views: 1 }] }), 81, 'a proven 81-character hook lifts the limit to 81');
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(81), views: 1 }, { first_line: 'short', views: 2 }] }), 80, 'only the most-viewed post sets it');
   // the fact keeps its words; case and the closing mark follow the template, and the hook is counted as posted
   const stem = 'the longer i build the more i see [thing] is [what it is].';
-  assert.equal(fillSpan(stem, 'AI is the engine, not the headline'), 'the longer i build the more i see AI is the engine, not the headline.', 'a capitals word keeps its capitals; the period is added');
-  assert.equal(fillSpan(stem, 'Life is too short.'), 'the longer i build the more i see life is too short.', 'lowercase template, one period, never doubled');
+  assert.equal(fillSpan(stem, 'AI is a draft partner, not a ghostwriter'), 'the longer i build the more i see AI is a draft partner, not a ghostwriter.', 'a capitals word keeps its capitals; the period is added');
+  assert.equal(fillSpan(stem, 'Sleep is underrated.'), 'the longer i build the more i see sleep is underrated.', 'lowercase template, one period, never doubled');
   assert.equal(fillSpan(stem, 'Rest is a weapon!'), 'the longer i build the more i see rest is a weapon.', "the skeleton's mark replaces the fact's");
   const at82 = fillSpan(stem, 'Consistency is the quiet secret of a great year');
   assert.equal(at82.length, 82, 'counted as posted, with its closing period');
@@ -781,6 +786,7 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
             }
           }
           assert.equal(check.in === 'pasted posts', Boolean(receipt.fallback_used), `${where} only the local fallback checks pasted posts instead of search_posts`);
+          assert.equal(typeof check.creator_search === 'string' && check.creator_search.length > 0, Boolean(receipt.fallback_used), `${where} the fallback records the creator's own search, or no answer`);
           if (check.searches.some((search) => search.returned < search.total)) {
             incomplete += 1;
             assert.match(fit.skipped ?? '', /^repeat check incomplete/, `${where} "${fit.fact}" could not get every match, so it is left out`);
@@ -792,6 +798,7 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
           } else if (!fit.skipped) {
             assert.deepEqual([...searched].sort(), [...claim].sort(), `${where} searches every claim word of "${fit.fact}" before calling it new`);
             assert.ok(check.closest === 'none' || (check.closest?.date && check.closest?.line && check.closest?.why_not), `${where} names the closest post, or none`);
+            assert.doesNotMatch(String(check.closest?.why_not ?? ''), /borderline|your call|confirm/i, `${where} decides the closest post itself`);
           }
         }
         assert.equal(fit.limit, hookLimit(template), `${where} limit is 80 or its proven hook`);

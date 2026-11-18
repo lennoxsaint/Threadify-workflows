@@ -109,7 +109,7 @@
       "Ask whether each template post had a picture; a template whose posts did is \"needs media\", and one with no answer yet is \"media unknown\" at the gate.",
       "The tired check uses every dated use of the template in any paste: find them with the same stretch of fixed words and quote-mark forms as step 2, and record those stretches as `tired_check_queries`; recent posts with no text cannot show a use, so they count as missing.",
       "A paste of only best posts hides a tired template, so if the recent posts are missing, label the template \"tired check incomplete\".",
-      "Find the templates, run the step-2 control before you fill any (with no fresh agent it is unavailable and no waiver is asked; with one, the control and waiver work as in step 2), count the hook fit as in step 3 (record `hook_fit`; a template with no fitting fact is labelled \"no fitting fact\" and gets no post), run the step-3 repeat check on every pasted post instead of `search_posts`, looking for the same claim words one at a time (record `repeat_check` with `in` set to `pasted posts` and, per word, the pasted posts that have it as its `total`, `returned` and `read`, and say at the gate that posts you were not given were not checked), fill them yourself from those facts only, run the same checks (skip `validate_post` and say so; check the 500 characters per part rule by hand) and propose times from the posting times the creator gives, marked \"tentative, not checked against your live calendar\" (with no times given, propose none and ask for them).",
+      "Find the templates, run the step-2 control before you fill any (with no fresh agent it is unavailable and no waiver is asked; with one, the control and waiver work as in step 2), count the hook fit as in step 3 (record `hook_fit`; a template with no fitting fact is labelled \"no fitting fact\" and gets no post), run the step-3 repeat check on every pasted post instead of `search_posts`, looking for the same claim words one at a time (record `repeat_check` with `in` set to `pasted posts` and, per word, the pasted posts that have it as its `total`, `returned` and `read`), then ask the creator to search their own posts for each claim word of each fact you will use and paste every match, or say there is none (record their answer as the row's `creator_search`, or `no answer`; with no answer, show \"repeat check: pasted posts only\" on that post at the gate), fill them yourself from those facts only, run the same checks (skip `validate_post` and say so; check the 500 characters per part rule by hand) and propose times from the posting times the creator gives, marked \"tentative, not checked against your live calendar\" (with no times given, propose none and ask for them).",
       "Label every draft \"written locally, not by Threadify\".",
       "Never claim Threadify generated, validated or scheduled anything.",
       "List any tool called before the fallback, such as a failed get_connection_defaults, in tool_path; leave it empty only when no tool was called."
@@ -143,7 +143,8 @@
       "queued posts whose full text was fetched for the duplicate-text check, at the gate and again at every dispatch",
       "readback status (scheduled, never published)",
       "fallback state",
-      "a generate_content idempotency key per version, written before the call and reused on any retry"
+      "a generate_content idempotency key per version, written before the call and reused on any retry",
+      "fallback repeat check: per claim word, the pasted posts that have it, and the creator's own search (creator_search) or no answer"
     ]
   }
 }
