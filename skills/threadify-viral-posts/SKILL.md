@@ -58,7 +58,7 @@ This workflow never publishes now, never deletes and never edits other queued po
 
 ## Local fallback
 
-Without a working connection, ask the creator to paste their best posts with view counts (the more the better, so you can see the top 10% line) and the facts each new post may use. Find the templates, fill them yourself from those facts only, run the same checks (skip `validate_post` and say so; check the 500 characters per part rule by hand) and propose times as "tentative, not checked against your live calendar". Label every draft "written locally, not by Threadify". Never claim Threadify generated, validated or scheduled anything.
+Without a working connection, ask the creator to paste their best posts with view counts (the more the better, so you can see the top 10% line), their 10 most recent posts with view counts, and the facts each new post may use. A paste of only best posts hides a tired template, so if the recent posts are missing, label the template "tired check incomplete". Find the templates, fill them yourself from those facts only, run the same checks (skip `validate_post` and say so; check the 500 characters per part rule by hand) and propose times as "tentative, not checked against your live calendar". Label every draft "written locally, not by Threadify". Never claim Threadify generated, validated or scheduled anything.
 
 ## Receipt
 

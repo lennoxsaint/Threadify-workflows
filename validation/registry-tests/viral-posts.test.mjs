@@ -50,6 +50,8 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /view count/);
   assert.match(skill, /three most recent uses by date/);
   assert.match(skill, /Label it "tired"/);
+  assert.match(skill, /10 most recent posts with view counts/);
+  assert.match(skill, /"tired check incomplete"/);
 });
 
 test('Viral Posts keeps the tool order, calendar check and approval gate', () => {
