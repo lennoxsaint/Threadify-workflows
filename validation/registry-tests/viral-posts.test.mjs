@@ -142,6 +142,12 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /A slot that is now less than 5 minutes away is blocked: it needs a new time and a new yes/);
   assert.match(skill, /record your answer word for word with its `DELIVERS:` word as the verdict and `unavailable` as the result/);
   assert.match(skill, /Never invent a number, quote, name or story/);
+  assert.match(skill, /a self-read of `borderline` or `no` is a fail, so only a post you read as a clear yes is shown as \"unavailable\"/);
+  assert.match(skill, /no line after the hook is longer, in characters, than the longest version of that line among the template's evidence posts/);
+  assert.match(skill, /These positions only find the skeleton: a new fill may have any number of words/);
+  assert.match(skill, /Also skip a fact that already fails a step-4 check before any call/);
+  assert.match(skill, /A paste that gives only each post's first part leaves every post cut off until its full text, or the creator's word that it had one part, comes in/);
+  assert.match(skill, /`fallback_ready` \(the local fallback, whether or not any post survives;/);
   assert.match(skill, /top 10% by views at least twice/);
   assert.match(skill, /view count/);
   assert.match(skill, /three most recent uses by date/);
