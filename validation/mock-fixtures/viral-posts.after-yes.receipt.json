@@ -222,6 +222,7 @@
       "saved_draft_id": "redacted-draft-1",
       "schedule_call": {
         "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
+        "account": "example_creator",
         "scheduled_at": "2026-06-03T09:00:00+08:00",
         "content_type": "long-form",
         "posts": [
@@ -254,7 +255,9 @@
       },
       "gate_flags": [
         "tired_check_incomplete"
-      ]
+      ],
+      "saved_draft_id": "redacted-draft-3",
+      "text_source": "draft"
     },
     {
       "template_id": "t3",
@@ -282,6 +285,7 @@
       ],
       "schedule_call": {
         "idempotency_key": "viral-posts:example_creator:t3:8467cea29b77",
+        "account": "example_creator",
         "scheduled_at": "2026-06-05T09:00:00+08:00",
         "content_type": "short-form",
         "text": "redacted example post three"
@@ -390,6 +394,38 @@
           ]
         }
       ]
+    }
+  ],
+  "gate_drafts": [
+    {
+      "draft_id": "redacted-draft-1",
+      "marked": "proposed",
+      "template_id": "t1"
+    },
+    {
+      "draft_id": "redacted-draft-2",
+      "marked": "not_picked",
+      "template_id": "t1"
+    },
+    {
+      "draft_id": "redacted-draft-3",
+      "marked": "proposed",
+      "template_id": "t2"
+    },
+    {
+      "draft_id": "redacted-draft-4",
+      "marked": "not_picked",
+      "template_id": "t3"
+    },
+    {
+      "draft_id": "redacted-draft-5",
+      "marked": "proposed",
+      "template_id": "t3"
+    },
+    {
+      "draft_id": "redacted-draft-6",
+      "marked": "proposed",
+      "template_id": "t5"
     }
   ]
 }

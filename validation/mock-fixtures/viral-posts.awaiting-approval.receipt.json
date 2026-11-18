@@ -54,7 +54,27 @@
       "top_10_percent_views": 5000,
       "status": "used",
       "tired_check_query": "here's what",
-      "gate_note": "evidence post 1 ends with a plug in part 3 (a link) that evidence post 2 lacks; the template is the 2 parts they share and the plug is not copied"
+      "gate_note": "evidence post 1 ends with a plug in part 3 (a link) that evidence post 2 lacks; the template is the 2 parts they share and the plug is not copied",
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-20",
+            "views": 9000,
+            "fill": "redacted fill t1-2"
+          },
+          {
+            "date": "2026-05-01",
+            "views": 12000,
+            "fill": "redacted fill t1-1"
+          },
+          {
+            "date": "2026-04-18",
+            "views": 2100,
+            "fill": "redacted fill t1-0"
+          }
+        ]
+      }
     },
     {
       "template_id": "t2",
@@ -130,7 +150,27 @@
           "part_count": 1
         }
       ],
-      "top_10_percent_views": 5000
+      "top_10_percent_views": 5000,
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-12",
+            "views": 7000,
+            "fill": "redacted fill t4-2"
+          },
+          {
+            "date": "2026-04-30",
+            "views": 900,
+            "fill": "redacted fill t4-2"
+          },
+          {
+            "date": "2026-03-01",
+            "views": 10000,
+            "fill": "redacted fill t4-1"
+          }
+        ]
+      }
     },
     {
       "template_id": "t5",
@@ -155,6 +195,53 @@
           "media_type": "TEXT_POST",
           "source_complete": true,
           "fill": "redacted recycled fill",
+          "part_count": 1
+        }
+      ]
+    },
+    {
+      "template_id": "t6",
+      "skeleton": "here's why [thing] fails:",
+      "status": "tired",
+      "top_10_percent_views": 5000,
+      "tired_check_query": "here's why",
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-28",
+            "views": 900,
+            "fill": "redacted fill t6-1"
+          },
+          {
+            "date": "2026-05-20",
+            "views": 700,
+            "fill": "redacted fill t6-1"
+          },
+          {
+            "date": "2026-05-10",
+            "views": 1200,
+            "fill": "redacted fill t6-2"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "first_line": "redacted example hook eight",
+          "date": "2026-01-12",
+          "views": 14000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t6-1",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted example hook nine",
+          "date": "2026-02-02",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t6-2",
           "part_count": 1
         }
       ]
@@ -309,5 +396,38 @@
         "part": 1
       }
     ]
-  }
+  },
+  "gate_drafts": [
+    {
+      "draft_id": "redacted-draft-1",
+      "marked": "proposed",
+      "template_id": "t1"
+    },
+    {
+      "draft_id": "redacted-draft-2",
+      "marked": "not_picked",
+      "template_id": "t1"
+    },
+    {
+      "draft_id": "redacted-draft-3",
+      "marked": "proposed",
+      "template_id": "t2"
+    },
+    {
+      "draft_id": "redacted-draft-4",
+      "marked": "not_picked",
+      "template_id": "t2"
+    },
+    {
+      "draft_id": "redacted-draft-5",
+      "marked": "excluded",
+      "template_id": "t4",
+      "why": "blocked: repeats queued text"
+    },
+    {
+      "draft_id": "redacted-draft-6",
+      "marked": "not_picked",
+      "template_id": "t4"
+    }
+  ]
 }
