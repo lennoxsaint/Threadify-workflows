@@ -272,6 +272,54 @@
       "top_10_percent_views": 5000,
       "status": "unproven",
       "gate_note": "both posts over the line differ only in a number (an age), so they are one fill"
+    },
+    {
+      "template_id": "t8",
+      "skeleton": "the older i get the more i realize [thing] is [what it is].",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "redacted one-line hook t8 best",
+          "date": "2026-02-10",
+          "views": 15000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t8-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted one-line hook t8 second",
+          "date": "2026-03-22",
+          "views": 6000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t8-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check_query": "the older i get the more i realize",
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-01",
+            "views": 7000,
+            "fill": "redacted fill t8-two"
+          },
+          {
+            "date": "2026-04-10",
+            "views": 3000,
+            "fill": "redacted fill t8-one"
+          },
+          {
+            "date": "2026-03-22",
+            "views": 6000,
+            "fill": "redacted fill t8-two"
+          }
+        ],
+        "verdict": "not tired"
+      }
     }
   ],
   "checks": [
@@ -348,7 +396,8 @@
     "redacted-draft-3",
     "redacted-draft-4",
     "redacted-draft-5",
-    "redacted-draft-6"
+    "redacted-draft-6",
+    "redacted-draft-7"
   ],
   "top_10_line": {
     "account_post_count": 1200,
@@ -408,6 +457,27 @@
       "text_source": "draft",
       "saved_draft_id": "redacted-draft-5",
       "blocked_reason": "part 1 repeats queued post redacted-queued-3 (full text fetched; its preview was cut off)"
+    },
+    {
+      "template_id": "t8",
+      "state": "excluded",
+      "parts": [
+        "redacted one-line post t8"
+      ],
+      "saved_draft_id": "redacted-draft-7",
+      "reason": "failed the fresh-reader check (borderline); the creator may waive the check for t8 in chat",
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "borderline: it states a claim but gives no reason or example",
+        "result": "fail"
+      },
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted one-line hook t8 best",
+        "reader": "fresh agent given only that post",
+        "answer": "borderline: it states a claim but gives no reason or example",
+        "result": "fail"
+      },
+      "waiver_available": true
     }
   ],
   "global_auto_repost": {
@@ -470,6 +540,11 @@
       "draft_id": "redacted-draft-6",
       "marked": "not_picked",
       "template_id": "t4"
+    },
+    {
+      "draft_id": "redacted-draft-7",
+      "marked": "excluded",
+      "template_id": "t8"
     }
   ]
 }

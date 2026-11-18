@@ -105,6 +105,11 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(gate, /for a tired template, the view counts of its last three uses/);
   assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\) and the fresh reader's answer/);
   assert.match(skill, /Record who read it \(a fresh agent, or you when none was available\) and its answer word for word/);
+  assert.match(skill, /give a fresh reader the template's most-viewed evidence post on its own as a control/);
+  assert.match(skill, /the post still fails, both answers go to the gate, and the creator may waive this check for that template in chat/);
+  assert.match(gate, /the control answer on its template's most-viewed evidence post, and whether the creator may waive the check/);
+  assert.ok(manifest.approval_gate.must_show.includes("for a post that failed the fresh-reader check, the control answer on its template's most-viewed evidence post"));
+  assert.ok(manifest.receipt.must_prove.includes('fresh-reader controls on evidence posts and any waiver the creator gave'));
   for (const line of ['the top 10% line each template beat', 'any plug part left out of a template', "for a tired template, its last three uses' view counts",
     "check results per post (each pass or fail, hook length against its limit, the fresh reader's answer), intent fingerprint and stable idempotency key"]) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
@@ -298,8 +303,16 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
       if (receipt.fallback_used) assert.equal(slot.idempotency_key, undefined, 'a local packet makes no write key');
       else assert.match(slot.idempotency_key, /^viral-posts:[^:@]+:[^:]+:[0-9a-f]{12}$/);
     }
+    for (const post of (receipt.posts ?? []).filter((p) => p.state === 'excluded' && p.fresh_reader?.result === 'fail')) {
+      const top = receipt.templates.find((t) => t.template_id === post.template_id).evidence
+        .reduce((best, e) => (e.views > best.views ? e : best));
+      assert.equal(post.fresh_reader_control?.evidence_first_line, top.first_line, `${post.template_id} control is its template's most-viewed post`);
+      assert.ok(post.fresh_reader_control.answer && post.fresh_reader.answer, 'both answers go to the gate');
+      assert.equal(post.waiver_available, post.fresh_reader_control.result !== 'pass', 'a waiver is offered only when the creator\'s own post fails too');
+      assert.ok(!post.scheduled_at && !post.idempotency_key, 'an excluded post gets no time or key');
+    }
     const account = receipt.account_handle.replace(/^@/, '');
-    for (const post of receipt.posts ?? []) {
+    for (const post of (receipt.posts ?? []).filter((p) => p.state !== 'excluded')) {
       const print = crypto.createHash('sha256')
         .update(JSON.stringify([account, post.parts, post.media, post.scheduled_at])).digest('hex');
       assert.equal(post.fingerprint, print, `${post.template_id} fingerprint uses the account with no @`);
@@ -365,7 +378,8 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   const collided = new Set(queue.collisions.map((hit) => hit.template_id));
   assert.ok(collided.size > 0, 'covers a post that repeats queued text');
   const slotKeys = new Map(pending.schedule_proposal.slots.map((slot) => [slot.template_id, slot.idempotency_key]));
-  for (const post of pending.posts) {
+  assert.ok(pending.posts.some((post) => post.waiver_available), 'the pending fixture covers a failed fresh-reader control');
+  for (const post of pending.posts.filter((p) => p.state !== 'excluded')) {
     if (collided.has(post.template_id)) {
       assert.equal(post.state, 'blocked', `${post.template_id} repeats queued text`);
       assert.ok(!slotKeys.has(post.template_id));

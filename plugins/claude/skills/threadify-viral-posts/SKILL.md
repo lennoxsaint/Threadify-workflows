@@ -49,7 +49,7 @@ Some calls save things in the creator's Threadify account before the approval ga
    - `validate_post` returns valid for the exact parts, in order.
    - The skeleton matches the template line for line (same line count and shape).
    - The hook is 80 characters or less, or no longer than the template's proven hook.
-   - The fresh-reader check is a clear yes: the body gives what the hook promised, with nothing that needs outside context.
+   - The fresh-reader check is a clear yes: the body gives what the hook promised, with nothing that needs outside context. When a post fails it, give a fresh reader the template's most-viewed evidence post on its own as a control. If the creator's own post fails too, the check may be too strict for this template: the post still fails, both answers go to the gate, and the creator may waive this check for that template in chat. Record the waiver, then show the post at a new gate.
    - The post is text only, and its template needs no media.
    - It reads at the energy of its evidence posts (their own swear words, short lines), not flat next to them.
    - A thread has every part present and in order.
@@ -67,6 +67,7 @@ Some calls save things in the creator's Threadify account before the approval ga
    - the global auto-repost setting exactly as read: "on: Threadify re-shares each post <delay> after it goes out" (or "after <n> likes"), "off", or "unknown". This workflow never changes it. If it is unknown, nothing can be scheduled until the creator checks it in Threadify;
    - for each post fixed by hand: "schedules the text shown here; saved draft <id> keeps the old wording";
    - every draft saved so far, by id, each marked proposed, excluded or not picked;
+   - for a post that failed the fresh-reader check, the control answer on its template's most-viewed evidence post, and whether the creator may waive the check;
    - each post's fingerprint and stable idempotency key (step 7.3 says how they are built), so the yes binds them;
    - the exact date and time for each post, in the creator's timezone;
    - the action: schedule, never publish now.
@@ -91,7 +92,7 @@ Without a working connection, ask the creator to paste their best posts with vie
 
 ## Receipt
 
-Save a receipt in the creator's private workspace that follows `workflow-receipt.v1` (`workflow_id`, `adapter`, `account_handle`, `action`, `approved_text`, `approved_text_sha256`, `status`, `timestamp`, `timezone`, `tool_path`, `fallback_used`). `tool_path` lists every tool called, in order, including a `get_connection_defaults` call that failed and sent you to the fallback; it is empty only when no tool was called. Every template has a `template_id`. Add the global auto-repost setting as the gate showed it and as each dispatch read it; the templates with their label, media decision and tired-check query, and per evidence post its first line, date, views, media type, part count, fill and whether its text was complete; the drafting yes and the draft ids saved; the check results per post, with the hook length and its limit and the fresh reader (who read it and its answer word for word); the schedule proposal with the live calendar total; and per post the state, fingerprint, idempotency key, returned scheduled post id and readback result. Before the yes, `status` is `awaiting_approval` and `approved_text` is empty. In the fallback, `fallback_used` is true and `action` is `local_packet`. Keep the creator's posts, numbers and receipts out of any public place.
+Save a receipt in the creator's private workspace that follows `workflow-receipt.v1` (`workflow_id`, `adapter`, `account_handle`, `action`, `approved_text`, `approved_text_sha256`, `status`, `timestamp`, `timezone`, `tool_path`, `fallback_used`). `tool_path` lists every tool called, in order, including a `get_connection_defaults` call that failed and sent you to the fallback; it is empty only when no tool was called. Every template has a `template_id`. Add the global auto-repost setting as the gate showed it and as each dispatch read it; the templates with their label, media decision and tired-check query, and per evidence post its first line, date, views, media type, part count, fill and whether its text was complete; the drafting yes and the draft ids saved; the check results per post, with the hook length and its limit and the fresh reader (who read it and its answer word for word, any control on an evidence post, and any waiver); the schedule proposal with the live calendar total; and per post the state, fingerprint, idempotency key, returned scheduled post id and readback result. Before the yes, `status` is `awaiting_approval` and `approved_text` is empty. In the fallback, `fallback_used` is true and `action` is `local_packet`. Keep the creator's posts, numbers and receipts out of any public place.
 
 ## Demo feedback rules
 
