@@ -1,0 +1,44 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "unconnected",
+  "action": "local_packet",
+  "approved_text": [],
+  "approved_text_sha256": "none-awaiting-approval",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": [],
+  "fallback_used": true,
+  "artifact_ids": ["redacted-artifact-id"],
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "[number] things i stopped doing:",
+      "evidence": [
+        { "first_line": "redacted pasted hook one", "date": "2026-04-11", "views": 8000 },
+        { "first_line": "redacted pasted hook two", "date": "2026-05-02", "views": 7000 }
+      ],
+      "top_10_percent_views": 4000
+    }
+  ],
+  "checks": [
+    {
+      "template_id": "t1",
+      "validate_post": "not run (no connection); 500 characters per part checked by hand",
+      "skeleton_match": true,
+      "hook_characters": 33,
+      "fresh_reader_delivers": true,
+      "all_parts_shown": true,
+      "facts_traced": true
+    }
+  ],
+  "schedule_proposal": {
+    "calendar_listed": null,
+    "calendar_total_in_window": null,
+    "min_gap_hours": 2,
+    "slots": [
+      { "template_id": "t1", "local_time": "2026-06-03 09:00", "label": "tentative, not checked against the live calendar" }
+    ]
+  }
+}

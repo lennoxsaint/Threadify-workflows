@@ -1,0 +1,4 @@
+interface:
+  display_name: "Viral Posts"
+  short_description: "New posts on your proven viral shapes"
+  default_prompt: "Use $threadify-viral-posts. Find what went viral for me more than once and write three posts on those templates."

@@ -44,6 +44,7 @@ Generated from the canonical workflow manifests. Edit a workflow manifest, then 
 | Threadify Unslop (`unslop`) | skill | `threadify-unslop` | advanced | unslop; which of my posts sound like slop; no hedging |
 | Threads Teach (`threads-teach`) | skill | `threadify-threads-teach` | advanced | teach me Threads; teach me how to write Threads posts; continue my Threads lessons |
 | Viral Carousel Maker (`viral-carousel-maker`) | skill | `threadify-viral-carousel-maker` | advanced | make a viral carousel; create and review a controlled-mutation carousel |
+| Viral Posts (`viral-posts`) | skill | `threadify-viral-posts` | advanced | viral posts; make me viral posts; write posts from my viral templates; turn my viral posts into new posts; what keeps going viral for me |
 | Viral Vault Setup (`vault-setup`) | skill | `threadify-vault-setup` | creator | set up my Viral Vault; build a starter inspiration Vault |
 | Watch Any Creator (`watch-any-creator`) | skill | `threadify-watch-any-creator` | advanced | watch any creator; watch every video from this creator; what are this creator's rules; turn a creator's whole archive into posts |
 | Weekly Buyer Outcomes (`weekly-buyer-outcomes`) | skill | `threadify-weekly-buyer-outcomes` | conversation | review my buyer outcomes for the past seven days; show this week's provider-observed and owner-reported buyer results |
