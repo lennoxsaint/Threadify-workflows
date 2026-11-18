@@ -36,9 +36,12 @@
     "search_posts",
     "query_brain",
     "search_posts",
-    "query_brain",
     "search_posts",
     "query_brain",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
     "search_posts",
     "generate_content",
     "generate_content",
@@ -137,7 +140,10 @@
           "limit": 80,
           "after_tool_calls": 20,
           "repeat_check": {
-            "query": "journaled every morning",
+            "queries": [
+              "journaled",
+              "morning"
+            ],
             "matches": []
           }
         }
@@ -224,9 +230,12 @@
           "filled_hook": "nobody warns you that the first 100 posts are practice.",
           "filled_hook_chars": 55,
           "limit": 80,
-          "after_tool_calls": 22,
+          "after_tool_calls": 23,
           "repeat_check": {
-            "query": "first 100 posts",
+            "queries": [
+              "100",
+              "practice"
+            ],
             "matches": []
           }
         }
@@ -303,9 +312,12 @@
           "filled_hook": "the honest truth about growing from replies:",
           "filled_hook_chars": 44,
           "limit": 80,
-          "after_tool_calls": 24,
+          "after_tool_calls": 26,
           "repeat_check": {
-            "query": "growing from replies",
+            "queries": [
+              "growing",
+              "replies"
+            ],
             "matches": []
           }
         }

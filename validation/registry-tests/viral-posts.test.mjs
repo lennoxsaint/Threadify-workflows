@@ -156,10 +156,13 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /A paste that gives only each post's first part leaves every post cut off until its full text, or the creator's word that it had one part, comes in/);
   assert.match(skill, /`fallback_ready` \(the local fallback, whether or not any post survives;/);
   // round 12: repeats of the creator's own posts, case and closing mark, label order, fact_kept
-  assert.match(skill, /\*\*Repeat check:\*\* for each fact that fits, call `search_posts` once with the words that carry its claim, not the template's fixed words/);
+  assert.match(skill, /\*\*Repeat check:\*\* for each fact that fits, call `search_posts` once for each word that carries its claim, on its own, leaving out the template's fixed words and words most of the creator's posts use/);
+  assert.match(skill, /: a phrase misses a post that makes the same claim in other words\. Raise the `limit` until every match comes back, as in the tired check, read each match for the claim, and stop once one makes it\./);
+  assert.match(skill, /If a raised limit still brings back fewer, search again with `to` set to the oldest date that came back and merge the results by post id, until you hold every match\./);
+  assert.match(skill, /Record the words you searched, in order, and those posts \(date, views, first line\) as the row's `repeat_check` \(`queries`, `matches`\)/);
   assert.match(skill, /A fact whose claim one of the creator's own posts already makes, in any template or in none, is a repeat/);
   assert.match(skill, /and so is a fact whose claim one of the creator's own posts already makes, in any template or in none \(the step-3 repeat check\)/);
-  assert.match(skill, /run the step-3 repeat check against every pasted post instead of `search_posts` \(record `repeat_check` with `pasted posts` as its query/);
+  assert.match(skill, /run the step-3 repeat check on every pasted post instead of `search_posts`, looking for the same words one at a time \(record `repeat_check` with those words as its `queries` and `in` set to `pasted posts`/);
   assert.match(skill, /the fact keeps its words and their order, while its letter case and closing mark follow the template/);
   assert.match(skill, /except a word the creator writes in capitals, such as AI, and the fact's own closing mark gives way to the skeleton's, never doubled/);
   assert.match(skill, new RegExp(`the template carries the first of them in this order: ${LABEL_ORDER.map((label) => label.replace(/_/g, ' ')).join(', ')}\\. Show the others next to it as "also: <labels>" and record them, in that order, as \`also_labels\``));
@@ -237,7 +240,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
     'any other label that applies to a template, shown next to it as also']) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
   }
-  for (const line of ["repeat check per fitting fact: its search_posts query (or pasted posts) and any of the creator's own posts that already make its claim; a fact with a match is skipped",
+  for (const line of ["repeat check per fitting fact: each word that carries its claim, searched on its own with search_posts (or in the pasted posts), and any of the creator's own posts that already make its claim; a fact with a match is skipped",
     'fact_kept per saved draft: word for word, shortened or changed']) {
     assert.ok(manifest.receipt.must_prove.includes(line), line);
   }
@@ -743,8 +746,16 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
         assert.ok(followsTemplate(template.skeleton.split('\n')[0], fit.filled_hook), `${where} "${fit.filled_hook}" takes the template's case and closing mark once`);
         // (b) every fact that fits is checked against the creator's own posts before drafting; a match is skipped
         if (fit.filled_hook_chars <= fit.limit) {
-          assert.ok(typeof fit.repeat_check?.query === 'string' && fit.repeat_check.query && Array.isArray(fit.repeat_check.matches), `${where} "${fit.fact}" has a repeat check`);
-          if (receipt.fallback_used) assert.equal(fit.repeat_check.query, 'pasted posts', `${where} the local fallback checks the pasted posts`);
+          const check = fit.repeat_check;
+          assert.ok(Array.isArray(check?.queries) && check.queries.length > 0 && Array.isArray(check.matches), `${where} "${fit.fact}" has a repeat check`);
+          const skeletonWords = fixedWords(template.skeleton.split('\n')[0]);
+          for (const query of check.queries) {
+            assert.equal(words(query).length, 1, `${where} searches "${query}" as one word: a phrase misses a post that makes the same claim in other words`);
+            assert.ok(words(fit.fact).includes(words(query)[0]), `${where} "${query}" is a word of "${fit.fact}"`);
+            assert.ok(!skeletonWords.includes(words(query)[0]), `${where} "${query}" is not one of the template's fixed words`);
+          }
+          assert.equal(new Set(check.queries.map((q) => words(q)[0])).size, check.queries.length, `${where} searches each word once`);
+          assert.equal(check.in === 'pasted posts', Boolean(receipt.fallback_used), `${where} only the local fallback checks pasted posts instead of search_posts`);
           if (fit.repeat_check.matches.length) {
             repeats += 1;
             assert.match(fit.skipped ?? '', /^repeat/, `${where} "${fit.fact}" repeats one of the creator's posts and is skipped`);
@@ -853,11 +864,11 @@ test('Viral Posts fixtures stay inside the drafting limits and record every call
       const counted = receipt.templates.filter((t) => (t.hook_fit ?? []).length > 0).length;
       assert.ok(count(receipt, 'query_brain') >= counted, `${name} calls query_brain for each of the ${counted} templates it counts a hook for`);
       const queries = receipt.templates.reduce((n, t) => n + (t.tired_check_queries ?? []).length, 0);
-      const repeatChecks = receipt.templates.reduce((n, t) => n + (t.hook_fit ?? []).filter((f) => f.repeat_check).length, 0);
+      const repeatChecks = receipt.templates.reduce((n, t) => n + (t.hook_fit ?? []).reduce((m, f) => m + (f.repeat_check?.queries ?? []).length, 0), 0);
       const firstGenerate = receipt.tool_path.indexOf('generate_content');
       const beforeDrafting = receipt.tool_path.slice(0, firstGenerate >= 0 ? firstGenerate : undefined);
       assert.ok(beforeDrafting.filter((tool) => tool === 'search_posts').length >= queries + repeatChecks,
-        `${name} records a search_posts call for every tired-check query (${queries}) and repeat check (${repeatChecks}) before any generate_content`);
+        `${name} records a search_posts call for every tired-check query (${queries}) and repeat-check word (${repeatChecks}) before any generate_content`);
     }
     if (receipt.queue_text_check) {
       assert.ok(count(receipt, 'get_schedule_status') >= receipt.queue_text_check.fetched_full_text.length, `${name} records every full-text fetch`);

@@ -60,7 +60,11 @@
           "limit": 80,
           "after_tool_calls": 1,
           "repeat_check": {
-            "query": "pasted posts",
+            "queries": [
+              "nights",
+              "hustle"
+            ],
+            "in": "pasted posts",
             "matches": [],
             "note": "posts you were not given were not checked"
           }

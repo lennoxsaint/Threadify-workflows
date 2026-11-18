@@ -42,10 +42,15 @@
     "search_posts",
     "query_brain",
     "search_posts",
+    "search_posts",
     "query_brain",
     "search_posts",
     "search_posts",
+    "search_posts",
+    "search_posts",
     "query_brain",
+    "search_posts",
+    "search_posts",
     "search_posts",
     "query_brain",
     "generate_content",
@@ -135,7 +140,10 @@
           "limit": 80,
           "after_tool_calls": 32,
           "repeat_check": {
-            "query": "journaled every morning",
+            "queries": [
+              "journaled",
+              "morning"
+            ],
             "matches": []
           }
         }
@@ -185,9 +193,13 @@
           "filled_hook": "patience is a paid skill.",
           "filled_hook_chars": 25,
           "limit": 80,
-          "after_tool_calls": 34,
+          "after_tool_calls": 35,
           "repeat_check": {
-            "query": "paid skill",
+            "queries": [
+              "patience",
+              "paid",
+              "skill"
+            ],
             "matches": []
           }
         },
@@ -196,9 +208,11 @@
           "filled_hook": "comfort is a slow leak.",
           "filled_hook_chars": 23,
           "limit": 80,
-          "after_tool_calls": 34,
+          "after_tool_calls": 35,
           "repeat_check": {
-            "query": "slow leak",
+            "queries": [
+              "comfort"
+            ],
             "matches": [
               {
                 "date": "2026-02-14",
@@ -458,9 +472,13 @@
           "filled_hook": "the longer i build the more i see sleep is a performance tool.",
           "filled_hook_chars": 62,
           "limit": 80,
-          "after_tool_calls": 37,
+          "after_tool_calls": 40,
           "repeat_check": {
-            "query": "performance tool",
+            "queries": [
+              "sleep",
+              "performance",
+              "tool"
+            ],
             "matches": []
           }
         }
@@ -557,14 +575,14 @@
           "filled_hook": "it took me years to learn that real confidence comes from keeping small promises to yourself every single day for years.",
           "filled_hook_chars": 120,
           "limit": 80,
-          "after_tool_calls": 39
+          "after_tool_calls": 44
         },
         {
           "fact": "the people who win long term were willing to look stupid in public first.",
           "filled_hook": "it took me years to learn that the people who win long term were willing to look stupid in public first.",
           "filled_hook_chars": 104,
           "limit": 80,
-          "after_tool_calls": 39
+          "after_tool_calls": 44
         }
       ],
       "tired_check_queries": [
