@@ -26,7 +26,7 @@
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-1",
+          "fill": "redacted fill t1-one",
           "part_count": 1
         },
         {
@@ -35,7 +35,7 @@
           "views": 7000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-2",
+          "fill": "redacted fill t1-two",
           "part_count": 1
         }
       ],

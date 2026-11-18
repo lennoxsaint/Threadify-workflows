@@ -37,7 +37,7 @@
           "views": 12000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-1",
+          "fill": "redacted fill t1-one",
           "part_count": 3,
           "plug_part_left_out": 3
         },
@@ -47,7 +47,7 @@
           "views": 9000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t1-2",
+          "fill": "redacted fill t1-two",
           "part_count": 2
         }
       ],
@@ -61,17 +61,17 @@
           {
             "date": "2026-05-20",
             "views": 9000,
-            "fill": "redacted fill t1-2"
+            "fill": "redacted fill t1-two"
           },
           {
             "date": "2026-05-01",
             "views": 12000,
-            "fill": "redacted fill t1-1"
+            "fill": "redacted fill t1-one"
           },
           {
             "date": "2026-04-18",
             "views": 2100,
-            "fill": "redacted fill t1-0"
+            "fill": "redacted fill t1-zero"
           }
         ]
       }
@@ -90,7 +90,7 @@
           "views": 11000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-1",
+          "fill": "redacted fill t2-one",
           "part_count": 1
         },
         {
@@ -99,7 +99,7 @@
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-2",
+          "fill": "redacted fill t2-two",
           "part_count": 1
         }
       ],
@@ -118,7 +118,7 @@
           "views": 7000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t3-1",
+          "fill": "redacted fill t3-one",
           "part_count": 1
         }
       ],
@@ -137,7 +137,7 @@
           "views": 10000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t4-1",
+          "fill": "redacted fill t4-one",
           "part_count": 1
         },
         {
@@ -146,7 +146,7 @@
           "views": 7000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t4-2",
+          "fill": "redacted fill t4-two",
           "part_count": 1
         }
       ],
@@ -157,17 +157,17 @@
           {
             "date": "2026-05-12",
             "views": 7000,
-            "fill": "redacted fill t4-2"
+            "fill": "redacted fill t4-two"
           },
           {
             "date": "2026-04-30",
             "views": 900,
-            "fill": "redacted fill t4-2"
+            "fill": "redacted fill t4-two"
           },
           {
             "date": "2026-03-01",
             "views": 10000,
-            "fill": "redacted fill t4-1"
+            "fill": "redacted fill t4-one"
           }
         ]
       }
@@ -211,17 +211,17 @@
           {
             "date": "2026-05-28",
             "views": 900,
-            "fill": "redacted fill t6-1"
+            "fill": "redacted fill t6-one"
           },
           {
             "date": "2026-05-20",
             "views": 700,
-            "fill": "redacted fill t6-1"
+            "fill": "redacted fill t6-one"
           },
           {
             "date": "2026-05-10",
             "views": 1200,
-            "fill": "redacted fill t6-2"
+            "fill": "redacted fill t6-two"
           }
         ]
       },
@@ -232,7 +232,7 @@
           "views": 14000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t6-1",
+          "fill": "redacted fill t6-one",
           "part_count": 1
         },
         {
@@ -241,10 +241,37 @@
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t6-2",
+          "fill": "redacted fill t6-two",
           "part_count": 1
         }
       ]
+    },
+    {
+      "template_id": "t7",
+      "skeleton": "i am [age]. [lesson].",
+      "evidence": [
+        {
+          "first_line": "redacted first line t7",
+          "date": "2026-03-01",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "part_count": 1,
+          "fill": "i am 28",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted first line t7",
+          "date": "2026-04-01",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "part_count": 1,
+          "fill": "i am 29",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "status": "unproven",
+      "gate_note": "both posts over the line differ only in a number (an age), so they are one fill"
     }
   ],
   "checks": [

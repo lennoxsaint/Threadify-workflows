@@ -12,6 +12,8 @@ const source = path.join(root, 'plugins/threadify/skills/threadify-viral-posts/S
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'workflows/viral-posts/manifest.json'), 'utf8'));
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
 const sameText = (text) => (text ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+// one fill: same text after case, punctuation and spacing, or differing only in a number (SKILL.md step 2)
+const sameFill = (text) => sameText(text).replace(/\p{N}+/gu, '#');
 const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
   .map((run) => run.replace(/[^\p{L}\p{N}'\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
   .reduce((best, run) => (run.length > best.length ? run : best), []);
@@ -87,7 +89,10 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /per evidence post its first line, date, views, media type, part count, fill and whether its text was complete/);
   assert.match(skill, /If `get_post_thread` fails for an evidence post, its text is not read in full: label the template "shape unverified". If it returns no `media_type`, label the template "media unknown"/);
   assert.match(skill, /A reposted copy counts as a use here, because the audience saw it again/);
-  assert.match(skill, /ranked at a tenth of that total, rounded down/);
+  assert.match(skill, /ranked at a tenth of that total, rounded down and at least 1/);
+  assert.match(skill, /a tenth of that count, rounded down and at least 1 \(rank 120 of 1,200; rank 1 for 1 to 19 posts\)/);
+  assert.match(skill, /If `total_matched` is 0, there is nothing to copy: say so and stop before drafting/);
+  assert.match(skill, /If they have published none, there is nothing to copy: say so and stop/);
   assert.match(skill, /or that differ only in a number such as an age or a year, are one fill/);
   assert.match(skill, /Each check is pass or fail: "pass with a flag" or "the creator should confirm" is a fail/);
   assert.match(skill, /changing who or what it is about makes a new claim, and that fails/);
@@ -223,7 +228,7 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
     assert.ok(!receipt.tool_path.includes('publish_now'));
     for (const template of receipt.templates.filter((t) => t.status === 'used')) {
       const hits = template.evidence.filter((post) => post.views >= receipt.top_10_line.views);
-      assert.ok(new Set(hits.map((post) => sameText(post.fill))).size >= 2, `${template.template_id} needs two different fills over the top 10% line`);
+      assert.ok(new Set(hits.map((post) => sameFill(post.fill))).size >= 2, `${template.template_id} needs two different fills over the top 10% line`);
     }
   }
   assert.equal(pending.status, 'awaiting_approval');
@@ -253,7 +258,7 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
         assert.equal(template.status, 'media_unknown', `${template.template_id} waits for the picture answer`);
       } else if (template.evidence.some((post) => post.media_type !== 'TEXT_POST')) {
         assert.equal(template.status, 'needs_media', `${template.template_id} went viral with media`);
-      } else if (new Set(template.evidence.filter((post) => post.views >= line.views).map((post) => sameText(post.fill))).size < 2) {
+      } else if (new Set(template.evidence.filter((post) => post.views >= line.views).map((post) => sameFill(post.fill))).size < 2) {
         assert.equal(template.status, 'unproven', `${template.template_id} hit the top 10% with fewer than two different fills`);
       } else if (template.tired_check?.last_three?.length === 3) {
         const allUnder = template.tired_check.last_three.every((use) => use.views < line.views);
@@ -331,6 +336,11 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   assert.ok(receipts[0].templates.some((t) => t.status === 'unproven' && t.evidence.filter((post) => post.views >= receipts[0].top_10_line.views).length >= 2),
     'the pending fixture covers a recycled post counted once');
   assert.ok(receipts[0].templates.some((t) => t.evidence.some((post) => post.plug_part_left_out)), 'the pending fixture covers a plug part');
+  const numberOnly = receipts[0].templates.find((t) => {
+    const hits = t.evidence.filter((post) => post.views >= receipts[0].top_10_line.views);
+    return new Set(hits.map((post) => sameText(post.fill))).size >= 2 && new Set(hits.map((post) => sameFill(post.fill))).size < 2;
+  });
+  assert.equal(numberOnly?.status, 'unproven', 'posts that differ only in a number are one fill');
   const tired = receipts[0].templates.find((t) => t.status === 'tired');
   assert.ok(tired, 'the pending fixture covers a tired template');
   assert.ok(new Set(tired.tired_check.last_three.map((use) => sameText(use.fill))).size < 3, 'its last three uses include a reposted copy');
