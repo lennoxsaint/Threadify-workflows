@@ -110,25 +110,26 @@
       "top 10% line with the account post count and rank",
       "templates with evidence posts: first line, date, views, media type, part count, fill and complete text",
       "plug parts left out per template",
-      "label per template: used, eligible, unproven, tired, needs media, media unknown, shape unverified or control failed, and any tired check incomplete flag",
+      "label per template: used, eligible, unproven, tired, needs media, media unknown, shape unverified, control failed or no fitting fact, and any tired check incomplete flag",
+      "hook fit per template picked for drafting: each fact's filled hook length and the limit, counted before any generate_content call",
       "exact approved text of every part",
       "check results per post",
       "fresh reader per post: who read it, its answer word for word and its verdict (the DELIVERS word from that answer)",
       "fresh-reader controls on evidence posts, run before any generate_content call, and any waiver (template, the creator's words, when; this run only)",
       "energy reason per post",
       "receipt status: one of awaiting_approval, nothing_to_approve, drafting_declined, fallback_ready, scheduled, partially_scheduled, schedule_unverified",
-      "tired-check queries searched in both apostrophe forms when the stretch has one",
       "stable idempotency key per post",
-      "schedule proposal with live calendar total",
+      "schedule proposal with the listed calendar window, at least 2 hours past every slot on both sides, and its live total; at each dispatch, the relisted window and total, at least 2 hours past that slot",
       "drafting yes and saved draft ids",
       "media decision per template",
       "intent fingerprint, returned scheduled post id and state per post",
       "approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)",
       "global auto-repost setting at the gate and at each dispatch",
-      "tired-check queries per template, every query searched, in order",
+      "tired-check queries per template, every query searched, in order, in both apostrophe forms when the stretch has one",
       "queued posts whose full text was fetched for the duplicate-text check, at the gate and again at every dispatch",
       "readback status (scheduled, never published)",
-      "fallback state"
+      "fallback state",
+      "a generate_content idempotency key per version, written before the call and reused on any retry"
     ]
   }
 }

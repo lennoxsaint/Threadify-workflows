@@ -6,12 +6,11 @@
   "approved_text": [
     "redacted example post one, line one",
     "redacted example post one, line two",
-    "redacted example post two",
     "redacted example post three",
     "redacted example post five, part one",
     "redacted example post five, part two"
   ],
-  "approved_text_sha256": "8355ea86b832dc1d6d85cf375464b0b79007864c4854136b311576989ff43218",
+  "approved_text_sha256": "fc3876a44730506a613733dbed8d849d6d358547701f28a5c16ee34800db9dab",
   "status": "partially_scheduled",
   "timestamp": "2026-06-02T11:00:00Z",
   "timezone": "America/New_York",
@@ -19,21 +18,20 @@
     "get_connection_defaults",
     "list_scheduled_posts",
     "get_schedule_status",
+    "get_schedule_status",
     "validate_post",
     "schedule_post",
     "get_schedule_status",
     "get_connection_defaults",
     "list_scheduled_posts",
     "get_schedule_status",
-    "validate_post",
-    "get_connection_defaults",
-    "list_scheduled_posts",
     "get_schedule_status",
     "validate_post",
     "schedule_post",
     "list_scheduled_posts",
     "get_connection_defaults",
     "list_scheduled_posts",
+    "get_schedule_status",
     "get_schedule_status"
   ],
   "fallback_used": false,
@@ -47,7 +45,6 @@
   "drafts_saved": [
     "redacted-draft-1",
     "redacted-draft-2",
-    "redacted-draft-3",
     "redacted-draft-4",
     "redacted-draft-5",
     "redacted-draft-6"
@@ -94,29 +91,36 @@
       "tired_check_queries": [
         "here's what",
         "here’s what"
+      ],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t1-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
       ]
     },
     {
       "template_id": "t2",
       "skeleton": "[thing] is [what it really is].",
-      "status": "used",
+      "status": "eligible",
       "evidence": [
         {
-          "first_line": "redacted example hook three",
+          "first_line": "money is a tool.",
           "date": "2026-04-01",
           "views": 11000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-one",
+          "fill": "money / a tool",
           "part_count": 1
         },
         {
-          "first_line": "redacted example hook four",
+          "first_line": "time is the real currency.",
           "date": "2026-05-09",
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-two",
+          "fill": "time / the real currency",
           "part_count": 1
         }
       ],
@@ -130,7 +134,7 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
         "verdict": "clear yes",
         "result": "pass",
-        "evidence_first_line": "redacted example hook three",
+        "evidence_first_line": "money is a tool.",
         "after_tool_calls": 0
       },
       "tired_check_queries": []
@@ -170,6 +174,13 @@
       },
       "tired_check_queries": [
         "things i stopped doing"
+      ],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t3-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
       ]
     },
     {
@@ -236,6 +247,13 @@
       },
       "tired_check_queries": [
         "truth about"
+      ],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t5-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
       ]
     }
   ],
@@ -290,29 +308,6 @@
       "gate_flags": [
         "fresh reader: fail, waived by you for t1 (your words: \"redacted: waive it for t1\")"
       ]
-    },
-    {
-      "template_id": "t2",
-      "parts": [
-        "redacted example post two"
-      ],
-      "media": [],
-      "scheduled_at": "2026-06-04T09:00:00-04:00",
-      "fingerprint": "ee3e7dce03c74c836e65d22db2fe246fd4e3b0f387358ab5ce3e2dbc2b086706",
-      "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7",
-      "state": "blocked",
-      "blocked_reason": "recheck before dispatch found a post queued 40 minutes earlier; new time proposed, waiting for a new yes",
-      "auto_repost_at_dispatch": {
-        "enabled": true,
-        "known": true,
-        "trigger": "time",
-        "delay_minutes": 480
-      },
-      "gate_flags": [
-        "tired_check_incomplete"
-      ],
-      "saved_draft_id": "redacted-draft-3",
-      "text_source": "draft"
     },
     {
       "template_id": "t3",
@@ -395,21 +390,13 @@
       ],
       "reused_earlier_text": false,
       "unresolved": [],
-      "collisions": []
-    },
-    {
-      "template_id": "t2",
-      "cut_off_or_multi_part": [
-        "redacted-queued-1",
-        "redacted-queued-2"
-      ],
-      "fetched_full_text": [
-        "redacted-queued-1",
-        "redacted-queued-2"
-      ],
-      "reused_earlier_text": false,
-      "unresolved": [],
-      "collisions": []
+      "collisions": [],
+      "calendar_window": {
+        "start": "2026-06-03T00:00:00-04:00",
+        "end": "2026-06-04T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
     },
     {
       "template_id": "t3",
@@ -423,7 +410,13 @@
       ],
       "reused_earlier_text": false,
       "unresolved": [],
-      "collisions": []
+      "collisions": [],
+      "calendar_window": {
+        "start": "2026-06-05T00:00:00-04:00",
+        "end": "2026-06-06T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
     },
     {
       "template_id": "t5",
@@ -448,39 +441,45 @@
             "part_count"
           ]
         }
-      ]
+      ],
+      "calendar_window": {
+        "start": "2026-06-06T00:00:00-04:00",
+        "end": "2026-06-07T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
     }
   ],
   "gate_drafts": [
     {
       "draft_id": "redacted-draft-1",
       "marked": "proposed",
-      "template_id": "t1"
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-a"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
-      "template_id": "t1"
-    },
-    {
-      "draft_id": "redacted-draft-3",
-      "marked": "proposed",
-      "template_id": "t2"
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-b"
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
-      "template_id": "t3"
+      "template_id": "t3",
+      "idempotency_key": "viral-posts-redacted-run-t3-a"
     },
     {
       "draft_id": "redacted-draft-5",
       "marked": "proposed",
-      "template_id": "t3"
+      "template_id": "t3",
+      "idempotency_key": "viral-posts-redacted-run-t3-b"
     },
     {
       "draft_id": "redacted-draft-6",
       "marked": "proposed",
-      "template_id": "t5"
+      "template_id": "t5",
+      "idempotency_key": "viral-posts-redacted-run-t5-a"
     }
   ],
   "note_on_controls": "controls ran in the earlier drafting run (see the awaiting-approval receipt); after_tool_calls counts that run's tool_path"

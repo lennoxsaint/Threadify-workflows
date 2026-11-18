@@ -15,7 +15,7 @@ const sameText = (text) => (text ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu
 // one fill: same text after case, punctuation and spacing, or differing only in a number (SKILL.md step 2)
 const sameFill = (text) => sameText(text).replace(/\p{N}+/gu, '#');
 const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
-  .map((run) => run.replace(/[^\p{L}\p{N}'\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
+  .map((run) => run.replace(/[^\p{L}\p{N}'’"“”\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
   .reduce((best, run) => (run.length > best.length ? run : best), []);
 
 // Search matches apostrophes and quote marks exactly, so a stretch with one is searched in both forms (SKILL.md step 2).
@@ -124,6 +124,18 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Show every part of a thread/);
   assert.match(skill, /Label each template you pick "used", even when none of its drafts survives the checks/);
   assert.match(skill, /Without a connection, `account_handle` is the handle the creator gave you, or `unconnected`/);
+  assert.match(skill, /A word that every evidence post has in the same place is a fixed word; a placeholder covers only the words that differ between fills/);
+  assert.match(skill, /A template with none of the labels above is "eligible"\. Step 3 labels the ones it picks "used"/);
+  assert.match(skill, /Before any `generate_content` call, fill the hook yourself with each fact in its exact Brain wording and count the characters/);
+  assert.match(skill, /When no fact fits, relabel the template "no fitting fact", leave it out and make no `generate_content` call for it/);
+  assert.match(skill, /A shortening that drops a word the sentence needs, such as an article or a verb, also fails/);
+  assert.match(skill, /If you would ask the creator to confirm the fix, it fails/);
+  assert.match(skill, /naming `account\.username` as the only account this run reads and writes/);
+  assert.match(skill, /This run opens at most 3 library posts: name that number in the drafting-yes ask/);
+  assert.match(skill, /pass it as `idempotency_key`\. If a call errors or times out, retry only with that same key/);
+  assert.match(skill, /Every slot must be at least 5 minutes in the future/);
+  assert.match(skill, /A slot that is now less than 5 minutes away is blocked: it needs a new time and a new yes/);
+  assert.match(skill, /record your answer word for word with its `DELIVERS:` word as the verdict and `unavailable` as the result/);
   assert.match(skill, /Never invent a number, quote, name or story/);
   assert.match(skill, /top 10% by views at least twice/);
   assert.match(skill, /view count/);
@@ -141,7 +153,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Your own read is never a pass: when no fresh agent or session is available, the check is \*\*unavailable\*\*/);
   // round 9: facts keep the link between their parts, one hand fix, the writer gets the limit and the exact words
   assert.match(skill, /changing who or what it is about, or the link between its parts \("is the secret to" becoming "is", "leads to" becoming "equals"\), makes a new claim, and that fails/);
-  assert.match(skill, /Fix it by hand at most once, and only when the fix keeps the skeleton and the facts \(for example a shorter hook\), then check again and say what changed\. If the fixed post still fails, drop it\./);
+  assert.match(skill, /Fix it by hand at most once, and only when the fix keeps the skeleton and the facts \(for example a shorter hook\), then check again and say what changed\. If you would ask the creator to confirm the fix, it fails\. If the fixed post still fails, drop it\./);
   assert.match(skill, /the hook's character limit \(80, or the proven hook's length when that is longer\), each fact in its exact Brain wording, and the rule "keep this skeleton exactly; change only the placeholder words; keep each fact's words and the link between them"/);
   assert.match(skill, /record every query you searched, in order, as the template's `tired_check_queries` in the receipt, or an empty list when there is no stretch to search/);
   assert.match(skill, /and only when drafting will go ahead: a run without the drafting yes stops after the tired check, with no control and no waiver question/);
@@ -205,7 +217,8 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   for (const line of ['plug parts left out per template', 'fresh reader per post: who read it, its answer word for word and its verdict (the DELIVERS word from that answer)',
     'approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)', 'energy reason per post',
     'receipt status: one of awaiting_approval, nothing_to_approve, drafting_declined, fallback_ready, scheduled, partially_scheduled, schedule_unverified',
-    'tired-check queries searched in both apostrophe forms when the stretch has one']) {
+    'tired-check queries per template, every query searched, in order, in both apostrophe forms when the stretch has one',
+    "hook fit per template picked for drafting: each fact's filled hook length and the limit, counted before any generate_content call"]) {
     assert.ok(manifest.receipt.must_prove.includes(line), line);
   }
   for (const line of ['template, its label and its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete',
@@ -255,7 +268,7 @@ test('Viral Posts discloses saves before drafting and guards the write after the
   const intent = step7.indexOf('**Save the intent first.**');
   const write = step7.indexOf('`schedule_post`');
   assert.ok(recheck >= 0 && recheck < intent && intent < write, 'recheck and saved intent come before the write');
-  assert.match(step7, /`list_scheduled_posts` again for the window/);
+  assert.match(step7, /`list_scheduled_posts` again for a window that starts at least 2 hours before this post's slot/);
   assert.match(step7, /Never move an approved time yourself/);
   assert.match(step7, /the approved time as an ISO instant/);
   assert.match(step7, /written `YYYY-MM-DDTHH:mm:ss±hh:mm` in the creator's timezone \(no milliseconds, never `Z`/);
@@ -344,7 +357,7 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     const line = receipt.top_10_line;
     assert.equal(line.rank, Math.max(1, Math.floor(line.account_post_count / 10)), 'the line is the post at a tenth of the count');
     const used = new Set([...(receipt.checks ?? []), ...(receipt.posts ?? [])].map((row) => row.template_id));
-    const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified', 'control_failed'];
+    const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified', 'control_failed', 'no_fitting_fact'];
     // every label a receipt uses is one the manifest's receipt line names
     const labelLine = manifest.receipt.must_prove.find((line) => line.startsWith('label per template:'));
     for (const template of receipt.templates) {
@@ -588,4 +601,135 @@ test('Viral Posts fresh-reader results come from the reader\'s own DELIVERS word
     for (const post of r.posts.filter((p) => p.template_id === row.template_id)) post.gate_flags = post.gate_flags.filter((g) => !g.startsWith('fresh reader: fail'));
   });
   assert.doesNotThrow(() => assertFreshReaders(passedAnyway), 'a clear yes on a waived template is a plain pass');
+});
+
+// A curly apostrophe and a straight one are the same mark when comparing words.
+const wordsOf = (text) => text.toLowerCase().replace(/’/g, "'").match(/[\p{L}\p{N}']+/gu) ?? [];
+const fixedWords = (skeleton) => wordsOf(skeleton.split(/\[[^\]]*\]/).join(' '));
+const words = (line) => wordsOf(line);
+const commonInOrder = (a, b) => {
+  const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+  for (let i = a.length - 1; i >= 0; i -= 1) for (let j = b.length - 1; j >= 0; j -= 1) dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const out = []; let i = 0; let j = 0;
+  while (i < a.length && j < b.length) { if (a[i] === b[j]) { out.push(a[i]); i += 1; j += 1; } else if (dp[i + 1][j] >= dp[i][j + 1]) i += 1; else j += 1; }
+  return out;
+};
+const inOrder = (needles, hay) => { let k = 0; for (const w of hay) if (w === needles[k]) k += 1; return k === needles.length; };
+
+test('Viral Posts checks the hook fits before drafting and keeps shared words fixed', () => {
+  const receipts = ['awaiting-approval', 'after-yes'].map((name) => [name, readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`)]);
+  let noFit = 0; let checkedSkeletons = 0;
+  for (const [name, receipt] of receipts) {
+    assert.equal(receipt.drafting_yes, true, name);
+    for (const template of receipt.templates) {
+      const where = `${name} ${template.template_id}`;
+      if (template.status === 'used') {
+        assert.ok(Array.isArray(template.hook_fit) && template.hook_fit.length > 0, `${where} records its hook fit`);
+        assert.ok(template.hook_fit.some((f) => f.filled_hook_chars <= f.limit), `${where} drafts only with a fact that fits`);
+      }
+      if (template.status === 'no_fitting_fact') {
+        noFit += 1;
+        assert.ok(template.hook_fit.length > 0 && template.hook_fit.every((f) => f.filled_hook_chars > f.limit), `${where} has no fact that fits`);
+        assert.ok(!(receipt.gate_drafts ?? []).some((d) => d.template_id === template.template_id), `${where} made no generate_content call`);
+        assert.ok(!receipt.posts.some((p) => p.template_id === template.template_id), `${where} has no post`);
+      }
+      const lines = (template.evidence ?? []).map((e) => e.first_line).filter((l) => !/^redacted/.test(l));
+      if (lines.length >= 2) {
+        checkedSkeletons += 1;
+        const shared = lines.map(words).reduce((acc, w) => commonInOrder(acc, w));
+        assert.ok(inOrder(shared, fixedWords(template.skeleton)), `${where} keeps the words every evidence post shares (${shared.join(' ')}) as fixed words`);
+      }
+    }
+  }
+  assert.ok(noFit >= 1, 'a fixture covers a template with no fitting fact');
+  for (const [name, receipt] of receipts) {
+    const keys = (receipt.gate_drafts ?? []).map((d) => d.idempotency_key);
+    assert.ok(keys.length > 0 && keys.every(Boolean), `${name} keeps a generate_content key for every saved draft`);
+    assert.equal(new Set(keys).size, keys.length, `${name} uses a different key for each version`);
+  }
+  let selfRead = 0;
+  for (const name of ['fallback', 'fallback-after-error']) {
+    for (const template of readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`).templates.filter((t) => /self-read/.test(t.fresh_reader_control?.reader ?? ''))) {
+      selfRead += 1;
+      const control = template.fresh_reader_control;
+      assert.equal(control.result, 'unavailable', `${name} ${template.template_id} self-read control is unavailable`);
+      assert.match(control.answer ?? '', /DELIVERS:/, `${name} ${template.template_id} keeps the self-read answer`);
+      assert.equal(control.verdict, control.answer.match(/DELIVERS:\s*(clear yes|borderline|no)/)[1], `${name} ${template.template_id} verdict is the self-read DELIVERS word`);
+    }
+  }
+  assert.ok(selfRead >= 1, 'a fixture covers a self-read control');
+  assert.ok(checkedSkeletons >= 2, 'the fixtures carry evidence lines the skeleton can be checked against');
+});
+
+test('Viral Posts keeps apostrophes and quote marks in the tired search, in both forms', () => {
+  for (const [skeleton, straight, curly] of [
+    ['[name] don\'t say "no" to [thing].', 'don\'t say "no" to', 'don’t say “no” to'],
+    ['[name] don’t say “no” to [thing].', 'don’t say “no” to', 'don\'t say "no" to'],
+  ]) {
+    const query = longestFixedRun(skeleton).join(' ');
+    assert.equal(query, straight, 'the stretch keeps its own marks');
+    assert.deepEqual(tiredQueries(query), [straight, curly], 'and is searched in the other form too');
+  }
+  assert.deepEqual(fixedWords('[name] don’t stop [thing]'), words("don't stop"), 'the shared-word check reads both apostrophes as one word');
+});
+
+test('Viral Posts fixtures stay inside the drafting limits and record every call', () => {
+  const skill = fs.readFileSync(source, 'utf8');
+  assert.match(skill, /Pick up to three templates/);
+  assert.match(skill, /at most 2 versions per template, 6 calls in all/);
+  const count = (receipt, tool) => receipt.tool_path.filter((name) => name === tool).length;
+  for (const name of ['awaiting-approval', 'fallback', 'after-yes', 'drafting-declined', 'fallback-after-error']) {
+    const receipt = readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`);
+    const used = new Set(receipt.templates.filter((t) => t.status === 'used').map((t) => t.template_id));
+    assert.ok(used.size <= 3, `${name} picks at most three templates`);
+    const drafts = receipt.gate_drafts ?? [];
+    assert.ok(drafts.length <= 6, `${name} makes at most 6 versions`);
+    for (const id of new Set(drafts.map((d) => d.template_id))) {
+      assert.ok(used.has(id), `${name}: ${id} drafts only as a picked template`);
+      assert.ok(drafts.filter((d) => d.template_id === id).length <= 2, `${name}: ${id} has at most 2 versions`);
+    }
+    assert.deepEqual(drafts.map((d) => d.draft_id), receipt.drafts_saved ?? [], `${name} shows every saved draft at the gate, in order`);
+    if (count(receipt, 'generate_content') > 0 || receipt.status === 'awaiting_approval') {
+      assert.equal(count(receipt, 'generate_content'), drafts.length, `${name} records one generate_content call per saved draft (no retries here)`);
+      const queries = receipt.templates.reduce((n, t) => n + (t.tired_check_queries ?? []).length, 0);
+      assert.ok(count(receipt, 'search_posts') >= queries, `${name} records a search_posts call for every tired-check query`);
+    }
+    if (receipt.queue_text_check) {
+      assert.ok(count(receipt, 'get_schedule_status') >= receipt.queue_text_check.fetched_full_text.length, `${name} records every full-text fetch`);
+    }
+    if (receipt.dispatch_queue_checks) {
+      assert.ok(count(receipt, 'get_connection_defaults') >= receipt.posts.length, `${name} rechecks the connection for every post`);
+      const fetched = receipt.dispatch_queue_checks.reduce((n, c) => n + c.fetched_full_text.length, 0);
+      assert.ok(count(receipt, 'get_schedule_status') >= fetched, `${name} records every full-text fetch at dispatch`);
+    }
+  }
+});
+
+test('Viral Posts lists the calendar at least 2 hours past every slot, at the gate and at dispatch', () => {
+  const skill = fs.readFileSync(source, 'utf8');
+  assert.match(skill, /Every proposed slot must be at least 2 hours inside the window you listed \(2 hours after its start and 2 hours before its end\)/);
+  assert.match(skill, /again for a window that starts at least 2 hours before this post's slot and ends at least 2 hours after it/);
+  const at = (time) => Date.parse(/[zZ]$|[+-]\d\d:\d\d$/.test(time) ? time : `${time.replace(' ', 'T')}:00Z`);
+  const inside = (time, window) => at(time) - at(window.start) >= 2 * 3600e3 && at(window.end) - at(time) >= 2 * 3600e3;
+  const edge = { start: '2026-06-02 00:00', end: '2026-06-03 00:00' };
+  assert.ok(!inside('2026-06-02 23:30', edge), 'a slot 30 minutes before the window ends is refused: a post at 00:30 would be unseen');
+  assert.ok(!inside('2026-06-02 01:00', edge), 'a slot 1 hour after the window starts is refused');
+  assert.ok(inside('2026-06-02 22:00', edge) && inside('2026-06-02 02:00', edge), 'exactly 2 hours inside is enough');
+
+  const pending = readJson('validation/mock-fixtures/viral-posts.awaiting-approval.receipt.json');
+  const window = pending.schedule_proposal.calendar_window;
+  assert.ok(window?.start && window?.end, 'the gate records the window it listed');
+  for (const slot of pending.schedule_proposal.slots) assert.ok(inside(slot.local_time, window), `${slot.template_id} sits at least 2 hours inside the listed window`);
+  for (const name of ['fallback', 'fallback-after-error']) {
+    const proposal = readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`).schedule_proposal;
+    assert.equal(proposal.calendar_listed, null, `${name} listed no calendar`);
+    for (const slot of proposal.slots) assert.match(slot.label, /not checked against the live calendar/);
+  }
+
+  const after = readJson('validation/mock-fixtures/viral-posts.after-yes.receipt.json');
+  for (const post of after.posts) {
+    const check = after.dispatch_queue_checks.find((c) => c.template_id === post.template_id);
+    assert.equal(check.calendar_listed, check.calendar_total_in_window, `${post.template_id} relists the whole window at dispatch`);
+    assert.ok(check.calendar_window && inside(post.scheduled_at, check.calendar_window), `${post.template_id} relists at least 2 hours either side of its slot`);
+  }
 });

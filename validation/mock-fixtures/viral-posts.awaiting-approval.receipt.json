@@ -13,13 +13,29 @@
     "greatest_hits",
     "read_post_performance",
     "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
     "get_post_thread",
     "list_viral_items",
     "query_brain",
     "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "validate_post",
+    "validate_post",
+    "validate_post",
     "validate_post",
     "best_time_to_post",
     "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
     "get_schedule_status"
   ],
   "fallback_used": false,
@@ -85,6 +101,13 @@
       "tired_check_queries": [
         "here's what",
         "here’s what"
+      ],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t1-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
       ]
     },
     {
@@ -96,21 +119,21 @@
       ],
       "evidence": [
         {
-          "first_line": "redacted example hook three",
+          "first_line": "money is a tool.",
           "date": "2026-04-01",
           "views": 11000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-one",
+          "fill": "money / a tool",
           "part_count": 1
         },
         {
-          "first_line": "redacted example hook four",
+          "first_line": "time is the real currency.",
           "date": "2026-05-09",
           "views": 8000,
           "media_type": "TEXT_POST",
           "source_complete": true,
-          "fill": "redacted fill t2-two",
+          "fill": "time / the real currency",
           "part_count": 1
         }
       ],
@@ -121,10 +144,17 @@
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
         "verdict": "clear yes",
         "result": "pass",
-        "evidence_first_line": "redacted example hook three",
+        "evidence_first_line": "money is a tool.",
         "after_tool_calls": 5
       },
-      "tired_check_queries": []
+      "tired_check_queries": [],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t2-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
+      ]
     },
     {
       "template_id": "t3",
@@ -147,7 +177,7 @@
     {
       "template_id": "t4",
       "skeleton": "[number] things i stopped doing:",
-      "status": "used",
+      "status": "eligible",
       "evidence": [
         {
           "first_line": "redacted example hook six",
@@ -366,6 +396,13 @@
       },
       "tired_check_queries": [
         "the older i get the more i realize"
+      ],
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t8-a",
+          "filled_hook_chars": 64,
+          "limit": 80
+        }
       ]
     },
     {
@@ -426,6 +463,48 @@
       "tired_check_queries": [
         "is the new"
       ]
+    },
+    {
+      "template_id": "t10",
+      "skeleton": "the older i get the more i realize [thing] is [what it really is].",
+      "evidence": [
+        {
+          "first_line": "redacted one-line hook t10 best",
+          "date": "2026-05-05",
+          "views": 15000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t10-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted one-line hook t10 second",
+          "date": "2026-05-12",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t10-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "status": "no_fitting_fact",
+      "label_reason": "every Brain fact in its exact wording makes the hook longer than its limit, so no generate_content call was made",
+      "hook_fit": [
+        {
+          "fact": "redacted Brain fact t10-a",
+          "filled_hook_chars": 96,
+          "limit": 81
+        },
+        {
+          "fact": "redacted Brain fact t10-b",
+          "filled_hook_chars": 105,
+          "limit": 81
+        }
+      ],
+      "tired_check_queries": [
+        "the older i get the more i realize"
+      ]
     }
   ],
   "checks": [
@@ -450,24 +529,6 @@
     {
       "template_id": "t2",
       "hook_characters": 41,
-      "validate_post": "valid",
-      "skeleton_match": true,
-      "energy_matches_evidence": true,
-      "all_parts_shown": true,
-      "facts_traced": true,
-      "fill_is_new": true,
-      "fresh_reader": {
-        "reader": "fresh agent given only the post text",
-        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
-        "verdict": "clear yes",
-        "result": "pass"
-      },
-      "hook_limit": 80,
-      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
-    },
-    {
-      "template_id": "t4",
-      "hook_characters": 30,
       "validate_post": "valid",
       "skeleton_match": true,
       "energy_matches_evidence": true,
@@ -513,16 +574,15 @@
         "idempotency_key": "viral-posts:example_creator:t1:76757481c757"
       },
       {
-        "template_id": "t2",
-        "local_time": "2026-06-04 09:00",
-        "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7"
-      },
-      {
         "template_id": "t8",
         "local_time": "2026-06-06 09:00",
         "idempotency_key": "viral-posts:example_creator:t8:e88c584f3830"
       }
-    ]
+    ],
+    "calendar_window": {
+      "start": "2026-06-02 00:00",
+      "end": "2026-06-09 00:00"
+    }
   },
   "drafting_yes": true,
   "drafts_saved": [
@@ -530,8 +590,6 @@
     "redacted-draft-2",
     "redacted-draft-3",
     "redacted-draft-4",
-    "redacted-draft-5",
-    "redacted-draft-6",
     "redacted-draft-7"
   ],
   "top_10_line": {
@@ -565,7 +623,7 @@
     },
     {
       "template_id": "t2",
-      "state": "proposed",
+      "state": "blocked",
       "parts": [
         "redacted example post two"
       ],
@@ -577,20 +635,7 @@
       "saved_draft_id": "redacted-draft-3",
       "gate_flags": [
         "tired_check_incomplete"
-      ]
-    },
-    {
-      "template_id": "t4",
-      "state": "blocked",
-      "parts": [
-        "redacted example post four"
       ],
-      "media": [],
-      "scheduled_at": "2026-06-05T09:00:00-04:00",
-      "fingerprint": "abe763868a626b05ae0ed8d8118de2aa5093f9f3cc277f196041913b63a287c8",
-      "idempotency_key": "viral-posts:example_creator:t4:abe763868a62",
-      "text_source": "draft",
-      "saved_draft_id": "redacted-draft-5",
       "blocked_reason": "part 1 repeats queued post redacted-queued-3 (full text fetched; its preview was cut off)"
     },
     {
@@ -634,7 +679,7 @@
     "collisions": [
       {
         "scheduled_post_id": "redacted-queued-3",
-        "template_id": "t4",
+        "template_id": "t2",
         "part": 1
       }
     ]
@@ -643,38 +688,33 @@
     {
       "draft_id": "redacted-draft-1",
       "marked": "proposed",
-      "template_id": "t1"
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-a"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
-      "template_id": "t1"
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-b"
     },
     {
       "draft_id": "redacted-draft-3",
-      "marked": "proposed",
-      "template_id": "t2"
+      "marked": "excluded",
+      "template_id": "t2",
+      "idempotency_key": "viral-posts-redacted-run-t2-a",
+      "why": "blocked: repeats queued text"
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
-      "template_id": "t2"
-    },
-    {
-      "draft_id": "redacted-draft-5",
-      "marked": "excluded",
-      "template_id": "t4",
-      "why": "blocked: repeats queued text"
-    },
-    {
-      "draft_id": "redacted-draft-6",
-      "marked": "not_picked",
-      "template_id": "t4"
+      "template_id": "t2",
+      "idempotency_key": "viral-posts-redacted-run-t2-b"
     },
     {
       "draft_id": "redacted-draft-7",
       "marked": "proposed",
-      "template_id": "t8"
+      "template_id": "t8",
+      "idempotency_key": "viral-posts-redacted-run-t8-a"
     }
   ]
 }
