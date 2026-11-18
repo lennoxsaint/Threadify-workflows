@@ -130,7 +130,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Without a connection, `account_handle` is the handle the creator gave you, or `unconnected`/);
   assert.match(skill, /A word is a \*\*fixed word\*\* only when every evidence post has it in the same place: the same word count from the start of the line, or from its end/);
   assert.match(skill, /A shared word that moves around inside the fills stays inside a placeholder/);
-  assert.match(skill, /record each fact, its filled hook, the count, the limit and `after_tool_calls` \(the number of `tool_path` entries made before you counted, never past the first `generate_content`\)/);
+  assert.match(skill, /`limit` and `after_tool_calls` \(the number of `tool_path` entries made before you counted, never past the first `generate_content`\)/);
   assert.match(skill, /Make up to two versions per template \(one call each, for example with a different style preset\), give each only facts that fit, and keep the draft id each call returns and the fact it was given/);
   assert.match(skill, /count the hook fit as in step 3 \(record `hook_fit`; a template with no fitting fact is labelled "no fitting fact" and gets no post\)/);
   assert.match(skill, /find them with the same stretch of fixed words and quote-mark forms as step 2, and record those stretches as `tired_check_queries`/);
@@ -164,6 +164,8 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /`searches`, in order, each with its `word`, `total` \(its `total_matched`\), `returned` \(the posts you got, after any paging\), `read` \(the ones you read for the claim\) and, when `read` is under `returned`, `narrowed_by`/);
   assert.match(skill, /for a fact that passes, `closest`, the post that came nearest \(date, views, its line and `why_not`, why its claim differs\), or `none`\./);
   assert.match(skill, /with the version's first line as `hook` so the label can be checked against it\./);
+  assert.match(skill, /record each fact as one row of the template's `hook_fit` in the receipt, with its `fact`, `filled_hook`, `filled_hook_chars` \(the count\), `limit` and `after_tool_calls`/);
+  assert.match(skill, /Record on that fact's `hook_fit` row its `repeat_check`: `searches`/);
   assert.match(skill, /If a raised limit still brings back fewer, search again with `to` set to the oldest date that came back and merge the results by post id, until you hold every match\./);
   assert.match(skill, /A fact whose claim one of the creator's own posts already makes, in any template or in none, is a repeat/);
   assert.match(skill, /and so is a fact whose claim one of the creator's own posts already makes, in any template or in none \(the step-3 repeat check\)/);
