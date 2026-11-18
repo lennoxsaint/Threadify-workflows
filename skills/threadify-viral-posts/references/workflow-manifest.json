@@ -83,7 +83,9 @@
       "media per post (none: text posts only)",
       "drafts already saved by generation, by id",
       "check results, intent fingerprint and stable idempotency key per post",
-      "any \"tired check incomplete\" flag next to its template"
+      "any \"tired check incomplete\" flag next to its template",
+      "global auto-repost setting as read (on with its trigger, off or unknown)",
+      "each hand-fixed post: the saved draft keeps the old wording"
     ]
   },
   "fallback": {
@@ -93,7 +95,8 @@
       "Without a working connection, ask the creator to paste their best posts with view counts, the full text of every part of each post a template copies, their 10 most recent posts with view counts, and the facts each new post may use.",
       "A cut-off or partial source post leaves its template shape unverified and out of the batch; a template whose posts carried a picture needs media and stays out of this text-only batch; one with no answer about pictures is media unknown and stays out until answered.",
       "Find templates, fill them, run the same checks and propose tentative slots locally; label every slot unverified against the live calendar.",
-      "Never claim Threadify generated, validated or scheduled anything; record the fallback in the receipt."
+      "Never claim Threadify generated, validated or scheduled anything; record the fallback in the receipt.",
+      "List any tool called before the fallback, such as a failed get_connection_defaults, in tool_path; leave it empty only when no tool was called."
     ]
   },
   "receipt": {
@@ -110,6 +113,9 @@
       "drafting yes and saved draft ids",
       "media decision per template",
       "intent fingerprint, returned scheduled post id and state per post",
+      "global auto-repost setting at the gate and at each dispatch",
+      "tired-check query per template",
+      "queued posts whose full text was fetched for the duplicate-text check",
       "readback status (scheduled, never published)",
       "fallback state"
     ]

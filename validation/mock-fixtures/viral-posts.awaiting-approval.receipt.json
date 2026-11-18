@@ -12,13 +12,15 @@
     "get_connection_defaults",
     "greatest_hits",
     "read_post_performance",
+    "search_posts",
     "get_post_thread",
     "list_viral_items",
     "query_brain",
     "generate_content",
     "validate_post",
     "best_time_to_post",
-    "list_scheduled_posts"
+    "list_scheduled_posts",
+    "get_schedule_status"
   ],
   "fallback_used": false,
   "artifact_ids": [
@@ -45,7 +47,8 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "status": "used"
+      "status": "used",
+      "tired_check_query": "i"
     },
     {
       "template_id": "t2",
@@ -70,7 +73,8 @@
           "source_complete": true
         }
       ],
-      "top_10_percent_views": 5000
+      "top_10_percent_views": 5000,
+      "tired_check_query": "redacted fixed words"
     },
     {
       "template_id": "t3",
@@ -86,6 +90,29 @@
         }
       ],
       "library_cross_check": "seen in the viral library; reached this creator's top 10% only once",
+      "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t4",
+      "skeleton": "[number] things i stopped doing:",
+      "status": "used",
+      "tired_check_query": "things i stopped doing",
+      "evidence": [
+        {
+          "first_line": "redacted example hook six",
+          "date": "2026-03-01",
+          "views": 10000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook seven",
+          "date": "2026-05-12",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
+      ],
       "top_10_percent_views": 5000
     }
   ],
@@ -109,6 +136,16 @@
       "energy_matches_evidence": true,
       "all_parts_shown": true,
       "facts_traced": true
+    },
+    {
+      "template_id": "t4",
+      "hook_characters": 30,
+      "validate_post": "valid",
+      "skeleton_match": true,
+      "fresh_reader_delivers": true,
+      "energy_matches_evidence": true,
+      "all_parts_shown": true,
+      "facts_traced": true
     }
   ],
   "schedule_proposal": {
@@ -119,19 +156,23 @@
       {
         "template_id": "t1",
         "local_time": "2026-06-03 09:00",
-        "idempotency_key": "viral-posts:example_creator:t1:96c6ff6f3a7f"
+        "idempotency_key": "viral-posts:example_creator:t1:d5485032c347"
       },
       {
         "template_id": "t2",
         "local_time": "2026-06-04 09:00",
-        "idempotency_key": "viral-posts:example_creator:t2:ebb609dd2d6a"
+        "idempotency_key": "viral-posts:example_creator:t2:af219b1a99fb"
       }
     ]
   },
   "drafting_yes": true,
   "drafts_saved": [
     "redacted-draft-1",
-    "redacted-draft-2"
+    "redacted-draft-2",
+    "redacted-draft-3",
+    "redacted-draft-4",
+    "redacted-draft-5",
+    "redacted-draft-6"
   ],
   "top_10_line": {
     "account_post_count": 1200,
@@ -154,8 +195,13 @@
       ],
       "media": [],
       "scheduled_at": "2026-06-03T09:00:00+08:00",
-      "fingerprint": "96c6ff6f3a7fdf575da19fb72a7891c98eca8fd0bb908cbddc404ac035eb7bec",
-      "idempotency_key": "viral-posts:example_creator:t1:96c6ff6f3a7f"
+      "fingerprint": "d5485032c34716c2a63d7365d003a32d210a0790c55171070cd884eec1cc5f83",
+      "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
+      "text_source": "hand_fixed",
+      "saved_draft_id": "redacted-draft-1",
+      "gate_flags": [
+        "hand_fixed: saved draft redacted-draft-1 keeps the old wording"
+      ]
     },
     {
       "template_id": "t2",
@@ -165,11 +211,56 @@
       ],
       "media": [],
       "scheduled_at": "2026-06-04T09:00:00+08:00",
-      "fingerprint": "ebb609dd2d6a3ffdffe1e70ac240cd6369fb9b241d1194783c9a45d98f178ace",
-      "idempotency_key": "viral-posts:example_creator:t2:ebb609dd2d6a",
+      "fingerprint": "af219b1a99fb7c77cd0809a6c6982749c4d8825d18a09512a91bba6019ad58e9",
+      "idempotency_key": "viral-posts:example_creator:t2:af219b1a99fb",
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-3",
       "gate_flags": [
         "tired_check_incomplete"
       ]
+    },
+    {
+      "template_id": "t4",
+      "state": "blocked",
+      "parts": [
+        "redacted example post four"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-05T09:00:00+08:00",
+      "fingerprint": "bd354a0aa761404c6121129786368f2f018c0473877defc62d1e1c52e5120735",
+      "idempotency_key": "viral-posts:example_creator:t4:bd354a0aa761",
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-5",
+      "blocked_reason": "part 1 repeats queued post redacted-queued-3 (full text fetched; its preview was cut off)"
     }
-  ]
+  ],
+  "global_auto_repost": {
+    "read": {
+      "enabled": true,
+      "known": true,
+      "trigger": "time",
+      "delay_minutes": 480
+    },
+    "gate_line": "on: Threadify re-shares each post 8 hours after it goes out"
+  },
+  "queue_text_check": {
+    "cut_off_or_multi_part": [
+      "redacted-queued-1",
+      "redacted-queued-2",
+      "redacted-queued-3"
+    ],
+    "fetched_full_text": [
+      "redacted-queued-1",
+      "redacted-queued-2",
+      "redacted-queued-3"
+    ],
+    "unresolved": [],
+    "collisions": [
+      {
+        "scheduled_post_id": "redacted-queued-3",
+        "template_id": "t4",
+        "part": 1
+      }
+    ]
+  }
 }

@@ -68,6 +68,34 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /a tenth of that count, rounded down/);
   assert.match(skill, /Writing it again needs a new drafting yes/);
   assert.doesNotMatch(skill, /fix it \(or write it again\)/);
+  assert.match(skill, /If the creator sends a post back with a note, change only what the note names and keep the skeleton/);
+  assert.match(skill, /flat or boring, or rejects the skeleton, switch to another eligible template/);
+  assert.match(skill, /fixed words up to the first placeholder, exactly as written in the evidence posts/);
+  assert.match(skill, /`account\.username` with no @; use that same form in every fingerprint and key/);
+});
+
+test('Viral Posts shows and rechecks the global auto-repost setting and full queued text', () => {
+  const skill = fs.readFileSync(source, 'utf8');
+  assert.match(skill, /`automation\.global_auto_repost`/);
+  assert.match(skill, /it is unknown, never off/);
+  const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
+  assert.match(gate, /the global auto-repost setting exactly as read/);
+  assert.match(gate, /This workflow never changes it/);
+  assert.match(gate, /nothing can be scheduled until the creator checks it/);
+  assert.match(gate, /saved draft <id> keeps the old wording/);
+  const step7 = skill.slice(skill.indexOf('7. **Schedule after the yes.**'));
+  assert.match(step7, /a changed or unknown setting blocks every post until a new yes/);
+  assert.match(step7, /the per-post `auto_repost`; the creator's global auto-repost setting still applies/);
+  assert.match(skill, /preview ends in "…" or that has more than one part, call `get_schedule_status` once for its full text/);
+  assert.match(skill, /the comparison is unresolved: no post is proposed until it is fetched/);
+  assert.match(step7, /fetch full text with `get_schedule_status` for every new id/);
+  assert.match(skill, /Without it, skip `list_viral_items`, `get_viral_item` and every later save/);
+  assert.match(skill, /After the drafting yes only, call `list_viral_items`/);
+  assert.match(skill, /it is empty only when no tool was called/);
+  for (const line of ['global auto-repost setting as read (on with its trigger, off or unknown)', 'each hand-fixed post: the saved draft keeps the old wording']) {
+    assert.ok(manifest.approval_gate.must_show.includes(line), line);
+  }
+  assert.ok(manifest.receipt.must_prove.includes('global auto-repost setting at the gate and at each dispatch'));
 });
 
 test('Viral Posts discloses saves before drafting and guards the write after the yes', () => {
@@ -88,7 +116,7 @@ test('Viral Posts discloses saves before drafting and guards the write after the
   assert.match(step7, /`\[account, parts, media, scheduled_at\]` \(as `JSON\.stringify` writes it\)/);
   assert.match(step7, /they must equal what the gate showed/);
   assert.match(step7, /without `draft_id`, because Threadify schedules a draft's stored text/);
-  assert.match(step7, /Leave out `platforms`, `auto_plug` and `auto_repost`/);
+  assert.match(step7, /Leave out `platforms` \(so it goes to Threads only\), `auto_plug` and the per-post `auto_repost`/);
   const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
   assert.match(gate, /fingerprint and stable idempotency key/, 'the gate shows what the yes binds');
   assert.match(step7, /the result is unknown/);
@@ -103,7 +131,7 @@ test('Viral Posts keeps the tool order, calendar check and approval gate', () =>
     'generate_content', 'validate_post', 'best_time_to_post', 'list_scheduled_posts', 'schedule_post', 'get_schedule_status'];
   let last = -1;
   for (const tool of order) {
-    const at = steps.indexOf(`\`${tool}\``);
+    const at = steps.indexOf(`\`${tool}\``, last + 1);
     assert.ok(at > last, `${tool} appears in workflow order`);
     last = at;
   }
@@ -156,14 +184,14 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
 
 test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write cases blocked or unverified', () => {
   const validate = new Ajv({ strict: false }).compile(readJson('schemas/workflow-receipt.v1.json'));
-  const names = ['awaiting-approval', 'fallback', 'after-yes'];
+  const names = ['awaiting-approval', 'fallback', 'after-yes', 'drafting-declined', 'fallback-after-error'];
   const receipts = names.map((name) => readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`));
   for (const receipt of receipts) {
     assert.ok(validate(receipt), JSON.stringify(validate.errors));
     const line = receipt.top_10_line;
     assert.equal(line.rank, Math.max(1, Math.floor(line.account_post_count / 10)), 'the line is the post at a tenth of the count');
     const used = new Set([...(receipt.checks ?? []), ...(receipt.posts ?? [])].map((row) => row.template_id));
-    const labels = ['used', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified'];
+    const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified'];
     for (const template of receipt.templates) {
       assert.ok(labels.includes(template.status), `${template.template_id} has a known label`);
       assert.equal(template.top_10_percent_views, line.views);
@@ -186,7 +214,31 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     }
     for (const slot of receipt.schedule_proposal?.slots ?? []) {
       if (receipt.fallback_used) assert.equal(slot.idempotency_key, undefined, 'a local packet makes no write key');
-      else assert.match(slot.idempotency_key, /^viral-posts:[^:]+:[^:]+:[0-9a-f]{12}$/);
+      else assert.match(slot.idempotency_key, /^viral-posts:[^:@]+:[^:]+:[0-9a-f]{12}$/);
+    }
+    const account = receipt.account_handle.replace(/^@/, '');
+    for (const post of receipt.posts ?? []) {
+      const print = crypto.createHash('sha256')
+        .update(JSON.stringify([account, post.parts, post.media, post.scheduled_at])).digest('hex');
+      assert.equal(post.fingerprint, print, `${post.template_id} fingerprint uses the account with no @`);
+      assert.equal(post.idempotency_key, `viral-posts:${account}:${post.template_id}:${print.slice(0, 12)}`, 'the whole key rebuilds');
+      if (post.text_source === 'hand_fixed') {
+        assert.ok(post.gate_flags?.some((flag) => flag.includes(`saved draft ${post.saved_draft_id} keeps the old wording`)));
+      }
+      if (post.schedule_call) {
+        assert.equal(post.schedule_call.idempotency_key, post.idempotency_key);
+        for (const banned of ['platforms', 'auto_plug', 'auto_repost']) assert.ok(!(banned in post.schedule_call), `no ${banned}`);
+        if (post.text_source === 'hand_fixed') {
+          assert.ok(!('draft_id' in post.schedule_call), 'hand-fixed text never goes by draft_id');
+          assert.deepEqual(post.schedule_call.posts?.map((part) => part.text) ?? [post.schedule_call.text], post.parts);
+        } else {
+          assert.equal(post.schedule_call.draft_id, post.saved_draft_id);
+        }
+      }
+    }
+    if (!receipt.fallback_used) assert.ok(receipt.global_auto_repost?.read, 'the setting is read in step 1');
+    for (const template of receipt.templates.filter((t) => t.status === 'used' || t.status === 'eligible')) {
+      if (!receipt.fallback_used) assert.ok(template.tired_check_query !== undefined, `${template.template_id} records its tired-check query`);
     }
   }
   assert.ok(receipts[1].templates.some((t) => t.status === 'shape_unverified'), 'the fallback fixture covers a cut-off paste');
@@ -195,21 +247,41 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   assert.ok(receipts[0].templates.some((t) => t.status === 'used' && t.flags?.includes('tired_check_incomplete')), 'covers a flagged template');
 
   const pending = receipts[0];
+  assert.ok(pending.global_auto_repost.gate_line.startsWith(pending.global_auto_repost.read.enabled ? 'on:' : 'off'));
+  const queue = pending.queue_text_check;
+  assert.deepEqual(queue.fetched_full_text, queue.cut_off_or_multi_part, 'every cut-off or multi-part queued post is read in full');
+  assert.deepEqual(queue.unresolved, []);
+  const collided = new Set(queue.collisions.map((hit) => hit.template_id));
+  assert.ok(collided.size > 0, 'covers a post that repeats queued text');
   const slotKeys = new Map(pending.schedule_proposal.slots.map((slot) => [slot.template_id, slot.idempotency_key]));
   for (const post of pending.posts) {
+    if (collided.has(post.template_id)) {
+      assert.equal(post.state, 'blocked', `${post.template_id} repeats queued text`);
+      assert.ok(!slotKeys.has(post.template_id));
+      continue;
+    }
     assert.equal(post.state, 'proposed');
-    const gatePrint = crypto.createHash('sha256')
-      .update(JSON.stringify([pending.account_handle, post.parts, post.media, post.scheduled_at])).digest('hex');
-    assert.equal(post.fingerprint, gatePrint, 'the gate shows the fingerprint the yes binds');
-    assert.equal(post.idempotency_key, slotKeys.get(post.template_id));
-    assert.ok(post.idempotency_key.endsWith(`:${gatePrint.slice(0, 12)}`));
+    assert.equal(post.idempotency_key, slotKeys.get(post.template_id), 'the gate shows the key the yes binds');
   }
+  assert.ok(pending.posts.some((post) => post.text_source === 'hand_fixed'), 'covers a hand-fixed post');
+
+  const declined = receipts[3];
+  assert.equal(declined.drafting_yes, false);
+  assert.deepEqual(declined.drafts_saved, []);
+  assert.ok(!declined.posts);
+  for (const tool of ['list_viral_items', 'get_viral_item', 'query_brain', 'generate_content', 'schedule_post']) {
+    assert.ok(!declined.tool_path.includes(tool), `no ${tool} without the drafting yes`);
+  }
+  const afterError = receipts[4];
+  assert.equal(afterError.fallback_used, true);
+  assert.deepEqual(afterError.tool_path, ['get_connection_defaults'], 'the failed call stays in tool_path');
+  assert.match(afterError.tool_outcomes[0].outcome, /^error/);
 
   const after = receipts[2];
   assert.ok(after.drafting_yes);
   assert.deepEqual(after.fingerprint_of, ['account', 'parts', 'media', 'scheduled_at']);
   const print = (post, at = post.scheduled_at) => crypto.createHash('sha256')
-    .update(JSON.stringify([after.account_handle, post.parts, post.media, at])).digest('hex');
+    .update(JSON.stringify([after.account_handle.replace(/^@/, ''), post.parts, post.media, at])).digest('hex');
   const states = new Set(after.posts.map((post) => post.state));
   for (const state of ['scheduled', 'blocked', 'schedule_unverified']) assert.ok(states.has(state), `covers ${state}`);
   assert.ok(after.templates.some((t) => t.status === 'needs_media'), 'covers a media template');
@@ -221,6 +293,7 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     const confirmed = post.readback?.status === 'scheduled' && post.readback.account_matches
       && post.readback.text_matches && post.readback.time_matches;
     if (post.state === 'scheduled') {
+      assert.deepEqual(post.auto_repost_at_dispatch, after.global_auto_repost.read, 'the setting at dispatch matches the gate');
       assert.ok(post.scheduled_post_id, 'a scheduled post keeps its returned id');
       assert.ok(confirmed, 'scheduled only after a matching readback');
     } else {
