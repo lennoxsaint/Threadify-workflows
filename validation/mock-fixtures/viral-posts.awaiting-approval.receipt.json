@@ -43,12 +43,18 @@
     "query_brain",
     "search_posts",
     "search_posts",
-    "query_brain",
-    "search_posts",
-    "search_posts",
     "search_posts",
     "search_posts",
     "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
     "search_posts",
     "search_posts",
     "search_posts",
@@ -140,11 +146,35 @@
           "limit": 80,
           "after_tool_calls": 32,
           "repeat_check": {
-            "queries": [
-              "journaled",
-              "morning"
+            "searches": [
+              {
+                "word": "journaled",
+                "total": 4,
+                "returned": 4,
+                "read": 4
+              },
+              {
+                "word": "morning",
+                "total": 31,
+                "returned": 31,
+                "read": 31
+              },
+              {
+                "word": "30",
+                "total": 118,
+                "returned": 118,
+                "read": 118
+              },
+              {
+                "word": "days",
+                "total": 260,
+                "returned": 260,
+                "read": 14,
+                "narrowed_by": "only the matches where \"days\" starts a claim"
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": "none"
           }
         }
       ]
@@ -193,14 +223,35 @@
           "filled_hook": "patience is a paid skill.",
           "filled_hook_chars": 25,
           "limit": 80,
-          "after_tool_calls": 35,
+          "after_tool_calls": 37,
           "repeat_check": {
-            "queries": [
-              "patience",
-              "paid",
-              "skill"
+            "searches": [
+              {
+                "word": "patience",
+                "total": 9,
+                "returned": 9,
+                "read": 9
+              },
+              {
+                "word": "paid",
+                "total": 22,
+                "returned": 22,
+                "read": 22
+              },
+              {
+                "word": "skill",
+                "total": 47,
+                "returned": 47,
+                "read": 47
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": {
+              "date": "2025-11-02",
+              "views": 2210,
+              "line": "patience is underrated.",
+              "why_not": "says patience is overlooked, not that it pays"
+            }
           }
         },
         {
@@ -208,20 +259,52 @@
           "filled_hook": "comfort is a slow leak.",
           "filled_hook_chars": 23,
           "limit": 80,
-          "after_tool_calls": 35,
+          "after_tool_calls": 37,
           "repeat_check": {
-            "queries": [
-              "comfort"
+            "searches": [
+              {
+                "word": "comfort",
+                "total": 15,
+                "returned": 15,
+                "read": 4
+              }
             ],
             "matches": [
               {
                 "date": "2026-02-14",
                 "views": 3120,
-                "first_line": "comfort is a slow leak in your ambition."
+                "first_line": "comfort is a slow leak in your ambition.",
+                "found_by": "comfort"
               }
             ]
           },
           "skipped": "repeat: your 2026-02-14 post already makes this claim"
+        },
+        {
+          "fact": "rest is part of the work.",
+          "filled_hook": "rest is part of the work.",
+          "filled_hook_chars": 25,
+          "limit": 80,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "rest",
+                "total": 40,
+                "returned": 40,
+                "read": 40
+              },
+              {
+                "word": "part",
+                "total": 1310,
+                "returned": 1000,
+                "read": 1000,
+                "note": "the call with `to` set to the oldest date returned the same 1,000 posts"
+              }
+            ],
+            "matches": []
+          },
+          "skipped": "repeat check incomplete: 310 of the 1,310 \"part\" matches could not be fetched",
+          "after_tool_calls": 37
         }
       ]
     },
@@ -472,14 +555,31 @@
           "filled_hook": "the longer i build the more i see sleep is a performance tool.",
           "filled_hook_chars": 62,
           "limit": 80,
-          "after_tool_calls": 40,
+          "after_tool_calls": 45,
           "repeat_check": {
-            "queries": [
-              "sleep",
-              "performance",
-              "tool"
+            "searches": [
+              {
+                "word": "sleep",
+                "total": 12,
+                "returned": 12,
+                "read": 12
+              },
+              {
+                "word": "performance",
+                "total": 8,
+                "returned": 8,
+                "read": 8
+              },
+              {
+                "word": "tool",
+                "total": 1240,
+                "returned": 1240,
+                "read": 31,
+                "narrowed_by": "only the matches where \"tool\" starts a claim"
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": "none"
           }
         }
       ]
@@ -575,14 +675,14 @@
           "filled_hook": "it took me years to learn that real confidence comes from keeping small promises to yourself every single day for years.",
           "filled_hook_chars": 120,
           "limit": 80,
-          "after_tool_calls": 44
+          "after_tool_calls": 50
         },
         {
           "fact": "the people who win long term were willing to look stupid in public first.",
           "filled_hook": "it took me years to learn that the people who win long term were willing to look stupid in public first.",
           "filled_hook_chars": 104,
           "limit": 80,
-          "after_tool_calls": 44
+          "after_tool_calls": 50
         }
       ],
       "tired_check_queries": [
@@ -782,7 +882,8 @@
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-a",
       "fact": "journaled every morning for 30 days",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
     },
     {
       "draft_id": "redacted-draft-2",
@@ -790,7 +891,8 @@
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-b",
       "fact": "journaled every morning for 30 days",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
     },
     {
       "draft_id": "redacted-draft-3",
@@ -799,7 +901,8 @@
       "idempotency_key": "viral-posts-redacted-run-t2-a",
       "why": "blocked: repeats queued text",
       "fact": "patience is a paid skill.",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "patience is a paid skill."
     },
     {
       "draft_id": "redacted-draft-4",
@@ -807,7 +910,8 @@
       "template_id": "t2",
       "idempotency_key": "viral-posts-redacted-run-t2-b",
       "fact": "patience is a paid skill.",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "patience is a paid skill."
     },
     {
       "draft_id": "redacted-draft-7",
@@ -815,7 +919,8 @@
       "template_id": "t8",
       "idempotency_key": "viral-posts-redacted-run-t8-a",
       "fact": "sleep is a performance tool.",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "the longer i build the more i see sleep is a performance tool."
     }
   ]
 }

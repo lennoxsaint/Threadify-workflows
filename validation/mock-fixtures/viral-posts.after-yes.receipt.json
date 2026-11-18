@@ -37,7 +37,11 @@
     "query_brain",
     "search_posts",
     "search_posts",
+    "search_posts",
+    "search_posts",
     "query_brain",
+    "search_posts",
+    "search_posts",
     "search_posts",
     "search_posts",
     "query_brain",
@@ -140,11 +144,35 @@
           "limit": 80,
           "after_tool_calls": 20,
           "repeat_check": {
-            "queries": [
-              "journaled",
-              "morning"
+            "searches": [
+              {
+                "word": "journaled",
+                "total": 4,
+                "returned": 4,
+                "read": 4
+              },
+              {
+                "word": "morning",
+                "total": 31,
+                "returned": 31,
+                "read": 31
+              },
+              {
+                "word": "30",
+                "total": 118,
+                "returned": 118,
+                "read": 118
+              },
+              {
+                "word": "days",
+                "total": 260,
+                "returned": 260,
+                "read": 14,
+                "narrowed_by": "only the matches where \"days\" starts a claim"
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": "none"
           }
         }
       ]
@@ -230,13 +258,37 @@
           "filled_hook": "nobody warns you that the first 100 posts are practice.",
           "filled_hook_chars": 55,
           "limit": 80,
-          "after_tool_calls": 23,
+          "after_tool_calls": 25,
           "repeat_check": {
-            "queries": [
-              "100",
-              "practice"
+            "searches": [
+              {
+                "word": "first",
+                "total": 180,
+                "returned": 180,
+                "read": 180
+              },
+              {
+                "word": "100",
+                "total": 25,
+                "returned": 25,
+                "read": 25
+              },
+              {
+                "word": "posts",
+                "total": 640,
+                "returned": 640,
+                "read": 12,
+                "narrowed_by": "only the matches where \"posts\" starts a claim"
+              },
+              {
+                "word": "practice",
+                "total": 14,
+                "returned": 14,
+                "read": 14
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": "none"
           }
         }
       ]
@@ -312,13 +364,29 @@
           "filled_hook": "the honest truth about growing from replies:",
           "filled_hook_chars": 44,
           "limit": 80,
-          "after_tool_calls": 26,
+          "after_tool_calls": 30,
           "repeat_check": {
-            "queries": [
-              "growing",
-              "replies"
+            "searches": [
+              {
+                "word": "growing",
+                "total": 96,
+                "returned": 96,
+                "read": 96
+              },
+              {
+                "word": "replies",
+                "total": 150,
+                "returned": 150,
+                "read": 150
+              }
             ],
-            "matches": []
+            "matches": [],
+            "closest": {
+              "date": "2026-01-20",
+              "views": 880,
+              "line": "replies are where the reach is.",
+              "why_not": "says replies bring reach, not that the account grew from them"
+            }
           }
         }
       ]
@@ -524,7 +592,8 @@
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-a",
       "fact": "journaled every morning for 30 days",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
     },
     {
       "draft_id": "redacted-draft-2",
@@ -532,7 +601,8 @@
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-b",
       "fact": "journaled every morning for 30 days",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
     },
     {
       "draft_id": "redacted-draft-4",
@@ -540,7 +610,8 @@
       "template_id": "t3",
       "idempotency_key": "viral-posts-redacted-run-t3-a",
       "fact": "the first 100 posts are practice.",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "nobody warns you that the first 100 posts are practice."
     },
     {
       "draft_id": "redacted-draft-5",
@@ -548,7 +619,8 @@
       "template_id": "t3",
       "idempotency_key": "viral-posts-redacted-run-t3-b",
       "fact": "the first 100 posts are practice.",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "nobody warns you that the first 100 posts are practice."
     },
     {
       "draft_id": "redacted-draft-6",
@@ -556,7 +628,8 @@
       "template_id": "t5",
       "idempotency_key": "viral-posts-redacted-run-t5-a",
       "fact": "growing from replies",
-      "fact_kept": "word for word"
+      "fact_kept": "word for word",
+      "hook": "the honest truth about growing from replies:"
     }
   ],
   "schedule_proposal": {

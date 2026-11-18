@@ -60,12 +60,46 @@
           "limit": 80,
           "after_tool_calls": 1,
           "repeat_check": {
-            "queries": [
-              "nights",
-              "hustle"
-            ],
             "in": "pasted posts",
+            "searches": [
+              {
+                "word": "early",
+                "total": 1,
+                "returned": 1,
+                "read": 1
+              },
+              {
+                "word": "nights",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              },
+              {
+                "word": "beat",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              },
+              {
+                "word": "late",
+                "total": 1,
+                "returned": 1,
+                "read": 1
+              },
+              {
+                "word": "hustle",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              }
+            ],
             "matches": [],
+            "closest": {
+              "date": "pasted",
+              "views": 0,
+              "line": "redacted pasted post that mentions getting up early",
+              "why_not": "a routine, not a claim that early nights beat hustle"
+            },
             "note": "posts you were not given were not checked"
           }
         }
