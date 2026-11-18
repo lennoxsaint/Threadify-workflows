@@ -80,6 +80,8 @@
       "exact text of every part of every post",
       "exact time and timezone for every post",
       "action (schedule, never publish now)",
+      "media per post (none: text posts only)",
+      "drafts already saved by generation, by id",
       "check results and stable idempotency key per post"
     ]
   },
@@ -87,7 +89,8 @@
     "mode": "local-viral-posts-packet",
     "artifact_schema": "workflow-receipt.v1",
     "instructions": [
-      "Without a working connection, ask the creator to paste their best posts with view counts and the facts each new post may use.",
+      "Without a working connection, ask the creator to paste their best posts with view counts, the full text of every part of each post a template copies, their 10 most recent posts with view counts, and the facts each new post may use.",
+      "A cut-off or partial source post leaves its template shape unverified and out of the batch; a template whose posts carried a picture needs media and stays out of this text-only batch.",
       "Find templates, fill them, run the same checks and propose tentative slots locally; label every slot unverified against the live calendar.",
       "Never claim Threadify generated, validated or scheduled anything; record the fallback in the receipt."
     ]
@@ -101,6 +104,9 @@
       "check results per post",
       "stable idempotency key per post",
       "schedule proposal with live calendar total",
+      "drafting yes and saved draft ids",
+      "media decision per template",
+      "intent fingerprint, returned scheduled post id and state per post",
       "readback status (scheduled, never published)",
       "fallback state"
     ]

@@ -21,16 +21,31 @@
     "list_scheduled_posts"
   ],
   "fallback_used": false,
-  "artifact_ids": ["redacted-artifact-id"],
+  "artifact_ids": [
+    "redacted-artifact-id"
+  ],
   "templates": [
     {
       "template_id": "t1",
       "skeleton": "i [did X] for [time]. here's what [result]:",
       "evidence": [
-        { "first_line": "redacted example hook one", "date": "2026-05-01", "views": 12000 },
-        { "first_line": "redacted example hook two", "date": "2026-05-20", "views": 9000 }
+        {
+          "first_line": "redacted example hook one",
+          "date": "2026-05-01",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook two",
+          "date": "2026-05-20",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
       ],
-      "top_10_percent_views": 5000
+      "top_10_percent_views": 5000,
+      "status": "used"
     }
   ],
   "checks": [
@@ -49,7 +64,16 @@
     "calendar_total_in_window": 4,
     "min_gap_hours": 2,
     "slots": [
-      { "template_id": "t1", "local_time": "2026-06-03 09:00", "idempotency_key": "viral-posts:example_creator:t1:0123abcd" }
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "idempotency_key": "viral-posts:example_creator:t1:0123abcd4567"
+      }
     ]
-  }
+  },
+  "drafting_yes": true,
+  "drafts_saved": [
+    "redacted-draft-1",
+    "redacted-draft-2"
+  ]
 }

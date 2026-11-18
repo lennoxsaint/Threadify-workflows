@@ -1,0 +1,184 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "@example_creator",
+  "action": "schedule_post",
+  "approved_text": [
+    "redacted example post one, line one",
+    "redacted example post one, line two",
+    "redacted example post two",
+    "redacted example post three"
+  ],
+  "approved_text_sha256": "88c18f41743f9a79979aee3634d6d41ef20a0e9f9dd92900bc8de08673f0cfd2",
+  "status": "partially_scheduled",
+  "timestamp": "2026-06-02T11:00:00Z",
+  "timezone": "Australia/Perth",
+  "tool_path": [
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "validate_post",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "validate_post",
+    "schedule_post",
+    "list_scheduled_posts"
+  ],
+  "fallback_used": false,
+  "fingerprint_of": [
+    "account",
+    "parts",
+    "media",
+    "scheduled_at"
+  ],
+  "drafting_yes": true,
+  "drafts_saved": [
+    "redacted-draft-1",
+    "redacted-draft-2",
+    "redacted-draft-3",
+    "redacted-draft-4",
+    "redacted-draft-5",
+    "redacted-draft-6"
+  ],
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "i [did X] for [time]. here's what [result]:",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "redacted example hook one",
+          "date": "2026-05-01",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook two",
+          "date": "2026-05-20",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t2",
+      "skeleton": "[thing] is [what it really is].",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "redacted example hook three",
+          "date": "2026-04-01",
+          "views": 11000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook four",
+          "date": "2026-05-09",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t3",
+      "skeleton": "[number] things i stopped doing:",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "redacted example hook five",
+          "date": "2026-03-01",
+          "views": 10000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook six",
+          "date": "2026-05-12",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t4",
+      "skeleton": "[photo] this is what [time] of [habit] looks like:",
+      "status": "needs_media",
+      "evidence": [
+        {
+          "first_line": "redacted example hook seven",
+          "date": "2026-02-01",
+          "views": 15000,
+          "media_type": "IMAGE",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted example hook eight",
+          "date": "2026-04-20",
+          "views": 9500,
+          "media_type": "IMAGE",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000
+    }
+  ],
+  "posts": [
+    {
+      "template_id": "t1",
+      "parts": [
+        "redacted example post one, line one",
+        "redacted example post one, line two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-03T09:00:00+08:00",
+      "fingerprint": "96c6ff6f3a7fdf575da19fb72a7891c98eca8fd0bb908cbddc404ac035eb7bec",
+      "idempotency_key": "viral-posts:example_creator:t1:96c6ff6f3a7f",
+      "state": "scheduled",
+      "scheduled_post_id": "redacted-scheduled-id-1",
+      "readback": {
+        "status": "scheduled",
+        "account_matches": true,
+        "text_matches": true,
+        "time_matches": true
+      }
+    },
+    {
+      "template_id": "t2",
+      "parts": [
+        "redacted example post two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-04T09:00:00+08:00",
+      "fingerprint": "ebb609dd2d6a3ffdffe1e70ac240cd6369fb9b241d1194783c9a45d98f178ace",
+      "idempotency_key": "viral-posts:example_creator:t2:ebb609dd2d6a",
+      "state": "blocked",
+      "blocked_reason": "recheck before dispatch found a post queued 40 minutes earlier; new time proposed, waiting for a new yes"
+    },
+    {
+      "template_id": "t3",
+      "parts": [
+        "redacted example post three"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-05T09:00:00+08:00",
+      "fingerprint": "089c459e29b175712d0d43742999ab0aa4f69d895cf706e725592f1c9fb3cf6f",
+      "idempotency_key": "viral-posts:example_creator:t3:089c459e29b1",
+      "state": "schedule_unverified",
+      "scheduled_post_id": null,
+      "dispatch": "unknown: schedule_post timed out; list_scheduled_posts did not show it; held, same key only",
+      "readback": null
+    }
+  ]
+}

@@ -10,14 +10,51 @@
   "timezone": "Australia/Perth",
   "tool_path": [],
   "fallback_used": true,
-  "artifact_ids": ["redacted-artifact-id"],
+  "artifact_ids": [
+    "redacted-artifact-id"
+  ],
   "templates": [
     {
       "template_id": "t1",
       "skeleton": "[number] things i stopped doing:",
       "evidence": [
-        { "first_line": "redacted pasted hook one", "date": "2026-04-11", "views": 8000 },
-        { "first_line": "redacted pasted hook two", "date": "2026-05-02", "views": 7000 }
+        {
+          "first_line": "redacted pasted hook one",
+          "date": "2026-04-11",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted pasted hook two",
+          "date": "2026-05-02",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 4000,
+      "status": "used"
+    },
+    {
+      "template_id": "t2",
+      "skeleton": "unverified: the pasted posts end in \"…\"",
+      "status": "shape_unverified",
+      "evidence": [
+        {
+          "first_line": "redacted pasted hook three",
+          "date": "2026-03-02",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": false
+        },
+        {
+          "first_line": "redacted pasted hook four",
+          "date": "2026-04-22",
+          "views": 6000,
+          "media_type": "TEXT_POST",
+          "source_complete": false
+        }
       ],
       "top_10_percent_views": 4000
     }
@@ -38,7 +75,11 @@
     "calendar_total_in_window": null,
     "min_gap_hours": 2,
     "slots": [
-      { "template_id": "t1", "local_time": "2026-06-03 09:00", "label": "tentative, not checked against the live calendar" }
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "label": "tentative, not checked against the live calendar"
+      }
     ]
   }
 }
