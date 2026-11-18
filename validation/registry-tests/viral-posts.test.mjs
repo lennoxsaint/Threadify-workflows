@@ -142,6 +142,10 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /A slot that is now less than 5 minutes away is blocked: it needs a new time and a new yes/);
   assert.match(skill, /record your answer word for word with its `DELIVERS:` word as the verdict and `unavailable` as the result/);
   assert.match(skill, /Never invent a number, quote, name or story/);
+  assert.match(skill, /`approved_text` is a list of every part of every approved post, in order: `\[\]` until the creator's yes at the gate, with `approved_text_sha256` set to `none-awaiting-approval`/);
+  assert.match(skill, /Until they tell you the total, do the same, and say at the gate which labels would change if the line were higher/);
+  assert.match(skill, /\(with no times given, propose none and ask for them\)/);
+  assert.match(skill, /or it is not what the placeholder names, such as a fact about AI in a slot for what successful people do/);
   assert.match(skill, /a self-read of `borderline` or `no` is a fail, so only a post you read as a clear yes is shown as \"unavailable\"/);
   assert.match(skill, /no line after the hook is longer, in characters, than the longest version of that line among the template's evidence posts/);
   assert.match(skill, /These positions only find the skeleton: a new fill may have any number of words/);
@@ -357,6 +361,12 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
   assert.equal(pending.schedule_proposal.calendar_listed, pending.schedule_proposal.calendar_total_in_window);
   assert.equal(fallback.fallback_used, true);
   assert.deepEqual(fallback.tool_path, []);
+  for (const name of ['awaiting-approval', 'drafting-declined', 'fallback', 'fallback-after-error']) {
+    const receipt = readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`);
+    assert.ok(validate(receipt), `${name}: ${JSON.stringify(validate.errors)}`);
+    assert.deepEqual(receipt.approved_text, [], `${name} has no approved text before a yes`);
+    assert.equal(receipt.approved_text_sha256, 'none-awaiting-approval', name);
+  }
 });
 
 test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write cases blocked or unverified', () => {
