@@ -7,7 +7,7 @@
   "approved_text_sha256": "none-awaiting-approval",
   "status": "drafting_declined",
   "timestamp": "2026-06-02T10:00:00Z",
-  "timezone": "Australia/Perth",
+  "timezone": "America/New_York",
   "tool_path": [
     "get_connection_defaults",
     "greatest_hits",

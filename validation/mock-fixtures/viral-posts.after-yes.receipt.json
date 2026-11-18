@@ -14,7 +14,7 @@
   "approved_text_sha256": "8355ea86b832dc1d6d85cf375464b0b79007864c4854136b311576989ff43218",
   "status": "partially_scheduled",
   "timestamp": "2026-06-02T11:00:00Z",
-  "timezone": "Australia/Perth",
+  "timezone": "America/New_York",
   "tool_path": [
     "get_connection_defaults",
     "list_scheduled_posts",
@@ -201,9 +201,9 @@
         "redacted example post one, line two"
       ],
       "media": [],
-      "scheduled_at": "2026-06-03T09:00:00+08:00",
-      "fingerprint": "d5485032c34716c2a63d7365d003a32d210a0790c55171070cd884eec1cc5f83",
-      "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
+      "scheduled_at": "2026-06-03T09:00:00-04:00",
+      "fingerprint": "76757481c7579477e3df77f88c3a0a641a9a62a08959b0451c6a52a463e294f5",
+      "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
       "state": "scheduled",
       "scheduled_post_id": "redacted-scheduled-id-1",
       "readback": {
@@ -221,9 +221,9 @@
       "text_source": "draft",
       "saved_draft_id": "redacted-draft-1",
       "schedule_call": {
-        "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
         "account": "example_creator",
-        "scheduled_at": "2026-06-03T09:00:00+08:00",
+        "scheduled_at": "2026-06-03T09:00:00-04:00",
         "content_type": "long-form",
         "posts": [
           {
@@ -242,9 +242,9 @@
         "redacted example post two"
       ],
       "media": [],
-      "scheduled_at": "2026-06-04T09:00:00+08:00",
-      "fingerprint": "af219b1a99fb7c77cd0809a6c6982749c4d8825d18a09512a91bba6019ad58e9",
-      "idempotency_key": "viral-posts:example_creator:t2:af219b1a99fb",
+      "scheduled_at": "2026-06-04T09:00:00-04:00",
+      "fingerprint": "ee3e7dce03c74c836e65d22db2fe246fd4e3b0f387358ab5ce3e2dbc2b086706",
+      "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7",
       "state": "blocked",
       "blocked_reason": "recheck before dispatch found a post queued 40 minutes earlier; new time proposed, waiting for a new yes",
       "auto_repost_at_dispatch": {
@@ -265,9 +265,9 @@
         "redacted example post three"
       ],
       "media": [],
-      "scheduled_at": "2026-06-05T09:00:00+08:00",
-      "fingerprint": "8467cea29b77133bb29a9d7c53d31477001538b4ed4e6d2938e05fc22641f2dd",
-      "idempotency_key": "viral-posts:example_creator:t3:8467cea29b77",
+      "scheduled_at": "2026-06-05T09:00:00-04:00",
+      "fingerprint": "bb839d09b36f6d924a7cc666bf1be3398cac55bfb29dde3ac1d1a82c317c71a4",
+      "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f",
       "state": "schedule_unverified",
       "scheduled_post_id": null,
       "dispatch": "unknown: schedule_post timed out; list_scheduled_posts did not show it; held, same key only",
@@ -284,9 +284,9 @@
         "hand_fixed: saved draft redacted-draft-5 keeps the old wording"
       ],
       "schedule_call": {
-        "idempotency_key": "viral-posts:example_creator:t3:8467cea29b77",
+        "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f",
         "account": "example_creator",
-        "scheduled_at": "2026-06-05T09:00:00+08:00",
+        "scheduled_at": "2026-06-05T09:00:00-04:00",
         "content_type": "short-form",
         "text": "redacted example post three"
       }
@@ -298,9 +298,9 @@
         "redacted example post five, part two"
       ],
       "media": [],
-      "scheduled_at": "2026-06-06T09:00:00+08:00",
-      "fingerprint": "152e97091862accaa54721c35cfc0c78941bd071dd02dbfd9d459135a4d60149",
-      "idempotency_key": "viral-posts:example_creator:t5:152e97091862",
+      "scheduled_at": "2026-06-06T09:00:00-04:00",
+      "fingerprint": "bb0b4eba02fa590e12c90d004736d0e7f29933e2c7f333eafe78f9b9692f5eb5",
+      "idempotency_key": "viral-posts:example_creator:t5:bb0b4eba02fa",
       "state": "blocked",
       "blocked_reason": "at dispatch, the fresh full text of queued post redacted-queued-2 showed part 2 now repeats this post's part 2; its id, preview and part count were the same as at the gate. New wording needed, waiting for a new yes",
       "auto_repost_at_dispatch": {

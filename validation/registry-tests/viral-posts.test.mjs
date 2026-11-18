@@ -96,6 +96,18 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
   assert.match(gate, /its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete/);
   assert.match(gate, /every draft saved so far, by id, each marked proposed, excluded or not picked/);
+  assert.match(gate, /each template with its label, the top 10% line it beat, and its evidence posts/);
+  assert.match(gate, /for a tired template, the view counts of its last three uses/);
+  assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\) and the fresh reader's answer/);
+  assert.match(skill, /Record who read it \(a fresh agent, or you when none was available\) and its answer word for word/);
+  for (const line of ['the top 10% line each template beat', 'any plug part left out of a template', "for a tired template, its last three uses' view counts",
+    "check results per post (each pass or fail, hook length against its limit, the fresh reader's answer), intent fingerprint and stable idempotency key"]) {
+    assert.ok(manifest.approval_gate.must_show.includes(line), line);
+  }
+  for (const line of ['plug parts left out per template', 'fresh reader per post: who read it and its answer word for word',
+    'approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)']) {
+    assert.ok(manifest.receipt.must_prove.includes(line), line);
+  }
   for (const line of ['template, its label and its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete',
     'every draft already saved by generation, by id, marked proposed, excluded or not picked']) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
@@ -146,6 +158,8 @@ test('Viral Posts discloses saves before drafting and guards the write after the
   assert.match(step7, /`list_scheduled_posts` again for the window/);
   assert.match(step7, /Never move an approved time yourself/);
   assert.match(step7, /the approved time as an ISO instant/);
+  assert.match(step7, /written `YYYY-MM-DDTHH:mm:ss±hh:mm` in the creator's timezone \(no milliseconds, never `Z`/);
+  assert.match(step7, /`scheduled_at` as that same approved time string/);
   assert.match(step7, /`\[account, parts, media, scheduled_at\]` \(as `JSON\.stringify` writes it\)/);
   assert.match(step7, /they must equal what the gate showed/);
   assert.match(step7, /Never pass `draft_id`: a saved draft can be edited after the gate, and the tool does not say which text wins/);
@@ -263,6 +277,13 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     for (const check of receipt.checks ?? []) {
       assert.equal(check.energy_matches_evidence, true, `${check.template_id} reads at its evidence energy`);
       assert.equal(check.fill_is_new, true, `${check.template_id} does not repeat an evidence or tired-check fill`);
+      assert.ok(check.fresh_reader?.reader && check.fresh_reader.answer, `${check.template_id} records who read it and the answer`);
+      assert.equal(check.fresh_reader.result, 'pass', `${check.template_id} passes only on a clear yes`);
+      assert.ok(!('fresh_reader_delivers' in check), 'a bare true is not a fresh-reader record');
+      const proven = receipt.templates.find((t) => t.template_id === check.template_id).evidence
+        .reduce((top, post) => (post.views > top.views ? post : top));
+      assert.equal(check.hook_limit, Math.max(80, proven.first_line.length), `${check.template_id} limit is 80 or the proven hook`);
+      assert.ok(check.hook_characters <= check.hook_limit, `${check.template_id} hook fits its limit`);
     }
     for (const post of receipt.posts ?? []) {
       const template = receipt.templates.find((t) => t.template_id === post.template_id);
@@ -278,6 +299,11 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
         .update(JSON.stringify([account, post.parts, post.media, post.scheduled_at])).digest('hex');
       assert.equal(post.fingerprint, print, `${post.template_id} fingerprint uses the account with no @`);
       assert.equal(post.idempotency_key, `viral-posts:${account}:${post.template_id}:${print.slice(0, 12)}`, 'the whole key rebuilds');
+      assert.match(post.scheduled_at, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+-]\d{2}:\d{2}$/, 'time is YYYY-MM-DDTHH:mm:ss±hh:mm');
+      const withMillis = post.scheduled_at.replace(/(:\d{2})([+-]\d{2}:\d{2})$/, '$1.000$2');
+      assert.notEqual(crypto.createHash('sha256').update(JSON.stringify([account, post.parts, post.media, withMillis])).digest('hex'), post.fingerprint,
+        'the .000 form of the same time makes a different fingerprint');
+      if (post.schedule_call) assert.equal(post.schedule_call.scheduled_at, post.scheduled_at, 'the write sends the same time string');
       if (post.text_source === 'hand_fixed') {
         assert.ok(post.gate_flags?.some((flag) => flag.includes(`saved draft ${post.saved_draft_id} keeps the old wording`)));
       }

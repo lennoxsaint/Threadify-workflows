@@ -7,7 +7,7 @@
   "approved_text_sha256": "none-awaiting-approval",
   "status": "awaiting_approval",
   "timestamp": "2026-06-02T10:00:00Z",
-  "timezone": "Australia/Perth",
+  "timezone": "America/New_York",
   "tool_path": [
     "get_connection_defaults",
     "greatest_hits",
@@ -253,33 +253,48 @@
       "hook_characters": 52,
       "validate_post": "valid",
       "skeleton_match": true,
-      "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
       "facts_traced": true,
-      "fill_is_new": true
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "clear yes: the body gives what the hook promised",
+        "result": "pass"
+      },
+      "hook_limit": 80
     },
     {
       "template_id": "t2",
       "hook_characters": 41,
       "validate_post": "valid",
       "skeleton_match": true,
-      "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
       "facts_traced": true,
-      "fill_is_new": true
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "clear yes: the body gives what the hook promised",
+        "result": "pass"
+      },
+      "hook_limit": 80
     },
     {
       "template_id": "t4",
       "hook_characters": 30,
       "validate_post": "valid",
       "skeleton_match": true,
-      "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
       "facts_traced": true,
-      "fill_is_new": true
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "clear yes: the body gives what the hook promised",
+        "result": "pass"
+      },
+      "hook_limit": 80
     }
   ],
   "schedule_proposal": {
@@ -290,12 +305,12 @@
       {
         "template_id": "t1",
         "local_time": "2026-06-03 09:00",
-        "idempotency_key": "viral-posts:example_creator:t1:d5485032c347"
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757"
       },
       {
         "template_id": "t2",
         "local_time": "2026-06-04 09:00",
-        "idempotency_key": "viral-posts:example_creator:t2:af219b1a99fb"
+        "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7"
       }
     ]
   },
@@ -328,9 +343,9 @@
         "redacted example post one, line two"
       ],
       "media": [],
-      "scheduled_at": "2026-06-03T09:00:00+08:00",
-      "fingerprint": "d5485032c34716c2a63d7365d003a32d210a0790c55171070cd884eec1cc5f83",
-      "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
+      "scheduled_at": "2026-06-03T09:00:00-04:00",
+      "fingerprint": "76757481c7579477e3df77f88c3a0a641a9a62a08959b0451c6a52a463e294f5",
+      "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
       "text_source": "hand_fixed",
       "saved_draft_id": "redacted-draft-1",
       "gate_flags": [
@@ -344,9 +359,9 @@
         "redacted example post two"
       ],
       "media": [],
-      "scheduled_at": "2026-06-04T09:00:00+08:00",
-      "fingerprint": "af219b1a99fb7c77cd0809a6c6982749c4d8825d18a09512a91bba6019ad58e9",
-      "idempotency_key": "viral-posts:example_creator:t2:af219b1a99fb",
+      "scheduled_at": "2026-06-04T09:00:00-04:00",
+      "fingerprint": "ee3e7dce03c74c836e65d22db2fe246fd4e3b0f387358ab5ce3e2dbc2b086706",
+      "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7",
       "text_source": "draft",
       "saved_draft_id": "redacted-draft-3",
       "gate_flags": [
@@ -360,9 +375,9 @@
         "redacted example post four"
       ],
       "media": [],
-      "scheduled_at": "2026-06-05T09:00:00+08:00",
-      "fingerprint": "bd354a0aa761404c6121129786368f2f018c0473877defc62d1e1c52e5120735",
-      "idempotency_key": "viral-posts:example_creator:t4:bd354a0aa761",
+      "scheduled_at": "2026-06-05T09:00:00-04:00",
+      "fingerprint": "abe763868a626b05ae0ed8d8118de2aa5093f9f3cc277f196041913b63a287c8",
+      "idempotency_key": "viral-posts:example_creator:t4:abe763868a62",
       "text_source": "draft",
       "saved_draft_id": "redacted-draft-5",
       "blocked_reason": "part 1 repeats queued post redacted-queued-3 (full text fetched; its preview was cut off)"

@@ -7,7 +7,7 @@
   "approved_text_sha256": "none-awaiting-approval",
   "status": "fallback_ready",
   "timestamp": "2026-06-02T10:00:00Z",
-  "timezone": "Australia/Perth",
+  "timezone": "America/New_York",
   "tool_path": [],
   "fallback_used": true,
   "artifact_ids": [
@@ -99,11 +99,16 @@
       "validate_post": "not run (no connection); 500 characters per part checked by hand",
       "skeleton_match": true,
       "hook_characters": 33,
-      "fresh_reader_delivers": true,
       "all_parts_shown": true,
       "facts_traced": true,
       "energy_matches_evidence": true,
-      "fill_is_new": true
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "clear yes: the body gives what the hook promised",
+        "result": "pass"
+      },
+      "hook_limit": 80
     }
   ],
   "schedule_proposal": {
