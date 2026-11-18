@@ -122,6 +122,8 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /voice and energy of the creator's own top posts/);
   assert.match(skill, /fresh-reader check/);
   assert.match(skill, /Show every part of a thread/);
+  assert.match(skill, /Label each template you pick "used", even when none of its drafts survives the checks/);
+  assert.match(skill, /Without a connection, `account_handle` is the handle the creator gave you, or `unconnected`/);
   assert.match(skill, /Never invent a number, quote, name or story/);
   assert.match(skill, /top 10% by views at least twice/);
   assert.match(skill, /view count/);
@@ -315,6 +317,7 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
   const validate = new Ajv({ strict: false }).compile(readJson('schemas/workflow-receipt.v1.json'));
   const pending = readJson('validation/mock-fixtures/viral-posts.awaiting-approval.receipt.json');
   const fallback = readJson('validation/mock-fixtures/viral-posts.fallback.receipt.json');
+  assert.equal(fallback.account_handle, 'unconnected');
   for (const receipt of [pending, fallback]) {
     assert.ok(validate(receipt), JSON.stringify(validate.errors));
     assert.equal(receipt.workflow_id, 'viral-posts');
