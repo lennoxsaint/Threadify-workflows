@@ -178,7 +178,8 @@
       },
       "hook_limit": 80,
       "energy_reason": "keeps the evidence posts' short lines",
-      "gate_line": "fresh reader: unavailable (self-read: PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: read by the writer)"
+      "gate_line": "fresh reader: unavailable (self-read: PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: read by the writer)",
+      "repeat_gate_line": "repeat check: pasted posts only"
     }
   ],
   "schedule_proposal": {

@@ -166,7 +166,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /for a fact that passes, `closest`, the post that came nearest \(date, views, its line and `why_not`, why its claim differs\), or `none`\. You decide whether a post makes the claim; never leave that call to the creator\./);
   assert.ok(skill.includes("(it is followed by is, isn't, are, aren't, was, will, won't, can, can't, do, don't, does, doesn't, has, have, should, makes or means)"), 'the narrowing verbs include are, do and have');
   assert.ok(skill.includes('then ask the creator to search their own posts for each claim word of each fact you will use and paste every match, or say there is none'), 'the fallback asks for the creator\'s own search');
-  assert.match(skill, /record their answer as the row's `creator_search`, or `no answer`; with no answer, show "repeat check: pasted posts only" on that post at the gate/);
+  assert.match(skill, /record their answer as `creator_search` in that fact's `repeat_check`, or `no answer`; with no answer, show "repeat check: pasted posts only" on that post at the gate and record it as that post's `repeat_gate_line`/);
   assert.match(skill, /with the version's first line as `hook` so the label can be checked against it\./);
   assert.match(skill, /record each fact as one row of the template's `hook_fit` in the receipt, with its `fact`, `filled_hook`, `filled_hook_chars` \(the count\), `limit` and `after_tool_calls`/);
   assert.match(skill, /Record on that fact's `hook_fit` row its `repeat_check`: `searches`/);
@@ -247,7 +247,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\), the energy reason and the fresh reader's answer; a waived check reads "fresh reader: fail, waived by you for <template-id> \(your words: "\.\.\."\)"/);
   assert.match(gate, /for each template, its control \(the fresh reader's answer on its most-viewed evidence post\) and any waiver, in the creator's words/);
   assert.match(gate, /per template its hook fit: each fact, its filled hook and its length against the limit, its repeat check \(each claim word with its match count and any narrowing, then the post that already makes the claim or the closest one\), and every fact left out before drafting, with the check it failed \(too long, a repeat of one of the creator's posts, a repeat check incomplete, or another step-4 check\)/);
-  for (const line of ['per template its hook fit (each fact, its filled hook and its length against the limit), its repeat check (each claim word with its match count and any narrowing, then the matching or closest post) and every fact left out before drafting, with the check it failed',
+  for (const line of ['per template its hook fit (each fact, its filled hook and its length against the limit), its repeat check (each claim word with its match count and any narrowing, then the matching or closest post) and every fact left out before drafting, with the check it failed, and, in the fallback with no creator search, "repeat check: pasted posts only" on that post',
     'any other label that applies to a template, shown next to it as also']) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
   }
@@ -757,7 +757,7 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
   assert.ok(!followsTemplate(stem, 'the longer i build the more i see Life is too short.'), 'a lowercase template keeps the fact lowercase');
 
   const receipts = ['awaiting-approval', 'after-yes', 'fallback', 'fallback-after-error'].map((name) => [name, readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`)]);
-  let noFit = 0; let checkedSkeletons = 0; let movers = 0; let repeats = 0; let narrowed = 0; let incomplete = 0;
+  let noFit = 0; let checkedSkeletons = 0; let movers = 0; let repeats = 0; let narrowed = 0; let incomplete = 0; let noAnswer = 0; let answered = 0;
   for (const [name, receipt] of receipts) {
     if (!receipt.fallback_used) assert.equal(receipt.drafting_yes, true, name);
     const firstGenerate = receipt.tool_path.indexOf('generate_content');
@@ -807,6 +807,13 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
         if (!receipt.fallback_used) assert.ok(receipt.tool_path.slice(0, fit.after_tool_calls).includes('query_brain'), `${where} hook fit counted after query_brain`);
       }
       const fitting = (template.hook_fit ?? []).filter((f) => f.filled_hook_chars <= f.limit && !f.skipped && !f.repeat_check?.matches.length).map((f) => f.fact);
+      // the fallback's proposed post says when its repeat check saw only the pasted posts (the creator gave no search of their own)
+      if (receipt.fallback_used && (receipt.schedule_proposal?.slots ?? []).some((slot) => slot.template_id === template.template_id)) {
+        const unsearched = (template.hook_fit ?? []).some((f) => fitting.includes(f.fact) && f.repeat_check?.creator_search === 'no answer');
+        const post = (receipt.checks ?? []).find((c) => c.template_id === template.template_id);
+        assert.equal(post?.repeat_gate_line, unsearched ? 'repeat check: pasted posts only' : undefined, `${where} the proposed post shows "repeat check: pasted posts only" only when the creator gave no search`);
+        if (unsearched) noAnswer += 1; else answered += 1;
+      }
       if (template.status === 'used') {
         assert.ok(fitting.length > 0, `${where} drafts only with a fact that fits`);
         for (const draft of (receipt.gate_drafts ?? []).filter((d) => d.template_id === template.template_id)) {
@@ -835,6 +842,7 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
   assert.ok(repeats >= 1, "a fixture covers a fact that repeats one of the creator's own posts");
   assert.ok(narrowed >= 1, 'a fixture covers a word with more than 200 matches that is narrowed');
   assert.ok(incomplete >= 1, 'a fixture covers a fact whose matches could not all be fetched');
+  assert.ok(noAnswer >= 1 && answered >= 1, 'the fallback fixtures cover a creator who searched and one who gave no answer');
   // (g) every saved draft records whether its text kept the fact; a changed fact never reaches the gate as a live post
   for (const [name, receipt] of receipts.filter(([, r]) => !r.fallback_used)) {
     for (const draft of receipt.gate_drafts ?? []) {
