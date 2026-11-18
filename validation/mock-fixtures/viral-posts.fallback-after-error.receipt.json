@@ -44,7 +44,8 @@
       "fresh_reader_control": {
         "evidence_first_line": "redacted pasted hook one",
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
         "result": "pass",
         "after_tool_calls": 1
       }
@@ -62,7 +63,8 @@
       "fill_is_new": true,
       "fresh_reader": {
         "reader": "fresh agent given only the post text",
-        "answer": "clear yes: the body gives what the hook promised",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
         "result": "pass"
       },
       "hook_limit": 80,

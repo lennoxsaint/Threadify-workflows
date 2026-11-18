@@ -77,7 +77,8 @@
       },
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "redacted example hook one",
         "after_tool_calls": 5
@@ -115,7 +116,8 @@
       "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "redacted example hook three",
         "after_tool_calls": 5
@@ -187,7 +189,8 @@
       },
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
         "result": "pass",
         "evidence_first_line": "redacted example hook six",
         "after_tool_calls": 5
@@ -344,7 +347,8 @@
       "fresh_reader_control": {
         "evidence_first_line": "redacted one-line hook t8 best",
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: a hard-won realization / DELIVERS: borderline / WHY: it states a claim but gives no reason or example",
+        "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
+        "verdict": "borderline",
         "result": "fail",
         "after_tool_calls": 5
       },
@@ -404,7 +408,8 @@
       "fresh_reader_control": {
         "evidence_first_line": "redacted one-line hook t9 best",
         "reader": "fresh agent given only that post",
-        "answer": "PROMISE: a new trend / DELIVERS: no / WHY: it names the swap but not why",
+        "answer": "PROMISE: a new trend / KIND: complete claim / DELIVERS: no / WHY: it names a swap a stranger cannot place without the author",
+        "verdict": "no",
         "result": "fail",
         "after_tool_calls": 5
       },
@@ -423,7 +428,8 @@
       "fill_is_new": true,
       "fresh_reader": {
         "reader": "fresh agent given only the post text",
-        "answer": "clear yes: the body gives what the hook promised",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
         "result": "pass"
       },
       "hook_limit": 80,
@@ -440,7 +446,8 @@
       "fill_is_new": true,
       "fresh_reader": {
         "reader": "fresh agent given only the post text",
-        "answer": "clear yes: the body gives what the hook promised",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
         "result": "pass"
       },
       "hook_limit": 80,
@@ -457,7 +464,8 @@
       "fill_is_new": true,
       "fresh_reader": {
         "reader": "fresh agent given only the post text",
-        "answer": "clear yes: the body gives what the hook promised",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
         "result": "pass"
       },
       "hook_limit": 80,
@@ -476,7 +484,8 @@
       "fill_is_new": true,
       "fresh_reader": {
         "reader": "fresh agent given only the post text",
-        "answer": "PROMISE: a hard-won realization / DELIVERS: borderline / WHY: it states a claim but gives no reason or example",
+        "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
+        "verdict": "borderline",
         "result": "fail, waived"
       }
     }
