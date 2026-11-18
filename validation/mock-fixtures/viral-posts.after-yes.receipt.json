@@ -78,7 +78,19 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "here's what"
+      "tired_check_query": "here's what",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: borderline / WHY: the list needs the author's context",
+        "result": "fail",
+        "evidence_first_line": "redacted example hook one",
+        "after_tool_calls": 0
+      },
+      "fresh_reader_waiver": {
+        "template_id": "t1",
+        "creator_words": "redacted: waive it for t1",
+        "at": "2026-06-01T10:05:00-04:00"
+      }
     },
     {
       "template_id": "t2",
@@ -109,7 +121,14 @@
       "flags": [
         "tired_check_incomplete"
       ],
-      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses"
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook three",
+        "after_tool_calls": 0
+      }
     },
     {
       "template_id": "t3",
@@ -136,7 +155,14 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "things i stopped doing"
+      "tired_check_query": "things i stopped doing",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook five",
+        "after_tool_calls": 0
+      }
     },
     {
       "template_id": "t4",
@@ -190,7 +216,14 @@
           "fill": "redacted fill t5-two",
           "part_count": 2
         }
-      ]
+      ],
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook nine",
+        "after_tool_calls": 0
+      }
     }
   ],
   "posts": [
@@ -234,7 +267,15 @@
           }
         ]
       },
-      "text_source_note": "saved draft redacted-draft-1 is where the text came from; schedule_post got the approved text, not the draft id"
+      "text_source_note": "saved draft redacted-draft-1 is where the text came from; schedule_post got the approved text, not the draft id",
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: borderline / WHY: the list needs the author's context",
+        "result": "fail, waived"
+      },
+      "gate_flags": [
+        "fresh reader: fail, waived by you for t1 (your words: \"redacted: waive it for t1\")"
+      ]
     },
     {
       "template_id": "t2",
@@ -427,5 +468,6 @@
       "marked": "proposed",
       "template_id": "t5"
     }
-  ]
+  ],
+  "note_on_controls": "controls ran in the earlier drafting run (see the awaiting-approval receipt); after_tool_calls counts that run's tool_path"
 }

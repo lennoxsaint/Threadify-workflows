@@ -40,7 +40,14 @@
         }
       ],
       "top_10_percent_views": 4000,
-      "status": "used"
+      "status": "used",
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted pasted hook one",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "after_tool_calls": 1
+      }
     }
   ],
   "checks": [
@@ -58,7 +65,8 @@
         "answer": "clear yes: the body gives what the hook promised",
         "result": "pass"
       },
-      "hook_limit": 80
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines"
     }
   ],
   "schedule_proposal": {

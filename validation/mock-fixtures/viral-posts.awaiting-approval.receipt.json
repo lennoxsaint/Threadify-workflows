@@ -74,6 +74,13 @@
             "fill": "redacted fill t1-zero"
           }
         ]
+      },
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook one",
+        "after_tool_calls": 5
       }
     },
     {
@@ -105,7 +112,14 @@
       ],
       "top_10_percent_views": 5000,
       "tired_check_query": null,
-      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses"
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook three",
+        "after_tool_calls": 5
+      }
     },
     {
       "template_id": "t3",
@@ -170,6 +184,13 @@
             "fill": "redacted fill t4-one"
           }
         ]
+      },
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: the body gives it",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook six",
+        "after_tool_calls": 5
       }
     },
     {
@@ -319,7 +340,75 @@
           }
         ],
         "verdict": "not tired"
+      },
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted one-line hook t8 best",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: a hard-won realization / DELIVERS: borderline / WHY: it states a claim but gives no reason or example",
+        "result": "fail",
+        "after_tool_calls": 5
+      },
+      "fresh_reader_waiver": {
+        "template_id": "t8",
+        "creator_words": "redacted: waive it for t8",
+        "at": "2026-06-01T10:05:00-04:00"
       }
+    },
+    {
+      "template_id": "t9",
+      "skeleton": "[thing] is the new [other thing].",
+      "status": "control_failed",
+      "evidence": [
+        {
+          "first_line": "redacted one-line hook t9 best",
+          "date": "2026-01-12",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t9-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted one-line hook t9 second",
+          "date": "2026-02-20",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t9-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check_query": "is the new",
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-04-02",
+            "views": 9000,
+            "fill": "redacted fill t9-two"
+          },
+          {
+            "date": "2026-02-20",
+            "views": 8000,
+            "fill": "redacted fill t9-two"
+          },
+          {
+            "date": "2026-01-12",
+            "views": 12000,
+            "fill": "redacted fill t9-one"
+          }
+        ],
+        "verdict": "not tired"
+      },
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted one-line hook t9 best",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: a new trend / DELIVERS: no / WHY: it names the swap but not why",
+        "result": "fail",
+        "after_tool_calls": 5
+      },
+      "label_reason": "its own most-viewed post failed the fresh-reader check and the creator did not waive it, so no draft was made"
     }
   ],
   "checks": [
@@ -337,7 +426,8 @@
         "answer": "clear yes: the body gives what the hook promised",
         "result": "pass"
       },
-      "hook_limit": 80
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
     },
     {
       "template_id": "t2",
@@ -353,7 +443,8 @@
         "answer": "clear yes: the body gives what the hook promised",
         "result": "pass"
       },
-      "hook_limit": 80
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
     },
     {
       "template_id": "t4",
@@ -369,7 +460,25 @@
         "answer": "clear yes: the body gives what the hook promised",
         "result": "pass"
       },
-      "hook_limit": 80
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
+    },
+    {
+      "template_id": "t8",
+      "hook_characters": 25,
+      "hook_limit": 80,
+      "validate_post": "valid",
+      "skeleton_match": true,
+      "energy_matches_evidence": true,
+      "energy_reason": "keeps the evidence post's one short line",
+      "all_parts_shown": true,
+      "facts_traced": true,
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: a hard-won realization / DELIVERS: borderline / WHY: it states a claim but gives no reason or example",
+        "result": "fail, waived"
+      }
     }
   ],
   "schedule_proposal": {
@@ -386,6 +495,11 @@
         "template_id": "t2",
         "local_time": "2026-06-04 09:00",
         "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7"
+      },
+      {
+        "template_id": "t8",
+        "local_time": "2026-06-06 09:00",
+        "idempotency_key": "viral-posts:example_creator:t8:e88c584f3830"
       }
     ]
   },
@@ -460,24 +574,19 @@
     },
     {
       "template_id": "t8",
-      "state": "excluded",
+      "state": "proposed",
       "parts": [
         "redacted one-line post t8"
       ],
+      "media": [],
+      "scheduled_at": "2026-06-06T09:00:00-04:00",
+      "fingerprint": "e88c584f383024b3b63cbc26194a959530854a0fdd6dc2837757a772bb423c3f",
+      "idempotency_key": "viral-posts:example_creator:t8:e88c584f3830",
+      "text_source": "draft",
       "saved_draft_id": "redacted-draft-7",
-      "reason": "failed the fresh-reader check (borderline); the creator may waive the check for t8 in chat",
-      "fresh_reader": {
-        "reader": "fresh agent given only the post text",
-        "answer": "borderline: it states a claim but gives no reason or example",
-        "result": "fail"
-      },
-      "fresh_reader_control": {
-        "evidence_first_line": "redacted one-line hook t8 best",
-        "reader": "fresh agent given only that post",
-        "answer": "borderline: it states a claim but gives no reason or example",
-        "result": "fail"
-      },
-      "waiver_available": true
+      "gate_flags": [
+        "fresh reader: fail, waived by you for t8 (your words: \"redacted: waive it for t8\")"
+      ]
     }
   ],
   "global_auto_repost": {
@@ -543,7 +652,7 @@
     },
     {
       "draft_id": "redacted-draft-7",
-      "marked": "excluded",
+      "marked": "proposed",
       "template_id": "t8"
     }
   ]

@@ -38,7 +38,14 @@
         }
       ],
       "top_10_percent_views": 4000,
-      "status": "used"
+      "status": "used",
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted pasted hook one",
+        "reader": "self-read (no fresh agent available)",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: read by the writer",
+        "result": "unavailable",
+        "after_tool_calls": 0
+      }
     },
     {
       "template_id": "t2",
@@ -104,11 +111,13 @@
       "energy_matches_evidence": true,
       "fill_is_new": true,
       "fresh_reader": {
-        "reader": "fresh agent given only the post text",
-        "answer": "clear yes: the body gives what the hook promised",
-        "result": "pass"
+        "reader": "self-read (no fresh agent available)",
+        "answer": "PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: read by the writer",
+        "result": "unavailable"
       },
-      "hook_limit": 80
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines",
+      "gate_line": "fresh reader: unavailable (self-read: PROMISE: what the hook sets up / DELIVERS: clear yes / WHY: read by the writer)"
     }
   ],
   "schedule_proposal": {

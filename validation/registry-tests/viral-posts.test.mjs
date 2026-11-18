@@ -59,17 +59,22 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Label it "tired"/);
   assert.match(skill, /10 most recent posts with view counts/);
   assert.match(skill, /"tired check incomplete"/);
-  assert.match(skill, /Only a clear yes passes/);
+  assert.match(skill, /Only `DELIVERS: clear yes` passes; `borderline` and `no` fail/);
+  assert.match(skill, /DELIVERS: <exactly one of: clear yes \| borderline \| no>/);
+  assert.match(skill, /Judge honestly\. "clear yes" only if the post fully gives you what its opening promised without needing to know the author\./);
+  assert.match(skill, /In a one-line post the line is both the promise and the delivery, and the same prompt judges it/);
+  assert.match(skill, /Your own read is never a pass: when no fresh agent or session is available, the check is \*\*unavailable\*\*/);
+  assert.match(skill, /search it again with the other form, curly `’` `“` `”` or straight `'` `"`, and merge the two results/);
   assert.match(skill, /read in full: every part of a thread, no cut-off text/);
   assert.match(skill, /Label the template "needs media"/);
   assert.match(skill, /sort_by: "recent"/);
-  assert.match(skill, /give it only the post text/);
+  assert.match(skill, /give it only this prompt, with the post's full text in place of `\{POST\}`/);
   assert.match(skill, /ranked at a tenth of that total/);
   assert.match(skill, /"media unknown"/);
   assert.match(skill, /reads at the energy of its evidence posts/);
   assert.match(skill, /A shape seen only in the library is "unproven" for this creator/);
   assert.doesNotMatch(skill, /library post with clear engagement/);
-  assert.match(skill, /Leave out every template labelled unproven, tired, needs media, media unknown or shape unverified/);
+  assert.match(skill, /Leave out every template labelled unproven, tired, needs media, media unknown, shape unverified or control failed/);
   assert.match(skill, /"tired check incomplete" template may be used only with that flag shown next to it at the gate/);
   assert.match(skill, /a tenth of that count, rounded down/);
   assert.match(skill, /Writing it again needs a new drafting yes/);
@@ -103,19 +108,23 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(gate, /every draft saved so far, by id, each marked proposed, excluded or not picked/);
   assert.match(gate, /each template with its label, the top 10% line it beat, and its evidence posts/);
   assert.match(gate, /for a tired template, the view counts of its last three uses/);
-  assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\) and the fresh reader's answer/);
-  assert.match(skill, /Record who read it \(a fresh agent, or you when none was available\) and its answer word for word/);
-  assert.match(skill, /give a fresh reader the template's most-viewed evidence post on its own as a control/);
-  assert.match(skill, /the post still fails, both answers go to the gate, and the creator may waive this check for that template in chat/);
-  assert.match(gate, /the control answer on its template's most-viewed evidence post, and whether the creator may waive the check/);
-  assert.ok(manifest.approval_gate.must_show.includes("for a post that failed the fresh-reader check, the control answer on its template's most-viewed evidence post"));
-  assert.ok(manifest.receipt.must_prove.includes('fresh-reader controls on evidence posts and any waiver the creator gave'));
+  assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\), the energy reason and the fresh reader's answer; a waived check reads "fresh reader: fail, waived by you for <template-id> \(your words: "\.\.\."\)"/);
+  assert.match(gate, /for each template, its control \(the fresh reader's answer on its most-viewed evidence post\) and any waiver, in the creator's words/);
+  assert.match(skill, /\*\*Calibrate the fresh-reader check\*\* before any `generate_content` call/);
+  assert.match(skill, /Until they waive it, label the template "control failed" and leave it out/);
+  assert.match(skill, /A waiver covers that template in this run only, and it is not a yes to schedule: the post still needs the yes at the gate/);
+  assert.match(skill, /A fix that drops the creator's own swear words or intensifiers from a fact fails\. Record a one-line reason for every energy result/);
+  assert.match(skill, /`status` is exactly one of: `awaiting_approval`/);
+  assert.ok(manifest.approval_gate.must_show.includes("for each template, the fresh-reader control on its most-viewed evidence post and any waiver in the creator's words"));
+  assert.ok(manifest.receipt.must_prove.includes("fresh-reader controls on evidence posts, run before any generate_content call, and any waiver (template, the creator's words, when; this run only)"));
   for (const line of ['the top 10% line each template beat', 'any plug part left out of a template', "for a tired template, its last three uses' view counts",
-    "check results per post (each pass or fail, hook length against its limit, the fresh reader's answer), intent fingerprint and stable idempotency key"]) {
+    "check results per post (each pass or fail, hook length against its limit, the energy reason, the fresh reader's answer, a waived check as fail, waived), intent fingerprint and stable idempotency key"]) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
   }
   for (const line of ['plug parts left out per template', 'fresh reader per post: who read it and its answer word for word',
-    'approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)']) {
+    'approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)', 'energy reason per post',
+    'receipt status: one of awaiting_approval, nothing_to_approve, drafting_declined, fallback_ready, scheduled, partially_scheduled, schedule_unverified',
+    'tired-check queries searched in both apostrophe forms when the stretch has one']) {
     assert.ok(manifest.receipt.must_prove.includes(line), line);
   }
   for (const line of ['template, its label and its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete',
@@ -253,7 +262,12 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     const line = receipt.top_10_line;
     assert.equal(line.rank, Math.max(1, Math.floor(line.account_post_count / 10)), 'the line is the post at a tenth of the count');
     const used = new Set([...(receipt.checks ?? []), ...(receipt.posts ?? [])].map((row) => row.template_id));
-    const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified'];
+    const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified', 'control_failed'];
+    const statuses = { awaiting_approval: 'schedule_post', nothing_to_approve: 'schedule_post', drafting_declined: 'evidence_only', fallback_ready: 'local_packet',
+      scheduled: 'schedule_post', partially_scheduled: 'schedule_post', schedule_unverified: 'schedule_post' };
+    assert.equal(receipt.action, statuses[receipt.status], `status ${receipt.status} is a listed one with its action`);
+    assert.equal(receipt.fallback_used, receipt.status === 'fallback_ready');
+    const firstGenerate = receipt.tool_path.indexOf('generate_content');
     for (const template of receipt.templates) {
       assert.ok(labels.includes(template.status), `${template.template_id} has a known label`);
       assert.equal(template.top_10_percent_views, line.views);
@@ -288,7 +302,18 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
       assert.equal(check.energy_matches_evidence, true, `${check.template_id} reads at its evidence energy`);
       assert.equal(check.fill_is_new, true, `${check.template_id} does not repeat an evidence or tired-check fill`);
       assert.ok(check.fresh_reader?.reader && check.fresh_reader.answer, `${check.template_id} records who read it and the answer`);
-      assert.equal(check.fresh_reader.result, 'pass', `${check.template_id} passes only on a clear yes`);
+      const checked = receipt.templates.find((t) => t.template_id === check.template_id);
+      assert.ok(check.energy_reason, `${check.template_id} gives a one-line energy reason`);
+      if (check.fresh_reader.result === 'fail, waived') {
+        assert.equal(checked.fresh_reader_waiver?.template_id, check.template_id, `${check.template_id} is waived only by the creator for this template`);
+        assert.ok(checked.fresh_reader_waiver.creator_words && checked.fresh_reader_waiver.at, 'the waiver keeps the creator\'s words and when');
+      } else if (check.fresh_reader.result === 'unavailable') {
+        assert.match(check.fresh_reader.reader, /^self-read/, 'unavailable means no fresh reader');
+        assert.equal(check.gate_line, `fresh reader: unavailable (self-read: ${check.fresh_reader.answer})`, 'the gate shows the self-read');
+      } else {
+        assert.equal(check.fresh_reader.result, 'pass', `${check.template_id} passes only on a clear yes`);
+        assert.match(check.fresh_reader.answer, /DELIVERS: clear yes|^clear yes/, 'a pass is a clear yes');
+      }
       assert.ok(!('fresh_reader_delivers' in check), 'a bare true is not a fresh-reader record');
       const proven = receipt.templates.find((t) => t.template_id === check.template_id).evidence
         .reduce((top, post) => (post.views > top.views ? post : top));
@@ -303,13 +328,26 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
       if (receipt.fallback_used) assert.equal(slot.idempotency_key, undefined, 'a local packet makes no write key');
       else assert.match(slot.idempotency_key, /^viral-posts:[^:@]+:[^:]+:[0-9a-f]{12}$/);
     }
-    for (const post of (receipt.posts ?? []).filter((p) => p.state === 'excluded' && p.fresh_reader?.result === 'fail')) {
-      const top = receipt.templates.find((t) => t.template_id === post.template_id).evidence
-        .reduce((best, e) => (e.views > best.views ? e : best));
-      assert.equal(post.fresh_reader_control?.evidence_first_line, top.first_line, `${post.template_id} control is its template's most-viewed post`);
-      assert.ok(post.fresh_reader_control.answer && post.fresh_reader.answer, 'both answers go to the gate');
-      assert.equal(post.waiver_available, post.fresh_reader_control.result !== 'pass', 'a waiver is offered only when the creator\'s own post fails too');
-      assert.ok(!post.scheduled_at && !post.idempotency_key, 'an excluded post gets no time or key');
+    for (const template of receipt.templates.filter((t) => t.status === 'used' || t.status === 'control_failed')) {
+      const control = template.fresh_reader_control;
+      assert.ok(control?.reader && control.answer, `${template.template_id} has a control with its reader and answer`);
+      assert.equal(control.evidence_first_line, template.evidence.reduce((best, e) => (e.views > best.views ? e : best)).first_line,
+        `${template.template_id} control is its most-viewed evidence post`);
+      if (firstGenerate >= 0) assert.ok(control.after_tool_calls <= firstGenerate, `${template.template_id} control ran before any generate_content`);
+      const waived = Boolean(template.fresh_reader_waiver);
+      if (control.result === 'fail') {
+        assert.equal(template.status === 'used', waived, `${template.template_id} is used after a failed control only with a waiver`);
+      } else {
+        assert.ok(!waived, `${template.template_id} needs no waiver when its control is ${control.result}`);
+      }
+      if (template.status === 'control_failed') {
+        assert.ok(!(receipt.gate_drafts ?? []).some((draft) => draft.template_id === template.template_id), `${template.template_id} saves no draft`);
+        assert.ok(!(receipt.posts ?? []).some((post) => post.template_id === template.template_id), `${template.template_id} makes no post`);
+      }
+      for (const post of (receipt.posts ?? []).filter((p) => p.template_id === template.template_id && waived)) {
+        const line = `fresh reader: fail, waived by you for ${template.template_id} (your words: "${template.fresh_reader_waiver.creator_words}")`;
+        if (post.state !== 'excluded') assert.ok(post.gate_flags?.includes(line), `${template.template_id} shows the waiver at the gate`);
+      }
     }
     const account = receipt.account_handle.replace(/^@/, '');
     for (const post of (receipt.posts ?? []).filter((p) => p.state !== 'excluded')) {
@@ -378,7 +416,10 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   const collided = new Set(queue.collisions.map((hit) => hit.template_id));
   assert.ok(collided.size > 0, 'covers a post that repeats queued text');
   const slotKeys = new Map(pending.schedule_proposal.slots.map((slot) => [slot.template_id, slot.idempotency_key]));
-  assert.ok(pending.posts.some((post) => post.waiver_available), 'the pending fixture covers a failed fresh-reader control');
+  assert.ok(pending.templates.some((t) => t.status === 'control_failed'), 'the pending fixture covers a failed control with no waiver');
+  assert.ok(pending.posts.some((post) => post.state === 'proposed' && pending.templates.find((t) => t.template_id === post.template_id).fresh_reader_waiver),
+    'the pending fixture covers a waived template proposed at the gate');
+  assert.ok(receipts[1].checks.some((check) => check.fresh_reader.result === 'unavailable'), 'the fallback fixture covers no fresh reader');
   for (const post of pending.posts.filter((p) => p.state !== 'excluded')) {
     if (collided.has(post.template_id)) {
       assert.equal(post.state, 'blocked', `${post.template_id} repeats queued text`);
@@ -410,6 +451,12 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   const states = new Set(after.posts.map((post) => post.state));
   for (const state of ['scheduled', 'blocked', 'schedule_unverified']) assert.ok(states.has(state), `covers ${state}`);
   assert.ok(after.templates.some((t) => t.status === 'needs_media'), 'covers a media template');
+  const waivedScheduled = after.posts.filter((post) => post.state === 'scheduled' && after.templates.find((t) => t.template_id === post.template_id).fresh_reader_waiver);
+  assert.ok(waivedScheduled.length > 0, 'the after-yes fixture covers a waived template');
+  for (const post of waivedScheduled) {
+    assert.equal(post.fresh_reader.result, 'fail, waived');
+    for (const part of post.parts) assert.ok(after.approved_text.includes(part), 'a waived post is scheduled only with the batch yes');
+  }
   for (const post of after.posts) {
     assert.equal(post.fingerprint, print(post), `${post.template_id} fingerprint binds account, parts, media and time`);
     assert.ok(post.idempotency_key.endsWith(`:${post.fingerprint.slice(0, 12)}`));
