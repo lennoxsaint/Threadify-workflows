@@ -14,6 +14,8 @@ const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relati
 const sameText = (text) => (text ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
 // one fill: same text after case, punctuation and spacing, or differing only in a number (SKILL.md step 2)
 const sameFill = (text) => sameText(text).replace(/\p{N}+/gu, '#');
+// When more than one label applies, the first in this order shows and the rest are also_labels (SKILL.md step 2).
+const LABEL_ORDER = ['shape_unverified', 'media_unknown', 'needs_media', 'unproven', 'tired', 'control_failed', 'no_fitting_fact'];
 const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
   .map((run) => run.replace(/[^\p{L}\p{N}'’"“”\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
   .reduce((best, run) => (run.length > best.length ? run : best), []);
@@ -74,7 +76,8 @@ function assertFreshReaders(receipt) {
   for (const [kind, row] of rows) {
     const where = `${row.template_id} ${kind}`;
     const verdict = readerVerdict(row.fresh_reader, where);
-    const expected = /^self-read/.test(row.fresh_reader.reader) ? 'unavailable'
+    // a self-read is never a pass: a clear yes is unavailable, a borderline or no is a fail (SKILL.md rule 4)
+    const expected = /^self-read/.test(row.fresh_reader.reader) ? (verdict === 'clear yes' ? 'unavailable' : 'fail')
       : verdict === 'clear yes' ? 'pass' : waiverFor(row.template_id) ? 'fail, waived' : 'fail';
     assert.equal(row.fresh_reader.result, expected, `${where} result follows its reader, verdict and waiver`);
     if (expected === 'fail') {
@@ -152,6 +155,17 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Also skip a fact that already fails a step-4 check before any call/);
   assert.match(skill, /A paste that gives only each post's first part leaves every post cut off until its full text, or the creator's word that it had one part, comes in/);
   assert.match(skill, /`fallback_ready` \(the local fallback, whether or not any post survives;/);
+  // round 12: repeats of the creator's own posts, case and closing mark, label order, fact_kept
+  assert.match(skill, /\*\*Repeat check:\*\* for each fact that fits, call `search_posts` once with the words that carry its claim, not the template's fixed words/);
+  assert.match(skill, /A fact whose claim one of the creator's own posts already makes, in any template or in none, is a repeat/);
+  assert.match(skill, /and so is a fact whose claim one of the creator's own posts already makes, in any template or in none \(the step-3 repeat check\)/);
+  assert.match(skill, /run the step-3 repeat check against every pasted post instead of `search_posts` \(record `repeat_check` with `pasted posts` as its query/);
+  assert.match(skill, /the fact keeps its words and their order, while its letter case and closing mark follow the template/);
+  assert.match(skill, /except a word the creator writes in capitals, such as AI, and the fact's own closing mark gives way to the skeleton's, never doubled/);
+  assert.match(skill, new RegExp(`the template carries the first of them in this order: ${LABEL_ORDER.map((label) => label.replace(/_/g, ' ')).join(', ')}\\. Show the others next to it as "also: <labels>" and record them, in that order, as \`also_labels\``));
+  assert.match(skill, /Record whether each version's text keeps that fact as `fact_kept`: `word for word` \(letter case and the closing mark aside\), `shortened`/);
+  assert.match(skill, /its `repeat_check` and any `skipped` check\)/);
+  assert.doesNotMatch(skill, /the older i get/, 'the example stem is a neutral one');
   assert.match(skill, /top 10% by views at least twice/);
   assert.match(skill, /view count/);
   assert.match(skill, /three most recent uses by date/);
@@ -218,6 +232,15 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(gate, /for a tired template, the view counts of its last three uses/);
   assert.match(gate, /each pass or fail, with the hook's length against its limit \(for example 78\/81 when the proven hook is 81 characters\), the energy reason and the fresh reader's answer; a waived check reads "fresh reader: fail, waived by you for <template-id> \(your words: "\.\.\."\)"/);
   assert.match(gate, /for each template, its control \(the fresh reader's answer on its most-viewed evidence post\) and any waiver, in the creator's words/);
+  assert.match(gate, /per template its hook fit: each fact, its filled hook and its length against the limit, and every fact left out before drafting, with the check it failed/);
+  for (const line of ['per template its hook fit (each fact, its filled hook and its length against the limit) and every fact left out before drafting, with the check it failed',
+    'any other label that applies to a template, shown next to it as also']) {
+    assert.ok(manifest.approval_gate.must_show.includes(line), line);
+  }
+  for (const line of ["repeat check per fitting fact: its search_posts query (or pasted posts) and any of the creator's own posts that already make its claim; a fact with a match is skipped",
+    'fact_kept per saved draft: word for word, shortened or changed']) {
+    assert.ok(manifest.receipt.must_prove.includes(line), line);
+  }
   assert.match(skill, /\*\*Calibrate the fresh-reader check\*\* before any `generate_content` call/);
   assert.match(skill, /Until they waive it, label the template "control failed" and leave it out/);
   assert.match(skill, /A waiver covers that template in this run only, and it is not a yes to schedule: the post still needs the yes at the gate/);
@@ -243,6 +266,9 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   const readme = fs.readFileSync(path.join(root, 'workflows/viral-posts/README.md'), 'utf8');
   assert.match(readme, /It writes text posts only: a template that went viral with a picture or video is shown but left out/);
   assert.match(readme, /except Threadify's validator \(the 500-character rule is checked by hand\)/);
+  assert.match(readme, /you see that post and the reader's answer/);
+  assert.doesNotMatch(readme, /you see both/);
+  assert.match(readme, /a check that its fact is not a claim one of your own posts already made/);
 });
 
 test('Viral Posts shows and rechecks the global auto-repost setting and full queued text', () => {
@@ -341,6 +367,15 @@ test('Viral Posts README and bundled skill stay in step with the source', () => 
   assert.match(bundled, /references\/demo-feedback-rules\.md/);
 });
 
+test('Viral Posts manifest fallback mirrors the skill fallback sentence by sentence', () => {
+  const skill = fs.readFileSync(source, 'utf8');
+  const paragraph = skill.slice(skill.indexOf('## Local fallback')).split('\n\n')[1].trim();
+  assert.ok(paragraph.startsWith('Without a working connection'), 'the fallback paragraph is found');
+  assert.ok(manifest.fallback.instructions.join(' ').startsWith(paragraph), 'the manifest fallback starts with the skill fallback, word for word');
+  assert.ok(manifest.fallback.instructions.length > paragraph.split('. ').length / 2, 'one instruction per sentence');
+  assert.match(manifest.fallback.instructions.at(-1), /tool_path/, 'and keeps the tool_path rule');
+});
+
 test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
   const validate = new Ajv({ strict: false }).compile(readJson('schemas/workflow-receipt.v1.json'));
   const pending = readJson('validation/mock-fixtures/viral-posts.awaiting-approval.receipt.json');
@@ -381,8 +416,10 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified', 'control_failed', 'no_fitting_fact'];
     // every label a receipt uses is one the manifest's receipt line names
     const labelLine = manifest.receipt.must_prove.find((line) => line.startsWith('label per template:'));
+    assert.ok(labelLine.endsWith(`when several apply, the first in order (${LABEL_ORDER.map((label) => label.replace(/_/g, ' ')).join(', ')}) and the rest as also_labels`),
+      'the manifest label line gives the order and also_labels');
     for (const template of receipt.templates) {
-      assert.ok(labelLine.includes(template.status.replace(/_/g, ' ')), `the manifest label line names ${template.status}`);
+      assert.ok(labelLine.split(';')[0].includes(template.status.replace(/_/g, ' ')), `the manifest label line names ${template.status} in its own list`);
     }
     // the step-2 control runs only when drafting goes ahead
     if (receipt.status === 'drafting_declined') {
@@ -395,18 +432,24 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     for (const template of receipt.templates) {
       assert.ok(labels.includes(template.status), `${template.template_id} has a known label`);
       assert.equal(template.top_10_percent_views, line.views);
-      if (template.evidence.some((post) => post.source_complete !== true)) {
-        assert.equal(template.status, 'shape_unverified', `${template.template_id} copies a cut-off post`);
-      } else if (template.evidence.some((post) => post.media_type === 'unknown')) {
-        assert.equal(template.status, 'media_unknown', `${template.template_id} waits for the picture answer`);
-      } else if (template.evidence.some((post) => post.media_type !== 'TEXT_POST')) {
-        assert.equal(template.status, 'needs_media', `${template.template_id} went viral with media`);
-      } else if (new Set(template.evidence.filter((post) => post.views >= line.views).map((post) => sameFill(post.fill))).size < 2) {
-        assert.equal(template.status, 'unproven', `${template.template_id} hit the top 10% with fewer than two different fills`);
-      } else if (template.tired_check?.last_three?.length === 3) {
-        const allUnder = template.tired_check.last_three.every((use) => use.views < line.views);
-        assert.equal(template.status === 'tired', allUnder, `${template.template_id} is tired exactly when its last three uses fell under the line`);
+      // every evidence label that applies, in order: the first is the label, the rest are also_labels
+      const found = {
+        shape_unverified: template.evidence.some((post) => post.source_complete !== true),
+        media_unknown: template.evidence.some((post) => post.media_type === 'unknown'),
+        needs_media: template.evidence.some((post) => !['TEXT_POST', 'unknown'].includes(post.media_type)),
+        unproven: template.evidence.every((post) => typeof post.fill === 'string')
+          && new Set(template.evidence.filter((post) => post.views >= line.views).map((post) => sameFill(post.fill))).size < 2,
+        tired: template.tired_check?.last_three?.length === 3 && template.tired_check.last_three.every((use) => use.views < line.views),
+      };
+      const applies = LABEL_ORDER.filter((label) => found[label]);
+      if (applies.length) {
+        assert.deepEqual([template.status, ...(template.also_labels ?? [])], applies, `${template.template_id} carries the first label that applies and the rest as also_labels, in order`);
+      } else {
+        assert.ok(!(template.status in found), `${template.template_id} is ${template.status} with no evidence for it`);
+        for (const label of template.also_labels ?? []) assert.ok(!(label in found), `${template.template_id} also ${label} with no evidence for it`);
       }
+      const shown = [template.status, ...(template.also_labels ?? [])].filter((label) => LABEL_ORDER.includes(label));
+      assert.deepEqual(shown, [...shown].sort((x, y) => LABEL_ORDER.indexOf(x) - LABEL_ORDER.indexOf(y)), `${template.template_id} labels follow the order`);
       if (template.tired_check) assert.equal(template.tired_check.recycled_copies, 'count as uses', 'a reposted copy counts as a use');
       for (const post of template.evidence) {
         for (const key of ['first_line', 'date', 'views', 'media_type', 'part_count', 'fill', 'source_complete']) {
@@ -494,6 +537,7 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     }
   }
   assert.ok(receipts[1].templates.some((t) => t.status === 'shape_unverified'), 'the fallback fixture covers a cut-off paste');
+  assert.ok(receipts.some((r) => r.templates.some((t) => (t.also_labels ?? []).length > 0)), 'a fixture covers a template with more than one label');
   assert.ok(receipts[1].templates.some((t) => t.status === 'media_unknown'), 'the fallback fixture covers an unanswered picture question');
   assert.ok(receipts[0].templates.some((t) => t.status === 'unproven'), 'the pending fixture covers a one-hit shape');
   assert.ok(receipts[0].templates.some((t) => t.status === 'used' && t.flags?.includes('tired_check_incomplete')), 'covers a flagged template');
@@ -614,6 +658,19 @@ test('Viral Posts fresh-reader results come from the reader\'s own DELIVERS word
   }
   assert.throws(() => assertFreshReaders(mutate(fallback, (r) => { r.checks[0].fresh_reader.result = 'pass'; })), assert.AssertionError,
     'a self-read recorded as pass');
+  // a self-read is unavailable only for a clear yes; a borderline or no is a fail and its post is never proposed
+  const selfSays = (word, result, states = []) => mutate(fallback, (r) => {
+    const f = r.checks[0].fresh_reader; say(f, word); f.verdict = word; f.result = result;
+    if (states.length) r.posts = states.map((state) => ({ template_id: r.checks[0].template_id, state, parts: ['redacted local post'] }));
+  });
+  assert.equal(fallback.checks[0].fresh_reader.reader.startsWith('self-read'), true, 'the fallback fixture check is a self-read');
+  for (const word of ['borderline', 'no']) {
+    assert.throws(() => assertFreshReaders(selfSays(word, 'unavailable')), assert.AssertionError, `a self-read of ${word} labelled unavailable`);
+    assert.throws(() => assertFreshReaders(selfSays(word, 'fail', ['proposed'])), assert.AssertionError, `a self-read of ${word} with its post proposed`);
+    assert.doesNotThrow(() => assertFreshReaders(selfSays(word, 'fail')), `a self-read of ${word} is a fail when no post is made`);
+    assert.doesNotThrow(() => assertFreshReaders(selfSays(word, 'fail', ['excluded'])), `a self-read of ${word} is a fail with its post excluded`);
+  }
+  assert.doesNotThrow(() => assertFreshReaders(selfSays('clear yes', 'unavailable')), 'a self-read clear yes stays unavailable');
   const saidNo = mutate(pending, (r) => { const f = waivedRow(r).fresh_reader; say(f, 'no'); f.verdict = 'no'; });
   assert.doesNotThrow(() => assertFreshReaders(saidNo), 'a reader who said no on a waived template is fail, waived');
   const passedAnyway = mutate(pending, (r) => {
@@ -636,20 +693,45 @@ const inOrder = (needles, hay) => { let k = 0; for (const w of hay) if (w === ne
 // The hook limit is 80, or the proven hook's length (the first line of the most-viewed evidence post) when that is longer (SKILL.md rule 2).
 const hookLimit = (template) => Math.max(80, template.evidence.reduce((top, post) => (post.views > top.views ? post : top)).first_line.length);
 const isRedacted = (line) => /^redacted/.test(line ?? '');
+// A fact fills a one-span hook with its words in order; letter case and the closing mark follow the template (SKILL.md step 3).
+const closingMark = (line) => (line.match(/[.!?:]$/) ?? [''])[0];
+const fillSpan = (hook, fact) => {
+  const lower = hook.replace(/\[[^\]]*\]/g, '') === hook.replace(/\[[^\]]*\]/g, '').toLowerCase();
+  let body = fact.trim().replace(/[.!?:;,…]+$/, '');
+  if (lower) body = body.split(' ').map((w) => (w.length > 1 && w === w.toUpperCase() ? w : w.toLowerCase())).join(' ');
+  return hook.slice(0, hook.indexOf('[')) + body + hook.slice(hook.lastIndexOf(']') + 1);
+};
+const followsTemplate = (skeletonHook, filled) => {
+  const mark = closingMark(skeletonHook);
+  const markOk = !mark || (filled.endsWith(mark) && !/[.!?:;,…]$/.test(filled.slice(0, -1)));
+  const lower = skeletonHook.replace(/\[[^\]]*\]/g, '') === skeletonHook.replace(/\[[^\]]*\]/g, '').toLowerCase();
+  const caseOk = !lower || filled.split(/\s+/).every((w) => w === w.toLowerCase() || (w.length > 1 && w.replace(/[^\p{L}]/gu, '') === w.replace(/[^\p{L}]/gu, '').toUpperCase()));
+  return markOk && caseOk;
+};
 
 test('Viral Posts checks the hook fits before drafting and keeps shared words fixed', () => {
   // the rule on a live-shaped pair: "your" is in both fills but moves, so it stays inside a placeholder
-  const moving = ['the older i get the more i realize rest is the secret weapon of your best days.', 'the older i get the more i realize silence is your answer.'];
-  assert.deepEqual(anchoredShared(moving), words('the older i get the more i realize is'), 'only words in the same place are fixed');
+  const moving = ['the longer i build the more i see rest is the secret weapon of your best days.', 'the longer i build the more i see silence is your answer.'];
+  assert.deepEqual(anchoredShared(moving), words('the longer i build the more i see is'), 'only words in the same place are fixed');
   assert.deepEqual(anchoredShared(['nobody warns you that success feels quiet.', 'nobody warns you, that growth looks boring up close.']), words('nobody warns you that'), 'punctuation does not move a word');
   assert.deepEqual(anchoredShared(['i walked daily for 90 days. here’s what changed:', "i quit sugar for a year. here's what happened:"]), words("i for here's what"), 'a word between placeholders is fixed when it sits at the same count');
   // the limit is derived from the evidence, at the 80/81 boundary
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(80), views: 2 }, { first_line: 'short', views: 1 }] }), 80);
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(81), views: 2 }, { first_line: 'short', views: 1 }] }), 81, 'a proven 81-character hook lifts the limit to 81');
   assert.equal(hookLimit({ evidence: [{ first_line: 'x'.repeat(81), views: 1 }, { first_line: 'short', views: 2 }] }), 80, 'only the most-viewed post sets it');
+  // the fact keeps its words; case and the closing mark follow the template, and the hook is counted as posted
+  const stem = 'the longer i build the more i see [thing] is [what it is].';
+  assert.equal(fillSpan(stem, 'AI is the engine, not the headline'), 'the longer i build the more i see AI is the engine, not the headline.', 'a capitals word keeps its capitals; the period is added');
+  assert.equal(fillSpan(stem, 'Life is too short.'), 'the longer i build the more i see life is too short.', 'lowercase template, one period, never doubled');
+  assert.equal(fillSpan(stem, 'Rest is a weapon!'), 'the longer i build the more i see rest is a weapon.', "the skeleton's mark replaces the fact's");
+  const at82 = fillSpan(stem, 'Consistency is the quiet secret of a great year');
+  assert.equal(at82.length, 82, 'counted as posted, with its closing period');
+  assert.ok(at82.length > hookLimit({ evidence: [{ first_line: 'x'.repeat(81), views: 2 }] }), 'a hook that is 81 only without its period does not fit an 81 limit');
+  assert.ok(followsTemplate(stem, at82) && !followsTemplate(stem, at82.slice(0, -1)) && !followsTemplate(stem, `${at82}.`), 'the mark is there once');
+  assert.ok(!followsTemplate(stem, 'the longer i build the more i see Life is too short.'), 'a lowercase template keeps the fact lowercase');
 
   const receipts = ['awaiting-approval', 'after-yes', 'fallback', 'fallback-after-error'].map((name) => [name, readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`)]);
-  let noFit = 0; let checkedSkeletons = 0; let movers = 0;
+  let noFit = 0; let checkedSkeletons = 0; let movers = 0; let repeats = 0;
   for (const [name, receipt] of receipts) {
     if (!receipt.fallback_used) assert.equal(receipt.drafting_yes, true, name);
     const firstGenerate = receipt.tool_path.indexOf('generate_content');
@@ -658,12 +740,22 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
       const where = `${name} ${template.template_id}`;
       for (const fit of template.hook_fit ?? []) {
         assert.equal(fit.filled_hook_chars, fit.filled_hook.length, `${where} counts the filled hook "${fit.filled_hook}"`);
+        assert.ok(followsTemplate(template.skeleton.split('\n')[0], fit.filled_hook), `${where} "${fit.filled_hook}" takes the template's case and closing mark once`);
+        // (b) every fact that fits is checked against the creator's own posts before drafting; a match is skipped
+        if (fit.filled_hook_chars <= fit.limit) {
+          assert.ok(typeof fit.repeat_check?.query === 'string' && fit.repeat_check.query && Array.isArray(fit.repeat_check.matches), `${where} "${fit.fact}" has a repeat check`);
+          if (receipt.fallback_used) assert.equal(fit.repeat_check.query, 'pasted posts', `${where} the local fallback checks the pasted posts`);
+          if (fit.repeat_check.matches.length) {
+            repeats += 1;
+            assert.match(fit.skipped ?? '', /^repeat/, `${where} "${fit.fact}" repeats one of the creator's posts and is skipped`);
+          }
+        }
         assert.equal(fit.limit, hookLimit(template), `${where} limit is 80 or its proven hook`);
         assert.ok(inOrder(fixedWords(template.skeleton.split('\n')[0]), words(fit.filled_hook)), `${where} filled hook keeps the skeleton's fixed words`);
         assert.ok(Number.isInteger(fit.after_tool_calls) && fit.after_tool_calls <= beforeDrafting, `${where} hook fit counted before any generate_content`);
         if (!receipt.fallback_used) assert.ok(receipt.tool_path.slice(0, fit.after_tool_calls).includes('query_brain'), `${where} hook fit counted after query_brain`);
       }
-      const fitting = (template.hook_fit ?? []).filter((f) => f.filled_hook_chars <= f.limit).map((f) => f.fact);
+      const fitting = (template.hook_fit ?? []).filter((f) => f.filled_hook_chars <= f.limit && !f.skipped && !f.repeat_check?.matches.length).map((f) => f.fact);
       if (template.status === 'used') {
         assert.ok(fitting.length > 0, `${where} drafts only with a fact that fits`);
         for (const draft of (receipt.gate_drafts ?? []).filter((d) => d.template_id === template.template_id)) {
@@ -689,6 +781,17 @@ test('Viral Posts checks the hook fits before drafting and keeps shared words fi
     }
   }
   assert.ok(noFit >= 1, 'a fixture covers a template with no fitting fact');
+  assert.ok(repeats >= 1, "a fixture covers a fact that repeats one of the creator's own posts");
+  // (g) every saved draft records whether its text kept the fact; a changed fact never reaches the gate as a live post
+  for (const [name, receipt] of receipts.filter(([, r]) => !r.fallback_used)) {
+    for (const draft of receipt.gate_drafts ?? []) {
+      assert.ok(['word for word', 'shortened', 'changed'].includes(draft.fact_kept), `${name} ${draft.draft_id} records fact_kept`);
+    }
+    for (const post of (receipt.posts ?? []).filter((p) => p.state !== 'excluded' && p.saved_draft_id)) {
+      const draft = receipt.gate_drafts.find((d) => d.draft_id === post.saved_draft_id);
+      assert.notEqual(draft.fact_kept, 'changed', `${name} ${post.template_id} is not built on a draft that changed its fact`);
+    }
+  }
   assert.ok(movers >= 1, 'a fixture covers a shared word that moves inside the fills');
   assert.ok(checkedSkeletons >= 6, 'the fixtures carry evidence lines the skeletons can be checked against');
   for (const [name, receipt] of receipts.filter(([, r]) => !r.fallback_used)) {
@@ -750,7 +853,11 @@ test('Viral Posts fixtures stay inside the drafting limits and record every call
       const counted = receipt.templates.filter((t) => (t.hook_fit ?? []).length > 0).length;
       assert.ok(count(receipt, 'query_brain') >= counted, `${name} calls query_brain for each of the ${counted} templates it counts a hook for`);
       const queries = receipt.templates.reduce((n, t) => n + (t.tired_check_queries ?? []).length, 0);
-      assert.ok(count(receipt, 'search_posts') >= queries, `${name} records a search_posts call for every tired-check query`);
+      const repeatChecks = receipt.templates.reduce((n, t) => n + (t.hook_fit ?? []).filter((f) => f.repeat_check).length, 0);
+      const firstGenerate = receipt.tool_path.indexOf('generate_content');
+      const beforeDrafting = receipt.tool_path.slice(0, firstGenerate >= 0 ? firstGenerate : undefined);
+      assert.ok(beforeDrafting.filter((tool) => tool === 'search_posts').length >= queries + repeatChecks,
+        `${name} records a search_posts call for every tired-check query (${queries}) and repeat check (${repeatChecks}) before any generate_content`);
     }
     if (receipt.queue_text_check) {
       assert.ok(count(receipt, 'get_schedule_status') >= receipt.queue_text_check.fetched_full_text.length, `${name} records every full-text fetch`);

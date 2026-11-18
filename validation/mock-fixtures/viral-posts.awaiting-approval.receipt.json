@@ -41,8 +41,12 @@
     "search_posts",
     "search_posts",
     "query_brain",
+    "search_posts",
     "query_brain",
+    "search_posts",
+    "search_posts",
     "query_brain",
+    "search_posts",
     "query_brain",
     "generate_content",
     "generate_content",
@@ -129,7 +133,11 @@
           "filled_hook": "i journaled every morning for 30 days. here's what changed:",
           "filled_hook_chars": 59,
           "limit": 80,
-          "after_tool_calls": 32
+          "after_tool_calls": 32,
+          "repeat_check": {
+            "query": "journaled every morning",
+            "matches": []
+          }
         }
       ]
     },
@@ -177,7 +185,29 @@
           "filled_hook": "patience is a paid skill.",
           "filled_hook_chars": 25,
           "limit": 80,
-          "after_tool_calls": 33
+          "after_tool_calls": 34,
+          "repeat_check": {
+            "query": "paid skill",
+            "matches": []
+          }
+        },
+        {
+          "fact": "comfort is a slow leak.",
+          "filled_hook": "comfort is a slow leak.",
+          "filled_hook_chars": 23,
+          "limit": 80,
+          "after_tool_calls": 34,
+          "repeat_check": {
+            "query": "slow leak",
+            "matches": [
+              {
+                "date": "2026-02-14",
+                "views": 3120,
+                "first_line": "comfort is a slow leak in your ambition."
+              }
+            ]
+          },
+          "skipped": "repeat: your 2026-02-14 post already makes this claim"
         }
       ]
     },
@@ -362,11 +392,11 @@
     },
     {
       "template_id": "t8",
-      "skeleton": "the older i get the more i realize [thing] is [what it is].",
+      "skeleton": "the longer i build the more i see [thing] is [what it is].",
       "status": "used",
       "evidence": [
         {
-          "first_line": "the older i get the more i realize rest is the secret weapon of your best days.",
+          "first_line": "the longer i build the more i see rest is the secret weapon of your best days.",
           "date": "2026-02-10",
           "views": 15000,
           "media_type": "TEXT_POST",
@@ -375,7 +405,7 @@
           "part_count": 1
         },
         {
-          "first_line": "the older i get the more i realize silence is your answer.",
+          "first_line": "the longer i build the more i see silence is your answer.",
           "date": "2026-03-22",
           "views": 6000,
           "media_type": "TEXT_POST",
@@ -407,7 +437,7 @@
         "verdict": "not tired"
       },
       "fresh_reader_control": {
-        "evidence_first_line": "the older i get the more i realize rest is the secret weapon of your best days.",
+        "evidence_first_line": "the longer i build the more i see rest is the secret weapon of your best days.",
         "reader": "fresh agent given only that post",
         "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
         "verdict": "borderline",
@@ -420,15 +450,19 @@
         "at": "2026-06-01T10:05:00-04:00"
       },
       "tired_check_queries": [
-        "the older i get the more i realize"
+        "the longer i build the more i see"
       ],
       "hook_fit": [
         {
           "fact": "sleep is a performance tool.",
-          "filled_hook": "the older i get the more i realize sleep is a performance tool.",
-          "filled_hook_chars": 63,
+          "filled_hook": "the longer i build the more i see sleep is a performance tool.",
+          "filled_hook_chars": 62,
           "limit": 80,
-          "after_tool_calls": 34
+          "after_tool_calls": 37,
+          "repeat_check": {
+            "query": "performance tool",
+            "matches": []
+          }
         }
       ]
     },
@@ -523,14 +557,14 @@
           "filled_hook": "it took me years to learn that real confidence comes from keeping small promises to yourself every single day for years.",
           "filled_hook_chars": 120,
           "limit": 80,
-          "after_tool_calls": 35
+          "after_tool_calls": 39
         },
         {
           "fact": "the people who win long term were willing to look stupid in public first.",
           "filled_hook": "it took me years to learn that the people who win long term were willing to look stupid in public first.",
           "filled_hook_chars": 104,
           "limit": 80,
-          "after_tool_calls": 35
+          "after_tool_calls": 39
         }
       ],
       "tired_check_queries": [
@@ -585,7 +619,7 @@
     },
     {
       "template_id": "t8",
-      "hook_characters": 63,
+      "hook_characters": 62,
       "hook_limit": 80,
       "validate_post": "valid",
       "skeleton_match": true,
@@ -729,14 +763,16 @@
       "marked": "proposed",
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-a",
-      "fact": "journaled every morning for 30 days"
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-b",
-      "fact": "journaled every morning for 30 days"
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-3",
@@ -744,21 +780,24 @@
       "template_id": "t2",
       "idempotency_key": "viral-posts-redacted-run-t2-a",
       "why": "blocked: repeats queued text",
-      "fact": "patience is a paid skill."
+      "fact": "patience is a paid skill.",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
       "template_id": "t2",
       "idempotency_key": "viral-posts-redacted-run-t2-b",
-      "fact": "patience is a paid skill."
+      "fact": "patience is a paid skill.",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-7",
       "marked": "proposed",
       "template_id": "t8",
       "idempotency_key": "viral-posts-redacted-run-t8-a",
-      "fact": "sleep is a performance tool."
+      "fact": "sleep is a performance tool.",
+      "fact_kept": "word for word"
     }
   ]
 }

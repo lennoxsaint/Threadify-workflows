@@ -56,7 +56,12 @@
           "filled_hook": "unpopular opinion: early nights beat late hustle.",
           "filled_hook_chars": 49,
           "limit": 80,
-          "after_tool_calls": 0
+          "after_tool_calls": 0,
+          "repeat_check": {
+            "query": "pasted posts",
+            "matches": [],
+            "note": "posts you were not given were not checked"
+          }
         }
       ]
     },
@@ -106,11 +111,14 @@
           "views": 5200,
           "media_type": "unknown",
           "source_complete": true,
-          "fill": "redacted fill t3-two",
+          "fill": "redacted fill t3-one",
           "part_count": 1
         }
       ],
-      "top_10_percent_views": 4000
+      "top_10_percent_views": 4000,
+      "also_labels": [
+        "unproven"
+      ]
     }
   ],
   "checks": [

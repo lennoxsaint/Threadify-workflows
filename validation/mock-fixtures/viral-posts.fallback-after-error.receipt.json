@@ -58,7 +58,12 @@
           "filled_hook": "unpopular opinion: early nights beat late hustle.",
           "filled_hook_chars": 49,
           "limit": 80,
-          "after_tool_calls": 1
+          "after_tool_calls": 1,
+          "repeat_check": {
+            "query": "pasted posts",
+            "matches": [],
+            "note": "posts you were not given were not checked"
+          }
         }
       ]
     }

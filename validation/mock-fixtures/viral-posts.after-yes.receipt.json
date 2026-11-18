@@ -35,8 +35,11 @@
     "search_posts",
     "search_posts",
     "query_brain",
+    "search_posts",
     "query_brain",
+    "search_posts",
     "query_brain",
+    "search_posts",
     "generate_content",
     "generate_content",
     "generate_content",
@@ -132,7 +135,11 @@
           "filled_hook": "i journaled every morning for 30 days. here's what changed:",
           "filled_hook_chars": 59,
           "limit": 80,
-          "after_tool_calls": 20
+          "after_tool_calls": 20,
+          "repeat_check": {
+            "query": "journaled every morning",
+            "matches": []
+          }
         }
       ]
     },
@@ -217,7 +224,11 @@
           "filled_hook": "nobody warns you that the first 100 posts are practice.",
           "filled_hook_chars": 55,
           "limit": 80,
-          "after_tool_calls": 21
+          "after_tool_calls": 22,
+          "repeat_check": {
+            "query": "first 100 posts",
+            "matches": []
+          }
         }
       ]
     },
@@ -292,7 +303,11 @@
           "filled_hook": "the honest truth about growing from replies:",
           "filled_hook_chars": 44,
           "limit": 80,
-          "after_tool_calls": 22
+          "after_tool_calls": 24,
+          "repeat_check": {
+            "query": "growing from replies",
+            "matches": []
+          }
         }
       ]
     }
@@ -496,35 +511,40 @@
       "marked": "proposed",
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-a",
-      "fact": "journaled every morning for 30 days"
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-2",
       "marked": "not_picked",
       "template_id": "t1",
       "idempotency_key": "viral-posts-redacted-run-t1-b",
-      "fact": "journaled every morning for 30 days"
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-4",
       "marked": "not_picked",
       "template_id": "t3",
       "idempotency_key": "viral-posts-redacted-run-t3-a",
-      "fact": "the first 100 posts are practice."
+      "fact": "the first 100 posts are practice.",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-5",
       "marked": "proposed",
       "template_id": "t3",
       "idempotency_key": "viral-posts-redacted-run-t3-b",
-      "fact": "the first 100 posts are practice."
+      "fact": "the first 100 posts are practice.",
+      "fact_kept": "word for word"
     },
     {
       "draft_id": "redacted-draft-6",
       "marked": "proposed",
       "template_id": "t5",
       "idempotency_key": "viral-posts-redacted-run-t5-a",
-      "fact": "growing from replies"
+      "fact": "growing from replies",
+      "fact_kept": "word for word"
     }
   ],
   "schedule_proposal": {
