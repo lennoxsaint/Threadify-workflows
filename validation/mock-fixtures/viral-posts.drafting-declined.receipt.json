@@ -36,21 +36,25 @@
       "template_id": "t1",
       "skeleton": "i [did X] for [time]. here's what [result]:",
       "status": "eligible",
-      "tired_check_query": "i",
+      "tired_check_query": "here's what",
       "evidence": [
         {
           "first_line": "redacted example hook one",
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook two",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000

@@ -88,7 +88,7 @@ schedules, publishes or sends in the same turn as the request: it shows the
 exact text, account and local time and waits for a clear yes, even when asked to
 skip that step, then reads the result back.
 
-Viral Posts reads only the owner's own posts and shared library posts for shape, never copies another creator's words, never invents a number or story, shows every part of every post and every exact time, schedules only after the owner's yes on that exact batch with a stable idempotency key per post, reports "scheduled" from readback and never publishes now.
+Viral Posts reads only the owner's own posts and shared library posts for shape, never copies another creator's words, never invents a number or story, shows every part of every post and every exact time, schedules only after the owner's yes on that exact batch with a stable idempotency key per post, reports "scheduled" from readback and never publishes now. Before that yes it names what it saves in the account: one draft and one chat per `generate_content` call, and a viral allowance per library post opened. It shows the owner's global auto-repost setting at the gate and never changes it.
 
 Disconnected work remains local. Local draft, validation, approval, scheduled,
 published and observed are different states. No receipt-shaped fixture proves

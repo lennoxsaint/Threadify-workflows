@@ -76,7 +76,7 @@
     "type": "explicit-final-approval",
     "must_show": [
       "account handle",
-      "template and its evidence posts with view counts",
+      "template, its label and its evidence posts: first line, date and view count",
       "exact text of every part of every post",
       "exact time and timezone for every post",
       "action (schedule, never publish now)",
@@ -104,7 +104,7 @@
     "must_prove": [
       "account",
       "top 10% line with the account post count and rank",
-      "templates with evidence posts and view counts",
+      "templates with evidence posts: first line, date, views, media type, part count, fill and complete text",
       "label per template: used, unproven, tired, needs media, media unknown or shape unverified",
       "exact approved text of every part",
       "check results per post",
@@ -115,7 +115,7 @@
       "intent fingerprint, returned scheduled post id and state per post",
       "global auto-repost setting at the gate and at each dispatch",
       "tired-check query per template",
-      "queued posts whose full text was fetched for the duplicate-text check",
+      "queued posts whose full text was fetched for the duplicate-text check, at the gate and again at every dispatch",
       "readback status (scheduled, never published)",
       "fallback state"
     ]

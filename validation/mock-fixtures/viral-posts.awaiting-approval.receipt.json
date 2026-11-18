@@ -36,19 +36,25 @@
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-1",
+          "part_count": 3,
+          "plug_part_left_out": 3
         },
         {
           "first_line": "redacted example hook two",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-2",
+          "part_count": 2
         }
       ],
       "top_10_percent_views": 5000,
       "status": "used",
-      "tired_check_query": "i"
+      "tired_check_query": "here's what",
+      "gate_note": "evidence post 1 ends with a plug in part 3 (a link) that evidence post 2 lacks; the template is the 2 parts they share and the plug is not copied"
     },
     {
       "template_id": "t2",
@@ -63,18 +69,23 @@
           "date": "2026-04-01",
           "views": 11000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t2-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook four",
           "date": "2026-05-09",
           "views": 8000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t2-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "redacted fixed words"
+      "tired_check_query": null,
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses"
     },
     {
       "template_id": "t3",
@@ -86,7 +97,9 @@
           "date": "2026-05-15",
           "views": 7000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t3-1",
+          "part_count": 1
         }
       ],
       "library_cross_check": "seen in the viral library; reached this creator's top 10% only once",
@@ -103,17 +116,48 @@
           "date": "2026-03-01",
           "views": 10000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t4-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook seven",
           "date": "2026-05-12",
           "views": 7000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t4-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t5",
+      "skeleton": "[one word].",
+      "status": "unproven",
+      "unproven_reason": "both posts over the line have the same text after ignoring case and punctuation (a recycled post), so it counts as one fill",
+      "top_10_percent_views": 5000,
+      "evidence": [
+        {
+          "first_line": "redacted recycled hook",
+          "date": "2026-02-10",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "Redacted recycled fill.",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted recycled hook",
+          "date": "2026-05-25",
+          "views": 6000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted recycled fill",
+          "part_count": 1
+        }
+      ]
     }
   ],
   "checks": [
@@ -125,7 +169,8 @@
       "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
-      "facts_traced": true
+      "facts_traced": true,
+      "fill_is_new": true
     },
     {
       "template_id": "t2",
@@ -135,7 +180,8 @@
       "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
-      "facts_traced": true
+      "facts_traced": true,
+      "fill_is_new": true
     },
     {
       "template_id": "t4",
@@ -145,7 +191,8 @@
       "fresh_reader_delivers": true,
       "energy_matches_evidence": true,
       "all_parts_shown": true,
-      "facts_traced": true
+      "facts_traced": true,
+      "fill_is_new": true
     }
   ],
   "schedule_proposal": {

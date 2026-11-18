@@ -23,14 +23,18 @@
           "date": "2026-04-11",
           "views": 8000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted pasted hook two",
           "date": "2026-05-02",
           "views": 7000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 4000,
@@ -46,14 +50,18 @@
           "date": "2026-03-02",
           "views": 9000,
           "media_type": "TEXT_POST",
-          "source_complete": false
+          "source_complete": false,
+          "fill": null,
+          "part_count": null
         },
         {
           "first_line": "redacted pasted hook four",
           "date": "2026-04-22",
           "views": 6000,
           "media_type": "TEXT_POST",
-          "source_complete": false
+          "source_complete": false,
+          "fill": null,
+          "part_count": null
         }
       ],
       "top_10_percent_views": 4000
@@ -68,14 +76,18 @@
           "date": "2026-02-14",
           "views": 9500,
           "media_type": "unknown",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t3-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted pasted hook six",
           "date": "2026-05-19",
           "views": 5200,
           "media_type": "unknown",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t3-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 4000
@@ -90,7 +102,8 @@
       "fresh_reader_delivers": true,
       "all_parts_shown": true,
       "facts_traced": true,
-      "energy_matches_evidence": true
+      "energy_matches_evidence": true,
+      "fill_is_new": true
     }
   ],
   "schedule_proposal": {

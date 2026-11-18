@@ -7,26 +7,34 @@
     "redacted example post one, line one",
     "redacted example post one, line two",
     "redacted example post two",
-    "redacted example post three"
+    "redacted example post three",
+    "redacted example post five, part one",
+    "redacted example post five, part two"
   ],
-  "approved_text_sha256": "88c18f41743f9a79979aee3634d6d41ef20a0e9f9dd92900bc8de08673f0cfd2",
+  "approved_text_sha256": "8355ea86b832dc1d6d85cf375464b0b79007864c4854136b311576989ff43218",
   "status": "partially_scheduled",
   "timestamp": "2026-06-02T11:00:00Z",
   "timezone": "Australia/Perth",
   "tool_path": [
     "get_connection_defaults",
     "list_scheduled_posts",
+    "get_schedule_status",
     "validate_post",
     "schedule_post",
     "get_schedule_status",
     "get_connection_defaults",
     "list_scheduled_posts",
+    "get_schedule_status",
     "validate_post",
     "get_connection_defaults",
     "list_scheduled_posts",
+    "get_schedule_status",
     "validate_post",
     "schedule_post",
-    "list_scheduled_posts"
+    "list_scheduled_posts",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "get_schedule_status"
   ],
   "fallback_used": false,
   "fingerprint_of": [
@@ -55,18 +63,22 @@
           "date": "2026-05-01",
           "views": 12000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook two",
           "date": "2026-05-20",
           "views": 9000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "i"
+      "tired_check_query": "here's what"
     },
     {
       "template_id": "t2",
@@ -78,18 +90,26 @@
           "date": "2026-04-01",
           "views": 11000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t2-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook four",
           "date": "2026-05-09",
           "views": 8000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t2-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "redacted fixed words"
+      "tired_check_query": null,
+      "flags": [
+        "tired_check_incomplete"
+      ],
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses"
     },
     {
       "template_id": "t3",
@@ -101,14 +121,18 @@
           "date": "2026-03-01",
           "views": 10000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t3-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook six",
           "date": "2026-05-12",
           "views": 7000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t3-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000,
@@ -124,18 +148,49 @@
           "date": "2026-02-01",
           "views": 15000,
           "media_type": "IMAGE",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t4-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted example hook eight",
           "date": "2026-04-20",
           "views": 9500,
           "media_type": "IMAGE",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t4-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 5000,
       "tired_check_query": "this is what"
+    },
+    {
+      "template_id": "t5",
+      "skeleton": "the [adjective] truth about [topic]:",
+      "status": "used",
+      "top_10_percent_views": 5000,
+      "tired_check_query": "truth about",
+      "evidence": [
+        {
+          "first_line": "redacted example hook nine",
+          "date": "2026-03-15",
+          "views": 13000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t5-1",
+          "part_count": 2
+        },
+        {
+          "first_line": "redacted example hook ten",
+          "date": "2026-05-05",
+          "views": 8500,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t5-2",
+          "part_count": 2
+        }
+      ]
     }
   ],
   "posts": [
@@ -169,8 +224,16 @@
         "idempotency_key": "viral-posts:example_creator:t1:d5485032c347",
         "scheduled_at": "2026-06-03T09:00:00+08:00",
         "content_type": "long-form",
-        "draft_id": "redacted-draft-1"
-      }
+        "posts": [
+          {
+            "text": "redacted example post one, line one"
+          },
+          {
+            "text": "redacted example post one, line two"
+          }
+        ]
+      },
+      "text_source_note": "saved draft redacted-draft-1 is where the text came from; schedule_post got the approved text, not the draft id"
     },
     {
       "template_id": "t2",
@@ -188,7 +251,10 @@
         "known": true,
         "trigger": "time",
         "delay_minutes": 480
-      }
+      },
+      "gate_flags": [
+        "tired_check_incomplete"
+      ]
     },
     {
       "template_id": "t3",
@@ -220,6 +286,27 @@
         "content_type": "short-form",
         "text": "redacted example post three"
       }
+    },
+    {
+      "template_id": "t5",
+      "parts": [
+        "redacted example post five, part one",
+        "redacted example post five, part two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-06T09:00:00+08:00",
+      "fingerprint": "152e97091862accaa54721c35cfc0c78941bd071dd02dbfd9d459135a4d60149",
+      "idempotency_key": "viral-posts:example_creator:t5:152e97091862",
+      "state": "blocked",
+      "blocked_reason": "at dispatch, the fresh full text of queued post redacted-queued-2 showed part 2 now repeats this post's part 2; its id, preview and part count were the same as at the gate. New wording needed, waiting for a new yes",
+      "auto_repost_at_dispatch": {
+        "enabled": true,
+        "known": true,
+        "trigger": "time",
+        "delay_minutes": 480
+      },
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-6"
     }
   ],
   "top_10_line": {
@@ -235,5 +322,74 @@
       "delay_minutes": 480
     },
     "gate_line": "on: Threadify re-shares each post 8 hours after it goes out"
-  }
+  },
+  "dispatch_queue_checks": [
+    {
+      "template_id": "t1",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": []
+    },
+    {
+      "template_id": "t2",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": []
+    },
+    {
+      "template_id": "t3",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": []
+    },
+    {
+      "template_id": "t5",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": [
+        {
+          "scheduled_post_id": "redacted-queued-2",
+          "template_id": "t5",
+          "part": 2,
+          "unchanged_since_gate": [
+            "id",
+            "preview",
+            "part_count"
+          ]
+        }
+      ]
+    }
+  ]
 }

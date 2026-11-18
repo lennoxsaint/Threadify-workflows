@@ -25,14 +25,18 @@
           "date": "2026-04-11",
           "views": 8000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-1",
+          "part_count": 1
         },
         {
           "first_line": "redacted pasted hook two",
           "date": "2026-05-02",
           "views": 7000,
           "media_type": "TEXT_POST",
-          "source_complete": true
+          "source_complete": true,
+          "fill": "redacted fill t1-2",
+          "part_count": 1
         }
       ],
       "top_10_percent_views": 4000,
@@ -48,7 +52,8 @@
       "fresh_reader_delivers": true,
       "all_parts_shown": true,
       "facts_traced": true,
-      "energy_matches_evidence": true
+      "energy_matches_evidence": true,
+      "fill_is_new": true
     }
   ],
   "schedule_proposal": {

@@ -11,6 +11,10 @@ const root = path.resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const source = path.join(root, 'plugins/threadify/skills/threadify-viral-posts/SKILL.md');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'workflows/viral-posts/manifest.json'), 'utf8'));
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
+const sameText = (text) => (text ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
+  .map((run) => run.replace(/[^\p{L}\p{N}'\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
+  .reduce((best, run) => (run.length > best.length ? run : best), []);
 
 test('Viral Posts registers only Threadify read, generate, validate and schedule tools', () => {
   const workflow = describeWorkflow(loadWorkflowRegistry({ root }), 'viral-posts');
@@ -70,8 +74,17 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.doesNotMatch(skill, /fix it \(or write it again\)/);
   assert.match(skill, /If the creator sends a post back with a note, change only what the note names and keep the skeleton/);
   assert.match(skill, /flat or boring, or rejects the skeleton, switch to another eligible template/);
-  assert.match(skill, /fixed words up to the first placeholder, exactly as written in the evidence posts/);
+  assert.match(skill, /the longest stretch of fixed words between placeholders \(most words; the first on a tie\), as written in the evidence posts/);
+  assert.match(skill, /Keep only the returned posts whose text fits the skeleton/);
+  assert.match(skill, /no stretch of at least two fixed words, the search cannot find its uses: label it "tired check incomplete"/);
+  assert.doesNotMatch(skill, /fixed words up to the first placeholder/);
   assert.match(skill, /`account\.username` with no @; use that same form in every fingerprint and key/);
+  assert.match(skill, /at least twice, with two different fills/);
+  assert.match(skill, /a reposted or recycled post counts once/);
+  assert.match(skill, /only a plug \(a link or a call to action\) that the other evidence posts do not have, the template is the parts they share/);
+  assert.match(skill, /never copy the plug/);
+  assert.match(skill, /The filled-in words are new: they differ from every evidence post and every use found in the tired check/);
+  assert.match(skill, /per evidence post its first line, date, views, media type, part count, fill and whether its text was complete/);
 });
 
 test('Viral Posts shows and rechecks the global auto-repost setting and full queued text', () => {
@@ -88,7 +101,9 @@ test('Viral Posts shows and rechecks the global auto-repost setting and full que
   assert.match(step7, /the per-post `auto_repost`; the creator's global auto-repost setting still applies/);
   assert.match(skill, /preview ends in "…" or that has more than one part, call `get_schedule_status` once for its full text/);
   assert.match(skill, /the comparison is unresolved: no post is proposed until it is fetched/);
-  assert.match(step7, /fetch full text with `get_schedule_status` for every new id/);
+  assert.match(step7, /at every dispatch, fetch the full text again with `get_schedule_status` for every queued post whose preview ends in "…" or that has more than one part/);
+  assert.match(step7, /never reuse text fetched earlier/);
+  assert.doesNotMatch(step7, /for any id whose preview or part count changed/);
   assert.match(skill, /Without it, skip `list_viral_items`, `get_viral_item` and every later save/);
   assert.match(skill, /After the drafting yes only, call `list_viral_items`/);
   assert.match(skill, /it is empty only when no tool was called/);
@@ -115,7 +130,10 @@ test('Viral Posts discloses saves before drafting and guards the write after the
   assert.match(step7, /the approved time as an ISO instant/);
   assert.match(step7, /`\[account, parts, media, scheduled_at\]` \(as `JSON\.stringify` writes it\)/);
   assert.match(step7, /they must equal what the gate showed/);
-  assert.match(step7, /without `draft_id`, because Threadify schedules a draft's stored text/);
+  assert.match(step7, /Never pass `draft_id`: Threadify schedules a draft's stored text when given one/);
+  assert.match(step7, /the exact approved `posts` \(or `text` for a single post\)/);
+  assert.doesNotMatch(step7, /pass its `draft_id`/);
+  assert.match(step7, /as plain strings \(not `\{text\}` objects\)/);
   assert.match(step7, /Leave out `platforms` \(so it goes to Threads only\), `auto_plug` and the per-post `auto_repost`/);
   const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
   assert.match(gate, /fingerprint and stable idempotency key/, 'the gate shows what the yes binds');
@@ -171,7 +189,7 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
     assert.ok(!receipt.tool_path.includes('publish_now'));
     for (const template of receipt.templates.filter((t) => t.status === 'used')) {
       const hits = template.evidence.filter((post) => post.views >= receipt.top_10_line.views);
-      assert.ok(hits.length >= 2, `${template.template_id} needs two evidence posts over the top 10% line`);
+      assert.ok(new Set(hits.map((post) => sameText(post.fill))).size >= 2, `${template.template_id} needs two different fills over the top 10% line`);
     }
   }
   assert.equal(pending.status, 'awaiting_approval');
@@ -201,13 +219,27 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
         assert.equal(template.status, 'media_unknown', `${template.template_id} waits for the picture answer`);
       } else if (template.evidence.some((post) => post.media_type !== 'TEXT_POST')) {
         assert.equal(template.status, 'needs_media', `${template.template_id} went viral with media`);
-      } else if (template.evidence.filter((post) => post.views >= line.views).length < 2) {
-        assert.equal(template.status, 'unproven', `${template.template_id} hit the top 10% less than twice`);
+      } else if (new Set(template.evidence.filter((post) => post.views >= line.views).map((post) => sameText(post.fill))).size < 2) {
+        assert.equal(template.status, 'unproven', `${template.template_id} hit the top 10% with fewer than two different fills`);
+      }
+      for (const post of template.evidence) {
+        for (const key of ['first_line', 'date', 'views', 'media_type', 'part_count', 'fill', 'source_complete']) {
+          assert.ok(key in post, `${template.template_id} evidence shows ${key}`);
+        }
+        if (post.plug_part_left_out) {
+          assert.match(template.gate_note ?? '', /plug is not copied/, `${template.template_id} shows the plug at the gate`);
+          for (const draft of (receipt.posts ?? []).filter((p) => p.template_id === template.template_id)) {
+            assert.ok(draft.parts.length < post.part_count, `${template.template_id} does not copy the plug part`);
+          }
+        }
       }
       if (template.status !== 'used') assert.ok(!used.has(template.template_id), `${template.template_id} stays out of the batch`);
       for (const flag of template.flags ?? []) assert.equal(flag, 'tired_check_incomplete', 'the only usable flag');
     }
-    for (const check of receipt.checks ?? []) assert.equal(check.energy_matches_evidence, true, `${check.template_id} reads at its evidence energy`);
+    for (const check of receipt.checks ?? []) {
+      assert.equal(check.energy_matches_evidence, true, `${check.template_id} reads at its evidence energy`);
+      assert.equal(check.fill_is_new, true, `${check.template_id} does not repeat an evidence or tired-check fill`);
+    }
     for (const post of receipt.posts ?? []) {
       const template = receipt.templates.find((t) => t.template_id === post.template_id);
       for (const flag of template.flags ?? []) assert.ok(post.gate_flags?.includes(flag) || post.state !== 'proposed', `${flag} is shown at the gate`);
@@ -227,20 +259,26 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
       }
       if (post.schedule_call) {
         assert.equal(post.schedule_call.idempotency_key, post.idempotency_key);
-        for (const banned of ['platforms', 'auto_plug', 'auto_repost']) assert.ok(!(banned in post.schedule_call), `no ${banned}`);
-        if (post.text_source === 'hand_fixed') {
-          assert.ok(!('draft_id' in post.schedule_call), 'hand-fixed text never goes by draft_id');
-          assert.deepEqual(post.schedule_call.posts?.map((part) => part.text) ?? [post.schedule_call.text], post.parts);
-        } else {
-          assert.equal(post.schedule_call.draft_id, post.saved_draft_id);
-        }
+        for (const banned of ['platforms', 'auto_plug', 'auto_repost', 'draft_id']) assert.ok(!(banned in post.schedule_call), `no ${banned}`);
+        assert.deepEqual(post.schedule_call.posts?.map((part) => part.text) ?? [post.schedule_call.text], post.parts, 'the exact approved text goes by value');
+        assert.ok(post.saved_draft_id, 'the draft id stays in the receipt as where the text came from');
       }
     }
     if (!receipt.fallback_used) assert.ok(receipt.global_auto_repost?.read, 'the setting is read in step 1');
     for (const template of receipt.templates.filter((t) => t.status === 'used' || t.status === 'eligible')) {
-      if (!receipt.fallback_used) assert.ok(template.tired_check_query !== undefined, `${template.template_id} records its tired-check query`);
+      if (receipt.fallback_used) continue;
+      const run = longestFixedRun(template.skeleton);
+      if (run.length >= 2) {
+        assert.equal(template.tired_check_query, run.join(' '), `${template.template_id} searches its longest stretch of fixed words`);
+      } else {
+        assert.equal(template.tired_check_query, null, `${template.template_id} has no stretch search can find`);
+        assert.ok(template.flags?.includes('tired_check_incomplete'), `${template.template_id} is flagged tired check incomplete`);
+      }
     }
   }
+  assert.ok(receipts[0].templates.some((t) => t.status === 'unproven' && t.evidence.filter((post) => post.views >= receipts[0].top_10_line.views).length >= 2),
+    'the pending fixture covers a recycled post counted once');
+  assert.ok(receipts[0].templates.some((t) => t.evidence.some((post) => post.plug_part_left_out)), 'the pending fixture covers a plug part');
   assert.ok(receipts[1].templates.some((t) => t.status === 'shape_unverified'), 'the fallback fixture covers a cut-off paste');
   assert.ok(receipts[1].templates.some((t) => t.status === 'media_unknown'), 'the fallback fixture covers an unanswered picture question');
   assert.ok(receipts[0].templates.some((t) => t.status === 'unproven'), 'the pending fixture covers a one-hit shape');
@@ -302,5 +340,18 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     if (post.state === 'blocked') assert.ok(!post.scheduled_post_id && post.blocked_reason);
     if (!confirmed) assert.notEqual(post.state, 'scheduled');
   }
+  const dispatchChecks = new Map(after.dispatch_queue_checks.map((check) => [check.template_id, check]));
+  for (const post of after.posts) {
+    const check = dispatchChecks.get(post.template_id);
+    assert.ok(check, `${post.template_id} rechecks queued text at dispatch`);
+    assert.deepEqual(check.fetched_full_text, check.cut_off_or_multi_part, 'every cut-off or multi-part queued post is read again at dispatch');
+    assert.equal(check.reused_earlier_text, false);
+    assert.deepEqual(check.unresolved, []);
+    if (post.schedule_call) assert.deepEqual(check.collisions, [], `${post.template_id} was written only after a clean fresh check`);
+  }
+  const edited = after.posts.find((post) => dispatchChecks.get(post.template_id).collisions
+    .some((hit) => ['id', 'preview', 'part_count'].every((field) => hit.unchanged_since_gate?.includes(field))));
+  assert.equal(edited?.state, 'blocked', 'a later-part edit with the same id, preview and part count still blocks the post');
+  assert.ok(!edited.schedule_call);
   assert.ok(!JSON.stringify(after).includes('published'), 'the receipt never says published');
 });
