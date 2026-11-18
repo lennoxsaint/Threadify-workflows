@@ -60,6 +60,14 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /give it only the post text/);
   assert.match(skill, /ranked at a tenth of that total/);
   assert.match(skill, /"media unknown"/);
+  assert.match(skill, /reads at the energy of its evidence posts/);
+  assert.match(skill, /A shape seen only in the library is "unproven" for this creator/);
+  assert.doesNotMatch(skill, /library post with clear engagement/);
+  assert.match(skill, /Leave out every template labelled unproven, tired, needs media, media unknown or shape unverified/);
+  assert.match(skill, /"tired check incomplete" template may be used only with that flag shown next to it at the gate/);
+  assert.match(skill, /a tenth of that count, rounded down/);
+  assert.match(skill, /Writing it again needs a new drafting yes/);
+  assert.doesNotMatch(skill, /fix it \(or write it again\)/);
 });
 
 test('Viral Posts discloses saves before drafting and guards the write after the yes', () => {
@@ -77,6 +85,12 @@ test('Viral Posts discloses saves before drafting and guards the write after the
   assert.match(step7, /`list_scheduled_posts` again for the window/);
   assert.match(step7, /Never move an approved time yourself/);
   assert.match(step7, /the approved time as an ISO instant/);
+  assert.match(step7, /`\[account, parts, media, scheduled_at\]` \(as `JSON\.stringify` writes it\)/);
+  assert.match(step7, /they must equal what the gate showed/);
+  assert.match(step7, /without `draft_id`, because Threadify schedules a draft's stored text/);
+  assert.match(step7, /Leave out `platforms`, `auto_plug` and `auto_repost`/);
+  const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
+  assert.match(gate, /fingerprint and stable idempotency key/, 'the gate shows what the yes binds');
   assert.match(step7, /the result is unknown/);
   assert.match(step7, /its status shows the post queued/);
   assert.match(skill, /label that template "shape unverified" and leave it out of the batch/);
@@ -127,7 +141,10 @@ test('Viral Posts receipt fixtures match the workflow receipt schema', () => {
     assert.ok(validate(receipt), JSON.stringify(validate.errors));
     assert.equal(receipt.workflow_id, 'viral-posts');
     assert.ok(!receipt.tool_path.includes('publish_now'));
-    for (const template of receipt.templates) assert.ok(template.evidence.length >= 2, 'a template needs two evidence posts');
+    for (const template of receipt.templates.filter((t) => t.status === 'used')) {
+      const hits = template.evidence.filter((post) => post.views >= receipt.top_10_line.views);
+      assert.ok(hits.length >= 2, `${template.template_id} needs two evidence posts over the top 10% line`);
+    }
   }
   assert.equal(pending.status, 'awaiting_approval');
   assert.deepEqual(pending.approved_text, []);
@@ -143,14 +160,29 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
   const receipts = names.map((name) => readJson(`validation/mock-fixtures/viral-posts.${name}.receipt.json`));
   for (const receipt of receipts) {
     assert.ok(validate(receipt), JSON.stringify(validate.errors));
+    const line = receipt.top_10_line;
+    assert.equal(line.rank, Math.max(1, Math.floor(line.account_post_count / 10)), 'the line is the post at a tenth of the count');
     const used = new Set([...(receipt.checks ?? []), ...(receipt.posts ?? [])].map((row) => row.template_id));
+    const labels = ['used', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified'];
     for (const template of receipt.templates) {
+      assert.ok(labels.includes(template.status), `${template.template_id} has a known label`);
+      assert.equal(template.top_10_percent_views, line.views);
       if (template.evidence.some((post) => post.source_complete !== true)) {
         assert.equal(template.status, 'shape_unverified', `${template.template_id} copies a cut-off post`);
+      } else if (template.evidence.some((post) => post.media_type === 'unknown')) {
+        assert.equal(template.status, 'media_unknown', `${template.template_id} waits for the picture answer`);
       } else if (template.evidence.some((post) => post.media_type !== 'TEXT_POST')) {
         assert.equal(template.status, 'needs_media', `${template.template_id} went viral with media`);
+      } else if (template.evidence.filter((post) => post.views >= line.views).length < 2) {
+        assert.equal(template.status, 'unproven', `${template.template_id} hit the top 10% less than twice`);
       }
       if (template.status !== 'used') assert.ok(!used.has(template.template_id), `${template.template_id} stays out of the batch`);
+      for (const flag of template.flags ?? []) assert.equal(flag, 'tired_check_incomplete', 'the only usable flag');
+    }
+    for (const check of receipt.checks ?? []) assert.equal(check.energy_matches_evidence, true, `${check.template_id} reads at its evidence energy`);
+    for (const post of receipt.posts ?? []) {
+      const template = receipt.templates.find((t) => t.template_id === post.template_id);
+      for (const flag of template.flags ?? []) assert.ok(post.gate_flags?.includes(flag) || post.state !== 'proposed', `${flag} is shown at the gate`);
     }
     for (const slot of receipt.schedule_proposal?.slots ?? []) {
       if (receipt.fallback_used) assert.equal(slot.idempotency_key, undefined, 'a local packet makes no write key');
@@ -158,6 +190,20 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     }
   }
   assert.ok(receipts[1].templates.some((t) => t.status === 'shape_unverified'), 'the fallback fixture covers a cut-off paste');
+  assert.ok(receipts[1].templates.some((t) => t.status === 'media_unknown'), 'the fallback fixture covers an unanswered picture question');
+  assert.ok(receipts[0].templates.some((t) => t.status === 'unproven'), 'the pending fixture covers a one-hit shape');
+  assert.ok(receipts[0].templates.some((t) => t.status === 'used' && t.flags?.includes('tired_check_incomplete')), 'covers a flagged template');
+
+  const pending = receipts[0];
+  const slotKeys = new Map(pending.schedule_proposal.slots.map((slot) => [slot.template_id, slot.idempotency_key]));
+  for (const post of pending.posts) {
+    assert.equal(post.state, 'proposed');
+    const gatePrint = crypto.createHash('sha256')
+      .update(JSON.stringify([pending.account_handle, post.parts, post.media, post.scheduled_at])).digest('hex');
+    assert.equal(post.fingerprint, gatePrint, 'the gate shows the fingerprint the yes binds');
+    assert.equal(post.idempotency_key, slotKeys.get(post.template_id));
+    assert.ok(post.idempotency_key.endsWith(`:${gatePrint.slice(0, 12)}`));
+  }
 
   const after = receipts[2];
   assert.ok(after.drafting_yes);

@@ -82,7 +82,8 @@
       "action (schedule, never publish now)",
       "media per post (none: text posts only)",
       "drafts already saved by generation, by id",
-      "check results and stable idempotency key per post"
+      "check results, intent fingerprint and stable idempotency key per post",
+      "any \"tired check incomplete\" flag next to its template"
     ]
   },
   "fallback": {
@@ -90,7 +91,7 @@
     "artifact_schema": "workflow-receipt.v1",
     "instructions": [
       "Without a working connection, ask the creator to paste their best posts with view counts, the full text of every part of each post a template copies, their 10 most recent posts with view counts, and the facts each new post may use.",
-      "A cut-off or partial source post leaves its template shape unverified and out of the batch; a template whose posts carried a picture needs media and stays out of this text-only batch.",
+      "A cut-off or partial source post leaves its template shape unverified and out of the batch; a template whose posts carried a picture needs media and stays out of this text-only batch; one with no answer about pictures is media unknown and stays out until answered.",
       "Find templates, fill them, run the same checks and propose tentative slots locally; label every slot unverified against the live calendar.",
       "Never claim Threadify generated, validated or scheduled anything; record the fallback in the receipt."
     ]
@@ -99,7 +100,9 @@
     "schema": "workflow-receipt.v1",
     "must_prove": [
       "account",
+      "top 10% line with the account post count and rank",
       "templates with evidence posts and view counts",
+      "label per template: used, unproven, tired, needs media, media unknown or shape unverified",
       "exact approved text of every part",
       "check results per post",
       "stable idempotency key per post",

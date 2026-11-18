@@ -57,6 +57,28 @@
         }
       ],
       "top_10_percent_views": 4000
+    },
+    {
+      "template_id": "t3",
+      "skeleton": "[photo] my desk after [time] of [habit]:",
+      "status": "media_unknown",
+      "evidence": [
+        {
+          "first_line": "redacted pasted hook five",
+          "date": "2026-02-14",
+          "views": 9500,
+          "media_type": "unknown",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted pasted hook six",
+          "date": "2026-05-19",
+          "views": 5200,
+          "media_type": "unknown",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 4000
     }
   ],
   "checks": [
@@ -67,7 +89,8 @@
       "hook_characters": 33,
       "fresh_reader_delivers": true,
       "all_parts_shown": true,
-      "facts_traced": true
+      "facts_traced": true,
+      "energy_matches_evidence": true
     }
   ],
   "schedule_proposal": {
@@ -81,5 +104,11 @@
         "label": "tentative, not checked against the live calendar"
       }
     ]
+  },
+  "top_10_line": {
+    "account_post_count": 400,
+    "rank": 40,
+    "views": 4000,
+    "source": "pasted, creator's stated post count"
   }
 }
