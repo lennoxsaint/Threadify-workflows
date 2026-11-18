@@ -36,7 +36,6 @@
       "template_id": "t1",
       "skeleton": "i [did X] for [time]. here's what [result]:",
       "status": "eligible",
-      "tired_check_query": "here's what",
       "evidence": [
         {
           "first_line": "redacted example hook one",
@@ -57,7 +56,11 @@
           "part_count": 1
         }
       ],
-      "top_10_percent_views": 5000
+      "top_10_percent_views": 5000,
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ]
     }
   ]
 }

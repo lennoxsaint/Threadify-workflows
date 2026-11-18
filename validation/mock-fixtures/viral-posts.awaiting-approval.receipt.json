@@ -53,7 +53,6 @@
       ],
       "top_10_percent_views": 5000,
       "status": "used",
-      "tired_check_query": "here's what",
       "gate_note": "evidence post 1 ends with a plug in part 3 (a link) that evidence post 2 lacks; the template is the 2 parts they share and the plug is not copied",
       "tired_check": {
         "recycled_copies": "count as uses",
@@ -82,7 +81,11 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook one",
         "after_tool_calls": 5
-      }
+      },
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ]
     },
     {
       "template_id": "t2",
@@ -112,7 +115,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": null,
       "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
@@ -121,7 +123,8 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook three",
         "after_tool_calls": 5
-      }
+      },
+      "tired_check_queries": []
     },
     {
       "template_id": "t3",
@@ -145,7 +148,6 @@
       "template_id": "t4",
       "skeleton": "[number] things i stopped doing:",
       "status": "used",
-      "tired_check_query": "things i stopped doing",
       "evidence": [
         {
           "first_line": "redacted example hook six",
@@ -194,7 +196,10 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook six",
         "after_tool_calls": 5
-      }
+      },
+      "tired_check_queries": [
+        "things i stopped doing"
+      ]
     },
     {
       "template_id": "t5",
@@ -228,7 +233,6 @@
       "skeleton": "here's why [thing] fails:",
       "status": "tired",
       "top_10_percent_views": 5000,
-      "tired_check_query": "here's why",
       "tired_check": {
         "recycled_copies": "count as uses",
         "last_three": [
@@ -268,6 +272,10 @@
           "fill": "redacted fill t6-two",
           "part_count": 1
         }
+      ],
+      "tired_check_queries": [
+        "here's why",
+        "here’s why"
       ]
     },
     {
@@ -322,7 +330,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "the older i get the more i realize",
       "tired_check": {
         "recycled_copies": "count as uses",
         "last_three": [
@@ -356,7 +363,10 @@
         "template_id": "t8",
         "creator_words": "redacted: waive it for t8",
         "at": "2026-06-01T10:05:00-04:00"
-      }
+      },
+      "tired_check_queries": [
+        "the older i get the more i realize"
+      ]
     },
     {
       "template_id": "t9",
@@ -383,7 +393,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "is the new",
       "tired_check": {
         "recycled_copies": "count as uses",
         "last_three": [
@@ -413,7 +422,10 @@
         "result": "fail",
         "after_tool_calls": 5
       },
-      "label_reason": "its own most-viewed post failed the fresh-reader check and the creator did not waive it, so no draft was made"
+      "label_reason": "its own most-viewed post failed the fresh-reader check and the creator did not waive it, so no draft was made",
+      "tired_check_queries": [
+        "is the new"
+      ]
     }
   ],
   "checks": [

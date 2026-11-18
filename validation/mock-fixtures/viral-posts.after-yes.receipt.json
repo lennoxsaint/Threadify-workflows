@@ -78,7 +78,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "here's what",
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: borderline / WHY: the list needs the author's context",
@@ -91,7 +90,11 @@
         "template_id": "t1",
         "creator_words": "redacted: waive it for t1",
         "at": "2026-06-01T10:05:00-04:00"
-      }
+      },
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ]
     },
     {
       "template_id": "t2",
@@ -118,7 +121,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": null,
       "flags": [
         "tired_check_incomplete"
       ],
@@ -130,7 +132,8 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook three",
         "after_tool_calls": 0
-      }
+      },
+      "tired_check_queries": []
     },
     {
       "template_id": "t3",
@@ -157,7 +160,6 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "things i stopped doing",
       "fresh_reader_control": {
         "reader": "fresh agent given only that post",
         "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
@@ -165,7 +167,10 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook five",
         "after_tool_calls": 0
-      }
+      },
+      "tired_check_queries": [
+        "things i stopped doing"
+      ]
     },
     {
       "template_id": "t4",
@@ -192,14 +197,15 @@
         }
       ],
       "top_10_percent_views": 5000,
-      "tired_check_query": "this is what"
+      "tired_check_queries": [
+        "this is what"
+      ]
     },
     {
       "template_id": "t5",
       "skeleton": "the [adjective] truth about [topic]:",
       "status": "used",
       "top_10_percent_views": 5000,
-      "tired_check_query": "truth about",
       "evidence": [
         {
           "first_line": "redacted example hook nine",
@@ -227,7 +233,10 @@
         "result": "pass",
         "evidence_first_line": "redacted example hook nine",
         "after_tool_calls": 0
-      }
+      },
+      "tired_check_queries": [
+        "truth about"
+      ]
     }
   ],
   "posts": [

@@ -18,6 +18,12 @@ const longestFixedRun = (skeleton) => skeleton.split(/\[[^\]]*\]/)
   .map((run) => run.replace(/[^\p{L}\p{N}'\s]+/gu, ' ').trim().split(/\s+/).filter(Boolean))
   .reduce((best, run) => (run.length > best.length ? run : best), []);
 
+// Search matches apostrophes and quote marks exactly, so a stretch with one is searched in both forms (SKILL.md step 2).
+const otherForm = (query) => (/['"]/.test(query)
+  ? query.replace(/'/g, '’').replace(/"([^"]*)"/g, '“$1”')
+  : /[’“”]/.test(query) ? query.replace(/’/g, "'").replace(/[“”]/g, '"') : null);
+const tiredQueries = (query) => [query, ...(otherForm(query) ? [otherForm(query)] : [])];
+
 // The verdict is the reader's own DELIVERS word, and the result follows from it, never the other way round (SKILL.md rule 4).
 const readerVerdict = (record, where) => {
   assert.ok(record?.reader && record.answer, `${where} records who read it and the answer`);
@@ -56,9 +62,12 @@ function assertFreshReaders(receipt) {
       assert.ok(!(receipt.gate_drafts ?? []).some((draft) => draft.template_id === template.template_id), `${template.template_id} saves no draft`);
       assert.ok(!(receipt.posts ?? []).some((post) => post.template_id === template.template_id), `${template.template_id} makes no post`);
     }
-    for (const post of (receipt.posts ?? []).filter((p) => p.template_id === template.template_id && waived)) {
+    // the waiver label follows the post's own result: a post its reader passed carries no failure label
+    const resultFor = (post) => post.fresh_reader?.result ?? (receipt.checks ?? []).find((c) => c.template_id === post.template_id)?.fresh_reader?.result;
+    for (const post of (receipt.posts ?? []).filter((p) => p.template_id === template.template_id && waived && p.state !== 'excluded')) {
       const line = `fresh reader: fail, waived by you for ${template.template_id} (your words: "${template.fresh_reader_waiver.creator_words}")`;
-      if (post.state !== 'excluded') assert.ok(post.gate_flags?.includes(line), `${template.template_id} shows the waiver at the gate`);
+      if (resultFor(post) === 'fail, waived') assert.ok(post.gate_flags?.includes(line), `${template.template_id} shows the waiver at the gate`);
+      else assert.ok(!(post.gate_flags ?? []).some((flag) => flag.startsWith('fresh reader: fail')), `${template.template_id} shows no failure label on a post its reader passed`);
     }
   }
   const rows = [...(receipt.checks ?? []).map((row) => ['check', row]), ...(receipt.posts ?? []).filter((post) => post.fresh_reader).map((row) => ['post', row])];
@@ -128,6 +137,13 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /Judge honestly\. "clear yes" only if the post fully gives you what its opening promised without needing to know the author\./);
   assert.match(skill, /The `KIND` line keeps one-line posts fair: a hook that promises more must get it in the rest of the post, while one complete claim passes when a stranger understands it, with no reason needed/);
   assert.match(skill, /Your own read is never a pass: when no fresh agent or session is available, the check is \*\*unavailable\*\*/);
+  // round 9: facts keep the link between their parts, one hand fix, the writer gets the limit and the exact words
+  assert.match(skill, /changing who or what it is about, or the link between its parts \("is the secret to" becoming "is", "leads to" becoming "equals"\), makes a new claim, and that fails/);
+  assert.match(skill, /Fix it by hand at most once, and only when the fix keeps the skeleton and the facts \(for example a shorter hook\), then check again and say what changed\. If the fixed post still fails, drop it\./);
+  assert.match(skill, /the hook's character limit \(80, or the proven hook's length when that is longer\), each fact in its exact Brain wording, and the rule "keep this skeleton exactly; change only the placeholder words; keep each fact's words and the link between them"/);
+  assert.match(skill, /record every query you searched, in order, as the template's `tired_check_queries` in the receipt, or an empty list when there is no stretch to search/);
+  assert.match(skill, /and only when drafting will go ahead: a run without the drafting yes stops after the tired check, with no control and no waiver question/);
+  assert.match(skill, /run the step-2 control before you fill any \(with no fresh agent it is unavailable and no waiver is asked; with one, the control and waiver work as in step 2\)/);
   assert.match(skill, /search it again with the other form, curly `’` `“` `”` or straight `'` `"`, and merge the two results/);
   assert.match(skill, /read in full: every part of a thread, no cut-off text/);
   assert.match(skill, /Label the template "needs media"/);
@@ -164,7 +180,6 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.match(skill, /If they have published none, there is nothing to copy: say so and stop/);
   assert.match(skill, /or that differ only in a number such as an age or a year, are one fill/);
   assert.match(skill, /Each check is pass or fail: "pass with a flag" or "the creator should confirm" is a fail/);
-  assert.match(skill, /changing who or what it is about makes a new claim, and that fails/);
   assert.match(skill, /this holds even when more uses may be hidden/);
   assert.match(skill, /recent posts with no text cannot show a use, so they count as missing/);
   const gate = skill.slice(skill.indexOf('6. **'), skill.indexOf('7. **Schedule after the yes.**'));
@@ -182,7 +197,7 @@ test('Viral Posts keeps the creator lessons as rules', () => {
   assert.ok(manifest.approval_gate.must_show.includes("for each template, the fresh-reader control on its most-viewed evidence post and any waiver in the creator's words"));
   assert.ok(manifest.receipt.must_prove.includes("fresh-reader controls on evidence posts, run before any generate_content call, and any waiver (template, the creator's words, when; this run only)"));
   for (const line of ['the top 10% line each template beat', 'any plug part left out of a template', "for a tired template, its last three uses' view counts",
-    "check results per post (each pass or fail, hook length against its limit, the energy reason, the fresh reader's answer, a waived check as fail, waived), intent fingerprint and stable idempotency key"]) {
+    "check results per post (each pass or fail, hook length against its limit, the energy reason, the fresh reader's answer, a waived check as fail, waived, a fresh reader marked unavailable with the self-read answer), intent fingerprint and stable idempotency key"]) {
     assert.ok(manifest.approval_gate.must_show.includes(line), line);
   }
   for (const line of ['plug parts left out per template', 'fresh reader per post: who read it, its answer word for word and its verdict (the DELIVERS word from that answer)',
@@ -327,6 +342,15 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
     assert.equal(line.rank, Math.max(1, Math.floor(line.account_post_count / 10)), 'the line is the post at a tenth of the count');
     const used = new Set([...(receipt.checks ?? []), ...(receipt.posts ?? [])].map((row) => row.template_id));
     const labels = ['used', 'eligible', 'unproven', 'tired', 'needs_media', 'media_unknown', 'shape_unverified', 'control_failed'];
+    // every label a receipt uses is one the manifest's receipt line names
+    const labelLine = manifest.receipt.must_prove.find((line) => line.startsWith('label per template:'));
+    for (const template of receipt.templates) {
+      assert.ok(labelLine.includes(template.status.replace(/_/g, ' ')), `the manifest label line names ${template.status}`);
+    }
+    // the step-2 control runs only when drafting goes ahead
+    if (receipt.status === 'drafting_declined') {
+      assert.ok(receipt.templates.every((t) => !t.fresh_reader_control && !t.fresh_reader_waiver), 'a declined run has no control and asks no waiver');
+    }
     const statuses = { awaiting_approval: 'schedule_post', nothing_to_approve: 'schedule_post', drafting_declined: 'evidence_only', fallback_ready: 'local_packet',
       scheduled: 'schedule_post', partially_scheduled: 'schedule_post', schedule_unverified: 'schedule_post' };
     assert.equal(receipt.action, statuses[receipt.status], `status ${receipt.status} is a listed one with its action`);
@@ -407,9 +431,9 @@ test('Viral Posts fixtures keep cut-off, media, stale-calendar and unknown-write
       if (receipt.fallback_used) continue;
       const run = longestFixedRun(template.skeleton);
       if (run.length >= 2) {
-        assert.equal(template.tired_check_query, run.join(' '), `${template.template_id} searches its longest stretch of fixed words`);
+        assert.deepEqual(template.tired_check_queries, tiredQueries(run.join(' ')), `${template.template_id} searches its longest stretch of fixed words, in both forms when it has an apostrophe or quote mark`);
       } else {
-        assert.equal(template.tired_check_query, null, `${template.template_id} has no stretch search can find`);
+        assert.deepEqual(template.tired_check_queries, [], `${template.template_id} has no stretch search can find`);
         assert.ok(template.flags?.includes('tired_check_incomplete'), `${template.template_id} is flagged tired check incomplete`);
       }
     }
@@ -545,6 +569,9 @@ test('Viral Posts fresh-reader results come from the reader\'s own DELIVERS word
     'failed control recorded as pass': (r) => { failedControl(r).fresh_reader_control.result = 'pass'; },
     'control verdict says clear yes, answer left': (r) => { failedControl(r).fresh_reader_control.verdict = 'clear yes'; },
     'failed control used with no waiver': (r) => { failedControl(r).status = 'used'; },
+    'clear-yes post on a waived template still labelled fail, waived': (r) => {
+      const f = waivedRow(r).fresh_reader; say(f, 'clear yes'); f.verdict = 'clear yes'; f.result = 'pass';
+    },
   };
   for (const [name, change] of Object.entries(broken)) {
     assert.throws(() => assertFreshReaders(mutate(pending, change)), assert.AssertionError, name);
@@ -554,7 +581,8 @@ test('Viral Posts fresh-reader results come from the reader\'s own DELIVERS word
   const saidNo = mutate(pending, (r) => { const f = waivedRow(r).fresh_reader; say(f, 'no'); f.verdict = 'no'; });
   assert.doesNotThrow(() => assertFreshReaders(saidNo), 'a reader who said no on a waived template is fail, waived');
   const passedAnyway = mutate(pending, (r) => {
-    const f = waivedRow(r).fresh_reader; say(f, 'clear yes'); f.verdict = 'clear yes'; f.result = 'pass';
+    const row = waivedRow(r); const f = row.fresh_reader; say(f, 'clear yes'); f.verdict = 'clear yes'; f.result = 'pass';
+    for (const post of r.posts.filter((p) => p.template_id === row.template_id)) post.gate_flags = post.gate_flags.filter((g) => !g.startsWith('fresh reader: fail'));
   });
   assert.doesNotThrow(() => assertFreshReaders(passedAnyway), 'a clear yes on a waived template is a plain pass');
 });
