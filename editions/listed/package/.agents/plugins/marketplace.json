@@ -1,0 +1,20 @@
+{
+  "interface": {
+    "displayName": "Threadify listed edition (local test)"
+  },
+  "name": "threadify-listed-local",
+  "plugins": [
+    {
+      "category": "Productivity",
+      "name": "threadify",
+      "policy": {
+        "authentication": "ON_USE",
+        "installation": "AVAILABLE"
+      },
+      "source": {
+        "path": "./threadify",
+        "source": "local"
+      }
+    }
+  ]
+}
