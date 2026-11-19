@@ -88,7 +88,7 @@ claude plugin install threadify-workflows@threadify
 
 Skills appear as `/threadify-workflows:<skill>`, for example `/threadify-workflows:threadify-get-set-up`. Update with `claude plugin update threadify-workflows@threadify`. The plugin root is `plugins/claude`, a generated mirror of the skill catalog with the manifest, icon and MCP declaration and nothing else; `npm run bundle:build` refreshes it and `npm run validate` checks parity. The plugin route installs the same skills as the installer below but does not run the installer's release-manifest and checksum checks; use the installer when you need a pinned, checksum-verified release.
 
-Claude Code leaves background auto-update off for third-party marketplaces. To receive releases automatically, open `/plugin`, choose the Marketplaces tab, select `threadify` and enable auto-update; the same menu turns it off again. Every merge to `main` becomes a new release version, which auto-updating installs pick up after their next session starts.
+Claude Code leaves background auto-update off for third-party marketplaces. To receive releases automatically, open `/plugin`, choose the Marketplaces tab, select `threadify` and enable auto-update; the same menu turns it off again. A merge to `main` publishes a release only when the release intent is enabled, names a version that has not been released yet, and validation and the build pass; auto-updating installs pick up a published release after their next session starts.
 
 From a source checkout, use the local executable:
 

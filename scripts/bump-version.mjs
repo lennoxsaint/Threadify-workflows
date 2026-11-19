@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Move every copy of the release version forward in one step, so a release never
 // drifts across package.json, the four plugin manifests, the release intent,
-// installation.md and the changelog. Generated bundles are refreshed afterwards.
+// installation.md, the workflow README install pins and the changelog.
+// Generated bundles are refreshed afterwards.
 //
 //   node scripts/bump-version.mjs [patch|minor|major|<x.y.z>] --summary "<line>" [--summary "<line>" ...]
 //   node scripts/bump-version.mjs patch --summary-file <path>   # one changelog line per non-empty line
@@ -101,6 +102,16 @@ planJson(FILES.intent, { ...intent, release_version: next, plugin_version: next,
 const installation = readText(FILES.installation);
 if (!installation.includes(current)) fail(`installation.md does not mention ${current}`);
 planText(FILES.installation, installation.split(current).join(next));
+
+// Workflow READMEs pin the release in their install line; the README tests check that pin.
+const pins = [`Threadify-workflows#v${current} `, `--version ${current} `];
+for (const dir of fs.readdirSync(path.join(root, 'workflows')).sort()) {
+  const file = `workflows/${dir}/README.md`;
+  if (!fs.existsSync(path.join(root, file))) continue;
+  const text = readText(file);
+  if (!pins.some((pin) => text.includes(pin))) continue;
+  planText(file, pins.reduce((out, pin) => out.split(pin).join(pin.replace(current, next)), text));
+}
 
 const changelog = readText(FILES.changelog).replace(/\r\n/g, '\n');
 if (!changelog.startsWith('# ')) fail('release/CHANGELOG.md must start with a version heading');
