@@ -44,6 +44,7 @@ Generated from each workflow manifest. A check means the workflow declares an ad
 | Threadify Unslop | yes | yes | yes | yes | yes | yes | yes |
 | Threads Teach | yes | yes | yes | yes | yes | yes | yes |
 | Viral Carousel Maker | yes | yes | yes | yes | yes | yes | yes |
+| Viral Posts | yes | yes | yes | yes | yes | yes | yes |
 | Viral Vault Setup | yes | yes | yes | yes | yes | yes | yes |
 | Watch Any Creator | yes | yes | yes | yes | yes | yes | yes |
 | Weekly Buyer Outcomes | yes | yes | yes | yes | yes | yes | yes |

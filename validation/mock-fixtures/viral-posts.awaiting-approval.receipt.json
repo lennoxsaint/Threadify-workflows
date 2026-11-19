@@ -1,0 +1,926 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "@example_creator",
+  "action": "schedule_post",
+  "approved_text": [],
+  "approved_text_sha256": "none-awaiting-approval",
+  "status": "awaiting_approval",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "America/New_York",
+  "tool_path": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "list_viral_items",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "validate_post",
+    "validate_post",
+    "validate_post",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
+    "get_schedule_status"
+  ],
+  "fallback_used": false,
+  "artifact_ids": [
+    "redacted-artifact-id"
+  ],
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "i [did X] for [time]. here's what [result]:",
+      "evidence": [
+        {
+          "first_line": "i walked daily for 90 days. here's what changed:",
+          "date": "2026-05-01",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "walked daily / 90 days / changed",
+          "part_count": 3,
+          "plug_part_left_out": 3
+        },
+        {
+          "first_line": "i quit sugar for a year. here's what happened:",
+          "date": "2026-05-20",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "quit sugar / a year / happened",
+          "part_count": 2
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "status": "used",
+      "gate_note": "evidence post 1 ends with a plug in part 3 (a link) that evidence post 2 lacks; the template is the 2 parts they share and the plug is not copied",
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-20",
+            "views": 9000,
+            "fill": "redacted fill t1-two"
+          },
+          {
+            "date": "2026-05-01",
+            "views": 12000,
+            "fill": "redacted fill t1-one"
+          },
+          {
+            "date": "2026-04-18",
+            "views": 2100,
+            "fill": "redacted fill t1-zero"
+          }
+        ]
+      },
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "i walked daily for 90 days. here's what changed:",
+        "after_tool_calls": 31
+      },
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ],
+      "hook_fit": [
+        {
+          "fact": "journaled every morning for 30 days",
+          "filled_hook": "i journaled every morning for 30 days. here's what changed:",
+          "filled_hook_chars": 59,
+          "limit": 80,
+          "after_tool_calls": 32,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "journaled",
+                "total": 4,
+                "returned": 4,
+                "read": 4
+              },
+              {
+                "word": "morning",
+                "total": 31,
+                "returned": 31,
+                "read": 31
+              },
+              {
+                "word": "30",
+                "total": 118,
+                "returned": 118,
+                "read": 118
+              },
+              {
+                "word": "days",
+                "total": 260,
+                "returned": 260,
+                "read": 14,
+                "narrowed_by": "only the matches where \"days\" starts a claim"
+              }
+            ],
+            "matches": [],
+            "closest": "none"
+          }
+        }
+      ]
+    },
+    {
+      "template_id": "t2",
+      "skeleton": "[thing] is [what it really is].",
+      "status": "used",
+      "flags": [
+        "tired_check_incomplete"
+      ],
+      "evidence": [
+        {
+          "first_line": "money is a tool.",
+          "date": "2026-04-01",
+          "views": 11000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "money / a tool",
+          "part_count": 1
+        },
+        {
+          "first_line": "time is the real currency.",
+          "date": "2026-05-09",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "time / the real currency",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "money is a tool.",
+        "after_tool_calls": 31
+      },
+      "tired_check_queries": [],
+      "hook_fit": [
+        {
+          "fact": "patience is a paid skill.",
+          "filled_hook": "patience is a paid skill.",
+          "filled_hook_chars": 25,
+          "limit": 80,
+          "after_tool_calls": 37,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "patience",
+                "total": 9,
+                "returned": 9,
+                "read": 9
+              },
+              {
+                "word": "paid",
+                "total": 22,
+                "returned": 22,
+                "read": 22
+              },
+              {
+                "word": "skill",
+                "total": 47,
+                "returned": 47,
+                "read": 47
+              }
+            ],
+            "matches": [],
+            "closest": {
+              "date": "2025-11-02",
+              "views": 2210,
+              "line": "patience is underrated.",
+              "why_not": "says patience is overlooked, not that it pays"
+            }
+          }
+        },
+        {
+          "fact": "comfort is a slow leak.",
+          "filled_hook": "comfort is a slow leak.",
+          "filled_hook_chars": 23,
+          "limit": 80,
+          "after_tool_calls": 37,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "comfort",
+                "total": 15,
+                "returned": 15,
+                "read": 4
+              }
+            ],
+            "matches": [
+              {
+                "date": "2026-02-14",
+                "views": 3120,
+                "first_line": "comfort is a slow leak in your ambition.",
+                "found_by": "comfort"
+              }
+            ]
+          },
+          "skipped": "repeat: your 2026-02-14 post already makes this claim"
+        },
+        {
+          "fact": "rest is part of the work.",
+          "filled_hook": "rest is part of the work.",
+          "filled_hook_chars": 25,
+          "limit": 80,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "rest",
+                "total": 40,
+                "returned": 40,
+                "read": 40
+              },
+              {
+                "word": "part",
+                "total": 1310,
+                "returned": 1000,
+                "read": 1000,
+                "note": "the call with `to` set to the oldest date returned the same 1,000 posts"
+              }
+            ],
+            "matches": []
+          },
+          "skipped": "repeat check incomplete: 310 of the 1,310 \"part\" matches could not be fetched",
+          "after_tool_calls": 37
+        }
+      ]
+    },
+    {
+      "template_id": "t3",
+      "skeleton": "nobody talks about [thing]:",
+      "status": "unproven",
+      "evidence": [
+        {
+          "first_line": "redacted example hook five",
+          "date": "2026-05-15",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t3-one",
+          "part_count": 1
+        }
+      ],
+      "library_cross_check": "seen in the viral library; reached this creator's top 10% only once",
+      "top_10_percent_views": 5000
+    },
+    {
+      "template_id": "t4",
+      "skeleton": "[number] things i stopped doing:",
+      "status": "eligible",
+      "evidence": [
+        {
+          "first_line": "redacted example hook six",
+          "date": "2026-03-01",
+          "views": 10000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t4-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted example hook seven",
+          "date": "2026-05-12",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t4-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-12",
+            "views": 7000,
+            "fill": "redacted fill t4-two"
+          },
+          {
+            "date": "2026-04-30",
+            "views": 900,
+            "fill": "redacted fill t4-two"
+          },
+          {
+            "date": "2026-03-01",
+            "views": 10000,
+            "fill": "redacted fill t4-one"
+          }
+        ]
+      },
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "redacted example hook six",
+        "after_tool_calls": 31
+      },
+      "tired_check_queries": [
+        "things i stopped doing"
+      ]
+    },
+    {
+      "template_id": "t5",
+      "skeleton": "[one word].",
+      "status": "unproven",
+      "unproven_reason": "both posts over the line have the same text after ignoring case and punctuation (a recycled post), so it counts as one fill",
+      "top_10_percent_views": 5000,
+      "evidence": [
+        {
+          "first_line": "redacted recycled hook",
+          "date": "2026-02-10",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "Redacted recycled fill.",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted recycled hook",
+          "date": "2026-05-25",
+          "views": 6000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted recycled fill",
+          "part_count": 1
+        }
+      ]
+    },
+    {
+      "template_id": "t6",
+      "skeleton": "here's why [thing] fails:",
+      "status": "tired",
+      "top_10_percent_views": 5000,
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-28",
+            "views": 900,
+            "fill": "redacted fill t6-one"
+          },
+          {
+            "date": "2026-05-20",
+            "views": 700,
+            "fill": "redacted fill t6-one"
+          },
+          {
+            "date": "2026-05-10",
+            "views": 1200,
+            "fill": "redacted fill t6-two"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "first_line": "redacted example hook eight",
+          "date": "2026-01-12",
+          "views": 14000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t6-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted example hook nine",
+          "date": "2026-02-02",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t6-two",
+          "part_count": 1
+        }
+      ],
+      "tired_check_queries": [
+        "here's why",
+        "here’s why"
+      ]
+    },
+    {
+      "template_id": "t7",
+      "skeleton": "i am [age]. [lesson].",
+      "evidence": [
+        {
+          "first_line": "redacted first line t7",
+          "date": "2026-03-01",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "part_count": 1,
+          "fill": "i am 28",
+          "source_complete": true
+        },
+        {
+          "first_line": "redacted first line t7",
+          "date": "2026-04-01",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "part_count": 1,
+          "fill": "i am 29",
+          "source_complete": true
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "status": "unproven",
+      "gate_note": "both posts over the line differ only in a number (an age), so they are one fill"
+    },
+    {
+      "template_id": "t8",
+      "skeleton": "the longer i build the more i see [thing] is [what it is].",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "the longer i build the more i see rest is the secret weapon of your best days.",
+          "date": "2026-02-10",
+          "views": 15000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "rest / the secret weapon of your best days",
+          "part_count": 1
+        },
+        {
+          "first_line": "the longer i build the more i see silence is your answer.",
+          "date": "2026-03-22",
+          "views": 6000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "silence / your answer",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-05-01",
+            "views": 7000,
+            "fill": "redacted fill t8-two"
+          },
+          {
+            "date": "2026-04-10",
+            "views": 3000,
+            "fill": "redacted fill t8-one"
+          },
+          {
+            "date": "2026-03-22",
+            "views": 6000,
+            "fill": "redacted fill t8-two"
+          }
+        ],
+        "verdict": "not tired"
+      },
+      "fresh_reader_control": {
+        "evidence_first_line": "the longer i build the more i see rest is the secret weapon of your best days.",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
+        "verdict": "borderline",
+        "result": "fail",
+        "after_tool_calls": 31
+      },
+      "fresh_reader_waiver": {
+        "template_id": "t8",
+        "creator_words": "redacted: waive it for t8",
+        "at": "2026-06-01T10:05:00-04:00"
+      },
+      "tired_check_queries": [
+        "the longer i build the more i see"
+      ],
+      "hook_fit": [
+        {
+          "fact": "sleep is a performance tool.",
+          "filled_hook": "the longer i build the more i see sleep is a performance tool.",
+          "filled_hook_chars": 62,
+          "limit": 80,
+          "after_tool_calls": 45,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "sleep",
+                "total": 12,
+                "returned": 12,
+                "read": 12
+              },
+              {
+                "word": "performance",
+                "total": 8,
+                "returned": 8,
+                "read": 8
+              },
+              {
+                "word": "tool",
+                "total": 1240,
+                "returned": 1240,
+                "read": 31,
+                "narrowed_by": "only the matches where \"tool\" starts a claim"
+              }
+            ],
+            "matches": [],
+            "closest": "none"
+          }
+        }
+      ]
+    },
+    {
+      "template_id": "t9",
+      "skeleton": "[thing] is the new [other thing].",
+      "status": "control_failed",
+      "evidence": [
+        {
+          "first_line": "redacted one-line hook t9 best",
+          "date": "2026-01-12",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t9-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted one-line hook t9 second",
+          "date": "2026-02-20",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "redacted fill t9-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check": {
+        "recycled_copies": "count as uses",
+        "last_three": [
+          {
+            "date": "2026-04-02",
+            "views": 9000,
+            "fill": "redacted fill t9-two"
+          },
+          {
+            "date": "2026-02-20",
+            "views": 8000,
+            "fill": "redacted fill t9-two"
+          },
+          {
+            "date": "2026-01-12",
+            "views": 12000,
+            "fill": "redacted fill t9-one"
+          }
+        ],
+        "verdict": "not tired"
+      },
+      "fresh_reader_control": {
+        "evidence_first_line": "redacted one-line hook t9 best",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: a new trend / KIND: complete claim / DELIVERS: no / WHY: it names a swap a stranger cannot place without the author",
+        "verdict": "no",
+        "result": "fail",
+        "after_tool_calls": 31
+      },
+      "label_reason": "its own most-viewed post failed the fresh-reader check and the creator did not waive it, so no draft was made",
+      "tired_check_queries": [
+        "is the new"
+      ]
+    },
+    {
+      "template_id": "t10",
+      "skeleton": "it took me years to learn that [lesson].",
+      "evidence": [
+        {
+          "first_line": "it took me years to learn that rest is part of the work.",
+          "date": "2026-05-05",
+          "views": 15000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "rest is part of the work",
+          "part_count": 1
+        },
+        {
+          "first_line": "it took me years to learn that quiet people notice everything.",
+          "date": "2026-05-12",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "quiet people notice everything",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "status": "no_fitting_fact",
+      "label_reason": "every Brain fact in its exact wording makes the hook longer than its limit, so no generate_content call was made",
+      "hook_fit": [
+        {
+          "fact": "real confidence comes from keeping small promises to yourself every single day for years.",
+          "filled_hook": "it took me years to learn that real confidence comes from keeping small promises to yourself every single day for years.",
+          "filled_hook_chars": 120,
+          "limit": 80,
+          "after_tool_calls": 50
+        },
+        {
+          "fact": "the people who win long term were willing to look stupid in public first.",
+          "filled_hook": "it took me years to learn that the people who win long term were willing to look stupid in public first.",
+          "filled_hook_chars": 104,
+          "limit": 80,
+          "after_tool_calls": 50
+        }
+      ],
+      "tired_check_queries": [
+        "it took me years to learn that"
+      ],
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "it took me years to learn that rest is part of the work.",
+        "after_tool_calls": 31
+      }
+    }
+  ],
+  "checks": [
+    {
+      "template_id": "t1",
+      "hook_characters": 59,
+      "validate_post": "valid",
+      "skeleton_match": true,
+      "energy_matches_evidence": true,
+      "all_parts_shown": true,
+      "facts_traced": true,
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
+        "result": "pass"
+      },
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
+    },
+    {
+      "template_id": "t2",
+      "hook_characters": 25,
+      "validate_post": "valid",
+      "skeleton_match": true,
+      "energy_matches_evidence": true,
+      "all_parts_shown": true,
+      "facts_traced": true,
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
+        "result": "pass"
+      },
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines and their own swear word"
+    },
+    {
+      "template_id": "t8",
+      "hook_characters": 62,
+      "hook_limit": 80,
+      "validate_post": "valid",
+      "skeleton_match": true,
+      "energy_matches_evidence": true,
+      "energy_reason": "keeps the evidence post's one short line",
+      "all_parts_shown": true,
+      "facts_traced": true,
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: a hard-won realization / KIND: complete claim / DELIVERS: borderline / WHY: the claim leans on a phrase a stranger cannot place without the author",
+        "verdict": "borderline",
+        "result": "fail, waived"
+      }
+    }
+  ],
+  "schedule_proposal": {
+    "calendar_listed": 4,
+    "calendar_total_in_window": 4,
+    "min_gap_hours": 2,
+    "slots": [
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757"
+      },
+      {
+        "template_id": "t8",
+        "local_time": "2026-06-06 09:00",
+        "idempotency_key": "viral-posts:example_creator:t8:e88c584f3830"
+      }
+    ],
+    "calendar_window": {
+      "start": "2026-06-02 00:00",
+      "end": "2026-06-09 00:00"
+    }
+  },
+  "drafting_yes": true,
+  "drafts_saved": [
+    "redacted-draft-1",
+    "redacted-draft-2",
+    "redacted-draft-3",
+    "redacted-draft-4",
+    "redacted-draft-7"
+  ],
+  "top_10_line": {
+    "account_post_count": 1200,
+    "rank": 120,
+    "views": 5000
+  },
+  "fingerprint_of": [
+    "account",
+    "parts",
+    "media",
+    "scheduled_at"
+  ],
+  "posts": [
+    {
+      "template_id": "t1",
+      "state": "proposed",
+      "parts": [
+        "redacted example post one, line one",
+        "redacted example post one, line two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-03T09:00:00-04:00",
+      "fingerprint": "76757481c7579477e3df77f88c3a0a641a9a62a08959b0451c6a52a463e294f5",
+      "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
+      "text_source": "hand_fixed",
+      "saved_draft_id": "redacted-draft-1",
+      "gate_flags": [
+        "hand_fixed: saved draft redacted-draft-1 keeps the old wording"
+      ]
+    },
+    {
+      "template_id": "t2",
+      "state": "blocked",
+      "parts": [
+        "redacted example post two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-04T09:00:00-04:00",
+      "fingerprint": "ee3e7dce03c74c836e65d22db2fe246fd4e3b0f387358ab5ce3e2dbc2b086706",
+      "idempotency_key": "viral-posts:example_creator:t2:ee3e7dce03c7",
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-3",
+      "gate_flags": [
+        "tired_check_incomplete"
+      ],
+      "blocked_reason": "part 1 repeats queued post redacted-queued-3 (full text fetched; its preview was cut off)"
+    },
+    {
+      "template_id": "t8",
+      "state": "proposed",
+      "parts": [
+        "redacted one-line post t8"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-06T09:00:00-04:00",
+      "fingerprint": "e88c584f383024b3b63cbc26194a959530854a0fdd6dc2837757a772bb423c3f",
+      "idempotency_key": "viral-posts:example_creator:t8:e88c584f3830",
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-7",
+      "gate_flags": [
+        "fresh reader: fail, waived by you for t8 (your words: \"redacted: waive it for t8\")"
+      ]
+    }
+  ],
+  "global_auto_repost": {
+    "read": {
+      "enabled": true,
+      "known": true,
+      "trigger": "time",
+      "delay_minutes": 480
+    },
+    "gate_line": "on: Threadify re-shares each post 8 hours after it goes out"
+  },
+  "queue_text_check": {
+    "cut_off_or_multi_part": [
+      "redacted-queued-1",
+      "redacted-queued-2",
+      "redacted-queued-3"
+    ],
+    "fetched_full_text": [
+      "redacted-queued-1",
+      "redacted-queued-2",
+      "redacted-queued-3"
+    ],
+    "unresolved": [],
+    "collisions": [
+      {
+        "scheduled_post_id": "redacted-queued-3",
+        "template_id": "t2",
+        "part": 1
+      }
+    ]
+  },
+  "gate_drafts": [
+    {
+      "draft_id": "redacted-draft-1",
+      "marked": "proposed",
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-a",
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
+    },
+    {
+      "draft_id": "redacted-draft-2",
+      "marked": "not_picked",
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-b",
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
+    },
+    {
+      "draft_id": "redacted-draft-3",
+      "marked": "excluded",
+      "template_id": "t2",
+      "idempotency_key": "viral-posts-redacted-run-t2-a",
+      "why": "blocked: repeats queued text",
+      "fact": "patience is a paid skill.",
+      "fact_kept": "word for word",
+      "hook": "patience is a paid skill."
+    },
+    {
+      "draft_id": "redacted-draft-4",
+      "marked": "not_picked",
+      "template_id": "t2",
+      "idempotency_key": "viral-posts-redacted-run-t2-b",
+      "fact": "patience is a paid skill.",
+      "fact_kept": "word for word",
+      "hook": "patience is a paid skill."
+    },
+    {
+      "draft_id": "redacted-draft-7",
+      "marked": "proposed",
+      "template_id": "t8",
+      "idempotency_key": "viral-posts-redacted-run-t8-a",
+      "fact": "sleep is a performance tool.",
+      "fact_kept": "word for word",
+      "hook": "the longer i build the more i see sleep is a performance tool."
+    }
+  ]
+}

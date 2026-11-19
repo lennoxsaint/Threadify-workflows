@@ -2266,6 +2266,57 @@
       ]
     },
     {
+      "workflow_id": "viral-posts",
+      "version": "0.1.0",
+      "title": "Viral Posts",
+      "summary": "Find the post shapes that went viral for you more than once, write a small batch of new Threads posts on those exact skeletons from your own facts, check every post, and propose a schedule that only runs after your yes on the exact batch.",
+      "kind": "skill",
+      "skill_name": "threadify-viral-posts",
+      "entrypoint": "skills/threadify-viral-posts/SKILL.md",
+      "source_entrypoint": "plugins/threadify/skills/threadify-viral-posts/SKILL.md",
+      "source_manifest": "workflows/viral-posts/manifest.json",
+      "bundle": {
+        "kind": "advanced",
+        "standalone": false
+      },
+      "dependencies": {
+        "workflows": [],
+        "files": [
+          "workflows/viral-posts/README.md"
+        ]
+      },
+      "triggers": [
+        "viral posts",
+        "make me viral posts",
+        "write posts from my viral templates",
+        "turn my viral posts into new posts",
+        "what keeps going viral for me"
+      ],
+      "io": {
+        "inputs": [
+          {
+            "name": "the creator's own published posts with view counts, saved viral posts and Brain facts, or pasted posts with view counts when no account is connected",
+            "schema_ref": "inline:viral-posts-input"
+          }
+        ],
+        "outputs": [
+          {
+            "name": "template evidence, checked drafts with every thread part, a schedule proposal and a receipt",
+            "schema_ref": "schemas/workflow-receipt.v1.json"
+          }
+        ]
+      },
+      "supported_adapters": [
+        "generic-mcp",
+        "codex",
+        "claude",
+        "hermes",
+        "gemini",
+        "openclaw",
+        "cursor"
+      ]
+    },
+    {
       "workflow_id": "vault-setup",
       "version": "0.1.0",
       "title": "Viral Vault Setup",

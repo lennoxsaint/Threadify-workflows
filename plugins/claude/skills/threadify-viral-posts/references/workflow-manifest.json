@@ -1,0 +1,150 @@
+{
+  "workflow_id": "viral-posts",
+  "version": "0.1.0",
+  "title": "Viral Posts",
+  "summary": "Find the post shapes that went viral for you more than once, write a small batch of new Threads posts on those exact skeletons from your own facts, check every post, and propose a schedule that only runs after your yes on the exact batch.",
+  "kind": "skill",
+  "entrypoint": {
+    "skill_id": "threadify-viral-posts",
+    "source": "plugins/threadify/skills/threadify-viral-posts/SKILL.md"
+  },
+  "bundle": {
+    "kind": "advanced",
+    "standalone": false
+  },
+  "dependencies": {
+    "workflows": [],
+    "files": [
+      "workflows/viral-posts/README.md"
+    ]
+  },
+  "triggers": [
+    "viral posts",
+    "make me viral posts",
+    "write posts from my viral templates",
+    "turn my viral posts into new posts",
+    "what keeps going viral for me"
+  ],
+  "io": {
+    "inputs": [
+      {
+        "name": "the creator's own published posts with view counts, saved viral posts and Brain facts, or pasted posts with view counts when no account is connected",
+        "schema_ref": "inline:viral-posts-input"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "template evidence, checked drafts with every thread part, a schedule proposal and a receipt",
+        "schema_ref": "schemas/workflow-receipt.v1.json"
+      }
+    ]
+  },
+  "supported_adapters": [
+    "generic-mcp",
+    "codex",
+    "claude",
+    "hermes",
+    "gemini",
+    "openclaw",
+    "cursor"
+  ],
+  "required_mcp_tools": [],
+  "optional_mcp_tools": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "search_posts",
+    "read_post_performance",
+    "get_post_thread",
+    "list_viral_items",
+    "get_viral_item",
+    "query_brain",
+    "generate_content",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "schedule_post",
+    "get_schedule_status"
+  ],
+  "free_capabilities": [
+    "local template finding, drafting checks and schedule proposal from posts the creator pastes"
+  ],
+  "paid_capability_stubs": [
+    "Hosted Threadify analytics, Brain and generation tools need a current connection and plan access"
+  ],
+  "approval_gate": {
+    "required": true,
+    "type": "explicit-final-approval",
+    "must_show": [
+      "account handle",
+      "template, its label and its evidence posts: per post its first line, date, views, media type, part count, fill and whether its text was complete",
+      "any other label that applies to a template, shown next to it as also",
+      "per template its hook fit (each fact, its filled hook and its length against the limit), its repeat check (each claim word with its match count and any narrowing, then the matching or closest post) and every fact left out before drafting, with the check it failed, and, in the fallback with no creator search, \"repeat check: pasted posts only\" on that post",
+      "the top 10% line each template beat",
+      "any plug part left out of a template",
+      "for a tired template, its last three uses' view counts",
+      "exact text of every part of every post",
+      "exact time and timezone for every post",
+      "action (schedule, never publish now)",
+      "media per post (none: text posts only)",
+      "every draft already saved by generation, by id, marked proposed, excluded or not picked",
+      "for each template, the fresh-reader control on its most-viewed evidence post and any waiver in the creator's words",
+      "check results per post (each pass or fail, hook length against its limit, the energy reason, the fresh reader's answer, a waived check as fail, waived, a fresh reader marked unavailable with the self-read answer), intent fingerprint and stable idempotency key",
+      "any \"tired check incomplete\" flag next to its template",
+      "global auto-repost setting as read (on with its trigger, off or unknown)",
+      "each hand-fixed post: the saved draft keeps the old wording"
+    ]
+  },
+  "fallback": {
+    "mode": "local-viral-posts-packet",
+    "artifact_schema": "workflow-receipt.v1",
+    "instructions": [
+      "Without a working connection, ask the creator to paste their best posts with view counts and dates (the more the better, so you can see the top 10% line), the full text of every part of each post you will copy a shape from, their 10 most recent posts with view counts, and the facts each new post may use.",
+      "A post that ends in \"…\" or is missing thread parts is cut off: ask for the full text.",
+      "A paste that gives only each post's first part leaves every post cut off until its full text, or the creator's word that it had one part, comes in.",
+      "Until you have it, label that template \"shape unverified\" and leave it out of the batch.",
+      "Ask how many posts they have published in all: the top 10% line is the view count of the pasted post ranked at a tenth of that total, rounded down and at least 1 (rank 370 of 3,700; rank 370 of 3,709; rank 1 for 1 to 19 posts).",
+      "If they have published none, there is nothing to copy: say so and stop.",
+      "If the paste stops before that rank, use its lowest view count and call the line estimated.",
+      "Until they tell you the total, do the same, and say at the gate which labels would change if the line were higher.",
+      "Ask whether each template post had a picture; a template whose posts did is \"needs media\", and one with no answer yet is \"media unknown\" at the gate.",
+      "The tired check uses every dated use of the template in any paste: find them with the same stretch of fixed words and quote-mark forms as step 2, and record those stretches as `tired_check_queries`; recent posts with no text cannot show a use, so they count as missing.",
+      "A paste of only best posts hides a tired template, so if the recent posts are missing, label the template \"tired check incomplete\".",
+      "Find the templates, run the step-2 control before you fill any (with no fresh agent it is unavailable and no waiver is asked; with one, the control and waiver work as in step 2), count the hook fit as in step 3 (record `hook_fit`; a template with no fitting fact is labelled \"no fitting fact\" and gets no post), run the step-3 repeat check on every pasted post instead of `search_posts`, looking for the same claim words one at a time (record `repeat_check` with `in` set to `pasted posts` and, per word, the pasted posts that have it as its `total`, `returned` and `read`), then ask the creator to search their own posts for each claim word of each fact you will use and paste every match, or say there is none (record their answer as `creator_search` in that fact's `repeat_check`, or `no answer`; with no answer, show \"repeat check: pasted posts only\" on that post at the gate and record it as that post's `repeat_gate_line`), fill them yourself from those facts only, run the same checks (skip `validate_post` and say so; check the 500 characters per part rule by hand) and propose times from the posting times the creator gives, marked \"tentative, not checked against your live calendar\" (with no times given, propose none and ask for them).",
+      "Label every draft \"written locally, not by Threadify\".",
+      "Never claim Threadify generated, validated or scheduled anything.",
+      "List any tool called before the fallback, such as a failed get_connection_defaults, in tool_path; leave it empty only when no tool was called."
+    ]
+  },
+  "receipt": {
+    "schema": "workflow-receipt.v1",
+    "must_prove": [
+      "account",
+      "top 10% line with the account post count and rank",
+      "templates with evidence posts: first line, date, views, media type, part count, fill and complete text",
+      "plug parts left out per template",
+      "label per template: used, eligible, unproven, tired, needs media, media unknown, shape unverified, control failed or no fitting fact, and any tired check incomplete flag; when several apply, the first in order (shape unverified, media unknown, needs media, unproven, tired, control failed, no fitting fact) and the rest as also_labels",
+      "hook fit per template picked for drafting: each fact, its filled hook, the length and the limit, with after_tool_calls at or before the first generate_content call; each saved draft names a fact that fits",
+      "repeat check per fitting fact: each claim word searched on its own with search_posts (or in the pasted posts), with its total, the posts returned and read, and the rule when a word with more than 200 matches is narrowed; the posts that already make its claim and the word that found them; for a fact that passes, the closest post or none; a fact with a match is skipped, and one whose matches could not all be read is left out as repeat check incomplete",
+      "fact_kept per saved draft: word for word, shortened or changed, with the draft first line it was judged on",
+      "exact approved text of every part",
+      "check results per post",
+      "fresh reader per post: who read it, its answer word for word and its verdict (the DELIVERS word from that answer)",
+      "fresh-reader controls on evidence posts, run before any generate_content call, and any waiver (template, the creator's words, when; this run only)",
+      "energy reason per post",
+      "receipt status: one of awaiting_approval, nothing_to_approve, drafting_declined, fallback_ready, scheduled, partially_scheduled, schedule_unverified",
+      "stable idempotency key per post",
+      "schedule proposal with the listed calendar window, at least 2 hours past every slot on both sides, and its live total; at each dispatch, the relisted window and total, at least 2 hours past that slot",
+      "drafting yes and saved draft ids",
+      "media decision per template",
+      "intent fingerprint, returned scheduled post id and state per post",
+      "approved time written YYYY-MM-DDTHH:mm:ss±hh:mm (no milliseconds, never Z)",
+      "global auto-repost setting at the gate and at each dispatch",
+      "tired-check queries per template, every query searched, in order: as written, all straight and all curly when the stretch has an apostrophe or quote mark",
+      "queued posts whose full text was fetched for the duplicate-text check, at the gate and again at every dispatch",
+      "readback status (scheduled, never published)",
+      "fallback state",
+      "a generate_content idempotency key per version, written before the call and reused on any retry",
+      "fallback repeat check: per claim word, the pasted posts that have it, and the creator's own search (creator_search) or no answer"
+    ]
+  }
+}

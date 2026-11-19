@@ -1,0 +1,154 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "unconnected",
+  "action": "local_packet",
+  "approved_text": [],
+  "approved_text_sha256": "none-awaiting-approval",
+  "status": "fallback_ready",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "America/New_York",
+  "tool_path": [
+    "get_connection_defaults"
+  ],
+  "fallback_used": true,
+  "artifact_ids": [
+    "redacted-artifact-id"
+  ],
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "unpopular opinion: [claim].",
+      "evidence": [
+        {
+          "first_line": "unpopular opinion: rest is a skill.",
+          "date": "2026-04-11",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "rest is a skill",
+          "part_count": 1
+        },
+        {
+          "first_line": "unpopular opinion: most advice is noise.",
+          "date": "2026-05-02",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "most advice is noise",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 4000,
+      "status": "used",
+      "fresh_reader_control": {
+        "evidence_first_line": "unpopular opinion: rest is a skill.",
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "after_tool_calls": 1
+      },
+      "tired_check_queries": [
+        "unpopular opinion"
+      ],
+      "hook_fit": [
+        {
+          "fact": "early nights beat late hustle.",
+          "filled_hook": "unpopular opinion: early nights beat late hustle.",
+          "filled_hook_chars": 49,
+          "limit": 80,
+          "after_tool_calls": 1,
+          "repeat_check": {
+            "in": "pasted posts",
+            "searches": [
+              {
+                "word": "early",
+                "total": 1,
+                "returned": 1,
+                "read": 1
+              },
+              {
+                "word": "nights",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              },
+              {
+                "word": "beat",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              },
+              {
+                "word": "late",
+                "total": 1,
+                "returned": 1,
+                "read": 1
+              },
+              {
+                "word": "hustle",
+                "total": 0,
+                "returned": 0,
+                "read": 0
+              }
+            ],
+            "matches": [],
+            "closest": {
+              "date": "pasted",
+              "views": 0,
+              "line": "redacted pasted post that mentions getting up early",
+              "why_not": "a routine, not a claim that early nights beat hustle"
+            },
+            "note": "posts you were not given were not checked",
+            "creator_search": "searched early, nights, beat, late and hustle in my own posts: none says early nights beat late hustle"
+          }
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "template_id": "t1",
+      "validate_post": "not run (no connection); 500 characters per part checked by hand",
+      "skeleton_match": true,
+      "hook_characters": 49,
+      "all_parts_shown": true,
+      "facts_traced": true,
+      "energy_matches_evidence": true,
+      "fill_is_new": true,
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives what the hook promised",
+        "verdict": "clear yes",
+        "result": "pass"
+      },
+      "hook_limit": 80,
+      "energy_reason": "keeps the evidence posts' short lines"
+    }
+  ],
+  "schedule_proposal": {
+    "calendar_listed": null,
+    "calendar_total_in_window": null,
+    "min_gap_hours": 2,
+    "slots": [
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "label": "tentative, not checked against the live calendar"
+      }
+    ]
+  },
+  "top_10_line": {
+    "account_post_count": 400,
+    "rank": 40,
+    "views": 4000,
+    "source": "pasted, creator's stated post count"
+  },
+  "tool_outcomes": [
+    {
+      "tool": "get_connection_defaults",
+      "outcome": "error: no working Threadify connection"
+    }
+  ]
+}

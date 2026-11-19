@@ -1,3 +1,9 @@
+# 0.46.0
+
+- Viral Posts: new posts written on a creator's own proven viral shapes, scheduled on Threads only after one yes.
+- A version bump now also moves each workflow README's pinned install line, so a bump no longer fails the README checks (the cause of the failed v0.45.1 release).
+- README: a merge to main publishes a release only when the release intent is enabled, the version is new, and validation and the build pass.
+
 # 0.45.1
 
 - Enforce the Claude plugin directory's rules in the repo, and fix v0.45.0's findings (#92)

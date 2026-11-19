@@ -1,0 +1,68 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "@example_creator",
+  "action": "evidence_only",
+  "approved_text": [],
+  "approved_text_sha256": "none-awaiting-approval",
+  "status": "drafting_declined",
+  "timestamp": "2026-06-02T10:00:00Z",
+  "timezone": "America/New_York",
+  "tool_path": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_post_thread",
+    "get_post_thread",
+    "search_posts",
+    "search_posts"
+  ],
+  "fallback_used": false,
+  "drafting_yes": false,
+  "drafts_saved": [],
+  "global_auto_repost": {
+    "read": {
+      "enabled": true,
+      "known": true,
+      "trigger": "time",
+      "delay_minutes": 480
+    }
+  },
+  "top_10_line": {
+    "account_post_count": 1200,
+    "rank": 120,
+    "views": 5000
+  },
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "i [did X] for [time]. here's what [result]:",
+      "status": "eligible",
+      "evidence": [
+        {
+          "first_line": "i walked daily for 90 days. here's what changed:",
+          "date": "2026-05-01",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "walked daily / 90 days / changed",
+          "part_count": 1
+        },
+        {
+          "first_line": "i quit sugar for a year. here's what happened:",
+          "date": "2026-05-20",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "quit sugar / a year / happened",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ]
+    }
+  ]
+}

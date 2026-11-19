@@ -1,0 +1,673 @@
+{
+  "workflow_id": "viral-posts",
+  "adapter": "generic-mcp",
+  "account_handle": "@example_creator",
+  "action": "schedule_post",
+  "approved_text": [
+    "redacted example post one, line one",
+    "redacted example post one, line two",
+    "redacted example post three",
+    "redacted example post five, part one",
+    "redacted example post five, part two"
+  ],
+  "approved_text_sha256": "fc3876a44730506a613733dbed8d849d6d358547701f28a5c16ee34800db9dab",
+  "status": "partially_scheduled",
+  "timestamp": "2026-06-02T11:00:00Z",
+  "timezone": "America/New_York",
+  "tool_path": [
+    "get_connection_defaults",
+    "greatest_hits",
+    "read_post_performance",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "get_post_thread",
+    "list_viral_items",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "search_posts",
+    "query_brain",
+    "search_posts",
+    "search_posts",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "generate_content",
+    "validate_post",
+    "validate_post",
+    "validate_post",
+    "best_time_to_post",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
+    "validate_post",
+    "schedule_post",
+    "get_schedule_status",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status",
+    "validate_post",
+    "schedule_post",
+    "list_scheduled_posts",
+    "get_connection_defaults",
+    "list_scheduled_posts",
+    "get_schedule_status",
+    "get_schedule_status"
+  ],
+  "fallback_used": false,
+  "fingerprint_of": [
+    "account",
+    "parts",
+    "media",
+    "scheduled_at"
+  ],
+  "drafting_yes": true,
+  "drafts_saved": [
+    "redacted-draft-1",
+    "redacted-draft-2",
+    "redacted-draft-4",
+    "redacted-draft-5",
+    "redacted-draft-6"
+  ],
+  "templates": [
+    {
+      "template_id": "t1",
+      "skeleton": "i [did X] for [time]. here's what [result]:",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "i walked daily for 90 days. here's what changed:",
+          "date": "2026-05-01",
+          "views": 12000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "walked daily / 90 days / changed",
+          "part_count": 1
+        },
+        {
+          "first_line": "i quit sugar for a year. here's what happened:",
+          "date": "2026-05-20",
+          "views": 9000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "quit sugar / a year / happened",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: borderline / WHY: the list needs the author's context",
+        "verdict": "borderline",
+        "result": "fail",
+        "evidence_first_line": "i walked daily for 90 days. here's what changed:",
+        "after_tool_calls": 19
+      },
+      "fresh_reader_waiver": {
+        "template_id": "t1",
+        "creator_words": "redacted: waive it for t1",
+        "at": "2026-06-01T10:05:00-04:00"
+      },
+      "tired_check_queries": [
+        "here's what",
+        "here’s what"
+      ],
+      "hook_fit": [
+        {
+          "fact": "journaled every morning for 30 days",
+          "filled_hook": "i journaled every morning for 30 days. here's what changed:",
+          "filled_hook_chars": 59,
+          "limit": 80,
+          "after_tool_calls": 20,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "journaled",
+                "total": 4,
+                "returned": 4,
+                "read": 4
+              },
+              {
+                "word": "morning",
+                "total": 31,
+                "returned": 31,
+                "read": 31
+              },
+              {
+                "word": "30",
+                "total": 118,
+                "returned": 118,
+                "read": 118
+              },
+              {
+                "word": "days",
+                "total": 260,
+                "returned": 260,
+                "read": 14,
+                "narrowed_by": "only the matches where \"days\" starts a claim"
+              }
+            ],
+            "matches": [],
+            "closest": "none"
+          }
+        }
+      ]
+    },
+    {
+      "template_id": "t2",
+      "skeleton": "[thing] is [what it really is].",
+      "status": "eligible",
+      "evidence": [
+        {
+          "first_line": "money is a tool.",
+          "date": "2026-04-01",
+          "views": 11000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "money / a tool",
+          "part_count": 1
+        },
+        {
+          "first_line": "time is the real currency.",
+          "date": "2026-05-09",
+          "views": 8000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "time / the real currency",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "flags": [
+        "tired_check_incomplete"
+      ],
+      "tired_check_note": "no stretch of at least two fixed words between placeholders, so search cannot find its uses",
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "money is a tool.",
+        "after_tool_calls": 19
+      },
+      "tired_check_queries": []
+    },
+    {
+      "template_id": "t3",
+      "skeleton": "nobody warns you that [truth].",
+      "status": "used",
+      "evidence": [
+        {
+          "first_line": "nobody warns you that success feels quiet.",
+          "date": "2026-03-01",
+          "views": 10000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "success feels quiet",
+          "part_count": 1
+        },
+        {
+          "first_line": "nobody warns you that growth looks boring up close.",
+          "date": "2026-05-12",
+          "views": 7000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "growth looks boring up close",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "nobody warns you that success feels quiet.",
+        "after_tool_calls": 19
+      },
+      "tired_check_queries": [
+        "nobody warns you that"
+      ],
+      "hook_fit": [
+        {
+          "fact": "the first 100 posts are practice.",
+          "filled_hook": "nobody warns you that the first 100 posts are practice.",
+          "filled_hook_chars": 55,
+          "limit": 80,
+          "after_tool_calls": 25,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "first",
+                "total": 180,
+                "returned": 180,
+                "read": 180
+              },
+              {
+                "word": "100",
+                "total": 25,
+                "returned": 25,
+                "read": 25
+              },
+              {
+                "word": "posts",
+                "total": 640,
+                "returned": 640,
+                "read": 12,
+                "narrowed_by": "only the matches where \"posts\" starts a claim"
+              },
+              {
+                "word": "practice",
+                "total": 14,
+                "returned": 14,
+                "read": 14
+              }
+            ],
+            "matches": [],
+            "closest": "none"
+          }
+        }
+      ]
+    },
+    {
+      "template_id": "t4",
+      "skeleton": "[photo] this is what [time] of [habit] looks like:",
+      "status": "needs_media",
+      "evidence": [
+        {
+          "first_line": "redacted example hook seven",
+          "date": "2026-02-01",
+          "views": 15000,
+          "media_type": "IMAGE",
+          "source_complete": true,
+          "fill": "redacted fill t4-one",
+          "part_count": 1
+        },
+        {
+          "first_line": "redacted example hook eight",
+          "date": "2026-04-20",
+          "views": 9500,
+          "media_type": "IMAGE",
+          "source_complete": true,
+          "fill": "redacted fill t4-two",
+          "part_count": 1
+        }
+      ],
+      "top_10_percent_views": 5000,
+      "tired_check_queries": [
+        "this is what"
+      ]
+    },
+    {
+      "template_id": "t5",
+      "skeleton": "the [adjective] truth about [topic]:",
+      "status": "used",
+      "top_10_percent_views": 5000,
+      "evidence": [
+        {
+          "first_line": "the boring truth about getting fit:",
+          "date": "2026-03-15",
+          "views": 13000,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "boring / getting fit",
+          "part_count": 2
+        },
+        {
+          "first_line": "the ugly truth about going viral:",
+          "date": "2026-05-05",
+          "views": 8500,
+          "media_type": "TEXT_POST",
+          "source_complete": true,
+          "fill": "ugly / going viral",
+          "part_count": 2
+        }
+      ],
+      "fresh_reader_control": {
+        "reader": "fresh agent given only that post",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: clear yes / WHY: the body gives it",
+        "verdict": "clear yes",
+        "result": "pass",
+        "evidence_first_line": "the boring truth about getting fit:",
+        "after_tool_calls": 19
+      },
+      "tired_check_queries": [
+        "truth about"
+      ],
+      "hook_fit": [
+        {
+          "fact": "growing from replies",
+          "filled_hook": "the honest truth about growing from replies:",
+          "filled_hook_chars": 44,
+          "limit": 80,
+          "after_tool_calls": 30,
+          "repeat_check": {
+            "searches": [
+              {
+                "word": "growing",
+                "total": 96,
+                "returned": 96,
+                "read": 96
+              },
+              {
+                "word": "replies",
+                "total": 150,
+                "returned": 150,
+                "read": 150
+              }
+            ],
+            "matches": [],
+            "closest": {
+              "date": "2026-01-20",
+              "views": 880,
+              "line": "replies are where the reach is.",
+              "why_not": "says replies bring reach, not that the account grew from them"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "posts": [
+    {
+      "template_id": "t1",
+      "parts": [
+        "redacted example post one, line one",
+        "redacted example post one, line two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-03T09:00:00-04:00",
+      "fingerprint": "76757481c7579477e3df77f88c3a0a641a9a62a08959b0451c6a52a463e294f5",
+      "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
+      "state": "scheduled",
+      "scheduled_post_id": "redacted-scheduled-id-1",
+      "readback": {
+        "status": "scheduled",
+        "account_matches": true,
+        "text_matches": true,
+        "time_matches": true
+      },
+      "auto_repost_at_dispatch": {
+        "enabled": true,
+        "known": true,
+        "trigger": "time",
+        "delay_minutes": 480
+      },
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-1",
+      "schedule_call": {
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757",
+        "account": "example_creator",
+        "scheduled_at": "2026-06-03T09:00:00-04:00",
+        "content_type": "long-form",
+        "posts": [
+          {
+            "text": "redacted example post one, line one"
+          },
+          {
+            "text": "redacted example post one, line two"
+          }
+        ]
+      },
+      "text_source_note": "saved draft redacted-draft-1 is where the text came from; schedule_post got the approved text, not the draft id",
+      "fresh_reader": {
+        "reader": "fresh agent given only the post text",
+        "answer": "PROMISE: what the hook sets up / KIND: promises more / DELIVERS: borderline / WHY: the list needs the author's context",
+        "verdict": "borderline",
+        "result": "fail, waived"
+      },
+      "gate_flags": [
+        "fresh reader: fail, waived by you for t1 (your words: \"redacted: waive it for t1\")"
+      ]
+    },
+    {
+      "template_id": "t3",
+      "parts": [
+        "redacted example post three"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-05T09:00:00-04:00",
+      "fingerprint": "bb839d09b36f6d924a7cc666bf1be3398cac55bfb29dde3ac1d1a82c317c71a4",
+      "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f",
+      "state": "schedule_unverified",
+      "scheduled_post_id": null,
+      "dispatch": "unknown: schedule_post timed out; list_scheduled_posts did not show it; held, same key only",
+      "readback": null,
+      "auto_repost_at_dispatch": {
+        "enabled": true,
+        "known": true,
+        "trigger": "time",
+        "delay_minutes": 480
+      },
+      "text_source": "hand_fixed",
+      "saved_draft_id": "redacted-draft-5",
+      "gate_flags": [
+        "hand_fixed: saved draft redacted-draft-5 keeps the old wording"
+      ],
+      "schedule_call": {
+        "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f",
+        "account": "example_creator",
+        "scheduled_at": "2026-06-05T09:00:00-04:00",
+        "content_type": "short-form",
+        "text": "redacted example post three"
+      }
+    },
+    {
+      "template_id": "t5",
+      "parts": [
+        "redacted example post five, part one",
+        "redacted example post five, part two"
+      ],
+      "media": [],
+      "scheduled_at": "2026-06-06T09:00:00-04:00",
+      "fingerprint": "bb0b4eba02fa590e12c90d004736d0e7f29933e2c7f333eafe78f9b9692f5eb5",
+      "idempotency_key": "viral-posts:example_creator:t5:bb0b4eba02fa",
+      "state": "blocked",
+      "blocked_reason": "at dispatch, the fresh full text of queued post redacted-queued-2 showed part 2 now repeats this post's part 2; its id, preview and part count were the same as at the gate. New wording needed, waiting for a new yes",
+      "auto_repost_at_dispatch": {
+        "enabled": true,
+        "known": true,
+        "trigger": "time",
+        "delay_minutes": 480
+      },
+      "text_source": "draft",
+      "saved_draft_id": "redacted-draft-6"
+    }
+  ],
+  "top_10_line": {
+    "account_post_count": 1200,
+    "rank": 120,
+    "views": 5000
+  },
+  "global_auto_repost": {
+    "read": {
+      "enabled": true,
+      "known": true,
+      "trigger": "time",
+      "delay_minutes": 480
+    },
+    "gate_line": "on: Threadify re-shares each post 8 hours after it goes out"
+  },
+  "dispatch_queue_checks": [
+    {
+      "template_id": "t1",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": [],
+      "calendar_window": {
+        "start": "2026-06-03T00:00:00-04:00",
+        "end": "2026-06-04T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
+    },
+    {
+      "template_id": "t3",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": [],
+      "calendar_window": {
+        "start": "2026-06-05T00:00:00-04:00",
+        "end": "2026-06-06T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
+    },
+    {
+      "template_id": "t5",
+      "cut_off_or_multi_part": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "fetched_full_text": [
+        "redacted-queued-1",
+        "redacted-queued-2"
+      ],
+      "reused_earlier_text": false,
+      "unresolved": [],
+      "collisions": [
+        {
+          "scheduled_post_id": "redacted-queued-2",
+          "template_id": "t5",
+          "part": 2,
+          "unchanged_since_gate": [
+            "id",
+            "preview",
+            "part_count"
+          ]
+        }
+      ],
+      "calendar_window": {
+        "start": "2026-06-06T00:00:00-04:00",
+        "end": "2026-06-07T00:00:00-04:00"
+      },
+      "calendar_listed": 2,
+      "calendar_total_in_window": 2
+    }
+  ],
+  "gate_drafts": [
+    {
+      "draft_id": "redacted-draft-1",
+      "marked": "proposed",
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-a",
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
+    },
+    {
+      "draft_id": "redacted-draft-2",
+      "marked": "not_picked",
+      "template_id": "t1",
+      "idempotency_key": "viral-posts-redacted-run-t1-b",
+      "fact": "journaled every morning for 30 days",
+      "fact_kept": "word for word",
+      "hook": "i journaled every morning for 30 days. here's what changed:"
+    },
+    {
+      "draft_id": "redacted-draft-4",
+      "marked": "not_picked",
+      "template_id": "t3",
+      "idempotency_key": "viral-posts-redacted-run-t3-a",
+      "fact": "the first 100 posts are practice.",
+      "fact_kept": "word for word",
+      "hook": "nobody warns you that the first 100 posts are practice."
+    },
+    {
+      "draft_id": "redacted-draft-5",
+      "marked": "proposed",
+      "template_id": "t3",
+      "idempotency_key": "viral-posts-redacted-run-t3-b",
+      "fact": "the first 100 posts are practice.",
+      "fact_kept": "word for word",
+      "hook": "nobody warns you that the first 100 posts are practice."
+    },
+    {
+      "draft_id": "redacted-draft-6",
+      "marked": "proposed",
+      "template_id": "t5",
+      "idempotency_key": "viral-posts-redacted-run-t5-a",
+      "fact": "growing from replies",
+      "fact_kept": "word for word",
+      "hook": "the honest truth about growing from replies:"
+    }
+  ],
+  "schedule_proposal": {
+    "calendar_window": {
+      "start": "2026-06-02 00:00",
+      "end": "2026-06-09 00:00"
+    },
+    "calendar_listed": 4,
+    "calendar_total_in_window": 4,
+    "min_gap_hours": 2,
+    "slots": [
+      {
+        "template_id": "t1",
+        "local_time": "2026-06-03 09:00",
+        "idempotency_key": "viral-posts:example_creator:t1:76757481c757"
+      },
+      {
+        "template_id": "t3",
+        "local_time": "2026-06-05 09:00",
+        "idempotency_key": "viral-posts:example_creator:t3:bb839d09b36f"
+      },
+      {
+        "template_id": "t5",
+        "local_time": "2026-06-06 09:00",
+        "idempotency_key": "viral-posts:example_creator:t5:bb0b4eba02fa"
+      }
+    ]
+  },
+  "queue_text_check": {
+    "cut_off_or_multi_part": [
+      "redacted-queued-1",
+      "redacted-queued-2"
+    ],
+    "fetched_full_text": [
+      "redacted-queued-1",
+      "redacted-queued-2"
+    ],
+    "unresolved": [],
+    "collisions": []
+  }
+}
