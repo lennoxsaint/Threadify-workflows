@@ -145,3 +145,14 @@ test('a saved workflow list the next release lacks fails before any pending muta
   assert.notEqual(status(options).status, 'installation_requires_recovery');
   assert.deepEqual(fs.readdirSync(path.join(options.home, '.claude', 'skills')), [next]);
 });
+
+test('a single workflow on Codex lands in the configured CODEX_HOME', async (t) => {
+  const options = isolated(t);
+  const saved = { HOME: process.env.HOME, USERPROFILE: process.env.USERPROFILE };
+  process.env.HOME = options.home; process.env.USERPROFILE = options.home;
+  t.after(() => { for (const [key, value] of Object.entries(saved)) { if (value === undefined) delete process.env[key]; else process.env[key] = value; } });
+  const custom = path.join(options.home, 'custom-codex');
+  await install({ ...options, env: { ...options.env, CODEX_HOME: custom }, targets: 'codex', workflows: 'your-next-moves', release: fixture('0.8.0') });
+  assert.deepEqual(fs.readdirSync(path.join(custom, 'skills')), [next]);
+  assert.ok(!fs.existsSync(path.join(options.home, '.codex', 'skills')));
+});
