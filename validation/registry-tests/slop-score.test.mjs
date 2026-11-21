@@ -57,14 +57,14 @@ test('Slop Score keeps the spec: own posts, blind swipe, Unslop scorer, Threadif
   assert.doesNotMatch(skill, /—/, 'no em dashes in user-facing text');
 });
 
-test('Slop Score README carries a working install line (the installer takes --workflows all only)', () => {
+test('Slop Score README carries a working install line (Slop Score installs on its own)', () => {
   const readme = fs.readFileSync(path.join(root, 'workflows/slop-score/README.md'), 'utf8');
   const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
   const line = readme.match(/npx --yes github:lennoxsaint\/Threadify-workflows#v(\S+) install --version (\S+) --workflows (\S+) --targets \S+ --disable-auto-update/);
   assert.ok(line, 'README has the install line');
   assert.equal(line[1], version);
   assert.equal(line[2], version);
-  assert.equal(line[3], 'all');
+  assert.equal(line[3], 'slop-score');
   assert.match(readme, /\/threadify-slop-score/);
   assert.doesNotMatch(readme, /—/);
 });

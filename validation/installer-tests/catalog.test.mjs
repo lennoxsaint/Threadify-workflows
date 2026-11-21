@@ -8,7 +8,7 @@ import { discoveryCommand } from '../../lib/discovery.mjs';
 
 const qbr = 'threadify-qualified-buyer-research';
 const next = 'threadify-your-next-moves';
-const rows = [qbr, next].map((skill_name) => ({ kind: 'skill', skill_name, workflow_id: skill_name.slice(9) }));
+const rows = [qbr, next].map((skill_name) => ({ kind: 'skill', skill_name, workflow_id: skill_name.slice(10) }));
 const catalog = { record_type: 'ThreadifyWorkflowCatalogV1', workflows: [...rows, { kind: 'recipe', workflow_id: 'recipe-only' }] };
 
 function fixture(version, modern = true) {
@@ -95,4 +95,53 @@ test('a later unmanaged catalog target prevents all earlier skill-link mutations
   await assert.rejects(install({ ...options, workflows: 'all', release: fixture('0.8.0') }), /refusing_to_overwrite_unrelated_target/);
   assert.equal(fs.readlinkSync(path.join(skillRoot, qbr)), before);
   assert.equal(fs.readFileSync(path.join(skillRoot, next, 'SKILL.md'), 'utf8'), 'user-owned');
+});
+
+test('one named workflow installs only that skill on every client, Codex included, and survives an update', async (t) => {
+  const options = isolated(t);
+  const receipt = await install({ ...options, targets: 'claude,codex', workflows: 'your-next-moves', release: fixture('0.8.0') });
+  for (const client of ['.claude', '.codex']) {
+    assert.deepEqual(fs.readdirSync(path.join(options.home, client, 'skills')), [next]);
+  }
+  assert.ok(!receipt.installed_targets.some((target) => target.startsWith('codex-plugin:')), 'no full Codex plugin for a single workflow');
+  assert.deepEqual(status(options).workflow_selection, { claude: ['your-next-moves'], codex: ['your-next-moves'] });
+  const source = path.join(options.home, 'source');
+  fs.mkdirSync(source, { recursive: true });
+  fs.writeFileSync(path.join(source, 'catalog.json'), JSON.stringify(catalog));
+  const listed = await discoveryCommand(['list', '--json'], { root: source, installerOptions: options });
+  const row = (id) => listed.workflows.find((item) => item.workflow_id === id);
+  assert.deepEqual(row('your-next-moves').availability.installed_clients.sort(), ['claude', 'codex']);
+  assert.deepEqual(row('qualified-buyer-research').availability.installed_clients, []);
+  await install({ ...options, release: fixture('0.8.1') });
+  assert.deepEqual(fs.readdirSync(path.join(options.home, '.claude', 'skills')), [next]);
+  assert.deepEqual(status(options).workflow_selection.claude, ['your-next-moves']);
+});
+
+test('a full install narrowed to one workflow removes the other managed skills', async (t) => {
+  const options = isolated(t);
+  await install({ ...options, targets: 'claude', workflows: 'all', release: fixture('0.8.0') });
+  await install({ ...options, workflows: 'threadify-your-next-moves', release: fixture('0.8.0') });
+  assert.deepEqual(fs.readdirSync(path.join(options.home, '.claude', 'skills')), [next]);
+});
+
+test('unknown, mixed or catalog-less single selections are refused before anything changes', async (t) => {
+  const options = isolated(t);
+  await assert.rejects(install({ ...options, targets: 'claude', workflows: 'nope', release: fixture('0.8.0') }), /unknown_workflow:nope/);
+  await assert.rejects(install({ ...options, targets: 'claude', workflows: 'all,your-next-moves', release: fixture('0.8.0') }), /invalid_workflow_selection/);
+  await assert.rejects(install({ ...options, targets: 'claude', workflows: 'your-next-moves', release: fixture('0.7.0', false) }), /full_catalog_unavailable/);
+  assert.ok(!fs.existsSync(path.join(options.home, '.claude', 'skills')));
+});
+
+test('a saved workflow list the next release lacks fails before any pending mutation is recorded', async (t) => {
+  const options = isolated(t);
+  await install({ ...options, targets: 'claude', workflows: 'your-next-moves', release: fixture('0.8.0') });
+  const without = fixture('0.9.0');
+  const slim = { ...catalog, workflows: catalog.workflows.filter((row) => row.skill_name !== next) };
+  const content = Buffer.from(JSON.stringify(slim));
+  without.bundle.files['plugin/catalog.json'] = { content_base64: content.toString('base64'), sha256: sha256(content), mode: '0644' };
+  delete without.bundle.files[`plugin/skills/${next}/SKILL.md`];
+  await assert.rejects(install({ ...options, release: without }), /catalog_skill_missing:your-next-moves/);
+  assert.ok(!fs.existsSync(path.join(options.root, 'mutation.json')) || JSON.parse(fs.readFileSync(path.join(options.root, 'mutation.json'))).status !== 'pending');
+  assert.notEqual(status(options).status, 'installation_requires_recovery');
+  assert.deepEqual(fs.readdirSync(path.join(options.home, '.claude', 'skills')), [next]);
 });

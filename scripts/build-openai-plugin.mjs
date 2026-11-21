@@ -109,6 +109,14 @@ const REWRITES = [
     from: " When Threadify itself is the offer, require current approved facts and the canonical /plans destination with the current brand's full attribution parameters; do not invent the attribution key set or use historical promotion URLs.",
     to: '',
   },
+  // Slop Score's bridge line names a Threadify plan and links to it, so the OpenAI package drops it.
+  {
+    files: 1,
+    from: ' Then say this bridge once, exactly as written, the line and then the link on its own line, and never add a price, a number or another claim:\n\n```text\n'
+      + "that was one test. writing every post from your own Brain and scheduling it at your best time - that's the rest of the job, and it's what a Threadify plan does.\n"
+      + 'https://www.threadify.app/home?utm_source=threadify-workflows&utm_medium=skill&utm_campaign=slop-score&utm_content=reveal__slop_score__bridge_a\n```\n',
+    to: '\n',
+  },
   {
     files: 2,
     from: 'tombstone_memory',

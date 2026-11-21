@@ -42,7 +42,7 @@ function help() {
   return `Threadify Workflows stable updater
 
 Usage:
-  threadify-workflows install [--enable-auto-update|--disable-auto-update] [--targets all] [--workflows all]
+  threadify-workflows install [--enable-auto-update|--disable-auto-update] [--targets all] [--workflows all|<workflow-id>[,<workflow-id>]]
   threadify-workflows preview-install --source-bundle <local candidate> --source-manifest <candidate manifest>
   threadify-workflows update [--on-use|--scheduled]
   threadify-workflows status

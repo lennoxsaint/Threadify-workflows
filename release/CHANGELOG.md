@@ -1,3 +1,9 @@
+# 0.47.0
+
+- Slop Score installs on its own: `--workflows slop-score` (or any workflow id, comma separated) installs only those skills, on every client, Codex included.
+- Slop Score says one bridge line and one tagged Threadify link right after the reveal (left out of the OpenAI package, which allows no plan promotion).
+- The main README's Slop Score install line now pins the current release.
+
 # 0.46.0
 
 - Viral Posts: new posts written on a creator's own proven viral shapes, scheduled on Threads only after one yes.
